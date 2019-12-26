@@ -1,0 +1,24 @@
+{
+  "name": "js-conflux-sdk",
+  "description": "Conflux JavaScript API",
+  "version": "0.0.0",
+  "license": "LGPL-3.0",
+  "main": "src/index.js",
+  "dependencies": {
+    "bignumber.js": "^9.0.0",
+    "keccak": "^2.0.0",
+    "lodash": "^4.17.15",
+    "secp256k1": "^3.7.1",
+    "superagent": "^5.1.0",
+    "ws": "^7.2.0"
+  },
+  "devDependencies": {
+    "jest": "^24.9.0",
+    "eslint": "^6.3.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2"
+  },
+  "scripts": {
+    "test": "jest"
+  }
+}
