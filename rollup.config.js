@@ -40,18 +40,18 @@ export default [
       {
         format: 'umd',
         name: 'JsConfluxSDK',
-        file: 'build/js-conflux-sdk.umd.js',
+        file: 'dist/js-conflux-sdk.umd.js',
       },
       {
         format: 'esm',
         name: 'JsConfluxSDK',
-        file: 'build/js-conflux-sdk.esm.js',
+        file: 'dist/js-conflux-sdk.esm.js',
       },
-      {
-        format: 'cjs',
-        name: 'JsConfluxSDK',
-        file: 'build/js-conflux-sdk.cjs.js',
-      },
+      // {
+      //   format: 'cjs',
+      //   name: 'JsConfluxSDK',
+      //   file: 'dist/js-conflux-sdk.cjs.js',
+      // },
     ],
   },
 ];

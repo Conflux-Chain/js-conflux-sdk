@@ -4,6 +4,12 @@
   "version": "0.3.1",
   "license": "LGPL-3.0",
   "main": "src/index.js",
+  "module": "dist/js-conflux-sdk.esm.js",
+  "browser": "dist/js-conflux-sdk.umd.js",
+  "files": [
+    "src",
+    "dist"
+  ],
   "dependencies": {
     "bignumber.js": "^9.0.0",
     "keccak": "^2.0.0",
@@ -25,7 +31,8 @@
     "@rollup/plugin-json": "^4.0.1"
   },
   "scripts": {
-    "test": "jest",
-    "build": "rollup --config rollup.config.js"
+    "build": "rollup --config rollup.config.js",
+    "prepublish": "npm run build",
+    "test": "jest"
   }
 }
