@@ -1,8 +1,8 @@
-const isPlainObject = require('lodash/isPlainObject');
+const lodash = require('lodash');
 
 function assert(bool, value) {
   if (!bool) {
-    if (isPlainObject(value)) {
+    if (lodash.isPlainObject(value)) {
       value = JSON.stringify(value);
     }
     throw new Error(value);
@@ -33,11 +33,7 @@ function sleep(ms) {
 async function loop({ delta = 1000, timeout = 30 * 1000 }, func) {
   const startTime = Date.now();
 
-  for (
-    let lastTime = startTime;
-    Date.now() - startTime < timeout;
-    lastTime = Date.now()
-  ) {
+  for (let lastTime = startTime; Date.now() - startTime < timeout; lastTime = Date.now()) {
     const ret = await func();
     if (ret !== undefined) {
       return ret;

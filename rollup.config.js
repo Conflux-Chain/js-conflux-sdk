@@ -26,7 +26,9 @@ export default [
             '@babel/preset-env',
             {
               targets: {
-                browsers: ['last 1 version'],
+                browsers: [
+                  'last 1 version',
+                ],
               },
               modules: false,
               loose: false,
@@ -49,6 +51,11 @@ export default [
         file: 'dist/js-conflux-sdk.esm.js',
         compact: true,
       },
+      // {
+      //   format: 'cjs',
+      //   name: 'JsConfluxSDK',
+      //   file: 'dist/js-conflux-sdk.cjs.js',
+      // },
     ],
   },
 ];

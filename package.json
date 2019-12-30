@@ -37,7 +37,7 @@
   },
   "scripts": {
     "build": "rollup --config rollup.config.js",
-    "prepublish": "npm run build",
+    "prepublishOnly": "npm run build",
     "test": "jest"
   }
 }
