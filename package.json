@@ -3,6 +3,10 @@
   "description": "JavaScript Conflux Software Development Kit",
   "version": "0.3.2-alpha",
   "license": "LGPL-3.0",
+  "keywords": [
+    "conflux",
+    "sdk"
+  ],
   "main": "src/index.js",
   "module": "dist/js-conflux-sdk.esm.js",
   "browser": "dist/js-conflux-sdk.umd.js",
