@@ -318,7 +318,7 @@ class Conflux {
       throw new Error('detail must be boolean');
     }
     const result = await this.provider.call('cfx_getBlockByEpochNumber', EpochNumber(epochNumber), detail);
-    return parse.block(result);
+    return (parse.block).or(parse.null)(result);
   }
 
   /**
@@ -452,7 +452,7 @@ class Conflux {
       throw new Error('detail must be boolean');
     }
     const result = await this.provider.call('cfx_getBlockByHash', BlockHash(blockHash), detail);
-    return parse.block(result);
+    return (parse.block).or(parse.null)(result);
   }
 
   /**

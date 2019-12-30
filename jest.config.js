@@ -1,5 +1,5 @@
 module.exports = {
-  bail: true,
+  // bail: true,
 
   collectCoverage: true,
   coverageDirectory: './coverage',

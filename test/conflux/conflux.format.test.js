@@ -35,6 +35,7 @@ test('getLogs', async () => {
     expect(options.address).toEqual(undefined);
     expect(options.topics).toEqual(undefined);
     expect(options.limit).toEqual(undefined);
+    return [];
   };
   await cfx.getLogs({});
 
@@ -46,6 +47,7 @@ test('getLogs', async () => {
     expect(options.address).toEqual(ADDRESS);
     expect(options.topics).toEqual([[TX_HASH], null]);
     expect(options.limit).toEqual('0x64');
+    return [];
   };
   await cfx.getLogs({
     blockHashes: [BLOCK_HASH],
@@ -65,6 +67,7 @@ test('getBalance', async () => {
     expect(method).toEqual('cfx_getBalance');
     expect(address).toEqual(ADDRESS);
     expect(epochNumber).toEqual(cfx.defaultEpoch);
+    return '0x0';
   };
   await cfx.getBalance(ADDRESS);
   await cfx.getBalance(ADDRESS.replace('0x', ''));
@@ -74,6 +77,7 @@ test('getBalance', async () => {
     expect(method).toEqual('cfx_getBalance');
     expect(address).toEqual(ADDRESS);
     expect(epochNumber).toEqual('0x00');
+    return '0x0';
   };
   await cfx.getBalance(ADDRESS, 0);
 });
@@ -85,6 +89,7 @@ test('getTransactionCount', async () => {
     expect(method).toEqual('cfx_getTransactionCount');
     expect(address).toEqual(ADDRESS);
     expect(epochNumber).toEqual(cfx.defaultEpoch);
+    return '0x0';
   };
   await cfx.getTransactionCount(ADDRESS);
   await cfx.getTransactionCount(ADDRESS.replace('0x', ''));
@@ -94,6 +99,7 @@ test('getTransactionCount', async () => {
     expect(method).toEqual('cfx_getTransactionCount');
     expect(address).toEqual(ADDRESS);
     expect(epochNumber).toEqual('0x00');
+    return '0x0';
   };
   await cfx.getTransactionCount(ADDRESS, 0);
 });
@@ -117,6 +123,7 @@ test('getBlockByHash', async () => {
     expect(method).toEqual('cfx_getBlockByHash');
     expect(blockHash).toEqual(BLOCK_HASH);
     expect(detail).toEqual(false);
+    return null;
   };
   await cfx.getBlockByHash(BLOCK_HASH);
   await cfx.getBlockByHash(BLOCK_HASH.replace('0x', ''));
@@ -126,6 +133,7 @@ test('getBlockByHash', async () => {
     expect(method).toEqual('cfx_getBlockByHash');
     expect(blockHash).toEqual(BLOCK_HASH);
     expect(detail).toEqual(true);
+    return null;
   };
   await cfx.getBlockByHash(BLOCK_HASH, true);
 });
@@ -138,6 +146,7 @@ test('getBlockByEpochNumber', async () => {
     expect(method).toEqual('cfx_getBlockByEpochNumber');
     expect(epochNumber).toEqual(cfx.defaultEpoch);
     expect(detail).toEqual(false);
+    return null;
   };
   await cfx.getBlockByEpochNumber(EpochNumber.LATEST_STATE);
   await cfx.getBlockByEpochNumber(EpochNumber.LATEST_STATE, false);
@@ -146,6 +155,7 @@ test('getBlockByEpochNumber', async () => {
     expect(method).toEqual('cfx_getBlockByEpochNumber');
     expect(epochNumber).toEqual('0x00');
     expect(detail).toEqual(true);
+    return null;
   };
   await cfx.getBlockByEpochNumber(0, true);
   await cfx.getBlockByEpochNumber('0', true);
@@ -166,6 +176,7 @@ test('getTransactionByHash', async () => {
   cfx.provider.call = async (method, txHash) => {
     expect(method).toEqual('cfx_getTransactionByHash');
     expect(txHash).toEqual(TX_HASH);
+    return null;
   };
   await cfx.getTransactionByHash(TX_HASH);
   await cfx.getTransactionByHash(TX_HASH.replace('0x', ''));
@@ -178,6 +189,7 @@ test('getTransactionReceipt', async () => {
   cfx.provider.call = async (method, txHash) => {
     expect(method).toEqual('cfx_getTransactionReceipt');
     expect(txHash).toEqual(TX_HASH);
+    return null;
   };
   await cfx.getTransactionReceipt(TX_HASH);
   await cfx.getTransactionReceipt(TX_HASH.replace('0x', ''));
@@ -342,6 +354,7 @@ test('estimateGas', async () => {
     expect(options.to).toEqual(ADDRESS);
     expect(options.value).toEqual(undefined);
     expect(options.data).toEqual(undefined);
+    return '0x0'
   };
   await cfx.estimateGas({ to: ADDRESS });
 
@@ -355,6 +368,7 @@ test('estimateGas', async () => {
     expect(options.to).toEqual(ADDRESS);
     expect(options.value).toEqual('0x64');
     expect(options.data).toEqual('0x');
+    return '0x0'
   };
   await cfx.estimateGas(
     {
