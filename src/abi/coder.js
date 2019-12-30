@@ -1,5 +1,8 @@
-const lodash = require('lodash');
 const BigNumber = require('bignumber.js');
+const isPlainObject = require('lodash/isPlainObject');
+const zip = require('lodash/zip');
+const range = require('lodash/range');
+const some = require('lodash/some');
 const { assert } = require('../utils');
 const { Hex, Address } = require('../utils/type');
 const { padBuffer, WORD_BYTES } = require('./HexStream');
@@ -20,7 +23,7 @@ function _pack(coders, array) {
   const staticList = [];
   const dynamicList = [];
 
-  lodash.zip(coders, array)
+  zip(coders, array)
     .forEach(([coder, value]) => {
       const buffer = coder.encode(value);
 
@@ -63,7 +66,7 @@ function _unpack(coders, stream) {
     }
   });
 
-  lodash.zip(coders, array)
+  zip(coders, array)
     .forEach(([coder, value], index) => {
       if (value instanceof Pointer) {
         assert(Number(value) === stream.index, {
@@ -442,7 +445,7 @@ class ArrayCoder extends Coder {
       });
     }
 
-    const coders = lodash.range(array.length).map(() => this.coder);
+    const coders = range(array.length).map(() => this.coder);
     let buffer = _pack(coders, array);
     if (this.size === undefined) {
       buffer = Buffer.concat([UINT_CODER.encode(array.length), buffer]);
@@ -461,7 +464,7 @@ class ArrayCoder extends Coder {
       length = UINT_CODER.decode(stream).toNumber();
     }
 
-    const coders = lodash.range(length).map(() => this.coder);
+    const coders = range(length).map(() => this.coder);
     return _unpack(coders, stream);
   }
 }
@@ -479,7 +482,7 @@ class TupleCoder extends Coder {
     this.type = `(${coders.map(coder => coder.type).join(',')})`;
     this.size = coders.length;
     this.coders = coders;
-    this.dynamic = lodash.some(coders, coder => coder.dynamic);
+    this.dynamic = some(coders, coder => coder.dynamic);
     this.names = coders.map((coder, index) => coder.name || `${index}`);
     this.NamedTuple = namedTuple(...this.names);
   }
@@ -489,7 +492,7 @@ class TupleCoder extends Coder {
    * @return {Buffer}
    */
   encode(array) {
-    if (lodash.isPlainObject(array)) {
+    if (isPlainObject(array)) {
       array = this.NamedTuple.fromObject(array);
     }
 

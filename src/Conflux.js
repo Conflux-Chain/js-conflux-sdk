@@ -1,4 +1,4 @@
-const lodash = require('lodash');
+const isBoolean = require('lodash/isBoolean');
 const { decorate } = require('./utils');
 const parse = require('./utils/parse');
 const { Hex, Address, EpochNumber, BlockHash, TxHash } = require('./utils/type');
@@ -314,7 +314,7 @@ class Conflux {
    }
    */
   async getBlockByEpochNumber(epochNumber, detail = false) {
-    if (!lodash.isBoolean(detail)) {
+    if (!isBoolean(detail)) {
       throw new Error('detail must be boolean');
     }
     const result = await this.provider.call('cfx_getBlockByEpochNumber', EpochNumber(epochNumber), detail);
@@ -448,7 +448,7 @@ class Conflux {
    }
    */
   async getBlockByHash(blockHash, detail = false) {
-    if (!lodash.isBoolean(detail)) {
+    if (!isBoolean(detail)) {
       throw new Error('detail must be boolean');
     }
     const result = await this.provider.call('cfx_getBlockByHash', BlockHash(blockHash), detail);

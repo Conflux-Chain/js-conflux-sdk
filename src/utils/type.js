@@ -7,7 +7,9 @@
   - should be pure functions
  */
 
-const lodash = require('lodash');
+const isNumber = require('lodash/isNumber');
+const isDate = require('lodash/isDate');
+const isString = require('lodash/isString');
 const BigNumber = require('bignumber.js');
 
 BigNumber.config({
@@ -40,11 +42,11 @@ const Hex = value => {
     return '0x';
   }
 
-  if (lodash.isNumber(value) || BigNumber.isBigNumber(value)) {
+  if (isNumber(value) || BigNumber.isBigNumber(value)) {
     return Hex(value.toString(16));
   }
 
-  if (lodash.isString(value)) {
+  if (isString(value)) {
     if (Hex.isHex(value)) { // In order not to copy hex string in most case.
       return value;
     }
@@ -62,7 +64,7 @@ const Hex = value => {
     return `0x${value.toString('hex')}`;
   }
 
-  if (lodash.isDate(value)) {
+  if (isDate(value)) {
     return Hex(value.valueOf());
   }
 
@@ -104,7 +106,7 @@ Hex.isHex = hex => {
  "0x10"
  */
 Hex.fromNumber = value => {
-  return Hex(lodash.isNumber(value) ? value : BigNumber(value));
+  return Hex(isNumber(value) ? value : BigNumber(value));
 };
 
 /**
@@ -351,7 +353,7 @@ Drip.toCFX = value => {
  "latest_state"
  */
 const EpochNumber = value => {
-  if (lodash.isString(value)) {
+  if (isString(value)) {
     value = value.toLowerCase();
   }
 

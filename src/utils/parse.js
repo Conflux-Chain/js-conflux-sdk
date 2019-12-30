@@ -4,7 +4,11 @@
    - check null before number, eg: `(parse.null).or(parse.number)`
  */
 
-const lodash = require('lodash');
+const isNull = require('lodash/isNull');
+const isPlainObject = require('lodash/isPlainObject');
+const isFunction = require('lodash/isFunction');
+const defaults = require('lodash/defaults');
+const mapValues = require('lodash/mapValues');
 const BigNumber = require('bignumber.js');
 const { Hex, TxHash, Hex32, Address, EpochNumber, BlockHash } = require('./type');
 
@@ -78,12 +82,12 @@ class ObjectParser extends Parser {
   constructor(keyToFunc, options) {
     super(
       object => {
-        if (!lodash.isPlainObject(object)) {
+        if (!isPlainObject(object)) {
           throw new Error(`expected a plain object, got ${object}`);
         }
 
-        const picked = lodash.mapValues(keyToFunc, (func, key) => func(object[key]));
-        return lodash.defaults(picked, object);
+        const picked = mapValues(keyToFunc, (func, key) => func(object[key]));
+        return defaults(picked, object);
       },
       options,
     );
@@ -95,7 +99,7 @@ function parse(schema, options = {}) {
     return schema;
   }
 
-  if (lodash.isFunction(schema)) {
+  if (isFunction(schema)) {
     return new Parser(schema, options);
   }
 
@@ -103,8 +107,8 @@ function parse(schema, options = {}) {
     return new ArrayParser(parse(schema[0]), options);
   }
 
-  if (lodash.isPlainObject(schema)) {
-    return new ObjectParser(lodash.mapValues(schema, v => parse(v)), options);
+  if (isPlainObject(schema)) {
+    return new ObjectParser(mapValues(schema, v => parse(v)), options);
   }
 
   throw new Error(`unknown schema type "${typeof schema}"`);
@@ -115,7 +119,7 @@ parse.boolean = v => Boolean(Number(v));
 parse.number = Number;
 parse.bigNumber = BigNumber;
 
-parse.null = parse(v => v).validate(lodash.isNull);
+parse.null = parse(v => v).validate(isNull);
 parse.uint = parse(Number).validate(v => v >= 0).validate(Number.isInteger);
 
 parse.transaction = parse({
