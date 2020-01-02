@@ -1,4 +1,6 @@
-const { decorate } = require('../utils');
+const lodash = require('lodash');
+const callable = require('../util/lib/callable');
+const { decorate } = require('../util');
 const { EventCoder } = require('../abi');
 
 class EventLog {
@@ -9,7 +11,7 @@ class EventLog {
     this.topics = topics;
   }
 
-  getLogs(options) {
+  getLogs(options = {}) {
     const iter = this.eventLog.cfx.getLogs({
       ...options,
       address: this.address,
@@ -19,7 +21,7 @@ class EventLog {
     decorate(iter, 'next', async (func, params) => {
       const log = await func(...params);
       if (log) {
-        log.params = this.eventLog.params(log);
+        log.params = this.eventLog.decode(log);
       }
       return log;
     });
@@ -37,28 +39,25 @@ class ContractEvent {
     this.coder = new EventCoder(this.fragment);
     this.code = this.coder.signature();
 
-    return new Proxy(this.call.bind(this), {
-      get: (_, key) => this[key],
-    });
+    return callable(this, this.call.bind(this));
   }
 
   call(...params) {
-    Object.entries(params).forEach(([index, param]) => {
-      if (param !== undefined) {
-        params[index] = this.coder.encodeInputByIndex(param, index);
-      }
-    });
-
     return new EventLog(this.cfx, this, {
       address: this.contract.address,
-      topics: [this.code, ...params],
+      topics: this.encode(params),
     });
   }
 
-  params(log) {
-    if (this.code !== log.topics[0]) {
-      return undefined;
-    }
+  encode(params) {
+    const topics = lodash.map(params, (param, index) => {
+      return param === undefined ? null : this.coder.encodeInputByIndex(param, index);
+    });
+
+    return this.fragment.anonymous ? topics : [this.code, ...topics];
+  }
+
+  decode(log) {
     return this.coder.decodeLog(log);
   }
 }

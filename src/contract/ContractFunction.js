@@ -1,5 +1,5 @@
-const { Hex } = require('../utils/type');
 const { FunctionCoder } = require('../abi');
+const callable = require('../util/lib/callable');
 
 /**
  * @memberOf Contract
@@ -19,7 +19,7 @@ class Called {
    *
    * > Note: This can alter the smart contract state.
    *
-   * @param options {object} - See `Transaction.callOptions`
+   * @param options {object} - See `format.sendTx`
    * @return {Promise<PendingTransaction>} The PendingTransaction object.
    */
   sendTransaction(options) {
@@ -35,7 +35,7 @@ class Called {
    * set contract.address as `to`,
    * set contract method encode as `data`.
    *
-   * @param options {object} - See `Transaction.callOptions`
+   * @param options {object} - See `format.sendTx`
    * @return {Promise<number>} The used gas for the simulated call/transaction.
    */
   estimateGas(options) {
@@ -53,7 +53,7 @@ class Called {
    *
    * > Note: Can not alter the smart contract state.
    *
-   * @param options {object} - See `Transaction.callOptions`.
+   * @param options {object} - See `format.sendTx`.
    * @param epochNumber {string|number} - See `Conflux.call`.
    * @return {Promise<*>} Decoded contact call return.
    */
@@ -80,17 +80,15 @@ class Called {
 }
 
 class ContractFunction {
-  constructor(cfx, contract, fragment, code) {
+  constructor(cfx, contract, fragment) {
     this.cfx = cfx;
     this.contract = contract;
     this.fragment = fragment;
 
     this.coder = new FunctionCoder(this.fragment);
-    this.code = code || this.coder.signature();
+    this.code = this.coder.signature();
 
-    return new Proxy(this.call.bind(this), {
-      get: (_, key) => this[key],
-    });
+    return callable(this, this.call.bind(this));
   }
 
   call(...params) {
@@ -100,15 +98,9 @@ class ContractFunction {
     });
   }
 
-  params(hex) {
-    if (!hex.startsWith(this.code)) {
-      return undefined;
-    }
-    return this.coder.decodeInputs(hex.slice(this.code.length)); // skip this.code as prefix
-  }
-
   encode(params) {
-    return Hex.concat(this.code, this.coder.encodeInputs(params));
+    const hex = this.coder.encodeInputs(params);
+    return `${this.code}${hex.substring(2)}`;
   }
 
   decode(hex) {

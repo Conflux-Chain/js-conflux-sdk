@@ -7,7 +7,23 @@ function namedTuple(...names) {
   class NamedTuple extends Array {
     constructor(...args) {
       super(...args);
-      return new Proxy(this, this.constructor);
+
+      return new Proxy(this, {
+        has: (_, key) => {
+          const index = _nameToIndex[key];
+          return index !== undefined ? true : (key in this);
+        },
+        get: (_, key) => {
+          const index = _nameToIndex[key];
+          return index === undefined ? this[key] : this[index];
+        },
+        set: () => {
+          throw new Error('can not change element to a NamedTuple');
+        },
+        deleteProperty: () => {
+          throw new Error('can not delete element to a NamedTuple');
+        },
+      });
     }
 
     static get name() {
@@ -20,24 +36,6 @@ function namedTuple(...names) {
 
     static fromObject(object) {
       return new this(...names.map(name => object[name]));
-    }
-
-    static has(self, name) {
-      const index = _nameToIndex[name];
-      return index === undefined ? (name in self) : true;
-    }
-
-    static get(self, name) {
-      const index = _nameToIndex[name];
-      return index === undefined ? self[name] : self[index];
-    }
-
-    static set() {
-      throw new Error('can not change element to a NamedTuple');
-    }
-
-    static deleteProperty() {
-      throw new Error('can not delete element to a NamedTuple');
     }
 
     toObject() {

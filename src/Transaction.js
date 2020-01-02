@@ -1,116 +1,24 @@
-const rlp = require('./utils/rlp');
-const { Hex, Address, PrivateKey, Drip } = require('./utils/type');
-const { sha3, ecdsaSign, ecdsaRecover, publicKeyToAddress } = require('./utils/sign');
-
-function throwError(...args) {
-  throw new Error(...args);
-}
+const { sha3, ecdsaSign, ecdsaRecover, publicKeyToAddress, rlpEncode } = require('./util/sign');
+const format = require('./util/format');
 
 class Transaction {
   /**
-   * @param options {object}
-   * @param options.from {string} - The address the transaction is send from.
-   * @param options.nonce {string|number} - This allows to overwrite your own pending transactions that use the same nonce.
-   * @param options.gasPrice {string|number} - The gasPrice used for each paid gas.
-   * @param options.gas {string|number} - The gas provided for the transaction execution. It will return unused gas.
-   * @param [options.to] {string} - The address the transaction is directed to.
-   * @param [options.value] {string|number|BigNumber} - the value sent with this transaction
-   * @param [options.data=''] {string|Buffer} - The compiled code of a contract OR the hash of the invoked method signature and encoded parameters.
-   * @return {object} Formatted send transaction options object.
-   */
-  static sendOptions({ from, nonce, gasPrice, gas, to, value, data }) {
-    return {
-      from: from !== undefined ? Address(from) : throwError(`'from' is required and should match 'Address', got ${from}`),
-      nonce: nonce !== undefined ? Hex.fromNumber(nonce) : throwError(`'nonce' is required and should match 'uint', got ${nonce}`),
-      gasPrice: gasPrice !== undefined ? Drip(gasPrice) : throwError(`'gasPrice' is required and should match 'Drip', got ${gasPrice}`),
-      gas: gas !== undefined ? Hex.fromNumber(gas) : throwError(`'gas' is required and should match 'uint', got ${gas}`),
-      to: to !== undefined ? Address(to) : undefined,
-      value: value !== undefined ? Drip(value) : undefined,
-      data: data !== undefined ? Hex(data) : Hex(''),
-    };
-  }
-
-  /**
-   * @param options {object}
-   * @param [options.from] {string} - The address the transaction is sent from.
-   * @param [options.nonce] {string|number} - The caller nonce (transaction count).
-   * @param [options.gasPrice] {string|number} - The gasPrice used for each paid gas.
-   * @param [options.gas] {string|number} - The gas provided for the transaction execution. `call` consumes zero gas, but this parameter may be needed by some executions.
-   * @param options.to {string} - The address the transaction is directed to.
-   * @param [options.value] {string|number|BigNumber} - Integer of the value sent with this transaction.
-   * @param [options.data] {string|Buffer} - Hash of the method signature and encoded parameters.
-   * @return {object} Formatted call contract options object.
-   */
-  static callOptions({ from, nonce, gasPrice, gas, to, value, data }) {
-    return {
-      from: from !== undefined ? Address(from) : undefined,
-      nonce: nonce !== undefined ? Hex.fromNumber(nonce) : undefined,
-      gasPrice: gasPrice !== undefined ? Drip(gasPrice) : undefined,
-      gas: gas !== undefined ? Hex.fromNumber(gas) : undefined,
-      to: to !== undefined ? Address(to) : throwError(`'to' is required and should match 'Address', got ${to}`),
-      value: value !== undefined ? Drip(value) : undefined,
-      data: data !== undefined ? Hex(data) : undefined,
-    };
-  }
-
-  /**
-   * @param options {object}
-   * @param [options.from] {string} - The address the transaction is sent from.
-   * @param [options.nonce] {string|number} - The caller nonce (transaction count).
-   * @param [options.gasPrice] {string|number} - The gasPrice used for each paid gas.
-   * @param [options.gas] {string|number} - The gas provided for the transaction execution. `call` consumes zero gas, but this parameter may be needed by some executions.
-   * @param [options.to] {string} - The address the transaction is directed to.
-   * @param [options.value] {string|number|BigNumber} - Integer of the value sent with this transaction.
-   * @param [options.data] {string|Buffer} - Hash of the method signature and encoded parameters.
-   * @return {object} Formatted call contract options object.
-   */
-  static estimateOptions({ from, nonce, gasPrice, gas, to, value, data }) {
-    return {
-      from: from !== undefined ? Address(from) : undefined,
-      nonce: nonce !== undefined ? Hex.fromNumber(nonce) : undefined,
-      gasPrice: gasPrice !== undefined ? Drip(gasPrice) : undefined,
-      gas: gas !== undefined ? Hex.fromNumber(gas) : undefined,
-      to: to !== undefined ? Address(to) : undefined,
-      value: value !== undefined ? Drip(value) : undefined,
-      data: data !== undefined ? Hex(data) : undefined,
-    };
-  }
-
-  /**
+   * Create a transaction.
+   *
    * @param options {object}
    * @param options.nonce {string|number} - This allows to overwrite your own pending transactions that use the same nonce.
    * @param options.gasPrice {string|number|BigNumber} - The price of gas for this transaction in drip.
    * @param options.gas {string|number} - The amount of gas to use for the transaction (unused gas is refunded).
    * @param [options.to=null] {string} - The destination address of the message, left undefined for a contract-creation transaction.
    * @param [options.value=0] {string|number|BigNumber} - The value transferred for the transaction in drip, also the endowment if it’s a contract-creation transaction.
-   * @param [options.data=''] {string|Buffer} - Either a ABI byte string containing the data of the function call on a contract, or in the case of a contract-creation transaction the initialisation code.
-   * @param [options.r=null] {string|Buffer} - ECDSA signature r
-   * @param [options.s=null] {string|Buffer} - ECDSA signature s
-   * @param [options.v=null] {string|number} - ECDSA recovery id
-   * @return {object} Formatted sign transaction options object.
-   */
-  static rawOptions({ nonce, gasPrice, gas, to, value, data, r, s, v }) {
-    return {
-      nonce: nonce !== undefined ? Hex.fromNumber(nonce) : throwError(`'nonce' is required and should match 'uint', got ${nonce}`),
-      gasPrice: gasPrice !== undefined ? Drip(gasPrice) : throwError(`'gasPrice' is required and should match 'Drip', got ${gasPrice}`),
-      gas: gas !== undefined ? Hex.fromNumber(gas) : throwError(`'gas' is required and should match 'uint', got ${gas}`),
-      to: to !== undefined ? Address(to) : Hex(null),
-      value: value !== undefined ? Drip(value) : Drip(0),
-      data: data !== undefined ? Hex(data) : Hex(''),
-      r: r !== undefined ? Hex(r) : undefined,
-      s: s !== undefined ? Hex(s) : undefined,
-      v: v !== undefined ? Hex(v) : undefined,
-    };
-  }
-
-  /**
-   * Signs a transaction. This account needs to be unlocked.
-   *
-   * @param options {object} - See `Transaction.rawOptions`
+   * @param [options.data='0x'] {string|Buffer} - Either a ABI byte string containing the data of the function call on a contract, or in the case of a contract-creation transaction the initialisation code.
+   * @param [options.r] {string|Buffer} - ECDSA signature r
+   * @param [options.s] {string|Buffer} - ECDSA signature s
+   * @param [options.v] {number} - ECDSA recovery id
    * @return {Transaction}
    */
-  constructor(options) {
-    Object.assign(this, Transaction.rawOptions(options));
+  constructor({ nonce, gasPrice, gas, to, value, data, v, r, s }) {
+    Object.assign(this, { nonce, gasPrice, gas, to, value, data, v, r, s });
   }
 
   /**
@@ -122,7 +30,7 @@ class Transaction {
    */
   get hash() {
     try {
-      return Hex(sha3(this.encode(true)));
+      return format.hex(sha3(this.encode(true)));
     } catch (e) {
       return undefined;
     }
@@ -138,11 +46,11 @@ class Transaction {
   get from() {
     try {
       const publicKey = ecdsaRecover(sha3(this.encode(false)), {
-        r: Hex.toBuffer(this.r),
-        s: Hex.toBuffer(this.s),
-        v: Number(this.v),
+        r: format.buffer(this.r),
+        s: format.buffer(this.s),
+        v: format.uint(this.v),
       });
-      return Hex(publicKeyToAddress(publicKey));
+      return format.hex(publicKeyToAddress(publicKey));
     } catch (e) {
       return undefined;
     }
@@ -154,10 +62,8 @@ class Transaction {
    * @param privateKey {string} - Private key hex string.
    */
   sign(privateKey) {
-    const { r, s, v } = ecdsaSign(sha3(this.encode(false)), Hex.toBuffer(PrivateKey(privateKey)));
-    this.r = Hex(r);
-    this.s = Hex(s);
-    this.v = Hex(v);
+    const { r, s, v } = ecdsaSign(sha3(this.encode(false)), format.buffer(privateKey));
+    Object.assign(this, { r, s, v });
   }
 
   /**
@@ -167,20 +73,13 @@ class Transaction {
    * @return {Buffer}
    */
   encode(includeSignature = false) {
-    const raw = [this.nonce, this.gasPrice, this.gas, this.to, this.value, this.data]; // ordered
-    if (includeSignature) {
-      if (this.v === undefined) {
-        throwError('`v` is required and should match `Hex`');
-      }
-      if (this.r === undefined) {
-        throwError('`r` is required and should match `Hex`');
-      }
-      if (this.s === undefined) {
-        throwError('`s` is required and should match `Hex`');
-      }
-      raw.push(this.v, this.r, this.s); // ordered
-    }
-    return rlp.encode(raw.map(Hex.toBuffer));
+    const { nonce, gasPrice, gas, to, value, data, v, r, s } = format.signTx(this);
+
+    const raw = includeSignature
+      ? [nonce, gasPrice, gas, to, value, data, v, r, s]
+      : [nonce, gasPrice, gas, to, value, data];
+
+    return rlpEncode(raw.map(format.buffer));
   }
 
   /**
@@ -189,7 +88,7 @@ class Transaction {
    * @return {Buffer}
    */
   serialize() {
-    return Hex(this.encode(true));
+    return format.hex(this.encode(true));
   }
 }
 

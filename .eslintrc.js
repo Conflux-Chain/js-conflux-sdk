@@ -26,6 +26,7 @@ module.exports = {
     'no-else-return': 0,
     'no-ex-assign': 0, // for extend Error
     'no-param-reassign': 0, // for type format
+    'no-restricted-syntax': 0, // for for of
     'no-underscore-dangle': 0, // for private attribute
     'no-use-before-define': 0, // for recursive parse
     'object-curly-newline': 0,

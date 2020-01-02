@@ -1,4 +1,4 @@
-const { sleep, loop } = require('../utils');
+const { sleep, loop } = require('../util');
 const LazyPromise = require('./LazyPromise');
 
 class PendingTransaction extends LazyPromise {
@@ -33,7 +33,7 @@ class PendingTransaction extends LazyPromise {
   async mined({ delta = 1000, timeout = 60 * 1000 } = {}) {
     return loop({ delta, timeout }, async () => {
       const tx = await this.get();
-      if (tx.blockHash) {
+      if (tx && tx.blockHash) {
         return tx;
       }
 
@@ -58,10 +58,11 @@ class PendingTransaction extends LazyPromise {
     return loop({ delta, timeout }, async () => {
       const receipt = await this.cfx.getTransactionReceipt(txHash);
       if (receipt) {
-        if (receipt.outcomeStatus === 0) {
-          return receipt;
+        if (receipt.outcomeStatus !== 0) {
+          throw new Error(`transaction "${txHash}" executed failed, outcomeStatus ${receipt.outcomeStatus}`);
         }
-        throw new Error(`transaction "${txHash}" executed failed, outcomeStatus ${receipt.outcomeStatus}`);
+
+        return receipt;
       }
 
       return undefined;
@@ -100,11 +101,8 @@ class PendingTransaction extends LazyPromise {
    * @return {Promise<string>} The contract address.
    */
   async deployed(options) {
-    const { transactionHash, outcomeStatus, contractCreated } = await this.confirmed(options);
-    if (outcomeStatus === 0) {
-      return contractCreated;
-    }
-    throw new Error(`transaction "${transactionHash}" deploy failed with ${outcomeStatus}`);
+    const { contractCreated } = await this.confirmed(options);
+    return contractCreated;
   }
 }
 

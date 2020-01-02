@@ -1,7 +1,8 @@
+const format = require('../src/util/format');
 const Transaction = require('../src/Transaction');
 
-const ADDRESS = '0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b';
-const KEY = '0xa816a06117e572ca7ae2f786a046d2bc478051d0717bf5cc4f5397923258d393';
+const KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
+const ADDRESS = '0xfcad0b19bb29d4674531d6f115237e16afce377c';
 
 test('Transaction', () => {
   const tx = new Transaction({
@@ -12,12 +13,12 @@ test('Transaction', () => {
     value: 0,
   });
 
-  expect(tx.nonce).toEqual('0x00');
-  expect(tx.gasPrice).toEqual('0x01');
-  expect(tx.gas).toEqual('0x5208');
+  expect(tx.nonce).toEqual(0);
+  expect(tx.gasPrice).toEqual(1);
+  expect(tx.gas).toEqual(21000);
   expect(tx.to).toEqual('0x0123456789012345678901234567890123456789');
-  expect(tx.value).toEqual('0x00');
-  expect(tx.data).toEqual('0x');
+  expect(tx.value).toEqual(0);
+  expect(tx.data).toEqual(undefined);
   expect(tx.r).toEqual(undefined);
   expect(tx.s).toEqual(undefined);
   expect(tx.v).toEqual(undefined);
@@ -26,76 +27,13 @@ test('Transaction', () => {
 
   tx.sign(KEY);
 
-  expect(tx.r).toEqual('0x1fdeea421319a30193d3250779a0edfaac79f9bb0556b523d8e4f9cba85543e2');
-  expect(tx.s).toEqual('0x28c6e13c055fe689b540b921b8a2cd944738367c8eeecd18400560e11b4c6a4f');
-  expect(tx.v).toEqual('0x01');
+  expect(format.hex(tx.r)).toEqual('0x489153a772628dd224e516f5231740a526dd4a7af90fe6d9b270286cb8cf2d68');
+  expect(format.hex(tx.s)).toEqual('0x40d27551b593ffba7a69a997690fc0461aed760a78236d4ed33e26c9c1a7c97b');
+  expect(tx.v).toEqual(0);
   expect(tx.from).toEqual(ADDRESS);
-  expect(tx.hash).toEqual('0xcf9eec4364c30176207e8972acfb358fb29b05569835125c458b94839651a724');
-  expect(tx.serialize()).toEqual('0xf85f8001825208940123456789012345678901234567890123456789808001a01fdeea421319a30193d3250779a0edfaac79f9bb0556b523d8e4f9cba85543e2a028c6e13c055fe689b540b921b8a2cd944738367c8eeecd18400560e11b4c6a4f');
+  expect(tx.hash).toEqual('0xe3233c95242fd25af7a87fa5e97a4051146d84d4495c0495a9459fad5bd31907');
+  expect(tx.serialize()).toEqual('0xf85f8001825208940123456789012345678901234567890123456789808080a0489153a772628dd224e516f5231740a526dd4a7af90fe6d9b270286cb8cf2d68a040d27551b593ffba7a69a997690fc0461aed760a78236d4ed33e26c9c1a7c97b');
 
-  tx.value = '0x01';
+  tx.value = 1;
   expect(tx.from).not.toEqual(ADDRESS);
-});
-
-test('sendOptions', () => {
-  expect(() => Transaction.sendOptions()).toThrow('Cannot destructure property');
-  expect(() => Transaction.sendOptions({})).toThrow('\'from\' is required and should match \'Address\'');
-  expect(() => Transaction.sendOptions({ from: ADDRESS })).toThrow('\'nonce\' is required and should match \'uint\'');
-  expect(() => Transaction.sendOptions({ nonce: 0, from: ADDRESS })).toThrow('\'gasPrice\' is required and should match \'Drip\'');
-  expect(() => Transaction.sendOptions({ nonce: 0, from: ADDRESS, gasPrice: 1 }))
-    .toThrow('\'gas\' is required and should match \'uint\'');
-
-  const tx = Transaction.sendOptions({ nonce: 0, from: ADDRESS, gasPrice: 1, gas: 21000 });
-  expect(tx.from).toEqual(ADDRESS);
-  expect(tx.nonce).toEqual('0x00');
-  expect(tx.gasPrice).toEqual('0x01');
-  expect(tx.gas).toEqual('0x5208');
-  expect(tx.to).toEqual(undefined);
-  expect(tx.value).toEqual(undefined);
-  expect(tx.data).toEqual('0x');
-});
-
-test('callOptions', () => {
-  expect(() => Transaction.callOptions()).toThrow('Cannot destructure property');
-  expect(() => Transaction.callOptions({})).toThrow('\'to\' is required and should match \'Address\'');
-
-  const tx = Transaction.callOptions({ to: ADDRESS });
-  expect(tx.from).toEqual(undefined);
-  expect(tx.nonce).toEqual(undefined);
-  expect(tx.gasPrice).toEqual(undefined);
-  expect(tx.gas).toEqual(undefined);
-  expect(tx.to).toEqual(ADDRESS);
-  expect(tx.value).toEqual(undefined);
-  expect(tx.data).toEqual(undefined);
-});
-
-test('estimateOptions', () => {
-  expect(() => Transaction.estimateOptions()).toThrow('Cannot destructure property');
-
-  const tx = Transaction.estimateOptions({});
-  expect(tx.from).toEqual(undefined);
-  expect(tx.nonce).toEqual(undefined);
-  expect(tx.gasPrice).toEqual(undefined);
-  expect(tx.gas).toEqual(undefined);
-  expect(tx.to).toEqual(undefined);
-  expect(tx.value).toEqual(undefined);
-  expect(tx.data).toEqual(undefined);
-});
-
-test('rawOptions', () => {
-  expect(() => Transaction.rawOptions()).toThrow('Cannot destructure property');
-  expect(() => Transaction.rawOptions({})).toThrow('\'nonce\' is required and should match \'uint\'');
-  expect(() => Transaction.rawOptions({ nonce: 0 })).toThrow('\'gasPrice\' is required and should match \'Drip\'');
-  expect(() => Transaction.rawOptions({ nonce: 0, gasPrice: 1 })).toThrow('\'gas\' is required and should match \'uint\'');
-
-  const tx = Transaction.rawOptions({ nonce: 0, gasPrice: 1, gas: 21000 });
-  expect(tx.nonce).toEqual('0x00');
-  expect(tx.gasPrice).toEqual('0x01');
-  expect(tx.gas).toEqual('0x5208');
-  expect(tx.to).toEqual('0x');
-  expect(tx.value).toEqual('0x00');
-  expect(tx.data).toEqual('0x');
-  expect(tx.r).toEqual(undefined);
-  expect(tx.s).toEqual(undefined);
-  expect(tx.v).toEqual(undefined);
 });

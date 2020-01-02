@@ -1,6 +1,6 @@
+const format = require('../util/format');
+const { privateKeyToAddress } = require('../util/sign'); // and decrypt, encrypt
 const Transaction = require('../Transaction');
-const { Hex, PrivateKey, Address } = require('../utils/type');
-const { privateKeyToAddress } = require('../utils/sign'); // and decrypt, encrypt
 
 class Account {
   /**
@@ -10,8 +10,8 @@ class Account {
    * @return {Account}
    */
   constructor(privateKey) {
-    this.privateKey = PrivateKey(privateKey);
-    this.address = Address(privateKeyToAddress(Hex.toBuffer(this.privateKey)));
+    this.privateKey = format.privateKey(privateKey);
+    this.address = format.address(privateKeyToAddress(format.buffer(this.privateKey)));
   }
 
   // /**
@@ -22,7 +22,7 @@ class Account {
   //  * @return {Account}
   //  */
   // static decrypt(info, password) {
-  //   const privateKeyBuffer = decrypt(lodash.mapValues(info, Hex.toBuffer), Buffer.from(password));
+  //   const privateKeyBuffer = decrypt(lodash.mapValues(info, format.buffer), Buffer.from(password));
   //   return new this(privateKeyBuffer);
   // }
   //
@@ -33,8 +33,8 @@ class Account {
   //  * @return {object}
   //  */
   // encrypt(password) {
-  //   const info = encrypt(Hex.toBuffer(this.privateKey), Buffer.from(password));
-  //   return lodash.mapValues(info, Hex);
+  //   const info = encrypt(format.buffer(this.privateKey), Buffer.from(password));
+  //   return lodash.mapValues(info, format.hex);
   // }
 
   /**

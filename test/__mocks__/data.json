@@ -49,7 +49,8 @@
       "height": "0x1",
       "size": "0x0",
       "timestamp": "0x0",
-      "transactions": []
+      "transactions": [],
+      "stable": null
     },
     "0xe1b0000000000000000000000000000000000000000000000000000000000001": {
       "adaptive": false,
@@ -137,6 +138,22 @@
       "transactionIndex": "0x0",
       "logIndex": "0x0",
       "transactionLogIndex": "0x0"
+    },
+    {
+      "address": "0xc000000000000000000000000000000000000000",
+      "topics": [
+        "0xc4c01f6de493c58245fb681341f3a76bba9551ce81b11cbbb5d6d297844594df",
+        "0x000000000000000000000000a000000000000000000000000000000000000001"
+      ],
+      "data": "0x0000000000000000000000000000000000000000000000000000000000000064",
+      "type": "mined",
+      "removed": false,
+      "epochNumber": "0x1",
+      "blockHash": "0xe1b0000000000000000000000000000000000000000000000000000000000001",
+      "transactionHash": "0xb0a0000000000000000000000000000000000000000000000000000000000000",
+      "transactionIndex": "0x0",
+      "logIndex": "0x1",
+      "transactionLogIndex": "0x1"
     }
   ]
 }

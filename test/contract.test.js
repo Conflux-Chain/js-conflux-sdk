@@ -1,10 +1,9 @@
 const BigNumber = require('bignumber.js');
-const { Hex } = require('../src/utils/type');
 const Conflux = require('../src');
 const MockProvider = require('./__mocks__/MockProvider');
 const { abi, code, address } = require('./__mocks__/contract.json');
 
-const ADDRESS = '0xc000000000000000000000000000000000000000';
+const ADDRESS = '0xfcad0b19bb29d4674531d6f115237e16afce377c';
 
 // ----------------------------------------------------------------------------
 const cfx = new Conflux({
@@ -15,6 +14,11 @@ cfx.provider = new MockProvider();
 
 const contract = cfx.Contract({ abi, code, address });
 
+test('without code', async () => {
+  const contractWithoutCode = cfx.Contract({ abi, address });
+  expect(() => contractWithoutCode.constructor(100)).toThrow('contract.constructor.code is empty');
+});
+
 test('Contract', async () => {
   let value;
 
@@ -22,7 +26,10 @@ test('Contract', async () => {
   expect(contract.constructor.code).toEqual(code);
 
   const deployAddress = await contract.constructor(100).sendTransaction({ from: ADDRESS, nonce: 0 }).deployed();
-  expect(Hex.isHex(deployAddress)).toEqual(true);
+  expect(deployAddress.startsWith('0x')).toEqual(true);
+
+  value = await contract.constructor(100);
+  expect(value.startsWith('0x')).toEqual(true);
 
   value = await contract.count();
   expect(value.toString()).toEqual('100');
@@ -34,7 +41,12 @@ test('Contract', async () => {
   expect(value).toEqual(BigNumber(21000));
 
   const logs = await contract.SelfEvent(ADDRESS).getLogs();
-  expect(logs.length).toEqual(1);
+  expect(logs.length).toEqual(2);
+
+  const iter = contract.SelfEvent(undefined, 10).getLogs({ toEpoch: 0x00 });
+  expect(Boolean(await iter.next())).toEqual(true);
+  expect(Boolean(await iter.next())).toEqual(true);
+  expect(Boolean(await iter.next())).toEqual(false);
 });
 
 test('decodeData.constructor', () => {
@@ -53,6 +65,8 @@ test('decodeData.function', () => {
   expect(value.name).toEqual('inc');
   expect(value.params.length).toEqual(1);
   expect(value.params[0]).toEqual(BigNumber(100));
+
+  expect(contract.abi.decodeData('0x')).toEqual(undefined);
 });
 
 test('decodeLog', () => {
@@ -69,4 +83,6 @@ test('decodeLog', () => {
   expect(value.params.length).toEqual(2);
   expect(value.params[0]).toEqual('0xa000000000000000000000000000000000000001');
   expect(value.params[1]).toEqual(BigNumber(100));
+
+  expect(contract.abi.decodeLog({ topics: [] })).toEqual(undefined);
 });

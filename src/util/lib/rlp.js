@@ -8,8 +8,6 @@
   0xf8~0xff |     7 | long array    | <0xf8+length(length(array.bytes))>, ...<length(array.bytes)>, ...<array.bytes>
  */
 
-const { Hex } = require('./type');
-
 const SHORT_RANGE = 55;
 const BUFFER_OFFSET = 0x80;
 const ARRAY_OFFSET = 0xc0;
@@ -20,8 +18,9 @@ function concat(...args) {
       return value;
     }
 
-    if (Number.isInteger(value) && value >= 0) {
-      return Hex.toBuffer(Hex(value));
+    if (Number.isSafeInteger(value) && value >= 0) {
+      const hex = value.toString(16);
+      return Buffer.from(hex.length % 2 ? `0${hex}` : hex, 'hex');
     }
 
     throw new Error(`invalid value, expect unsigned integer or buffer, got ${value}`);

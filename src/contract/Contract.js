@@ -100,12 +100,11 @@ class Contract {
     }
    */
   constructor(cfx, { abi: contractABI, address, code }) {
-    this.address = address; // XXX: Create a method named `address` in solidity is a `ParserError`
-
     contractABI.forEach(fragment => {
       switch (fragment.type) {
         case 'constructor': // cover this.constructor
-          this.constructor = new ContractConstructor(cfx, this, fragment, code);
+          this.constructor = new ContractConstructor(cfx, this, fragment);
+          this.constructor.code = code;
           break;
 
         case 'function':
@@ -126,6 +125,7 @@ class Contract {
     });
 
     this.abi = new ContractABICoder(this); // XXX: Create a method named `abi` in solidity is a `Warning`.
+    this.address = address; // XXX: Create a method named `address` in solidity is a `ParserError`
   }
 }
 

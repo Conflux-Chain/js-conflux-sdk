@@ -1,4 +1,3 @@
-const { Hex } = require('../utils/type');
 const ContractFunction = require('./ContractFunction');
 
 class ContractConstructor extends ContractFunction {
@@ -6,7 +5,8 @@ class ContractConstructor extends ContractFunction {
     if (!this.code) {
       throw new Error('contract.constructor.code is empty');
     }
-    return Hex.concat(this.code, this.coder.encodeInputs(params));
+    const hex = this.coder.encodeInputs(params);
+    return `${this.code}${hex.substring(2)}`;
   }
 
   decode(hex) {

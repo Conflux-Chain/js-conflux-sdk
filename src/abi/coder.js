@@ -1,7 +1,7 @@
 const lodash = require('lodash');
-const BigNumber = require('bignumber.js');
-const { assert } = require('../utils');
-const { Hex, Address } = require('../utils/type');
+const format = require('../util/format');
+const { assert } = require('../util');
+
 const { padBuffer, WORD_BYTES } = require('./HexStream');
 const namedTuple = require('./namedTuple');
 
@@ -147,7 +147,7 @@ class BoolCoder extends Coder {
    * @return {Buffer}
    */
   encode(value) {
-    return padBuffer(Hex(value ? 1 : 0));
+    return padBuffer(format.hex(Boolean(value)));
   }
 
   /**
@@ -172,7 +172,7 @@ class AddressCoder extends Coder {
    * @return {Buffer}
    */
   encode(address) {
-    return padBuffer(Address(address));
+    return padBuffer(format.address(address));
   }
 
   /**
@@ -180,7 +180,7 @@ class AddressCoder extends Coder {
    * @return {string}
    */
   decode(stream) {
-    return Address(stream.read(20));
+    return format.address(`0x${stream.read(20)}`);
   }
 }
 
@@ -212,7 +212,7 @@ class IntegerCoder extends Coder {
     this.type = `${type}${bits}`;
     this.signed = signed;
     this.size = bits / BYTE_BITS;
-    this.bound = BigNumber(2).pow(bits - (this.signed ? 1 : 0));
+    this.bound = format.bigNumber(2).pow(bits - (this.signed ? 1 : 0));
   }
 
   /**
@@ -220,12 +220,12 @@ class IntegerCoder extends Coder {
    * @return {Buffer}
    */
   encode(value) {
-    let number = BigNumber(value);
+    let number = format.bigNumber(value);
     let twosComplement = number;
 
     if (this.signed && number.lt(0)) {
       twosComplement = number.plus(this.bound);
-      number = number.plus(BigNumber(2).pow(WORD_BYTES * BYTE_BITS));
+      number = number.plus(format.bigNumber(2).pow(WORD_BYTES * BYTE_BITS));
     }
 
     assert(twosComplement.gte(0) && twosComplement.lt(this.bound), {
@@ -236,7 +236,7 @@ class IntegerCoder extends Coder {
       value,
     });
 
-    return padBuffer(Hex(number));
+    return padBuffer(format.hex(number));
   }
 
   /**
@@ -244,10 +244,10 @@ class IntegerCoder extends Coder {
    * @return {BigNumber}
    */
   decode(stream) {
-    let value = BigNumber(stream.read(this.size), 16); // 16: hex base
+    let value = format.bigNumber(`0x${stream.read(this.size)}`); // 16: hex base
 
     if (this.signed && value.gte(this.bound)) {
-      value = value.minus(BigNumber(2).pow(this.size * BYTE_BITS));
+      value = value.minus(format.bigNumber(2).pow(this.size * BYTE_BITS));
     }
 
     return value;
@@ -281,11 +281,11 @@ class FixedCoder extends IntegerCoder {
 
     super({ name, signed, bits });
     this.type = `${type}${bits}x${offset}`;
-    this.power = BigNumber(10).pow(offset);
+    this.power = format.bigNumber(10).pow(offset);
   }
 
   encode(value) {
-    return super.encode(BigNumber(value).times(this.power).integerValue());
+    return super.encode(format.bigNumber(value).times(this.power).integerValue());
   }
 
   decode(stream) {

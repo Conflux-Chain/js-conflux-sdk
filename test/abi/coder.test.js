@@ -1,13 +1,13 @@
 const lodash = require('lodash');
 const BigNumber = require('bignumber.js');
-const { Hex } = require('../../src/utils/type');
+const format = require('../../src/util/format');
 const HexStream = require('../../src/abi/HexStream');
 const getCoder = require('../../src/abi/coder');
 
 const MAX_UINT = BigNumber(2).pow(HexStream.WORD_BYTES * 8);
 
 function testEncode(coder, value, string) {
-  const hex = Hex(coder.encode(value));
+  const hex = format.hex(coder.encode(value));
   expect(hex).toEqual(string);
   return hex;
 }
@@ -116,7 +116,7 @@ describe('number', () => {
     testEncode(coder, 1.0, '0x0000000000000000000000000000000000000000000000000000000000000001');
     testEncode(coder, 256, '0x0000000000000000000000000000000000000000000000000000000000000100');
     testEncodeAndDecode(coder, BigNumber(-129), '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f');
-    expect(() => coder.encode(0.1)).toThrow('do not match hex string');
+    expect(() => coder.encode(0.1)).toThrow('not match hex');
   });
 
   test('uint', () => {

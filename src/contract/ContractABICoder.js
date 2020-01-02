@@ -1,3 +1,4 @@
+const lodash = require('lodash');
 const ContractConstructor = require('./ContractConstructor');
 const ContractFunction = require('./ContractFunction');
 const ContractEvent = require('./ContractEvent');
@@ -8,15 +9,15 @@ class ContractABICoder {
     this._codeToFunction = {};
     this._codeToEvent = {};
 
-    Object.values(contract).forEach(instance => {
-      if (!instance || !instance.constructor) {
-        // pass
-      } else if (instance.constructor === ContractConstructor) {
+    lodash.forEach(contract, (instance, name) => {
+      if (instance.constructor === ContractConstructor) {
         this._constructorFunction = instance;
       } else if (instance.constructor === ContractFunction) {
         this._codeToFunction[instance.code] = instance;
       } else if (instance.constructor === ContractEvent) {
         this._codeToEvent[instance.code] = instance;
+      } else {
+        throw new Error(`unexpected type of "${name}", got ${instance}`);
       }
     });
   }
@@ -24,12 +25,17 @@ class ContractABICoder {
   decodeData(data) {
     const _function = this._codeToFunction[data.slice(0, 10)]; // contract function code match '0x[0~9a-z]{8}'
     if (_function) {
-      return { name: _function.fragment.name, params: _function.params(data) };
+      const name = _function.fragment.name;
+      const params = _function.coder.decodeInputs(data.slice(10)); // skip contract function code prefix
+      return { name, params };
     }
 
     const _constructor = this._constructorFunction;
     if (_constructor && data.startsWith(_constructor.code)) {
-      return { name: _constructor.fragment.type, params: _constructor.params(data) };
+      const name = _constructor.fragment.type;
+      const params = _constructor.coder.decodeInputs(data.slice(_constructor.code.length)); // skip prefix
+
+      return { name, params };
     }
 
     return undefined;
@@ -37,11 +43,14 @@ class ContractABICoder {
 
   decodeLog(log) {
     const event = this._codeToEvent[log.topics[0]];
-    if (!event) {
-      return undefined;
+    if (event) {
+      const name = event.fragment.name;
+      const params = event.decode(log);
+
+      return { name, params };
     }
 
-    return { name: event.fragment.name, params: event.params(log) };
+    return undefined;
   }
 }
 

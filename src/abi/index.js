@@ -2,9 +2,9 @@
  @see https://solidity.readthedocs.io/en/v0.5.13/abi-spec.html
  */
 
-const { assert } = require('../utils');
-const { sha3 } = require('../utils/sign');
-const { Hex } = require('../utils/type');
+const { assert } = require('../util');
+const { sha3 } = require('../util/sign');
+const format = require('../util/format');
 
 const getCoder = require('./coder');
 const namedTuple = require('./namedTuple');
@@ -51,7 +51,7 @@ class FunctionCoder {
    "0x360ff942"
    */
   signature() {
-    return Hex(sha3(Buffer.from(this.type)).slice(0, 4));
+    return format.hex(sha3(Buffer.from(this.type)).slice(0, 4));
   }
 
   /**
@@ -67,7 +67,7 @@ class FunctionCoder {
    "0x00000000000000000000000000000000000000000000000000000000000000640000000000000000000000000000000000000000000000000000000000000001"
    */
   encodeInputs(array) {
-    return Hex(getCoder({ type: 'tuple', components: this.inputs }).encode(array));
+    return format.hex(getCoder({ type: 'tuple', components: this.inputs }).encode(array));
   }
 
   /**
@@ -117,9 +117,10 @@ class EventCoder {
   /**
    * Event coder
    *
-   * @param anonymous {boolean}
-   * @param name {string}
-   * @param inputs {array}
+   * @param options {object}
+   * @param options.anonymous {boolean}
+   * @param options.name {string}
+   * @param options.inputs {array}
    *
    * @example
    * > abi = {
@@ -169,7 +170,7 @@ class EventCoder {
    "0xb0333e0e3a6b99318e4e2e0d7e5e5f93646f9cbf62da1587955a4092bf7df6e7"
    */
   signature() {
-    return Hex(sha3(Buffer.from(this.type))); // {name:this.name, inputs:this.inputs}
+    return format.hex(sha3(Buffer.from(this.type))); // {name:this.name, inputs:this.inputs}
   }
 
   /**
@@ -193,7 +194,7 @@ class EventCoder {
       got: index,
       coder: this,
     });
-    return Hex(getCoder(this.inputs[index]).encode(value));
+    return format.hex(getCoder(this.inputs[index]).encode(value));
   }
 
   /**

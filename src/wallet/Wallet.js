@@ -1,5 +1,5 @@
-const { Hex, PrivateKey } = require('../utils/type');
-const { randomPrivateKey } = require('../utils/sign');
+const format = require('../util/format');
+const { randomPrivateKey } = require('../util/sign');
 const Account = require('./Account');
 
 /**
@@ -32,7 +32,7 @@ class Wallet {
    * @return {Account}
    */
   create(entropy) {
-    const privateKeyBuffer = randomPrivateKey(entropy !== undefined ? Hex.toBuffer(entropy) : undefined);
+    const privateKeyBuffer = randomPrivateKey(entropy !== undefined ? format.buffer(entropy) : undefined);
     return this.add(privateKeyBuffer);
   }
 
@@ -53,7 +53,7 @@ class Wallet {
    * @return {Account}
    */
   add(privateKey) {
-    privateKey = PrivateKey(privateKey);
+    privateKey = format.privateKey(privateKey);
 
     let account = this.get(privateKey);
     if (!account) {

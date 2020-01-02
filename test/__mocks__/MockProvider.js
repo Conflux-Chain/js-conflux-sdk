@@ -1,37 +1,40 @@
-const { Hex } = require('../../src/utils/type');
-const { randomBuffer } = require('../../src/utils/sign');
+const format = require('../../src/util/format');
+const { randomBuffer } = require('../../src/util/sign');
 const BaseProvider = require('../../src/provider/BaseProvider');
 const mockData = require('./data.json');
 
 const fullNode = {
   cfx_gasPrice() {
-    return Hex(randomBuffer(1));
+    return format.hex(randomBuffer(1));
   },
 
   cfx_epochNumber() {
-    return Hex(randomBuffer(2));
+    return format.hex(randomBuffer(2));
   },
 
-  cfx_getLogs() {
-    return mockData.logs;
+  cfx_getLogs(options) {
+    if (!options.fromEpoch || options.fromEpoch === '0x00') {
+      return mockData.logs;
+    }
+    return [];
   },
 
   cfx_getBalance(address, epochNumber) {
     if (epochNumber === '0x00') {
       return '0x0';
     }
-    return Hex(randomBuffer(4));
+    return format.hex(randomBuffer(4));
   },
 
   cfx_getTransactionCount(address, epochNumber) {
     if (epochNumber === '0x00') {
       return '0x0';
     }
-    return Hex(randomBuffer(1));
+    return format.hex(randomBuffer(1));
   },
 
   cfx_getBestBlockHash() {
-    return Hex(randomBuffer(32));
+    return format.hex(randomBuffer(32));
   },
 
   cfx_getBlocksByEpoch(epochNumber) {

@@ -1,4 +1,3 @@
-const { EpochNumber } = require('../../src/utils/type');
 const Conflux = require('../../src');
 
 // ----------------------------------------------------------------------------
@@ -6,7 +5,7 @@ const Conflux = require('../../src');
 test('constructor()', async () => {
   const cfx = new Conflux();
 
-  expect(cfx.defaultEpoch).toEqual(EpochNumber.LATEST_STATE);
+  expect(cfx.defaultEpoch).toEqual('latest_state');
   expect(cfx.defaultGasPrice).toEqual(undefined);
   expect(cfx.defaultGas).toEqual(undefined);
   expect(cfx.provider.constructor.name).toEqual('BaseProvider');
@@ -17,12 +16,12 @@ test('constructor()', async () => {
 test('constructor({...})', () => {
   const cfx = new Conflux({
     url: 'http://localhost:12537',
-    defaultEpoch: EpochNumber.LATEST_MINED,
+    defaultEpoch: 'latest_mined',
     defaultGasPrice: 100,
     defaultGas: 1000000,
   });
 
-  expect(cfx.defaultEpoch).toEqual(EpochNumber.LATEST_MINED);
+  expect(cfx.defaultEpoch).toEqual('latest_mined');
   expect(cfx.defaultGasPrice).toEqual(100);
   expect(cfx.defaultGas).toEqual(1000000);
   expect(cfx.provider.constructor.name).toEqual('HttpProvider');

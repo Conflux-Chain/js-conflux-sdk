@@ -1,7 +1,7 @@
 const Wallet = require('../src/wallet');
 
-const KEY = '0xa816a06117e572ca7ae2f786a046d2bc478051d0717bf5cc4f5397923258d393';
-const ADDRESS = '0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b';
+const KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
+const ADDRESS = '0xfcad0b19bb29d4674531d6f115237e16afce377c';
 
 // ----------------------------------------------------------------------------
 test('Wallet', () => {
@@ -42,6 +42,11 @@ test('Wallet.Account', () => {
   const account = new Wallet.Account(KEY);
   expect(account.privateKey).toEqual(KEY);
   expect(account.address).toEqual(ADDRESS);
+
+  const tx = account.signTransaction({ nonce: 0, gasPrice: 100, gas: 10000 });
+  expect(tx.from).toEqual(ADDRESS);
+  account.address = '0x0000000000000000000000000000000000000000';
+  expect(() => account.signTransaction({ nonce: 0, gasPrice: 100, gas: 10000 })).toThrow('transaction.from !==');
 
   // const info = account.encrypt('password');
   // const loadAccount = Wallet.Account.decrypt(info, 'password');

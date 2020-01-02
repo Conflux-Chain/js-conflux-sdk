@@ -1,5 +1,5 @@
 const lodash = require('lodash');
-const { loop } = require('../utils');
+const { loop } = require('../util');
 const LazyPromise = require('./LazyPromise');
 
 class LogIterator extends LazyPromise {
@@ -24,14 +24,15 @@ class LogIterator extends LazyPromise {
   }
 
   async _popUnconfirmed(logs, threshold) {
-    const unconfirmedSet = new Set();
-
     while (logs.length) {
       const { epochNumber } = lodash.last(logs);
-      if (unconfirmedSet.has(epochNumber) || !await this._isConfirmed(epochNumber, threshold)) {
-        logs.pop();
-      } else {
+      if (await this._isConfirmed(epochNumber, threshold)) {
         break;
+      }
+
+      // pop log.epochNumber === epochNumber which not confirmed
+      while (logs.length && lodash.last(logs).epochNumber === epochNumber) {
+        logs.pop();
       }
     }
 
@@ -56,9 +57,9 @@ class LogIterator extends LazyPromise {
       }
 
       await this._popUnconfirmed(logs, threshold); // logs will be change by `_popRisk`
-
       if (logs.length) {
         this._epoch = lodash.last(logs).epochNumber + 1;
+        this._count += logs.length;
         return logs;
       }
 

@@ -1,9 +1,9 @@
-const { assert } = require('../utils');
-const { Hex } = require('../utils/type');
+const { assert } = require('../util');
+const format = require('../util/format');
 
 const WORD_BYTES = 32;
 const BYTE_CHARS = 2; // 1 bytes === 2 hex char
-const ZERO_BUFFER = Hex.toBuffer('0x0000000000000000000000000000000000000000000000000000000000000000');
+const ZERO_BUFFER = format.buffer('0x0000000000000000000000000000000000000000000000000000000000000000');
 
 class HexStream {
   static from(hex) {
@@ -53,9 +53,7 @@ class HexStream {
 }
 
 function padBuffer(buffer, alignLeft = false) {
-  if (!Buffer.isBuffer(buffer)) {
-    buffer = Hex.toBuffer(buffer); // accept hex
-  }
+  buffer = format.buffer(buffer); // accept hex
 
   const count = WORD_BYTES - (buffer.length % WORD_BYTES);
   if (0 < count && count < WORD_BYTES) {

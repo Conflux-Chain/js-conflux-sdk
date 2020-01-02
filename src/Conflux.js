@@ -1,10 +1,8 @@
 const lodash = require('lodash');
-const { decorate } = require('./utils');
-const parse = require('./utils/parse');
-const { Hex, Address, EpochNumber, BlockHash, TxHash } = require('./utils/type');
+const { decorate } = require('./util');
+const format = require('./util/format');
 
 const providerFactory = require('./provider');
-const Transaction = require('./Transaction');
 const Contract = require('./contract');
 const Wallet = require('./wallet');
 const { PendingTransaction, LogIterator } = require('./subscribe');
@@ -16,7 +14,7 @@ class Conflux {
   /**
    * @param [options] {object} - Conflux and Provider constructor options.
    * @param [options.url=''] {string} - Url of provider to create.
-   * @param [options.defaultEpoch=EpochNumber.LATEST_STATE] {string|number} - Default epochNumber.
+   * @param [options.defaultEpoch="latest_state"] {string|number} - Default epochNumber.
    * @param [options.defaultGasPrice] {string|number|BigNumber} - The default gas price in drip to use for transactions.
    * @param [options.defaultGas] {string|number|BigNumber} - The default maximum gas provided for a transaction (gasLimit).
    *
@@ -34,7 +32,7 @@ class Conflux {
    */
   constructor({
     url = '',
-    defaultEpoch = EpochNumber.LATEST_STATE,
+    defaultEpoch = 'latest_state',
     defaultGasPrice,
     defaultGas,
     ...rest
@@ -130,7 +128,7 @@ class Conflux {
    */
   async getGasPrice() {
     const result = await this.provider.call('cfx_gasPrice');
-    return parse.bigNumber(result);
+    return format.bigNumber(result);
   }
 
   /**
@@ -143,9 +141,9 @@ class Conflux {
    * > await cfx.getEpochNumber();
    200109
    */
-  async getEpochNumber(epochNumber = EpochNumber.LATEST_MINED) {
-    const result = await this.provider.call('cfx_epochNumber', EpochNumber(epochNumber));
-    return parse.number(result);
+  async getEpochNumber(epochNumber = 'latest_mined') {
+    const result = await this.provider.call('cfx_epochNumber', format.epochNumber(epochNumber));
+    return format.number(result);
   }
 
   /**
@@ -241,9 +239,9 @@ class Conflux {
       throw new Error('Override waring, do not use `blockHashes` with `fromEpoch` or `toEpoch`, cause only `blockHashes` will take effect');
     }
 
-    const result = await this.provider.call('cfx_getLogs', parse.getLogs(options));
+    const result = await this.provider.call('cfx_getLogs', format.getLogs(options));
 
-    return parse.logs(result);
+    return format.logs(result);
   }
 
   // ------------------------------- address ----------------------------------
@@ -267,8 +265,8 @@ class Conflux {
    0
    */
   async getBalance(address, epochNumber = this.defaultEpoch) {
-    const result = await this.provider.call('cfx_getBalance', Address(address), EpochNumber(epochNumber));
-    return parse.bigNumber(result);
+    const result = await this.provider.call('cfx_getBalance', format.address(address), format.epochNumber(epochNumber));
+    return format.bigNumber(result);
   }
 
   /**
@@ -286,8 +284,8 @@ class Conflux {
    0
    */
   async getTransactionCount(address, epochNumber = this.defaultEpoch) {
-    const result = await this.provider.call('cfx_getTransactionCount', Address(address), EpochNumber(epochNumber));
-    return parse.number(result);
+    const result = await this.provider.call('cfx_getTransactionCount', format.address(address), format.epochNumber(epochNumber));
+    return format.number(result);
   }
 
   // -------------------------------- epoch -----------------------------------
@@ -295,7 +293,7 @@ class Conflux {
   // eslint-disable-next-line no-unused-vars
   async getRiskCoefficient(epochNumber) {
     // FIXME rpc not implement yet.
-    // const result = await this.provider.call('cfx_getRiskCoefficient', EpochNumber(epochNumber));
+    // const result = await this.provider.call('cfx_getRiskCoefficient', format.epochNumber(epochNumber));
     return 0;
   }
 
@@ -317,8 +315,8 @@ class Conflux {
     if (!lodash.isBoolean(detail)) {
       throw new Error('detail must be boolean');
     }
-    const result = await this.provider.call('cfx_getBlockByEpochNumber', EpochNumber(epochNumber), detail);
-    return (parse.block).or(parse.null)(result);
+    const result = await this.provider.call('cfx_getBlockByEpochNumber', format.epochNumber(epochNumber), detail);
+    return format.block.or(null)(result);
   }
 
   /**
@@ -338,7 +336,7 @@ class Conflux {
    ]
    */
   async getBlocksByEpochNumber(epochNumber) {
-    return this.provider.call('cfx_getBlocksByEpoch', EpochNumber(epochNumber));
+    return this.provider.call('cfx_getBlocksByEpoch', format.epochNumber(epochNumber));
   }
 
   // -------------------------------- block -----------------------------------
@@ -451,8 +449,8 @@ class Conflux {
     if (!lodash.isBoolean(detail)) {
       throw new Error('detail must be boolean');
     }
-    const result = await this.provider.call('cfx_getBlockByHash', BlockHash(blockHash), detail);
-    return (parse.block).or(parse.null)(result);
+    const result = await this.provider.call('cfx_getBlockByHash', format.blockHash(blockHash), detail);
+    return format.block.or(null)(result);
   }
 
   /**
@@ -476,9 +474,9 @@ class Conflux {
    */
   async getBlockByHashWithPivotAssumption(blockHash, pivotBlockHash, epochNumber) {
     const result = await this.provider.call('cfx_getBlockByHashWithPivotAssumption',
-      BlockHash(blockHash), BlockHash(pivotBlockHash), EpochNumber(epochNumber),
+      format.blockHash(blockHash), format.blockHash(pivotBlockHash), format.epochNumber(epochNumber),
     );
-    return parse.block(result);
+    return format.block(result);
   }
 
   // ----------------------------- transaction --------------------------------
@@ -524,8 +522,8 @@ class Conflux {
     }
    */
   async getTransactionByHash(txHash) {
-    const result = await this.provider.call('cfx_getTransactionByHash', TxHash(txHash));
-    return (parse.transaction).or(parse.null)(result);
+    const result = await this.provider.call('cfx_getTransactionByHash', format.txHash(txHash));
+    return format.transaction.or(null)(result);
   }
 
   /**
@@ -569,8 +567,8 @@ class Conflux {
    }
    */
   async getTransactionReceipt(txHash) {
-    const result = await this.provider.call('cfx_getTransactionReceipt', TxHash(txHash));
-    return (parse.receipt).or(parse.null)(result);
+    const result = await this.provider.call('cfx_getTransactionReceipt', format.txHash(txHash));
+    return format.receipt.or(null)(result);
   }
 
   /**
@@ -580,7 +578,7 @@ class Conflux {
    *
    * > NOTE: if `from` options is a instance of `Account`, this methods will sign by account local and send by `cfx_sendRawTransaction`, else send by `cfx_sendTransaction`
    *
-   * @param options {object} - See `Transaction.callOptions`
+   * @param options {object} - See `format.sendTx`
    * @return {Promise<PendingTransaction>} The PendingTransaction object.
    *
    * @example
@@ -672,11 +670,14 @@ class Conflux {
       options.nonce = await this.getTransactionCount(options.from);
     }
 
-    if (options.from instanceof Wallet.Account) { // sign by local
+    if (options.from instanceof Wallet.Account) {
+      // sign by local
       const tx = options.from.signTransaction(options);
       return this.sendRawTransaction(tx.serialize());
-    } // sign by remote
-    return this.provider.call('cfx_sendTransaction', Transaction.sendOptions(options));
+    }
+
+    // sign by remote
+    return this.provider.call('cfx_sendTransaction', format.sendTx(options));
   }
 
   /**
@@ -690,7 +691,7 @@ class Conflux {
    "0xbe007c3eca92d01f3917f33ae983f40681182cf618defe75f490a65aac016914"
    */
   async sendRawTransaction(hex) {
-    return this.provider.call('cfx_sendRawTransaction', Hex(hex));
+    return this.provider.call('cfx_sendRawTransaction', format.hex(hex));
   }
 
   // ------------------------------ contract ----------------------------------
@@ -706,14 +707,14 @@ class Conflux {
    "0x6080604052348015600f57600080fd5b506004361060325760003560e01c806306661abd1460375780638..."
    */
   async getCode(address, epochNumber = this.defaultEpoch) {
-    return this.provider.call('cfx_getCode', Address(address), EpochNumber(epochNumber));
+    return this.provider.call('cfx_getCode', format.address(address), format.epochNumber(epochNumber));
   }
 
   /**
    * Executes a message call transaction, which is directly executed in the VM of the node,
    * but never mined into the block chain.
    *
-   * @param options {object} - See `Transaction.callOptions`
+   * @param options {object} - See `format.sendTx`
    * @param [epochNumber=this.defaultEpoch] {string|number} - The end epochNumber to execute call of.
    * @return {Promise<string>} Hex bytes the contract method return.
    */
@@ -730,13 +731,13 @@ class Conflux {
       options.nonce = await this.getTransactionCount(options.from);
     }
 
-    return this.provider.call('cfx_call', Transaction.callOptions(options), EpochNumber(epochNumber));
+    return this.provider.call('cfx_call', format.callTx(options), format.epochNumber(epochNumber));
   }
 
   /**
    * Executes a message call or transaction and returns the amount of the gas used.
    *
-   * @param options {object} - See `Transaction.callOptions`
+   * @param options {object} - See `format.estimateTx`
    * @return {Promise<BigNumber>} The used gas for the simulated call/transaction.
    */
   async estimateGas(options) {
@@ -752,8 +753,8 @@ class Conflux {
       options.nonce = await this.getTransactionCount(options.from);
     }
 
-    const result = await this.provider.call('cfx_estimateGas', Transaction.estimateOptions(options));
-    return parse.bigNumber(result);
+    const result = await this.provider.call('cfx_estimateGas', format.estimateTx(options));
+    return format.bigNumber(result);
   }
 }
 

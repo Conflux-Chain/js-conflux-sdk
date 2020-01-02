@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const keccak = require('keccak');
 const secp256k1 = require('secp256k1');
+const { encode: rlpEncode } = require('./lib/rlp');
 // const scryptJs = require('scrypt.js'); // ^0.3.0. cause it's depends on python, might cause some problems
 
 // ----------------------------------------------------------------------------
@@ -167,7 +168,7 @@ function ecdsaRecover(hash, { r, s, v }) {
 //   const mac = sha3(Buffer.concat([derived.slice(16, 32), cipher]));
 //   return { salt, iv, cipher, mac };
 // }
-
+//
 // /**
 //  * @param options
 //  * @param options.salt {Buffer}
@@ -196,4 +197,5 @@ module.exports = {
   ecdsaRecover,
   // encrypt,
   // decrypt,
+  rlpEncode,
 };
