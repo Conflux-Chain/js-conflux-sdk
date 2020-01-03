@@ -4,11 +4,11 @@ const commonShake = require('common-shakeify');
 const fs = require('fs');
 const exorcist = require('exorcist');
 const esmify = require('esmify');
-const pkg = require('../package.json');
+const pkg = require('./package.json');
 
 const browserifyOptions = {
   debug: true, // gen inline sourcemap to extract with exorcist
-  standalone: 'ConfluxWeb', // generate a umd file to load directly into browser
+  standalone: 'Conflux', // generate a umd file to load directly into browser
   detectGlobals: true, // detect __diranme process global __filename
 };
 
