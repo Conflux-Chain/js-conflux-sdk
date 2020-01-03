@@ -3,8 +3,6 @@
 const Conflux = require('../src');
 const unit = require('../src/util/unit');
 
-const fromDripToCFX = unit.converter('drip', 'cfx');
-
 async function main() {
   const cfx = new Conflux({
     url: 'http://testnet-jsonrpc.conflux-chain.org:12537',
@@ -19,7 +17,7 @@ async function main() {
   const balance = await cfx.getBalance('0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b');
   console.log(balance); // BigNumber
   console.log(balance.toString()); // 999999889185008600
-  console.log(fromDripToCFX(balance).toString()); // 0.9999998891850086
+  console.log(unit.fromDripToCFX(balance).toString()); // 0.9999998891850086
 
   console.log(await cfx.getTransactionCount('0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b'));
 

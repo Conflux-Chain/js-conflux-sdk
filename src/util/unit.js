@@ -7,20 +7,20 @@ const UNIT_MATRIX = {
 };
 
 /**
- * Unit transfer function factory
+ * Unit converter factory
  *
  * @param from {string} - Enum in ['cfx', 'gdrip', 'drip']
  * @param to {string} - Enum in ['cfx', 'gdrip', 'drip']
  * @return {function}
  *
  * @example
- * > converter('cfx', 'drip')(1)
+ * > unit('cfx', 'drip')(1)
  "1000000000000000000" // BigNumber
 
- * > converter('drip', 'cfx')(1)
+ * > unit('drip', 'cfx')(1)
  "0.000000000000000001" // BigNumber
  */
-function converter(from, to) {
+function unit(from, to) {
   const keys = Object.keys(UNIT_MATRIX);
   if (!keys.includes(from)) {
     throw new Error(`"from" must in ${JSON.stringify(keys)}, got "${from}"`);
@@ -31,18 +31,65 @@ function converter(from, to) {
   return value => format.bigNumber(value).times(UNIT_MATRIX[from][to]);
 }
 
-module.exports = {
-  converter,
+// ----------------------------------------------------------------------------
+/**
+ * @param {number|BigNumber|string}
+ * @return {BigNumber}
+ *
+ * @example
+ * > fromCFXToGDrip(3.14)
+ "3140000000"
+ */
+unit.fromCFXToGDrip = unit('cfx', 'gdrip');
 
-  fromCFXToCFX: converter('cfx', 'cfx'),
-  fromCFXToGDrip: converter('cfx', 'gdrip'),
-  fromCFXToDrip: converter('cfx', 'drip'),
+/**
+ * @param {number|BigNumber|string}
+ * @return {BigNumber}
+ *
+ * @example
+ * > fromCFXToDrip(3.14)
+ "3140000000000000000"
+ */
+unit.fromCFXToDrip = unit('cfx', 'drip');
 
-  fromGDripToCFX: converter('gdrip', 'cfx'),
-  fromGDripToGDrip: converter('gdrip', 'gdrip'),
-  fromGDripToDrip: converter('gdrip', 'drip'),
+/**
+ * @param {number|BigNumber|string}
+ * @return {BigNumber}
+ *
+ * @example
+ * > fromGDripToCFX(3.14)
+ "0.00000000314"
+ */
+unit.fromGDripToCFX = unit('gdrip', 'cfx');
 
-  fromDripToCFX: converter('drip', 'cfx'),
-  fromDripToGDrip: converter('drip', 'gdrip'),
-  fromDripToDrip: converter('drip', 'drip'),
-};
+/**
+ * @param {number|BigNumber|string}
+ * @return {BigNumber}
+ *
+ * @example
+ * > fromGDripToDrip(3.14)
+ "3140000000"
+ */
+unit.fromGDripToDrip = unit('gdrip', 'drip');
+
+/**
+ * @param {number|BigNumber|string}
+ * @return {BigNumber}
+ *
+ * @example
+ * > fromDripToCFX(3.14)
+ "0.00000000000000000314"
+ */
+unit.fromDripToCFX = unit('drip', 'cfx');
+
+/**
+ * @param {number|BigNumber|string}
+ * @return {BigNumber}
+ *
+ * @example
+ * > fromDripToGDrip(3.14)
+ "0.00000000314"
+ */
+unit.fromDripToGDrip = unit('drip', 'gdrip');
+
+module.exports = unit;

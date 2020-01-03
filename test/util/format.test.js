@@ -97,14 +97,14 @@ test('bigNumber', () => {
   expect(() => format.bigNumber(null)).toThrow('not match bigNumber');
 });
 
-test('bigUInt', () => {
-  expect(format.bigUInt(100)).toEqual('0x64');
-  expect(format.bigUInt(BigNumber(10))).toEqual('0x0a');
-  expect(format.bigUInt(3.50)).toEqual('0x04');
-  expect(format.bigUInt(3.49)).toEqual('0x03');
-  expect(format.bigUInt(-0.49)).toEqual('0x00');
-  expect(() => format.bigUInt(-0.5)).toThrow('not match hex');
-  expect(() => format.bigUInt(-1)).toThrow('not match hex');
+test('hexNumber', () => {
+  expect(format.hexNumber(100)).toEqual('0x64');
+  expect(format.hexNumber(BigNumber(10))).toEqual('0xa');
+  expect(format.hexNumber(3.50)).toEqual('0x4');
+  expect(format.hexNumber(3.49)).toEqual('0x3');
+  expect(format.hexNumber(-0.49)).toEqual('0x0');
+  expect(() => format.hexNumber(-0.5)).toThrow('not match hexNumber');
+  expect(() => format.hexNumber(-1)).toThrow('not match hexNumber');
 });
 
 test('epochNumber', () => {

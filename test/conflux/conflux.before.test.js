@@ -201,9 +201,9 @@ test('sendTransaction by address', async () => {
   cfx.provider.call = async (method, options) => {
     expect(method).toEqual('cfx_sendTransaction');
     expect(options.from).toEqual(ADDRESS);
-    expect(options.nonce).toEqual('0x00');
-    expect(options.gasPrice).toEqual(format.hex(cfx.defaultGasPrice));
-    expect(options.gas).toEqual(format.hex(cfx.defaultGas));
+    expect(options.nonce).toEqual('0x0');
+    expect(options.gasPrice).toEqual(format.hexNumber(cfx.defaultGasPrice));
+    expect(options.gas).toEqual(format.hexNumber(cfx.defaultGas));
     expect(options.to).toEqual(undefined);
     expect(options.value).toEqual(undefined);
     expect(options.data).toEqual(undefined);
@@ -216,10 +216,10 @@ test('sendTransaction by address', async () => {
     expect(method).toEqual('cfx_sendTransaction');
     expect(options.from).toEqual(ADDRESS);
     expect(options.nonce).toEqual('0x64');
-    expect(options.gasPrice).toEqual(format.hex(cfx.defaultGasPrice));
-    expect(options.gas).toEqual('0x01');
+    expect(options.gasPrice).toEqual(format.hexNumber(cfx.defaultGasPrice));
+    expect(options.gas).toEqual('0x1');
     expect(options.to).toEqual(ADDRESS);
-    expect(options.value).toEqual('0x00');
+    expect(options.value).toEqual('0x0');
     expect(options.data).toEqual('0x');
     return TX_HASH;
   };
@@ -294,8 +294,8 @@ test('call', async () => {
 
     expect(options.from).toEqual(undefined);
     expect(options.nonce).toEqual(undefined);
-    expect(options.gasPrice).toEqual(format.hex(cfx.defaultGasPrice));
-    expect(options.gas).toEqual(format.hex(cfx.defaultGas));
+    expect(options.gasPrice).toEqual(format.hexNumber(cfx.defaultGasPrice));
+    expect(options.gas).toEqual(format.hexNumber(cfx.defaultGas));
     expect(options.to).toEqual(ADDRESS);
     expect(options.value).toEqual(undefined);
     expect(options.data).toEqual(undefined);
@@ -309,8 +309,8 @@ test('call', async () => {
 
     expect(options.from).toEqual(ADDRESS);
     expect(options.nonce).toEqual('0x64');
-    expect(options.gasPrice).toEqual(format.hex(cfx.defaultGasPrice));
-    expect(options.gas).toEqual('0x01');
+    expect(options.gasPrice).toEqual(format.hexNumber(cfx.defaultGasPrice));
+    expect(options.gas).toEqual('0x1');
     expect(options.to).toEqual(ADDRESS);
     expect(options.value).toEqual('0x64');
     expect(options.data).toEqual('0x');
@@ -322,7 +322,7 @@ test('call', async () => {
       from: format.buffer(ADDRESS),
       to: format.buffer(ADDRESS),
       gas: BigNumber(1),
-      value: '100',
+      value: 100,
       data: '0x',
     },
     'latest_mined',
@@ -342,8 +342,8 @@ test('estimateGas', async () => {
 
     expect(options.from).toEqual(undefined);
     expect(options.nonce).toEqual(undefined);
-    expect(options.gasPrice).toEqual(format.hex(cfx.defaultGasPrice));
-    expect(options.gas).toEqual(format.hex(cfx.defaultGas));
+    expect(options.gasPrice).toEqual(format.hexNumber(cfx.defaultGasPrice));
+    expect(options.gas).toEqual(format.hexNumber(cfx.defaultGas));
     expect(options.to).toEqual(ADDRESS);
     expect(options.value).toEqual(undefined);
     expect(options.data).toEqual(undefined);
@@ -356,8 +356,8 @@ test('estimateGas', async () => {
 
     expect(options.from).toEqual(ADDRESS);
     expect(options.nonce).toEqual('0x64');
-    expect(options.gasPrice).toEqual(format.hex(cfx.defaultGasPrice));
-    expect(options.gas).toEqual('0x01');
+    expect(options.gasPrice).toEqual(format.hexNumber(cfx.defaultGasPrice));
+    expect(options.gas).toEqual('0x1');
     expect(options.to).toEqual(ADDRESS);
     expect(options.value).toEqual('0x64');
     expect(options.data).toEqual('0x');
@@ -368,7 +368,7 @@ test('estimateGas', async () => {
       from: format.buffer(ADDRESS),
       to: format.buffer(ADDRESS),
       gas: BigNumber(1),
-      value: '100',
+      value: 100,
       data: '0x',
     },
   );

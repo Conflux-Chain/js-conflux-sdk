@@ -11,13 +11,13 @@ A sdk of conflux.
 
 ### Parameters
 
-Name                    | Type                    | Required | Default                  | Description
-------------------------|-------------------------|----------|--------------------------|---------------------------------------------------------------
-options                 | object                  | false    |                          | Conflux and Provider constructor options.
-options.url             | string                  | false    | ''                       | Url of provider to create.
-options.defaultEpoch    | string,number           | false    | EpochNumber.LATEST_STATE | Default epochNumber.
-options.defaultGasPrice | string,number,BigNumber | false    |                          | The default gas price in drip to use for transactions.
-options.defaultGas      | string,number,BigNumber | false    |                          | The default maximum gas provided for a transaction (gasLimit).
+Name                    | Type                    | Required | Default        | Description
+------------------------|-------------------------|----------|----------------|---------------------------------------------------------------
+options                 | object                  | false    |                | Conflux and Provider constructor options.
+options.url             | string                  | false    | ''             | Url of provider to create.
+options.defaultEpoch    | string,number           | false    | "latest_state" | Default epochNumber.
+options.defaultGasPrice | string,number,BigNumber | false    |                | The default gas price in drip to use for transactions.
+options.defaultGas      | string,number,BigNumber | false    |                | The default maximum gas provided for a transaction (gasLimit).
 
 ### Return
 
@@ -122,9 +122,9 @@ Returns the current epochNumber the client is on.
 
 ### Parameters
 
-Name        | Type          | Required | Default | Description
-------------|---------------|----------|---------|-----------------------------------------
-epochNumber | string,number | false    |         | The end epochNumber to count balance of.
+Name        | Type          | Required | Default      | Description
+------------|---------------|----------|--------------|-----------------------------------------
+epochNumber | string,number | false    | latest_mined | The end epochNumber to count balance of.
 
 ### Return
 
@@ -593,8 +593,8 @@ Creates new message call transaction or a contract creation, if the data field c
 ### Parameters
 
 Name    | Type   | Required | Default | Description
---------|--------|----------|---------|------------------------------
-options | object | true     |         | See `Transaction.callOptions`
+--------|--------|----------|---------|--------------------
+options | object | true     |         | See `format.sendTx`
 
 ### Return
 
@@ -723,7 +723,7 @@ but never mined into the block chain.
 
 Name        | Type          | Required | Default           | Description
 ------------|---------------|----------|-------------------|----------------------------------------
-options     | object        | true     |                   | See `Transaction.callOptions`
+options     | object        | true     |                   | See `format.sendTx`
 epochNumber | string,number | false    | this.defaultEpoch | The end epochNumber to execute call of.
 
 ### Return
@@ -738,8 +738,8 @@ Executes a message call or transaction and returns the amount of the gas used.
 ### Parameters
 
 Name    | Type   | Required | Default | Description
---------|--------|----------|---------|------------------------------
-options | object | true     |         | See `Transaction.callOptions`
+--------|--------|----------|---------|------------------------
+options | object | true     |         | See `format.estimateTx`
 
 ### Return
 
@@ -886,13 +886,22 @@ method    | string | true     |         | Json rpc method name.
 
 ## Transaction.constructor
 
-Signs a transaction. This account needs to be unlocked.
+Create a transaction.
 
 ### Parameters
 
-Name    | Type   | Required | Default | Description
---------|--------|----------|---------|-----------------------------
-options | object | true     |         | See `Transaction.rawOptions`
+Name             | Type                    | Required | Default | Description
+-----------------|-------------------------|----------|---------|------------------------------------------------------------------------------------------------------------------------------------------------------------
+options          | object                  | true     |         |
+options.nonce    | string,number           | true     |         | This allows to overwrite your own pending transactions that use the same nonce.
+options.gasPrice | string,number,BigNumber | true     |         | The price of gas for this transaction in drip.
+options.gas      | string,number           | true     |         | The amount of gas to use for the transaction (unused gas is refunded).
+options.to       | string                  | false    |         | The destination address of the message, left undefined for a contract-creation transaction.
+options.value    | string,number,BigNumber | false    | 0       | The value transferred for the transaction in drip, also the endowment if it’s a contract-creation transaction.
+options.data     | string,Buffer           | false    | '0x'    | Either a ABI byte string containing the data of the function call on a contract, or in the case of a contract-creation transaction the initialisation code.
+options.r        | string,Buffer           | false    |         | ECDSA signature r
+options.s        | string,Buffer           | false    |         | ECDSA signature s
+options.v        | number                  | false    |         | ECDSA recovery id
 
 ### Return
 
@@ -972,173 +981,47 @@ Get the raw tx hex string.
 `Buffer` 
 
 
-## Transaction.sendOptions
-
-
-
-### Parameters
-
-Name             | Type                    | Required | Default | Description
------------------|-------------------------|----------|---------|----------------------------------------------------------------------------------------------------
-options          | object                  | true     |         |
-options.from     | string                  | true     |         | The address the transaction is send from.
-options.nonce    | string,number           | true     |         | This allows to overwrite your own pending transactions that use the same nonce.
-options.gasPrice | string,number           | true     |         | The gasPrice used for each paid gas.
-options.gas      | string,number           | true     |         | The gas provided for the transaction execution. It will return unused gas.
-options.to       | string                  | false    |         | The address the transaction is directed to.
-options.value    | string,number,BigNumber | false    |         | the value sent with this transaction
-options.data     | string,Buffer           | false    | ''      | The compiled code of a contract OR the hash of the invoked method signature and encoded parameters.
-
-### Return
-
-`object` Formatted send transaction options object.
-
-
-## Transaction.callOptions
-
-
-
-### Parameters
-
-Name             | Type                    | Required | Default | Description
------------------|-------------------------|----------|---------|-------------------------------------------------------------------------------------------------------------------------------
-options          | object                  | true     |         |
-options.from     | string                  | false    |         | The address the transaction is sent from.
-options.nonce    | string,number           | false    |         | The caller nonce (transaction count).
-options.gasPrice | string,number           | false    |         | The gasPrice used for each paid gas.
-options.gas      | string,number           | false    |         | The gas provided for the transaction execution. `call` consumes zero gas, but this parameter may be needed by some executions.
-options.to       | string                  | true     |         | The address the transaction is directed to.
-options.value    | string,number,BigNumber | false    |         | Integer of the value sent with this transaction.
-options.data     | string,Buffer           | false    |         | Hash of the method signature and encoded parameters.
-
-### Return
-
-`object` Formatted call contract options object.
-
-
-## Transaction.estimateOptions
-
-
-
-### Parameters
-
-Name             | Type                    | Required | Default | Description
------------------|-------------------------|----------|---------|-------------------------------------------------------------------------------------------------------------------------------
-options          | object                  | true     |         |
-options.from     | string                  | false    |         | The address the transaction is sent from.
-options.nonce    | string,number           | false    |         | The caller nonce (transaction count).
-options.gasPrice | string,number           | false    |         | The gasPrice used for each paid gas.
-options.gas      | string,number           | false    |         | The gas provided for the transaction execution. `call` consumes zero gas, but this parameter may be needed by some executions.
-options.to       | string                  | false    |         | The address the transaction is directed to.
-options.value    | string,number,BigNumber | false    |         | Integer of the value sent with this transaction.
-options.data     | string,Buffer           | false    |         | Hash of the method signature and encoded parameters.
-
-### Return
-
-`object` Formatted call contract options object.
-
-
-## Transaction.rawOptions
-
-
-
-### Parameters
-
-Name             | Type                    | Required | Default | Description
------------------|-------------------------|----------|---------|------------------------------------------------------------------------------------------------------------------------------------------------------------
-options          | object                  | true     |         |
-options.nonce    | string,number           | true     |         | This allows to overwrite your own pending transactions that use the same nonce.
-options.gasPrice | string,number,BigNumber | true     |         | The price of gas for this transaction in drip.
-options.gas      | string,number           | true     |         | The amount of gas to use for the transaction (unused gas is refunded).
-options.to       | string                  | false    |         | The destination address of the message, left undefined for a contract-creation transaction.
-options.value    | string,number,BigNumber | false    | 0       | The value transferred for the transaction in drip, also the endowment if it’s a contract-creation transaction.
-options.data     | string,Buffer           | false    | ''      | Either a ABI byte string containing the data of the function call on a contract, or in the case of a contract-creation transaction the initialisation code.
-options.r        | string,Buffer           | false    |         | ECDSA signature r
-options.s        | string,Buffer           | false    |         | ECDSA signature s
-options.v        | string,number           | false    |         | ECDSA recovery id
-
-### Return
-
-`object` Formatted sign transaction options object.
-
-
 ----------
-# utils.type
+# util.format
 
 
 
-## type.EpochNumber.LATEST_STATE
 
-The latest epochNumber where the latest block with an executed state in.
-`string`
+## format.hex
 
-
-## type.EpochNumber.LATEST_MINED
-
-The latest epochNumber where the latest mined block in.
-`string`
-
-
-## type.Hex
-
-Hex formatter, trans value to hex string
+When encoding UNFORMATTED DATA (byte arrays, account addresses, hashes, bytecode arrays): encode as hex, prefix with "0x", two hex digits per byte.
 
 ### Parameters
 
-Name  | Type                                     | Required | Default | Description
-------|------------------------------------------|----------|---------|-----------------------------
-value | string,number,Buffer,Date,BigNumber,null | true     |         | The value to gen hex string.
+Name | Type                                        | Required | Default | Description
+-----|---------------------------------------------|----------|---------|------------
+arg  | number,BigNumber,string,Buffer,boolean,null | true     |         |
 
 ### Return
 
-`string` Hex string.
+`string` Hex string
 
 ### Example
 
 ```
-> Hex(null)
- "0x"> Hex(1) // also BigNumber
- "0x01"> Hex('10') // from naked hex string
- "0x10"> Hex('0x1') // pad prefix 0 auto
- "0x01"> Hex(Buffer.from([1, 2]))
- "0x0102"
+> format.hex(null)
+ '0x'> format.hex(1)
+ "0x01"> format.hex(BigNumber(256))
+ "0x0100"> format.hex(true)
+ "0x01"> format.hex(Buffer.from([1,10,255]))
+ "0x010aff"> format.hex("0x0a")
+ "0x0a"
 ```
 
-## type.Hex.isHex
+## format.epochNumber
 
-Check if is hex string.
 
-> Hex: /^0x([0-9a-f][0-9a-f])*$/
 
 ### Parameters
 
-Name | Type   | Required | Default | Description
------|--------|----------|---------|-------------------
-hex  | string | true     |         | Value to be check.
-
-### Return
-
-`boolean` 
-
-### Example
-
-```
-> Hex.isHex('0x')
- true> Hex.isHex('0x01')
- true> Hex.isHex('0x1')
- false> Hex.isHex('01')
- false
-```
-
-## type.Hex.fromNumber
-
-Get hex string from number.
-
-### Parameters
-
-Name  | Type                    | Required | Default | Description
-------|-------------------------|----------|---------|------------
-value | number,BigNumber,string | true     |         |
+Name | Type          | Required | Default | Description
+-----|---------------|----------|---------|-----------------------------------------------------
+arg  | number,string | true     |         | number or string in ['latest_state', 'latest_mined']
 
 ### Return
 
@@ -1147,22 +1030,207 @@ value | number,BigNumber,string | true     |         |
 ### Example
 
 ```
-> Hex.fromNumber('10')
- "0x0a"> Hex('10')
- "0x10"
+> format.epochNumber(10)
+ "0x0a"> format.epochNumber('latest_state')
+ "latest_state"> format.epochNumber('latest_mined')
+ "latest_state"
 ```
 
-## type.Hex.toBuffer
+## format.address
 
-Get `Buffer` by `Hex` string.
 
-> NOTE: It's importance to only support `Hex` string, cause `Transaction.encode` will not check hex again.
 
 ### Parameters
 
-Name | Type   | Required | Default | Description
------|--------|----------|---------|----------------
-hex  | string | true     |         | The hex string.
+Name | Type          | Required | Default | Description
+-----|---------------|----------|---------|------------
+arg  | string,Buffer | true     |         |
+
+### Return
+
+`string` Hex string
+
+### Example
+
+```
+> format.address('0x0123456789012345678901234567890123456789')
+ "0x0123456789012345678901234567890123456789"> format.address('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
+ Error("not match hex40")
+```
+
+## format.privateKey
+
+
+
+### Parameters
+
+Name | Type          | Required | Default | Description
+-----|---------------|----------|---------|------------
+arg  | string,Buffer | true     |         |
+
+### Return
+
+`string` Hex string
+
+### Example
+
+```
+> format.privateKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
+ "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"> format.privateKey('0x0123456789012345678901234567890123456789')
+ Error("not match hex64")
+```
+
+## format.blockHash
+
+
+
+### Parameters
+
+Name | Type          | Required | Default | Description
+-----|---------------|----------|---------|------------
+arg  | string,Buffer | true     |         |
+
+### Return
+
+`string` Hex string
+
+### Example
+
+```
+> format.privateKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
+ "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"> format.privateKey('0x0123456789012345678901234567890123456789')
+ Error("not match hex64")
+```
+
+## format.txHash
+
+
+
+### Parameters
+
+Name | Type          | Required | Default | Description
+-----|---------------|----------|---------|------------
+arg  | string,Buffer | true     |         |
+
+### Return
+
+`string` Hex string
+
+### Example
+
+```
+> format.privateKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
+ "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"> format.privateKey('0x0123456789012345678901234567890123456789')
+ Error("not match hex64")
+```
+
+## format.number
+
+
+
+### Parameters
+
+Name | Type                            | Required | Default | Description
+-----|---------------------------------|----------|---------|------------
+arg  | number,BigNumber,string,boolean | true     |         |
+
+### Return
+
+`Number` 
+
+### Example
+
+```
+> format.number(-3.14)
+ -3.14> format.number('-3.14')
+ -3.14> format.number('0x10')
+ 16format.number(true)
+ 1
+```
+
+## format.uint
+
+
+
+### Parameters
+
+Name | Type                            | Required | Default | Description
+-----|---------------------------------|----------|---------|------------
+arg  | number,BigNumber,string,boolean | true     |         |
+
+### Return
+
+`Number` 
+
+### Example
+
+```
+> format.uint(-3.14)
+ Error("not match uint")> format.uint(10)
+ 10> format.uint(BigNumber(100))
+ 100> format.uint('0x10')
+ 16> format.uint(Number.MAX_SAFE_INTEGER + 1) // unsafe integer
+ Error("not match uint")
+```
+
+## format.bigNumber
+
+
+
+### Parameters
+
+Name | Type                            | Required | Default | Description
+-----|---------------------------------|----------|---------|------------
+arg  | number,BigNumber,string,boolean | true     |         |
+
+### Return
+
+`BigNumber` 
+
+### Example
+
+```
+> format.bigNumber(-3.14)
+ "-3.14"> format.bigNumber('-3.14')
+ "-3.14"> format.bigNumber('0x10')
+ "16"format.bigNumber(true)
+ "1"
+```
+
+## format.hexNumber
+
+When encoding QUANTITIES (integers, numbers): encode as hex, prefix with "0x", the most compact representation (slight exception: zero should be represented as "0x0")
+
+### Parameters
+
+Name | Type                            | Required | Default | Description
+-----|---------------------------------|----------|---------|------------
+arg  | number,BigNumber,string,boolean | true     |         |
+
+### Return
+
+`string` Hex string
+
+### Example
+
+```
+> format.hexNumber(100)
+ "0x64"> format.hexNumber(BigNumber(10))
+ "0xa"> format.hexNumber(3.50)
+ "0x4"> format.hexNumber(3.49)
+ "0x3"> format.hexNumber(-1))
+ Error("not match hexNumber")
+```
+
+## format.buffer
+
+
+
+### Parameters
+
+Name | Type                                        | Required | Default | Description
+-----|---------------------------------------------|----------|---------|------------
+arg  | number,BigNumber,string,Buffer,boolean,null | true     |         |
 
 ### Return
 
@@ -1171,214 +1239,30 @@ hex  | string | true     |         | The hex string.
 ### Example
 
 ```
-> Hex.toBuffer('0x0102')
- <Buffer 01 02>
+> format.buffer(Buffer.from([0, 1]))
+ <Buffer 00 01>> format.buffer(null)
+ <Buffer >> format.buffer(1024)
+ <Buffer 04 00>> format.buffer('0x0a')
+ <Buffer 0a>> format.buffer(true)
+ <Buffer 01>> format.buffer(3.14)
+ Error("not match hex")
 ```
 
-## type.Hex.concat
+----------
+# util.unit
 
-Concat `Hex` string by order.
 
-### Parameters
 
-Name   | Type  | Required | Default | Description
--------|-------|----------|---------|--------------------
-values | array | true     |         | Array of hex string
 
-### Return
-
-`string` 
-
-### Example
-
-```
-> Hex.concat('0x01', '0x02', '0x0304')
- "0x01020304"> Hex.concat()
- "0x"
-```
-
-## type.Address
-
-Get and validate `Address` from value
-
-### Parameters
-
-Name  | Type                           | Required | Default | Description
-------|--------------------------------|----------|---------|------------
-value | string,number,Buffer,BigNumber | true     |         |
-
-### Return
-
-`string` 
-
-### Example
-
-```
-> Address('0123456789012345678901234567890123456789')
- "0x0123456789012345678901234567890123456789"
-```
-
-## type.Hex32
+## unit.fromCFXToGDrip
 
 
 
 ### Parameters
 
-Name  | Type                           | Required | Default | Description
-------|--------------------------------|----------|---------|------------
-value | string,number,Buffer,BigNumber | true     |         |
-
-### Return
-
-`string` 
-
-### Example
-
-```
-> Hex32('0123456789012345678901234567890123456789012345678901234567890123')
- "0x0123456789012345678901234567890123456789012345678901234567890123"
-```
-
-## type.PrivateKey
-
-Get and validate `PrivateKey` from value.
-
-> same as `Hex32` in coincidence
-
-### Parameters
-
-Name  | Type                           | Required | Default | Description
-------|--------------------------------|----------|---------|------------
-value | string,number,Buffer,BigNumber | true     |         |
-
-### Return
-
-`string` 
-
-
-## type.BlockHash
-
-Get and validate `BlockHash` from value
-
-> same as `Hex32` in coincidence
-
-### Parameters
-
-Name  | Type                           | Required | Default | Description
-------|--------------------------------|----------|---------|------------
-value | string,number,Buffer,BigNumber | true     |         |
-
-### Return
-
-`string` 
-
-
-## type.TxHash
-
-Get and validate `TxHash` from value
-
-> same as `Hex32` in coincidence
-
-### Parameters
-
-Name  | Type                           | Required | Default | Description
-------|--------------------------------|----------|---------|------------
-value | string,number,Buffer,BigNumber | true     |         |
-
-### Return
-
-`string` 
-
-### Example
-
-```
-> TxHash('0123456789012345678901234567890123456789012345678901234567890123')
- "0x0123456789012345678901234567890123456789012345678901234567890123"
-```
-
-## type.Drip
-
-
-
-### Parameters
-
-Name  | Type                           | Required | Default | Description
-------|--------------------------------|----------|---------|------------
-value | string,number,Buffer,BigNumber | true     |         |
-
-### Return
-
-`string` 
-
-### Example
-
-```
-> Drip(1)
- "0x01"
-```
-
-```
-> Drip.toGDrip(Drip.fromCFX(1));
- "1000000000"
-```
-
-## type.Drip.fromGDrip
-
-Get Drip hex string by GDrip value.
-
-> NOTE: Rounds towards nearest neighbour. If equidistant, rounds towards zero.
-
-### Parameters
-
-Name  | Type                    | Required | Default | Description
-------|-------------------------|----------|---------|----------------
-value | string,number,BigNumber | true     |         | Value in GDrip.
-
-### Return
-
-`string` Hex string in drip.
-
-### Example
-
-```
-> Drip.fromGDrip(1)
- "0x3b9aca00"> Drip.fromGDrip(0.1)
- "0x05f5e100"
-```
-
-## type.Drip.fromCFX
-
-Get Drip hex string by CFX value.
-
-> NOTE: Rounds towards nearest neighbour. If equidistant, rounds towards zero.
-
-### Parameters
-
-Name  | Type                    | Required | Default | Description
-------|-------------------------|----------|---------|--------------
-value | string,number,BigNumber | true     |         | Value in CFX.
-
-### Return
-
-`string` Hex string in drip.
-
-### Example
-
-```
-> Drip.fromCFX(1)
- "0x0de0b6b3a7640000"> Drip.fromCFX(0.1)
- "0x016345785d8a0000"
-```
-
-## type.Drip.toGDrip
-
-Get `GDrip` from Drip.
-
-### Parameters
-
-Name  | Type                    | Required | Default | Description
-------|-------------------------|----------|---------|------------
-value | string,number,BigNumber | true     |         |
+Name | Type                    | Required | Default | Description
+-----|-------------------------|----------|---------|------------
+     | number,BigNumber,string | true     |         |
 
 ### Return
 
@@ -1387,20 +1271,19 @@ value | string,number,BigNumber | true     |         |
 ### Example
 
 ```
-> Drip.toGDrip(1e9)
- "1"> Drip.toGDrip(Drip.fromCFX(1))
- "1000000000"
+> fromCFXToGDrip(3.14)
+ "3140000000"
 ```
 
-## type.Drip.toCFX
+## unit.fromCFXToDrip
 
-Get `CFX` from Drip.
+
 
 ### Parameters
 
-Name  | Type                    | Required | Default | Description
-------|-------------------------|----------|---------|------------
-value | string,number,BigNumber | true     |         |
+Name | Type                    | Required | Default | Description
+-----|-------------------------|----------|---------|------------
+     | number,BigNumber,string | true     |         |
 
 ### Return
 
@@ -1409,32 +1292,115 @@ value | string,number,BigNumber | true     |         |
 ### Example
 
 ```
-> Drip.toCFX(1e18)
- "1"> Drip.toCFX(Drip.fromGDrip(1e9))
- "1"
+> fromCFXToDrip(3.14)
+ "3140000000000000000"
 ```
 
-## type.EpochNumber
+## unit.fromGDripToCFX
 
-Get and validate `EpochNumber` from value
+
 
 ### Parameters
 
-Name  | Type                           | Required | Default | Description
-------|--------------------------------|----------|---------|------------
-value | string,number,Buffer,BigNumber | true     |         |
+Name | Type                    | Required | Default | Description
+-----|-------------------------|----------|---------|------------
+     | number,BigNumber,string | true     |         |
 
 ### Return
 
-`string` 
+`BigNumber` 
 
 ### Example
 
 ```
-> EpochNumber(0)
- "0x00"> EpochNumber('100')
- "0x64"> EpochNumber('LATEST_STATE')
- "latest_state"
+> fromGDripToCFX(3.14)
+ "0.00000000314"
+```
+
+## unit.fromGDripToDrip
+
+
+
+### Parameters
+
+Name | Type                    | Required | Default | Description
+-----|-------------------------|----------|---------|------------
+     | number,BigNumber,string | true     |         |
+
+### Return
+
+`BigNumber` 
+
+### Example
+
+```
+> fromGDripToDrip(3.14)
+ "3140000000"
+```
+
+## unit.fromDripToCFX
+
+
+
+### Parameters
+
+Name | Type                    | Required | Default | Description
+-----|-------------------------|----------|---------|------------
+     | number,BigNumber,string | true     |         |
+
+### Return
+
+`BigNumber` 
+
+### Example
+
+```
+> fromDripToCFX(3.14)
+ "0.00000000000000000314"
+```
+
+## unit.fromDripToGDrip
+
+
+
+### Parameters
+
+Name | Type                    | Required | Default | Description
+-----|-------------------------|----------|---------|------------
+     | number,BigNumber,string | true     |         |
+
+### Return
+
+`BigNumber` 
+
+### Example
+
+```
+> fromDripToGDrip(3.14)
+ "0.00000000314"
+```
+
+## unit.unit
+
+Unit converter factory
+
+### Parameters
+
+Name | Type   | Required | Default | Description
+-----|--------|----------|---------|---------------------------------
+from | string | true     |         | Enum in ['cfx', 'gdrip', 'drip']
+to   | string | true     |         | Enum in ['cfx', 'gdrip', 'drip']
+
+### Return
+
+`function` 
+
+### Example
+
+```
+> unit('cfx', 'drip')(1)
+ "1000000000000000000" // BigNumber> unit('drip', 'cfx')(1)
+ "0.000000000000000001" // BigNumber
 ```
 
 ----------

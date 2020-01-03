@@ -76,21 +76,182 @@ function toBigNumber(value) {
 // ----------------------------------------------------------------------------
 const format = {};
 
+/**
+ * When encoding UNFORMATTED DATA (byte arrays, account addresses, hashes, bytecode arrays): encode as hex, prefix with "0x", two hex digits per byte.
+ *
+ * @param arg {number|BigNumber|string|Buffer|boolean|null}
+ * @return {string} Hex string
+ *
+ * @example
+ * > format.hex(null)
+ '0x'
+ * > format.hex(1)
+ "0x01"
+ * > format.hex(BigNumber(256))
+ "0x0100"
+ * > format.hex(true)
+ "0x01"
+ * > format.hex(Buffer.from([1,10,255]))
+ "0x010aff"
+ * > format.hex("0x0a")
+ "0x0a"
+ */
 format.hex = Parser(toHex);
 format.hex40 = format.hex.validate(v => v.length === 2 + 40, 'hex40');
 format.hex64 = format.hex.validate(v => v.length === 2 + 64, 'hex64');
-format.epochNumber = format.hex.or('latest_mined').or('latest_state');
+
+/**
+ * @param arg {number|string} - number or string in ['latest_state', 'latest_mined']
+ * @return {string}
+ *
+ * @example
+ * > format.epochNumber(10)
+ "0x0a"
+ * > format.epochNumber('latest_state')
+ "latest_state"
+ * > format.epochNumber('latest_mined')
+ "latest_state"
+ */
+format.epochNumber = format.hex.or('latest_state').or('latest_mined');
+
+/**
+ * @param arg {string|Buffer}
+ * @return {string} Hex string
+ *
+ * @example
+ * > format.address('0x0123456789012345678901234567890123456789')
+ "0x0123456789012345678901234567890123456789"
+ * > format.address('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
+ Error("not match hex40")
+ */
 format.address = format.hex40; // alias
+
+/**
+ * @param arg {string|Buffer}
+ * @return {string} Hex string
+ *
+ * @example
+ * > format.privateKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
+ "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+ * > format.privateKey('0x0123456789012345678901234567890123456789')
+ Error("not match hex64")
+ */
 format.privateKey = format.hex64; // alias
+
+/**
+ * @param arg {string|Buffer}
+ * @return {string} Hex string
+ *
+ * @example
+ * > format.privateKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
+ "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+ * > format.privateKey('0x0123456789012345678901234567890123456789')
+ Error("not match hex64")
+ */
 format.blockHash = format.hex64; // alias
+
+/**
+ * @param arg {string|Buffer}
+ * @return {string} Hex string
+ *
+ * @example
+ * > format.privateKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
+ "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+ * > format.privateKey('0x0123456789012345678901234567890123456789')
+ Error("not match hex64")
+ */
 format.txHash = format.hex64; // alias
 
+/**
+ * @param arg {number|BigNumber|string|boolean}
+ * @return {Number}
+ *
+ * @example
+ * > format.number(-3.14)
+ -3.14
+ * > format.number('-3.14')
+ -3.14
+ * > format.number('0x10')
+ 16
+ * format.number(true)
+ 1
+ */
 format.number = Parser(toNumber).validate(v => Number.isFinite(v), 'number');
+
+/**
+ * @param arg {number|BigNumber|string|boolean}
+ * @return {Number}
+ *
+ * @example
+ * > format.uint(-3.14)
+ Error("not match uint")
+ * > format.uint(10)
+ 10
+ * > format.uint(BigNumber(100))
+ 100
+ * > format.uint('0x10')
+ 16
+ * > format.uint(Number.MAX_SAFE_INTEGER + 1) // unsafe integer
+ Error("not match uint")
+ */
 format.uint = format.number.validate(v => v >= 0 && Number.isSafeInteger(v), 'uint');
 
+/**
+ * @param arg {number|BigNumber|string|boolean}
+ * @return {BigNumber}
+ *
+ * @example
+ * > format.bigNumber(-3.14)
+ "-3.14"
+ * > format.bigNumber('-3.14')
+ "-3.14"
+ * > format.bigNumber('0x10')
+ "16"
+ * format.bigNumber(true)
+ "1"
+ */
 format.bigNumber = Parser(toBigNumber).validate(v => v.isFinite(), 'bigNumber');
-format.bigUInt = format.bigNumber.parse(v => format.hex(v.integerValue()));
 
+/**
+ * When encoding QUANTITIES (integers, numbers): encode as hex, prefix with "0x", the most compact representation (slight exception: zero should be represented as "0x0")
+ *
+ * @param arg {number|BigNumber|string|boolean}
+ * @return {string} Hex string
+ *
+ * @example
+ * > format.hexNumber(100)
+ "0x64"
+ * > format.hexNumber(BigNumber(10))
+ "0xa"
+ * > format.hexNumber(3.50)
+ "0x4"
+ * > format.hexNumber(3.49)
+ "0x3"
+ * > format.hexNumber(-1))
+ Error("not match hexNumber")
+ */
+format.hexNumber = format.bigNumber
+  .parse(v => `0x${v.integerValue().toString(16)}`)
+  .validate(v => /^0x[0-9a-f]+$/.test(v), 'hexNumber');
+
+/**
+ * @param arg {number|BigNumber|string|Buffer|boolean|null}
+ * @return {Buffer}
+ *
+ * @example
+ * > format.buffer(Buffer.from([0, 1]))
+ <Buffer 00 01>
+ * > format.buffer(null)
+ <Buffer >
+ * > format.buffer(1024)
+ <Buffer 04 00>
+ * > format.buffer('0x0a')
+ <Buffer 0a>
+ * > format.buffer(true)
+ <Buffer 01>
+ * > format.buffer(3.14)
+ Error("not match hex")
+ */
 format.buffer = Parser(v => (Buffer.isBuffer(v) ? v : Buffer.from(format.hex(v).substring(2), 'hex')));
 
 // ----------------------------- parse rpc returned ---------------------------
@@ -162,31 +323,31 @@ format.signTx = Parser({
 
 format.sendTx = Parser({
   from: format.address,
-  nonce: format.hex,
-  gasPrice: format.bigUInt,
-  gas: format.hex,
+  nonce: format.hexNumber,
+  gasPrice: format.hexNumber,
+  gas: format.hexNumber,
   to: format.address.or(undefined),
-  value: format.bigUInt.or(undefined),
+  value: format.hexNumber.or(undefined),
   data: format.hex.or(undefined),
 });
 
 format.callTx = Parser({
   from: format.address.or(undefined),
-  nonce: format.hex.or(undefined),
-  gasPrice: format.bigUInt.or(undefined),
-  gas: format.hex.or(undefined),
+  nonce: format.hexNumber.or(undefined),
+  gasPrice: format.hexNumber.or(undefined),
+  gas: format.hexNumber.or(undefined),
   to: format.address,
-  value: format.bigUInt.or(undefined),
+  value: format.hexNumber.or(undefined),
   data: format.hex.or(undefined),
 });
 
 format.estimateTx = Parser({
   from: format.address.or(undefined),
-  nonce: format.hex.or(undefined),
-  gasPrice: format.bigUInt.or(undefined),
-  gas: format.hex.or(undefined),
+  nonce: format.hexNumber.or(undefined),
+  gasPrice: format.hexNumber.or(undefined),
+  gas: format.hexNumber.or(undefined),
   to: format.address.or(undefined),
-  value: format.bigUInt.or(undefined),
+  value: format.hexNumber.or(undefined),
   data: format.hex.or(undefined),
 });
 

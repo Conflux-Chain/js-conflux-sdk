@@ -3,8 +3,6 @@
 const Conflux = require('../src');
 const unit = require('../src/util/unit');
 
-const fromCFXToDrip = unit.converter('cfx', 'drip');
-
 const PRIVATE_KEY_1 = '0xa816a06117e572ca7ae2f786a046d2bc478051d0717b....................';
 const PRIVATE_KEY_2 = '0x52a937219bbc01a232236ee16ec098e4acc951ec7a80....................';
 
@@ -27,7 +25,7 @@ async function main() {
   const txHash = await cfx.sendTransaction({
     from: account1,
     to: account2,
-    value: fromCFXToDrip(0.02),
+    value: unit.fromCFXToDrip(0.02),
   });
   console.log(txHash); // 0xaf93e8764813ded1e64b427d5f793a5c9e064f63f5e99492844f4eafae0a0add
 
