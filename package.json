@@ -9,7 +9,6 @@
   ],
   "main": "src/index.js",
   "module": "dist/js-conflux-sdk.esm.js",
-  "browser": "dist/js-conflux-sdk.umd.js",
   "files": [
     "src",
     "dist"
@@ -22,21 +21,18 @@
     "superagent": "^5.1.0"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.7.7",
-    "@rollup/plugin-commonjs": "^11.0.0",
-    "@rollup/plugin-json": "^4.0.1",
-    "@rollup/plugin-node-resolve": "^6.0.0",
+    "browserify": "^16.5.0",
+    "common-shakeify": "^0.6.2",
     "eslint": "^6.3.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2",
+    "esmify": "^2.1.1",
+    "exorcist": "^1.0.1",
     "jest": "^24.9.0",
-    "rollup": "^1.27.14",
-    "rollup-plugin-babel": "^4.3.3",
-    "rollup-plugin-babel-minify": "^9.1.1",
-    "rollup-plugin-node-builtins": "^2.1.2"
+    "tinyify": "^2.5.2"
   },
   "scripts": {
-    "build": "rollup --config rollup.config.js",
+    "build": "node scripts/build.js",
     "prepublishOnly": "npm run build",
     "test": "jest"
   }
