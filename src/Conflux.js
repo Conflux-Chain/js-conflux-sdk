@@ -14,9 +14,9 @@ class Conflux {
   /**
    * @param [options] {object} - Conflux and Provider constructor options.
    * @param [options.url=''] {string} - Url of provider to create.
-   * @param [options.defaultEpoch="latest_state"] {string|number} - Default epochNumber.
-   * @param [options.defaultGasPrice] {string|number|BigNumber} - The default gas price in drip to use for transactions.
-   * @param [options.defaultGas] {string|number|BigNumber} - The default maximum gas provided for a transaction (gasLimit).
+   * @param [options.defaultEpoch="latest_state"] {string|number} - Default epochNumber. (deprecated)
+   * @param [options.defaultGasPrice] {string|number|BigNumber} - The default gas price in drip to use for transactions. (deprecated)
+   * @param [options.defaultGas] {string|number|BigNumber} - The default maximum gas provided for a transaction. (deprecated)
    *
    * @example
    * > const Conflux = require('conflux-web');
@@ -40,8 +40,38 @@ class Conflux {
     this.provider = this.setProvider(url, rest);
     this.wallet = new Wallet(this);
 
+    /**
+     * Default epoch number for following methods:
+     * - `Conflux.getBalance`
+     * - `Conflux.getTransactionCount`
+     * - `Conflux.getCode`
+     * - `Conflux.call`
+     *
+     * @deprecated
+     * @type {number|string}
+     */
     this.defaultEpoch = defaultEpoch;
+
+    /**
+     * Default gas price for following methods:
+     * - `Conflux.sendTransaction`
+     * - `Conflux.call`
+     * - `Conflux.estimateGas`
+     *
+     * @deprecated
+     * @type {number|BigNumber|string}
+     */
     this.defaultGasPrice = defaultGasPrice;
+
+    /**
+     * Default gas limit for following methods:
+     * - `Conflux.sendTransaction`
+     * - `Conflux.call`
+     * - `Conflux.estimateGas`
+     *
+     * @deprecated
+     * @type {number|BigNumber|string}
+     */
     this.defaultGas = defaultGas;
 
     decorate(this, 'sendTransaction', (func, params) => {

@@ -4,6 +4,33 @@
 
 A sdk of conflux.
 
+## Conflux.defaultEpoch
+
+Default epoch number for following methods:
+- `Conflux.getBalance`
+- `Conflux.getTransactionCount`
+- `Conflux.getCode`
+- `Conflux.call`
+`number,string`
+
+
+## Conflux.defaultGasPrice
+
+Default gas price for following methods:
+- `Conflux.sendTransaction`
+- `Conflux.call`
+- `Conflux.estimateGas`
+`number,BigNumber,string`
+
+
+## Conflux.defaultGas
+
+Default gas limit for following methods:
+- `Conflux.sendTransaction`
+- `Conflux.call`
+- `Conflux.estimateGas`
+`number,BigNumber,string`
+
 
 ## Conflux.constructor
 
@@ -12,12 +39,12 @@ A sdk of conflux.
 ### Parameters
 
 Name                    | Type                    | Required | Default        | Description
-------------------------|-------------------------|----------|----------------|---------------------------------------------------------------
+------------------------|-------------------------|----------|----------------|--------------------------------------------------------------------
 options                 | object                  | false    |                | Conflux and Provider constructor options.
 options.url             | string                  | false    | ''             | Url of provider to create.
-options.defaultEpoch    | string,number           | false    | "latest_state" | Default epochNumber.
-options.defaultGasPrice | string,number,BigNumber | false    |                | The default gas price in drip to use for transactions.
-options.defaultGas      | string,number,BigNumber | false    |                | The default maximum gas provided for a transaction (gasLimit).
+options.defaultEpoch    | string,number           | false    | "latest_state" | Default epochNumber. (deprecated)
+options.defaultGasPrice | string,number,BigNumber | false    |                | The default gas price in drip to use for transactions. (deprecated)
+options.defaultGas      | string,number,BigNumber | false    |                | The default maximum gas provided for a transaction. (deprecated)
 
 ### Return
 

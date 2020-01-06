@@ -2,6 +2,7 @@ const format = require('../../src/util/format');
 
 const {
   sha3,
+  checksumAddress,
   randomBuffer,
   randomPrivateKey,
   privateKeyToAddress,
@@ -13,6 +14,14 @@ const {
 
 const KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 const ADDRESS = '0xfcad0b19bb29d4674531d6f115237e16afce377c';
+
+test('checksumAddress', () => {
+  expect(checksumAddress('0XFB6916095CA1DF60BB79CE92CE3EA74C37C5D359'))
+    .toEqual('0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359');
+
+  expect(checksumAddress('0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359'))
+    .toEqual('0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359');
+});
 
 test('randomBuffer', () => {
   const buffer1 = randomBuffer(32);
@@ -66,3 +75,5 @@ test('ecdsaSign and ecdsaRecover', () => {
   const address = format.hex(sha3(publicKey).slice(-20));
   expect(address).toEqual(ADDRESS);
 });
+
+

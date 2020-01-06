@@ -19,6 +19,26 @@ function sha3(buffer) {
   return keccak('keccak256').update(buffer).digest();
 }
 
+/**
+ * Makes a checksum address
+ *
+ * @param address {string} - Hex string
+ * @return {string}
+ *
+ * @example
+ * > checksumAddress('0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359')
+ "0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359"
+ */
+function checksumAddress(address) {
+  address = address.toLowerCase().replace('0x', '');
+
+  const hash = sha3(Buffer.from(address)).toString('hex');
+  const sequence = Object.entries(address).map(([index, char]) => {
+    return parseInt(hash[index], 16) >= 8 ? char.toUpperCase() : char;
+  });
+  return `0x${sequence.join('')}`;
+}
+
 // ----------------------------------------------------------------------------
 /**
  * gen a random buffer with `size` bytes.
@@ -189,6 +209,7 @@ function ecdsaRecover(hash, { r, s, v }) {
 // ----------------------------------------------------------------------------
 module.exports = {
   sha3,
+  checksumAddress,
   randomBuffer,
   randomPrivateKey,
   publicKeyToAddress,

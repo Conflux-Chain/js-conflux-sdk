@@ -13,7 +13,7 @@ function toHex(value) {
   let hex;
 
   if (lodash.isString(value)) {
-    hex = value; // XXX: toLowerCase()
+    hex = value.toLowerCase(); // XXX: for checksum address
   } else if (value === null) {
     hex = '0x';
   } else if (Number.isInteger(value) || BigNumber.isBigNumber(value)) {
@@ -266,7 +266,7 @@ format.transaction = Parser({
 });
 
 format.block = Parser({
-  epochNumber: format.uint,
+  epochNumber: format.uint.or(null), // FIXME null for getBlockByEpochNumber(0)
   height: format.uint,
   size: format.uint,
   timestamp: format.uint,
@@ -300,7 +300,7 @@ format.logs = Parser([
 
 // -------------------------- format method arguments -------------------------
 format.getLogs = Parser({
-  limit: format.hex.or(undefined),
+  limit: format.hexNumber.or(undefined),
   fromEpoch: format.epochNumber.or(undefined),
   toEpoch: format.epochNumber.or(undefined),
   blockHashes: format.blockHash.or([format.blockHash]).or(undefined),

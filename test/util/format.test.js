@@ -51,11 +51,11 @@ test('hex(string)', () => {
   expect(() => format.hex('1234')).toThrow('not match hex');
 
   expect(format.hex('0x0a')).toEqual('0x0a');
+  expect(format.hex('0X0A')).toEqual('0x0a');
   expect(() => format.hex('0xa')).toThrow('not match hex');
   expect(() => format.hex('a')).toThrow('not match hex');
   expect(() => format.hex(' a')).toThrow('not match hex');
   expect(() => format.hex('a ')).toThrow('not match hex');
-  expect(() => format.hex('0x0A')).toThrow('not match hex');
 });
 
 test('number', () => {
