@@ -1,7 +1,7 @@
 {
   "name": "js-conflux-sdk",
   "description": "JavaScript Conflux Software Development Kit",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "license": "LGPL-3.0",
   "author": "Haizhou@conflux-chain.org",
   "homepage": "https://github.com/GeekBerry/js-conflux-sdk#readme",
@@ -41,9 +41,9 @@
     "tinyify": "^2.5.2"
   },
   "scripts": {
+    "scope": "npm config set scope conflux-dev & npm config set access public",
     "build": "node build.js",
     "prepublishOnly": "npm run build",
-    "publish": "npm publish --access public",
     "test": "jest"
   }
 }
