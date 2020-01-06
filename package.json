@@ -1,7 +1,7 @@
 {
   "name": "js-conflux-sdk",
   "description": "JavaScript Conflux Software Development Kit",
-  "version": "0.4.0-beta",
+  "version": "0.4.0",
   "license": "LGPL-3.0",
   "keywords": [
     "conflux",
