@@ -115,7 +115,7 @@ test('getBlocksByEpochNumber', async () => {
 test('getBlockByHash', async () => {
   await expect(cfx.getBlockByHash()).rejects.toThrow('not match hex');
   await expect(cfx.getBlockByHash(ADDRESS)).rejects.toThrow('not match hex');
-  await expect(cfx.getBlockByHash(BLOCK_HASH, 0)).rejects.toThrow('detail must be boolean');
+  await expect(cfx.getBlockByHash(BLOCK_HASH, 0)).rejects.toThrow('not match boolean');
 
   cfx.provider.call = async (method, blockHash, detail) => {
     expect(method).toEqual('cfx_getBlockByHash');
@@ -137,7 +137,7 @@ test('getBlockByHash', async () => {
 
 test('getBlockByEpochNumber', async () => {
   await expect(cfx.getBlockByEpochNumber()).rejects.toThrow('not match hex');
-  await expect(cfx.getBlockByEpochNumber(0, 1)).rejects.toThrow('detail must be boolean');
+  await expect(cfx.getBlockByEpochNumber(0, 1)).rejects.toThrow('not match boolean');
 
   cfx.provider.call = async (method, epochNumber, detail) => {
     expect(method).toEqual('cfx_getBlockByEpochNumber');

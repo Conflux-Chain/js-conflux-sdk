@@ -1275,6 +1275,28 @@ arg  | number,BigNumber,string,Buffer,boolean,null | true     |         |
  Error("not match hex")
 ```
 
+## format.boolean
+
+
+
+### Parameters
+
+Name | Type    | Required | Default | Description
+-----|---------|----------|---------|------------
+arg  | boolean | true     |         |
+
+### Return
+
+`boolean` 
+
+### Example
+
+```
+> format.boolean(true)
+ true> format.boolean(false)
+ false
+```
+
 ----------
 # util.unit
 

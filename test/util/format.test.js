@@ -153,3 +153,11 @@ test('buffer', () => {
   expect(format.buffer(false)).toEqual(Buffer.from([0]));
   expect(format.buffer(true)).toEqual(Buffer.from([1]));
 });
+
+test('boolean', () => {
+  expect(() => format.boolean(undefined)).toThrow('not match boolean');
+  expect(() => format.boolean(1)).toThrow('not match boolean');
+
+  expect(format.boolean(true)).toEqual(true);
+  expect(format.boolean(false)).toEqual(false);
+});

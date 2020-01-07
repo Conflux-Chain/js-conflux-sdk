@@ -1,4 +1,3 @@
-const lodash = require('lodash');
 const { decorate } = require('./util');
 const format = require('./util/format');
 
@@ -295,7 +294,9 @@ class Conflux {
    0
    */
   async getBalance(address, epochNumber = this.defaultEpoch) {
-    const result = await this.provider.call('cfx_getBalance', format.address(address), format.epochNumber(epochNumber));
+    const result = await this.provider.call('cfx_getBalance',
+      format.address(address), format.epochNumber(epochNumber),
+    );
     return format.bigNumber(result);
   }
 
@@ -314,7 +315,9 @@ class Conflux {
    0
    */
   async getTransactionCount(address, epochNumber = this.defaultEpoch) {
-    const result = await this.provider.call('cfx_getTransactionCount', format.address(address), format.epochNumber(epochNumber));
+    const result = await this.provider.call('cfx_getTransactionCount',
+      format.address(address), format.epochNumber(epochNumber),
+    );
     return format.number(result);
   }
 
@@ -342,10 +345,9 @@ class Conflux {
    }
    */
   async getBlockByEpochNumber(epochNumber, detail = false) {
-    if (!lodash.isBoolean(detail)) {
-      throw new Error('detail must be boolean');
-    }
-    const result = await this.provider.call('cfx_getBlockByEpochNumber', format.epochNumber(epochNumber), detail);
+    const result = await this.provider.call('cfx_getBlockByEpochNumber',
+      format.epochNumber(epochNumber), format.boolean(detail),
+    );
     return format.block.or(null)(result);
   }
 
@@ -476,10 +478,9 @@ class Conflux {
    }
    */
   async getBlockByHash(blockHash, detail = false) {
-    if (!lodash.isBoolean(detail)) {
-      throw new Error('detail must be boolean');
-    }
-    const result = await this.provider.call('cfx_getBlockByHash', format.blockHash(blockHash), detail);
+    const result = await this.provider.call('cfx_getBlockByHash',
+      format.blockHash(blockHash), format.boolean(detail),
+    );
     return format.block.or(null)(result);
   }
 

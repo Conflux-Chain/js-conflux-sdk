@@ -254,6 +254,18 @@ format.hexNumber = format.bigNumber
  */
 format.buffer = Parser(v => (Buffer.isBuffer(v) ? v : Buffer.from(format.hex(v).substring(2), 'hex')));
 
+/**
+ * @param arg {boolean}
+ * @return {boolean}
+ *
+ * @example
+ * > format.boolean(true)
+ true
+ * > format.boolean(false)
+ false
+ */
+format.boolean = Parser(v => v).validate(lodash.isBoolean, 'boolean');
+
 // ----------------------------- parse rpc returned ---------------------------
 format.transaction = Parser({
   nonce: format.uint,
