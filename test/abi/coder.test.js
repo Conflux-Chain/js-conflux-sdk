@@ -1,10 +1,11 @@
 const lodash = require('lodash');
 const BigNumber = require('bignumber.js');
+const { WORD_BYTES } = require('../../src/util');
 const format = require('../../src/util/format');
 const HexStream = require('../../src/abi/HexStream');
 const getCoder = require('../../src/abi/coder');
 
-const MAX_UINT = BigNumber(2).pow(HexStream.WORD_BYTES * 8);
+const MAX_UINT = BigNumber(2).pow(WORD_BYTES * 8);
 
 function testEncode(coder, value, string) {
   const hex = format.hex(coder.encode(value));
@@ -13,7 +14,7 @@ function testEncode(coder, value, string) {
 }
 
 function testDecode(coder, value, hex) {
-  const stream = HexStream.from(hex);
+  const stream = HexStream(hex);
   const decoded = coder.decode(stream);
   expect(decoded).toEqual(value);
   return decoded;
@@ -128,6 +129,7 @@ describe('number', () => {
 
     expect(() => coder.encode(-1)).toThrow();
     expect(() => coder.encode(MAX_UINT)).toThrow();
+
     testEncodeAndDecode(coder, MAX_UINT.minus(1), '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
   });
 });
@@ -370,7 +372,7 @@ describe('tuple', () => {
     expect(() => coder.encode('string')).toThrow('unexpected type');
     expect(() => coder.encode([])).toThrow('length not match');
 
-    const value = coder.decode(HexStream.from('0x' +
+    const value = coder.decode(HexStream(
       '000000000000000000000000000000000000000000000000000000000000000f' +
       '0000000000000000000000000000000000000000000000000000000000000000',
     ));
@@ -409,12 +411,12 @@ describe('tuple', () => {
       ],
     });
 
-    const hex = '0x' +
+    const hex =
       '000000000000000000000000000000000000000000000000000000000000000f' +
       'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff' +
       '0000000000000000000000000000000000000000000000000000000000000003' +
       '6162630000000000000000000000000000000000000000000000000000000000';
-    expect(() => coder.decode(HexStream.from(hex))).toThrow('stream.index error');
+    expect(() => coder.decode(HexStream(hex))).toThrow('stream.index error');
   });
 
   test('tuple(tuple)', () => {
@@ -449,11 +451,11 @@ describe('tuple', () => {
       '0000000000000000000000000000000000000000000000000000000000000384',
     );
 
-    const value = coder.decode(HexStream.from('0x' +
+    const value = coder.decode(HexStream(
       '000000000000000000000000000000000000000000000000000000000000000f' +
       'fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffa24' +
-      '0000000000000000000000000000000000000000000000000000000000000384'),
-    );
+      '0000000000000000000000000000000000000000000000000000000000000384',
+    ));
     expect(value.age).toEqual(value[0]);
     expect(value.location).toEqual(value[1]);
     expect(value.location.x).toEqual(value[1][0]);

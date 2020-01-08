@@ -1,6 +1,6 @@
 const lodash = require('lodash');
 const BigNumber = require('bignumber.js');
-const Parser = require('./lib/parser');
+const Parser = require('../lib/parser');
 
 BigNumber.config({
   ROUNDING_MODE: BigNumber.ROUND_HALF_UP,

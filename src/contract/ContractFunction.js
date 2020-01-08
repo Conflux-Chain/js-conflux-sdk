@@ -1,5 +1,5 @@
 const { FunctionCoder } = require('../abi');
-const callable = require('../util/lib/callable');
+const callable = require('../lib/callable');
 
 /**
  * @memberOf Contract

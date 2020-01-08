@@ -7,7 +7,7 @@ const { sha3 } = require('../util/sign');
 const format = require('../util/format');
 
 const getCoder = require('./coder');
-const namedTuple = require('./namedTuple');
+const namedTuple = require('../lib/namedTuple');
 const HexStream = require('./HexStream');
 
 // ============================================================================
@@ -67,7 +67,8 @@ class FunctionCoder {
    "0x00000000000000000000000000000000000000000000000000000000000000640000000000000000000000000000000000000000000000000000000000000001"
    */
   encodeInputs(array) {
-    return format.hex(getCoder({ type: 'tuple', components: this.inputs }).encode(array));
+    const coder = getCoder({ type: 'tuple', components: this.inputs });
+    return format.hex(coder.encode(array));
   }
 
   /**
@@ -89,7 +90,9 @@ class FunctionCoder {
    true
    */
   decodeInputs(hex) {
-    return getCoder({ type: 'tuple', components: this.inputs }).decode(HexStream.from(hex));
+    const coder = getCoder({ type: 'tuple', components: this.inputs });
+    const stream = HexStream(hex);
+    return coder.decode(stream);
   }
 
   /**
@@ -109,7 +112,9 @@ class FunctionCoder {
    -1
    */
   decodeOutputs(hex) {
-    return getCoder({ type: 'tuple', components: this.outputs }).decode(HexStream.from(hex));
+    const coder = getCoder({ type: 'tuple', components: this.outputs });
+    const stream = HexStream(hex);
+    return coder.decode(stream);
   }
 }
 
@@ -194,7 +199,9 @@ class EventCoder {
       got: index,
       coder: this,
     });
-    return format.hex(getCoder(this.inputs[index]).encode(value));
+
+    const coder = getCoder(this.inputs[index]);
+    return format.hex(coder.encode(value));
   }
 
   /**
@@ -222,17 +229,20 @@ class EventCoder {
    10
    */
   decodeLog({ topics, data }) {
-    const dataStream = HexStream.from(data);
+    const stream = HexStream(data);
     // XXX: for !this.anonymous, assert(topics[0] === this.signature)
 
     let index = this.anonymous ? 0 : 1;
     const array = this.inputs.map(input => {
-      let stream = dataStream;
+      const coder = getCoder(input);
+
       if (input.indexed) {
-        stream = HexStream.from(topics[index]);
+        const result = coder.decode(HexStream(topics[index]));
         index += 1;
+        return result;
+      } else {
+        return coder.decode(stream);
       }
-      return getCoder(input).decode(stream);
     });
 
     return new this.NamedTuple(...array);

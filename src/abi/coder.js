@@ -1,11 +1,24 @@
 const lodash = require('lodash');
 const format = require('../util/format');
-const { assert } = require('../util');
+const { assert, WORD_BYTES } = require('../util');
+const namedTuple = require('../lib/namedTuple');
 
-const { padBuffer, WORD_BYTES } = require('./HexStream');
-const namedTuple = require('./namedTuple');
-
+const BYTE_CHARS = 2; // 1 bytes === 2 hex char
 const BYTE_BITS = 8; // 1 byte === 8 bits
+const ZERO_BUFFER = format.buffer('0x0000000000000000000000000000000000000000000000000000000000000000');
+
+function padBuffer(buffer, alignLeft = false) {
+  buffer = format.buffer(buffer); // accept hex
+
+  const count = WORD_BYTES - (buffer.length % WORD_BYTES);
+  if (0 < count && count < WORD_BYTES) {
+    buffer = alignLeft
+      ? Buffer.concat([buffer, ZERO_BUFFER.slice(0, count)])
+      : Buffer.concat([ZERO_BUFFER.slice(0, count), buffer]);
+  }
+
+  return buffer;
+}
 
 // ----------------------------------------------------------------------------
 class Pointer extends Number {}
@@ -57,7 +70,7 @@ function _unpack(coders, stream) {
   const array = coders.map(coder => {
     if (coder.dynamic) {
       const offset = UINT_CODER.decode(stream).toNumber();
-      return new Pointer(startIndex + offset);
+      return new Pointer(startIndex + offset * BYTE_CHARS);
     } else {
       return coder.decode(stream);
     }
@@ -180,7 +193,7 @@ class AddressCoder extends Coder {
    * @return {string}
    */
   decode(stream) {
-    return format.address(`0x${stream.read(20)}`);
+    return format.address(`0x${stream.read(40)}`);
   }
 }
 
@@ -244,7 +257,7 @@ class IntegerCoder extends Coder {
    * @return {BigNumber}
    */
   decode(stream) {
-    let value = format.bigNumber(`0x${stream.read(this.size)}`); // 16: hex base
+    let value = format.bigNumber(`0x${stream.read(this.size * BYTE_CHARS)}`); // 16: hex base
 
     if (this.signed && value.gte(this.bound)) {
       value = value.minus(format.bigNumber(2).pow(this.size * BYTE_BITS));
@@ -354,7 +367,7 @@ class BytesCoder extends Coder {
       length = UINT_CODER.decode(stream).toNumber();
     }
 
-    return Buffer.from(stream.read(length, true), 'hex');
+    return Buffer.from(stream.read(length * BYTE_CHARS, true), 'hex');
   }
 }
 
@@ -553,3 +566,4 @@ function getCoder(component) {
 }
 
 module.exports = getCoder;
+module.exports.padBuffer = padBuffer;

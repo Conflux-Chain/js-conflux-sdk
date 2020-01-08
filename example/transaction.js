@@ -36,7 +36,7 @@ async function main() {
     // nonce: if nonce miss, auto call `cfx.getTransactionCount` to get nonce, if you have a batch of transaction to be send, you **must** query `nonce` and increase manual.
     from: account1,
     to: account2,
-    value: fromCFXToDrip(0.03),
+    value: unit.fromCFXToDrip(0.03),
   });
 
   console.log(await promise); // await and get txHash
@@ -52,7 +52,7 @@ async function main() {
   const tx = account1.signTransaction({
     nonce,
     to: account2,
-    value: fromCFXToDrip(0.02),
+    value: unit.fromCFXToDrip(0.02),
     gasPrice: 100,
     gas: 1000000,
   });

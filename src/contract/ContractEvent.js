@@ -1,5 +1,5 @@
 const lodash = require('lodash');
-const callable = require('../util/lib/callable');
+const callable = require('../lib/callable');
 const { decorate } = require('../util');
 const { EventCoder } = require('../abi');
 

@@ -1,5 +1,7 @@
 const lodash = require('lodash');
 
+const WORD_BYTES = 32; // byte number pre abi word
+
 function assert(bool, value) {
   if (!bool) {
     if (lodash.isPlainObject(value)) {
@@ -53,6 +55,7 @@ function decorate(instance, name, func) {
 }
 
 module.exports = {
+  WORD_BYTES,
   assert,
   sleep,
   loop,

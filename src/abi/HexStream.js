@@ -1,25 +1,12 @@
-const { assert } = require('../util');
-const format = require('../util/format');
+const { assert, WORD_BYTES } = require('../util');
+const callable = require('../lib/callable');
 
-const WORD_BYTES = 32;
-const BYTE_CHARS = 2; // 1 bytes === 2 hex char
-const ZERO_BUFFER = format.buffer('0x0000000000000000000000000000000000000000000000000000000000000000');
+const WORD_CHAR = WORD_BYTES * 2;
 
 class HexStream {
-  static from(hex) {
-    if (hex.startsWith('0x')) {
-      hex = hex.replace('0x', '');
-    }
-    return new this(hex);
-  }
-
-  constructor(string) {
-    this.string = string;
-    this.index = 0;
-  }
-
-  cut(start, size) {
-    return this.string.substring(BYTE_CHARS * start, BYTE_CHARS * (start + size));
+  constructor(hex) {
+    this.string = hex;
+    this.index = hex.startsWith('0x') ? 2 : 0;
   }
 
   read(length, alignLeft = false) {
@@ -30,41 +17,21 @@ class HexStream {
       stream: this,
     });
 
-    let skip = 0;
-    const count = WORD_BYTES - (length % WORD_BYTES);
-    if (0 < count && count < WORD_BYTES) {
-      skip = count;
-    }
-
+    const size = Math.ceil(length / WORD_CHAR) * WORD_CHAR;
     const string = alignLeft
-      ? this.cut(this.index, length)
-      : this.cut(this.index + skip, length);
+      ? this.string.substr(this.index, length)
+      : this.string.substr(this.index + (size - length), length);
 
-    assert(string.length === BYTE_CHARS * length, {
+    assert(string.length === length, {
       message: 'length not match',
-      expect: BYTE_CHARS * length,
+      expect: length,
       got: string.length,
       stream: this,
     });
 
-    this.index += length + skip;
+    this.index += size;
     return string;
   }
 }
 
-function padBuffer(buffer, alignLeft = false) {
-  buffer = format.buffer(buffer); // accept hex
-
-  const count = WORD_BYTES - (buffer.length % WORD_BYTES);
-  if (0 < count && count < WORD_BYTES) {
-    buffer = alignLeft
-      ? Buffer.concat([buffer, ZERO_BUFFER.slice(0, count)])
-      : Buffer.concat([ZERO_BUFFER.slice(0, count), buffer]);
-  }
-
-  return buffer;
-}
-
-module.exports = HexStream;
-module.exports.WORD_BYTES = WORD_BYTES;
-module.exports.padBuffer = padBuffer;
+module.exports = callable.withoutNew(HexStream);
