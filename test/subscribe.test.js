@@ -1,5 +1,5 @@
 const Conflux = require('../src');
-const MockProvider = require('./__mocks__/MockProvider');
+const MockProvider = require('../mock/MockProvider');
 
 const cfx = new Conflux({
   defaultGas: 100,
@@ -30,7 +30,7 @@ test('PendingTransaction', async () => {
     from: account,
   });
 
-  expect(await pending).toEqual('0xb0a0000000000000000000000000000000000000000000000000000000000000');
+  expect((await pending).startsWith('0x')).toEqual(true);
   expect(await pending.mined({ delta: 0 })).toEqual({ blockHash: 'blockHash' });
   expect(await pending.executed({ delta: 0 })).toEqual({ outcomeStatus: 0, contractCreated: 'address' });
   expect(await pending.confirmed({ delta: 0 })).toEqual({ outcomeStatus: 0, contractCreated: 'address' });

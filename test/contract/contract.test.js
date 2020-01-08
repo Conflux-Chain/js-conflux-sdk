@@ -1,7 +1,7 @@
 const BigNumber = require('bignumber.js');
-const Conflux = require('../src');
-const MockProvider = require('./__mocks__/MockProvider');
-const { abi, code, address } = require('./__mocks__/contract.json');
+const Conflux = require('../../src');
+const MockProvider = require('../../mock/MockProvider');
+const { abi, code, address } = require('./contract.json');
 
 const ADDRESS = '0xfcad0b19bb29d4674531d6f115237e16afce377c';
 
@@ -38,7 +38,7 @@ test('Contract', async () => {
   expect(value.toString()).toEqual('100');
 
   value = await contract.count().estimateGas({ gasPrice: 101 });
-  expect(value).toEqual(BigNumber(21000));
+  expect(BigNumber.isBigNumber(value)).toEqual(true);
 
   const logs = await contract.SelfEvent(ADDRESS).getLogs();
   expect(logs.length).toEqual(2);

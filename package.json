@@ -19,6 +19,7 @@
   "main": "src/index.js",
   "module": "dist/js-conflux-sdk.esm.js",
   "files": [
+    "mock",
     "src",
     "dist"
   ],

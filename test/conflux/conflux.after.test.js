@@ -2,7 +2,7 @@ const lodash = require('lodash');
 const BigNumber = require('bignumber.js');
 
 const Conflux = require('../../src');
-const MockProvider = require('../__mocks__/MockProvider');
+const MockProvider = require('../../mock/MockProvider');
 
 const ADDRESS = '0xfcad0b19bb29d4674531d6f115237e16afce377c';
 const BLOCK_HASH = '0xe1b0000000000000000000000000000000000000000000000000000000000001';
@@ -94,7 +94,6 @@ test('getBlockByHash', async () => {
   expect(BigNumber.isBigNumber(block.difficulty)).toEqual(true);
   expect(Array.isArray(block.refereeHashes)).toEqual(true);
   expect(Array.isArray(block.transactions)).toEqual(true);
-  expect(lodash.isPlainObject(block.deferredStateRootWithAux)).toEqual(true);
   block.transactions.forEach(txHash => {
     expect(txHash.startsWith('0x')).toEqual(true);
   });
@@ -113,11 +112,11 @@ test('getBlockByEpochNumber', async () => {
 
 test('getBlockByHashWithPivotAssumption', async () => {
   const block = await cfx.getBlockByHashWithPivotAssumption(
-    '0xe1b0000000000000000000000000000000000000000000000000000000000000',
-    '0xe1b0000000000000000000000000000000000000000000000000000000000001',
+    '0xb000001040000000000000000000000000000000000000000000000000000000',
+    '0xb000001000000000000000000000000000000000000000000000000000000000',
     1,
   );
-  expect(block.hash).toEqual('0xe1b0000000000000000000000000000000000000000000000000000000000000');
+  expect(block.hash).toEqual('0xb000001040000000000000000000000000000000000000000000000000000000');
   expect(block.epochNumber).toEqual(1);
 });
 
@@ -131,7 +130,7 @@ test('getTransactionByHash', async () => {
   expect(transaction.data.startsWith('0x')).toEqual(true);
   expect(transaction.r.startsWith('0x')).toEqual(true);
   expect(transaction.s.startsWith('0x')).toEqual(true);
-  expect(transaction.contractCreated.startsWith('0x') || lodash.isNull(transaction.contractCreated)).toEqual(true);
+  expect(lodash.isNull(transaction.contractCreated) || transaction.contractCreated.startsWith('0x')).toEqual(true);
   expect(Number.isInteger(transaction.transactionIndex)).toEqual(true);
   expect(Number.isInteger(transaction.nonce)).toEqual(true);
   expect(Number.isInteger(transaction.status)).toEqual(true);
@@ -150,7 +149,7 @@ test('getTransactionReceipt', async () => {
   expect(receipt.to.startsWith('0x')).toEqual(true);
   expect(receipt.logsBloom.startsWith('0x')).toEqual(true);
   expect(receipt.stateRoot.startsWith('0x')).toEqual(true);
-  expect(receipt.contractCreated.startsWith('0x') || lodash.isNull(receipt.contractCreated)).toEqual(true);
+  expect(lodash.isNull(receipt.contractCreated) || receipt.contractCreated.startsWith('0x')).toEqual(true);
   expect(Number.isInteger(receipt.index)).toEqual(true);
   expect(Number.isInteger(receipt.epochNumber)).toEqual(true);
   expect(Number.isInteger(receipt.outcomeStatus)).toEqual(true);
