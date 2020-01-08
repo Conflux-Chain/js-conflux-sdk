@@ -31,14 +31,15 @@ async function main() {
   console.log(estimateDeployGas.toString()); // 173978
 
   // deploy the contract
-  const contractAddress = await contract.constructor(10)
+  const { contractCreated } = await contract.constructor(10)
     .sendTransaction({
       from: account,
       // gas: estimateDeployGas, // if not set gas, will use 'cfx.defaultGas'
     })
-    .deployed();
-  console.log(contractAddress); // 0x32116df84f12e1fc936720a57bbdcba2a1e1ff05
-  contract.address = contractAddress;
+    .confirmed();
+
+  console.log(contractCreated); // 0x32116df84f12e1fc936720a57bbdcba2a1e1ff05
+  contract.address = contractCreated;
 
   // FIXME: user might need to wait few seconds here
 

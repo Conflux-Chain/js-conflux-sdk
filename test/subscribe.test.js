@@ -34,7 +34,6 @@ test('PendingTransaction', async () => {
   expect(await pending.mined({ delta: 0 })).toEqual({ blockHash: 'blockHash' });
   expect(await pending.executed({ delta: 0 })).toEqual({ outcomeStatus: 0, contractCreated: 'address' });
   expect(await pending.confirmed({ delta: 0 })).toEqual({ outcomeStatus: 0, contractCreated: 'address' });
-  expect(await pending.deployed({ delta: 0 })).toEqual('address');
 });
 
 test('PendingTransaction failed', async () => {

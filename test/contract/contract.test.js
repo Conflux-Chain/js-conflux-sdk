@@ -25,8 +25,8 @@ test('Contract', async () => {
   expect(contract.address).toEqual(address);
   expect(contract.constructor.code).toEqual(code);
 
-  const deployAddress = await contract.constructor(100).sendTransaction({ from: ADDRESS, nonce: 0 }).deployed();
-  expect(deployAddress.startsWith('0x')).toEqual(true);
+  const { contractCreated } = await contract.constructor(100).sendTransaction({ from: ADDRESS, nonce: 0 }).confirmed();
+  expect(contractCreated === null || contractCreated.startsWith('0x')).toEqual(true);
 
   value = await contract.constructor(100);
   expect(value.startsWith('0x')).toEqual(true);

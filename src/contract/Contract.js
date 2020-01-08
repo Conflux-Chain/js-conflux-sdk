@@ -27,10 +27,6 @@ class Contract {
    * > contract.constructor.code; // input code
    "0x6080604052600080..."
 
-   * // deploy a contract by send constructor then wait and get contract address by `PendingTransaction.deployed` trick.
-   * > await contract.constructor(100).sendTransaction({ from: account }).deployed();
-   "0xc3ed1a06471be1d3bcd014051fbe078387ec0ad8"
-
    * @example
    * > const contract = cfx.Contract({ abi, address });
    * > contract.address

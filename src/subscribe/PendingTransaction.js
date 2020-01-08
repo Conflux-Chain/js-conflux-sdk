@@ -92,18 +92,6 @@ class PendingTransaction extends LazyPromise {
       return undefined;
     });
   }
-
-  /**
-   * Async wait till contract create transaction deployed.
-   * - transaction confirmed
-   *
-   * @param [options] {object} - See `PendingTransaction.confirmed`
-   * @return {Promise<string>} The contract address.
-   */
-  async deployed(options) {
-    const { contractCreated } = await this.confirmed(options);
-    return contractCreated;
-  }
 }
 
 module.exports = PendingTransaction;
