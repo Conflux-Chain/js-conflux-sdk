@@ -49,7 +49,8 @@ async function loop({ delta = 1000, timeout = 30 * 1000 }, func) {
 
 function decorate(instance, name, func) {
   const method = instance[name];
-  instance[name] = function (...params) {
+
+  instance[name] = function bind(...params) {
     return func(method.bind(this), params);
   };
 }

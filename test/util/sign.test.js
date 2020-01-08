@@ -75,5 +75,3 @@ test('ecdsaSign and ecdsaRecover', () => {
   const address = format.hex(sha3(publicKey).slice(-20));
   expect(address).toEqual(ADDRESS);
 });
-
-
