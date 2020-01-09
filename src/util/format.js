@@ -77,6 +77,16 @@ function toBigNumber(value) {
 const format = {};
 
 /**
+ * @param arg {any}
+ * @return {any} arg
+ *
+ * @example
+ * > format.any(1)
+ 1
+ */
+format.any = Parser(v => v);
+
+/**
  * When encoding UNFORMATTED DATA (byte arrays, account addresses, hashes, bytecode arrays): encode as hex, prefix with "0x", two hex digits per byte.
  *
  * @param arg {number|BigNumber|string|Buffer|boolean|null}
@@ -264,7 +274,7 @@ format.buffer = Parser(v => (Buffer.isBuffer(v) ? v : Buffer.from(format.hex(v).
  * > format.boolean(false)
  false
  */
-format.boolean = Parser(v => v).validate(lodash.isBoolean, 'boolean');
+format.boolean = format.any.validate(lodash.isBoolean, 'boolean');
 
 // ----------------------------- parse rpc returned ---------------------------
 format.transaction = Parser({

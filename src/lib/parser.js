@@ -112,8 +112,9 @@ class Parser {
     return new this.constructor(inner);
   }
 
-  parse(func) {
-    const inner = value => func(this(value));
+  parse(schema) {
+    const outer = new this.constructor(schema);
+    const inner = value => outer(this(value));
     return new this.constructor(inner);
   }
 

@@ -4,6 +4,14 @@ const format = require('../../src/util/format');
 const HEX_64 = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 const HEX_40 = '0x0123456789012345678901234567890123456789';
 
+test('any', () => {
+  expect(format.any()).toEqual(undefined);
+  expect(format.any(null)).toEqual(null);
+  expect(format.any(1)).toEqual(1);
+  expect(format.any(true)).toEqual(true);
+  expect(format.any('string')).toEqual('string');
+});
+
 test('hex(null)', () => {
   expect(format.hex(null)).toEqual('0x');
 
