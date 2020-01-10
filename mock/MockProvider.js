@@ -2,9 +2,9 @@
 const lodash = require('lodash');
 const { toHex, padHex, randomPick, randomHex, HexStruct } = require('./util');
 
-const addressStruct = new HexStruct('0xa', { address: 4 }, 40);
-const blockHashStruct = new HexStruct('0xb', { epochNumber: 6, blockIndex: 2 }, 64);
-const txHashStruct = new HexStruct('0xf', { epochNumber: 6, blockIndex: 2, transactionIndex: 4 }, 64);
+const addressStruct = new HexStruct('0xa0', { address: 38 }, 40);
+const blockHashStruct = new HexStruct('0xb0', { epochNumber: 6, blockIndex: 56 }, 64);
+const txHashStruct = new HexStruct('0xf0', { epochNumber: 6, blockIndex: 2, transactionIndex: 54 }, 64);
 
 function mockBlockHashArray(self, epochNumber) {
   const blockHashArray = lodash.range(self.epochBlockCount).map(
@@ -15,16 +15,17 @@ function mockBlockHashArray(self, epochNumber) {
 
 function mockBlockByHash(self, blockHash) {
   const { epochNumber, blockIndex } = blockHashStruct.decode(blockHash);
-  const blockCount = (epochNumber - 1) * self.epochBlockCount + blockIndex;
+
+  const blockCount = epochNumber * self.epochBlockCount + blockIndex;
   const minerIndex = blockCount % self.addressCount;
 
   const parentHash = blockIndex === 0
-    ? blockHashStruct.encode({ epochNumber: epochNumber ? epochNumber - 1 : 0, blockIndex: 0 })
+    ? blockHashStruct.encode({ epochNumber: epochNumber ? epochNumber - 1 : 0, blockIndex })
     : blockHashStruct.encode({ epochNumber, blockIndex: blockIndex - 1 });
 
-  const refereeHashes = [blockHashStruct.encode({ epochNumber: epochNumber ? epochNumber - 1 : 0, blockIndex })];
+  const refereeHashes = [blockHashStruct.encode({ epochNumber, blockIndex })];
   const miner = addressStruct.encode({ address: minerIndex });
-  const timestamp = self.startTimestamp + blockCount; // in secords
+  const timestamp = self.startTimestamp + (blockCount * self.blockDelta); // in secords
 
   return {
     epochNumber: toHex(epochNumber),
@@ -45,10 +46,11 @@ function mockTxHashArray(self, blockHash) {
 
 function mockTxByHash(self, txHash) {
   const { epochNumber, blockIndex, transactionIndex } = txHashStruct.decode(txHash);
+
   const blockCount = epochNumber * self.epochBlockCount + blockIndex;
   const txCount = blockCount * self.blockTxCount + transactionIndex;
   const fromIndex = txCount % self.addressCount;
-  const toIndex = (txCount + epochNumber) % self.addressCount;
+  const toIndex = (txCount + 1) % self.addressCount;
 
   const blockHash = blockHashStruct.encode({ epochNumber, blockIndex });
   const nonce = Math.floor(txCount / self.addressCount);
@@ -61,7 +63,7 @@ function mockTxByHash(self, txHash) {
     from,
     nonce: toHex(nonce),
     to,
-    status: '0x0',
+    status: randomPick(null, '0x0', '0x1'),
   };
 }
 
@@ -88,11 +90,13 @@ function mockLog(epochNumber) {
 class MockProvider {
   constructor({
     startTimestamp = Math.floor(Date.now() / 1000) - 2 * 30 * 24 * 3600,
+    blockDelta = 1,
     addressCount = 10,
     epochBlockCount = 5,
     blockTxCount = 2,
   } = {}) {
     this.startTimestamp = startTimestamp;
+    this.blockDelta = blockDelta;
     this.addressCount = addressCount;
     this.epochBlockCount = epochBlockCount;
     this.blockTxCount = blockTxCount;
@@ -174,7 +178,7 @@ class MockProvider {
       parentHash,
       refereeHashes,
       size: randomHex(4),
-      stable: randomPick(null),
+      stable: randomPick(null, true, false),
       timestamp,
       transactions,
       transactionsRoot: randomHex(64),
@@ -187,7 +191,12 @@ class MockProvider {
       throw new Error('{"code":-32602,"message":"Error: pivot chain assumption failed"}');
     }
 
-    return this.cfx_getBlockByHash(blockHash, true);
+    const block = this.cfx_getBlockByHash(blockHash, true);
+    block.stable = randomPick(true, false);
+    block.transactions.forEach(tx => {
+      tx.status = randomPick('0x0', '0x01');
+    });
+    return block;
   }
 
   // ----------------------------- transaction --------------------------------

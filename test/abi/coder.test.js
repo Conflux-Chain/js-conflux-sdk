@@ -358,7 +358,6 @@ describe('tuple', () => {
       ],
     });
     expect(coder.NamedTuple.name).toEqual('NamedTuple(age,adult)');
-    expect(coder.NamedTuple.names).toEqual(['age', 'adult']);
     expect(coder.type).toEqual('(uint256,bool)');
     expect(coder.size).toEqual(2);
     expect(coder.dynamic).toEqual(false);

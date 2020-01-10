@@ -1,3 +1,25 @@
+/**
+ * Make a NamedTuple Class
+ *
+ * @param names {string[]}
+ * @return {NamedTuple}
+ *
+ * @example
+ * > Student = namedTuple('name', 'age')
+ * > student = new Student('Tom', 18)
+ * > Array.isArray(student)
+ true
+ * > student
+ NamedTuple(name,age) [ 'Tom', 18 ]
+ * > student.toObject()
+ { name: 'Tom', age: 18 }
+ * > student.name
+ "Tom"
+ * > student.age
+ 18
+ * > student.age = 19
+ Error: can not change element to a NamedTuple
+ */
 function namedTuple(...names) {
   const _nameToIndex = {};
   names.forEach((name, index) => {
@@ -27,11 +49,7 @@ function namedTuple(...names) {
     }
 
     static get name() {
-      return `NamedTuple(${this.names.join(',')})`;
-    }
-
-    static get names() {
-      return names;
+      return `NamedTuple(${names.join(',')})`;
     }
 
     static fromObject(object) {
