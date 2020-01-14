@@ -233,7 +233,7 @@ test('sendTransaction by address', async () => {
 });
 
 test('sendTransaction by account', async () => {
-  const account = cfx.wallet.add(KEY);
+  const account = cfx.Account(KEY);
 
   cfx.getTransactionCount = async address => {
     expect(format.hex(address)).toEqual(ADDRESS);

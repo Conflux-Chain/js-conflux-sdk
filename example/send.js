@@ -13,7 +13,8 @@ async function main() {
   });
 
   // ================================ Account ================================
-  const account = cfx.wallet.add(PRIVATE_KEY); // create account instance
+  const account = cfx.Account(PRIVATE_KEY); // create account instance
+  console.log(account.address); // 0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b
 
   // ================================ Contract ================================
   // create contract instance

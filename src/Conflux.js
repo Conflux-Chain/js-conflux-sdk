@@ -3,7 +3,7 @@ const format = require('./util/format');
 
 const providerFactory = require('./provider');
 const Contract = require('./contract');
-const Wallet = require('./wallet');
+const Account = require('./Account');
 const { PendingTransaction, LogIterator } = require('./subscribe');
 
 /**
@@ -13,9 +13,9 @@ class Conflux {
   /**
    * @param [options] {object} - Conflux and Provider constructor options.
    * @param [options.url=''] {string} - Url of provider to create.
-   * @param [options.defaultEpoch="latest_state"] {string|number} - Default epochNumber. (deprecated)
-   * @param [options.defaultGasPrice] {string|number} - The default gas price in drip to use for transactions. (deprecated)
-   * @param [options.defaultGas] {string|number} - The default maximum gas provided for a transaction. (deprecated)
+   * @param [options.defaultEpoch="latest_state"] {string|number} - Default epochNumber.
+   * @param [options.defaultGasPrice] {string|number} - The default gas price in drip to use for transactions.
+   * @param [options.defaultGas] {string|number} - The default maximum gas provided for a transaction.
    *
    * @example
    * > const Conflux = require('conflux-web');
@@ -37,7 +37,6 @@ class Conflux {
     ...rest
   } = {}) {
     this.provider = this.setProvider(url, rest);
-    this.wallet = new Wallet(this);
 
     /**
      * Default epoch number for following methods:
@@ -121,6 +120,16 @@ class Conflux {
     }
 
     return this.provider;
+  }
+
+  /**
+   * A shout cut for `new Account(privateKey);`
+   *
+   * @param privateKey {string|Buffer} - See `Account.constructor`
+   * @return {Account}
+   */
+  Account(privateKey) {
+    return new Account(privateKey);
   }
 
   /**
@@ -480,9 +489,9 @@ class Conflux {
    *
    * @example
    * > await cfx.getBlockByHashWithPivotAssumption(
-     '0x3d8b71208f81fb823f4eec5eaf2b0ec6b1457d381615eff2fbe24605ea333c39',
-     '0x59339ff28bc235cceac9fa588ebafcbf61316e6a8c86c7a1d7239b9445d98e40'
-     449,
+   '0x3d8b71208f81fb823f4eec5eaf2b0ec6b1457d381615eff2fbe24605ea333c39',
+   '0x59339ff28bc235cceac9fa588ebafcbf61316e6a8c86c7a1d7239b9445d98e40'
+   449,
    );
    {
      hash: '0x3d8b71208f81fb823f4eec5eaf2b0ec6b1457d381615eff2fbe24605ea333c39',
@@ -602,7 +611,7 @@ class Conflux {
    * > // TODO call with address, need `cfx_sendTransaction`
    *
    * @example
-   * > const account = cfx.wallet.add(KEY);
+   * > const account = cfx.Account(KEY);
    * > await cfx.sendTransaction({
       from: account, // from account instance will sign by local.
       to: ADDRESS,
@@ -687,7 +696,7 @@ class Conflux {
       options.nonce = await this.getTransactionCount(options.from);
     }
 
-    if (options.from instanceof Wallet.Account) {
+    if (options.from instanceof Account) {
       // sign by local
       const tx = options.from.signTransaction(options);
       return this.sendRawTransaction(tx.serialize());

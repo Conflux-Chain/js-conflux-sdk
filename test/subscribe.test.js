@@ -8,7 +8,7 @@ const cfx = new Conflux({
 cfx.provider = new MockProvider();
 
 const KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
-const account = cfx.wallet.add(KEY);
+const account = cfx.Account(KEY);
 
 test('PendingTransaction', async () => {
   cfx.getTransactionByHash = jest.fn();
