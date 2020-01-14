@@ -50,6 +50,8 @@ test('cfx.setProvider', () => {
 
 test('cfx.close', () => {
   const cfx = new Conflux();
+  cfx.close();
 
+  cfx.provider = undefined;
   cfx.close();
 });

@@ -2,9 +2,9 @@
 const lodash = require('lodash');
 const { toHex, padHex, randomPick, randomHex, HexStruct } = require('./util');
 
-const addressStruct = new HexStruct('0xa0', { address: 38 }, 40);
-const blockHashStruct = new HexStruct('0xb0', { epochNumber: 6, blockIndex: 56 }, 64);
-const txHashStruct = new HexStruct('0xf0', { epochNumber: 6, blockIndex: 2, transactionIndex: 54 }, 64);
+const addressStruct = new HexStruct('0xa0', { address: 4 }, 40);
+const blockHashStruct = new HexStruct('0xb0', { epochNumber: 6, blockIndex: 2 }, 64);
+const txHashStruct = new HexStruct('0xf0', { epochNumber: 6, blockIndex: 2, transactionIndex: 4 }, 64);
 
 function mockBlockHashArray(self, epochNumber) {
   const blockHashArray = lodash.range(self.epochBlockCount).map(
@@ -63,7 +63,7 @@ function mockTxByHash(self, txHash) {
     from,
     nonce: toHex(nonce),
     to,
-    status: randomPick(null, '0x0', '0x1'),
+    status: self.stable ? '0x0' : randomPick(null, '0x0', '0x1'),
   };
 }
 
@@ -94,12 +94,14 @@ class MockProvider {
     addressCount = 10,
     epochBlockCount = 5,
     blockTxCount = 2,
+    stable = true,
   } = {}) {
     this.startTimestamp = startTimestamp;
     this.blockDelta = blockDelta;
     this.addressCount = addressCount;
     this.epochBlockCount = epochBlockCount;
     this.blockTxCount = blockTxCount;
+    this.stable = stable;
   }
 
   async call(method, ...params) {

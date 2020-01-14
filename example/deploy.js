@@ -2,7 +2,7 @@
 
 const Conflux = require('../src');
 
-const PRIVATE_KEY = '0xa816a06117e572ca7ae2f786a046d2bc478051d0717b....................';
+const PRIVATE_KEY = 'Your Private Key';
 
 async function main() {
   const cfx = new Conflux({
@@ -28,7 +28,7 @@ async function main() {
 
   // estimate deploy contract gas use
   const estimateDeployGas = await contract.constructor(10).estimateGas();
-  console.log(estimateDeployGas.toString()); // 173978
+  console.log(estimateDeployGas); // "173978n"
 
   // deploy the contract
   const { contractCreated } = await contract.constructor(10)
@@ -38,7 +38,7 @@ async function main() {
     })
     .confirmed();
 
-  console.log(contractCreated); // 0x32116df84f12e1fc936720a57bbdcba2a1e1ff05
+  console.log(contractCreated); // 0xf30ffa8833e44f33f362399bd39cca004ff3ffe1
   contract.address = contractCreated;
 
   // FIXME: user might need to wait few seconds here
@@ -49,7 +49,7 @@ async function main() {
    call contract method.
    'count' is a method name, see solidity.sol
    */
-  console.log(await contract.count()); // BigNumber { _hex: '0x0a' }, 10 in hex set by 'contract.constructor(10)'
+  console.log(await contract.count()); // 10n, set by 'contract.constructor(10)'
 }
 
 main().catch(e => console.error(e));

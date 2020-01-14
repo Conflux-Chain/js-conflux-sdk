@@ -1,11 +1,11 @@
+/* eslint-disable no-bitwise */
+
 const lodash = require('lodash');
-const BigNumber = require('bignumber.js');
-const { WORD_BYTES } = require('../../src/util');
 const format = require('../../src/util/format');
 const HexStream = require('../../src/abi/HexStream');
 const getCoder = require('../../src/abi/coder');
 
-const MAX_UINT = BigNumber(2).pow(WORD_BYTES * 8);
+const MAX_UINT = BigInt(1) << BigInt(32 * 8);
 
 function testEncode(coder, value, string) {
   const hex = format.hex(coder.encode(value));
@@ -79,15 +79,15 @@ describe('number', () => {
     expect(coder.size).toEqual(1);
 
     testEncode(coder, 127, '0x000000000000000000000000000000000000000000000000000000000000007f');
-    testDecode(coder, BigNumber(127), '0x000000000000000000000000000000000000000000000000000000000000007f');
+    testDecode(coder, BigInt(127), '0x000000000000000000000000000000000000000000000000000000000000007f');
 
     expect(() => coder.encode(128)).toThrow('bound error');
-    testEncodeAndDecode(coder, BigNumber(127), '0x000000000000000000000000000000000000000000000000000000000000007f');
-    testEncodeAndDecode(coder, BigNumber(1), '0x0000000000000000000000000000000000000000000000000000000000000001');
-    testEncodeAndDecode(coder, BigNumber(0), '0x0000000000000000000000000000000000000000000000000000000000000000');
-    testEncodeAndDecode(coder, BigNumber(-1), '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
-    testEncodeAndDecode(coder, BigNumber(-128), '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff80');
-    testDecode(coder, BigNumber(-128), '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcd80');
+    testEncodeAndDecode(coder, BigInt(127), '0x000000000000000000000000000000000000000000000000000000000000007f');
+    testEncodeAndDecode(coder, BigInt(1), '0x0000000000000000000000000000000000000000000000000000000000000001');
+    testEncodeAndDecode(coder, BigInt(0), '0x0000000000000000000000000000000000000000000000000000000000000000');
+    testEncodeAndDecode(coder, BigInt(-1), '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
+    testEncodeAndDecode(coder, BigInt(-128), '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff80');
+    testDecode(coder, BigInt(-128), '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcd80');
     expect(() => coder.encode(-129)).toThrow('bound error');
   });
 
@@ -99,11 +99,11 @@ describe('number', () => {
     expect(coder.size).toEqual(1);
 
     expect(() => coder.encode(256)).toThrow();
-    testEncodeAndDecode(coder, BigNumber(255), '0x00000000000000000000000000000000000000000000000000000000000000ff');
-    testEncodeAndDecode(coder, BigNumber(1), '0x0000000000000000000000000000000000000000000000000000000000000001');
-    testEncodeAndDecode(coder, BigNumber(0), '0x0000000000000000000000000000000000000000000000000000000000000000');
-    testDecode(coder, BigNumber(128), '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff80');
-    testDecode(coder, BigNumber(128), '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcd80');
+    testEncodeAndDecode(coder, BigInt(255), '0x00000000000000000000000000000000000000000000000000000000000000ff');
+    testEncodeAndDecode(coder, BigInt(1), '0x0000000000000000000000000000000000000000000000000000000000000001');
+    testEncodeAndDecode(coder, BigInt(0), '0x0000000000000000000000000000000000000000000000000000000000000000');
+    testDecode(coder, BigInt(128), '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff80');
+    testDecode(coder, BigInt(128), '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcd80');
     expect(() => coder.encode(-1)).toThrow('bound error');
   });
 
@@ -116,8 +116,8 @@ describe('number', () => {
 
     testEncode(coder, 1.0, '0x0000000000000000000000000000000000000000000000000000000000000001');
     testEncode(coder, 256, '0x0000000000000000000000000000000000000000000000000000000000000100');
-    testEncodeAndDecode(coder, BigNumber(-129), '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f');
-    expect(() => coder.encode(0.1)).toThrow('not match hex');
+    testEncodeAndDecode(coder, BigInt(-129), '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f');
+    expect(() => coder.encode(0.1)).toThrow('cannot be converted to a BigInt');
   });
 
   test('uint', () => {
@@ -130,78 +130,7 @@ describe('number', () => {
     expect(() => coder.encode(-1)).toThrow();
     expect(() => coder.encode(MAX_UINT)).toThrow();
 
-    testEncodeAndDecode(coder, MAX_UINT.minus(1), '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
-  });
-});
-
-describe('fixed', () => {
-  test('bits error', () => {
-    expect(() => getCoder({ type: 'fixed127x18' })).toThrow('invalid bits');
-    expect(() => getCoder({ type: 'fixed128x0' })).toThrow('invalid offset');
-  });
-
-  test('fixed8x1', () => {
-    const coder = getCoder({ type: 'fixed8x1' }); // n * 10 ** 1
-    expect(coder.constructor.name).toEqual('FixedCoder');
-    expect(coder.type).toEqual('fixed8x1');
-    expect(coder.signed).toEqual(true);
-    expect(coder.size).toEqual(1);
-
-    testEncode(coder, 12.7, '0x000000000000000000000000000000000000000000000000000000000000007f');
-    testDecode(coder, BigNumber(12.7), '0x000000000000000000000000000000000000000000000000000000000000007f');
-
-    expect(() => coder.encode(-12.9)).toThrow('bound error');
-    testEncodeAndDecode(coder, BigNumber(-12.8), '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff80');
-    testEncodeAndDecode(coder, BigNumber(-3.2), '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0');
-    testEncode(coder, BigNumber(-3.15), '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0');
-    testEncode(coder, BigNumber(-3.14), '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe1');
-    testEncodeAndDecode(coder, BigNumber(-3.1), '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe1');
-    testEncodeAndDecode(coder, BigNumber(0), '0x0000000000000000000000000000000000000000000000000000000000000000');
-    testEncodeAndDecode(coder, BigNumber(3.1), '0x000000000000000000000000000000000000000000000000000000000000001f');
-    testEncode(coder, BigNumber(3.14), '0x000000000000000000000000000000000000000000000000000000000000001f');
-    testEncode(coder, BigNumber(3.15), '0x0000000000000000000000000000000000000000000000000000000000000020');
-    testEncodeAndDecode(coder, BigNumber(3.2), '0x0000000000000000000000000000000000000000000000000000000000000020');
-    testEncodeAndDecode(coder, BigNumber(12.7), '0x000000000000000000000000000000000000000000000000000000000000007f');
-    expect(() => coder.encode(12.8)).toThrow('bound error');
-  });
-
-  test('ufixed8x1', () => {
-    const coder = getCoder({ type: 'ufixed8x1' }); // n * 10 ** 1
-    expect(coder.constructor.name).toEqual('FixedCoder');
-    expect(coder.type).toEqual('ufixed8x1');
-    expect(coder.signed).toEqual(false);
-    expect(coder.size).toEqual(1);
-
-    expect(() => coder.encode(-0.05)).toThrow('bound error');
-    testEncode(coder, BigNumber(-0.04), '0x0000000000000000000000000000000000000000000000000000000000000000');
-    testEncodeAndDecode(coder, BigNumber(0), '0x0000000000000000000000000000000000000000000000000000000000000000');
-    testEncodeAndDecode(coder, BigNumber(3.1), '0x000000000000000000000000000000000000000000000000000000000000001f');
-    testEncode(coder, BigNumber(3.14), '0x000000000000000000000000000000000000000000000000000000000000001f');
-    testEncode(coder, BigNumber(3.15), '0x0000000000000000000000000000000000000000000000000000000000000020');
-    testEncodeAndDecode(coder, BigNumber(3.2), '0x0000000000000000000000000000000000000000000000000000000000000020');
-    testEncodeAndDecode(coder, BigNumber(25.5), '0x00000000000000000000000000000000000000000000000000000000000000ff');
-    expect(() => coder.encode(25.6)).toThrow('bound error');
-  });
-
-  test('fixed', () => {
-    const coder = getCoder({ type: 'fixed' }); // n * 10 ** 18
-    expect(coder.constructor.name).toEqual('FixedCoder');
-    expect(coder.type).toEqual('fixed128x18');
-    expect(coder.signed).toEqual(true);
-    expect(coder.size).toEqual(16);
-
-    testEncodeAndDecode(coder, BigNumber(-12.9), '0xffffffffffffffffffffffffffffffffffffffffffffffff4cf9fe58dd760000');
-    testEncodeAndDecode(coder, BigNumber(12.8), '0x000000000000000000000000000000000000000000000000b1a2bc2ec5000000');
-  });
-
-  test('ufixed', () => {
-    const coder = getCoder({ type: 'ufixed' }); // n * 10 ** 18
-    expect(coder.constructor.name).toEqual('FixedCoder');
-    expect(coder.type).toEqual('ufixed128x18');
-    expect(coder.signed).toEqual(false);
-    expect(coder.size).toEqual(16);
-
-    testEncodeAndDecode(coder, BigNumber(25.6), '0x0000000000000000000000000000000000000000000000016345785d8a000000');
+    testEncodeAndDecode(coder, MAX_UINT - BigInt(1), '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
   });
 });
 
@@ -280,7 +209,7 @@ describe('array', () => {
     expect(coder.size).toEqual(2);
     expect(coder.dynamic).toEqual(false);
 
-    testEncodeAndDecode(coder, [BigNumber(0xab), BigNumber(0xcd)], '0x' +
+    testEncodeAndDecode(coder, [BigInt(0xab), BigInt(0xcd)], '0x' +
       '00000000000000000000000000000000000000000000000000000000000000ab' +
       '00000000000000000000000000000000000000000000000000000000000000cd',
     );
@@ -301,7 +230,7 @@ describe('array', () => {
     expect(coder.size).toEqual(undefined);
     expect(coder.dynamic).toEqual(true);
 
-    testEncodeAndDecode(coder, [BigNumber(0xab), BigNumber(0xcd)], '0x' +
+    testEncodeAndDecode(coder, [BigInt(0xab), BigInt(0xcd)], '0x' +
       '0000000000000000000000000000000000000000000000000000000000000002' +
       '00000000000000000000000000000000000000000000000000000000000000ab' +
       '00000000000000000000000000000000000000000000000000000000000000cd',
@@ -363,7 +292,7 @@ describe('tuple', () => {
     expect(coder.dynamic).toEqual(false);
     expect(coder.names).toEqual(['age', 'adult']);
 
-    testEncodeAndDecode(coder, [BigNumber(15), false], '0x' +
+    testEncodeAndDecode(coder, [BigInt(15), false], '0x' +
       '000000000000000000000000000000000000000000000000000000000000000f' +
       '0000000000000000000000000000000000000000000000000000000000000000',
     );
@@ -375,7 +304,7 @@ describe('tuple', () => {
       '000000000000000000000000000000000000000000000000000000000000000f' +
       '0000000000000000000000000000000000000000000000000000000000000000',
     ));
-    expect(value.toObject()).toEqual({ age: BigNumber(15), adult: false });
+    expect(value.toObject()).toEqual({ age: BigInt(15), adult: false });
     expect(() => { value.age = 18; }).toThrow('can not change element to a NamedTuple');
     expect(() => { delete value.age; }).toThrow('can not delete element to a NamedTuple');
   });
@@ -393,7 +322,7 @@ describe('tuple', () => {
     expect(coder.dynamic).toEqual(true);
     expect(coder.names).toEqual(['age', 'name']);
 
-    testEncodeAndDecode(coder, [BigNumber(15), 'abc'], '0x' +
+    testEncodeAndDecode(coder, [BigInt(15), 'abc'], '0x' +
       '000000000000000000000000000000000000000000000000000000000000000f' +
       '0000000000000000000000000000000000000000000000000000000000000040' +
       '0000000000000000000000000000000000000000000000000000000000000003' +
@@ -438,7 +367,7 @@ describe('tuple', () => {
     expect(coder.dynamic).toEqual(false);
     expect(coder.names).toEqual(['age', 'location']);
 
-    testEncodeAndDecode(coder, [BigNumber(15), [BigNumber(-1500), BigNumber(900)]], '0x' +
+    testEncodeAndDecode(coder, [BigInt(15), [BigInt(-1500), BigInt(900)]], '0x' +
       '000000000000000000000000000000000000000000000000000000000000000f' +
       'fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffa24' +
       '0000000000000000000000000000000000000000000000000000000000000384',
@@ -479,7 +408,7 @@ describe('tuple', () => {
 
     testEncodeAndDecode(
       coder,
-      [BigNumber(0x123), [BigNumber(0x456), BigNumber(0x789)], 'Hello, world!', Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])],
+      [BigInt(0x123), [BigInt(0x456), BigInt(0x789)], 'Hello, world!', Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])],
       '0x' +
       '0000000000000000000000000000000000000000000000000000000000000123' +
       '0000000000000000000000000000000000000000000000000000000000000080' +

@@ -33,15 +33,15 @@ class Contract {
    "0xc3ed1a06471be1d3bcd014051fbe078387ec0ad8"
 
    * > await contract.count(); // call a method without parameter, get decoded return value.
-   BigNumber { _hex: '0x64' }
+   100n
    * > await contract.inc(1); // call a method with parameters, get decoded return value.
-   BigNumber { _hex: '0x65' }
+   101n
    * > await contract.count().call({ from: account }); // call a method from a account.
-   BigNumber { _hex: '0x64' }
+   100n
    * > await contract.count().estimateGas();
-   21655
+   21655n
    * > await contract.count().estimateGas({ from: ADDRESS, nonce: 68 }); // if from is a address string, nonce is required
-   21655
+   21655n
 
    * // send transaction from account instance, then wait till confirmed, and get receipt.
    * > await contract.inc(1)
@@ -59,11 +59,11 @@ class Contract {
    * > await contract.abi.decodeData(tx.data)
    {
      name: 'inc',
-     params: [BigNumber{0x01}]
+     params: NamedTuple(num) [ 100n ]
    }
 
    * > await contract.count(); // data in block chain changed by transaction.
-   BigNumber { _hex: '0x65' }
+   101n
 
    * > logs = await contract.SelfEvent(account1.address).getLogs()
    [
@@ -89,9 +89,9 @@ class Contract {
    * > contract.abi.decodeLog(logs[0]);
    {
       name: "SelfEvent",
-      params: [
+      params: NamedTuple(sender,current) [
         '0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b',
-        BigNumber{0x64},
+        100n
       ]
     }
    */

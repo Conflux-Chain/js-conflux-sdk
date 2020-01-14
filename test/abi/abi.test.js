@@ -1,7 +1,5 @@
-const BigNumber = require('bignumber.js');
 const { formatSignature, FunctionCoder, EventCoder } = require('../../src/abi');
 
-// ============================================================================
 test('function', () => {
   const abi = {
     name: 'func',
@@ -36,9 +34,9 @@ test('function', () => {
   };
 
   const params = [
-    BigNumber(-1),
+    BigInt(-1),
     ['0x0123456789012345678901234567890123456789', ['Hello', 'World']],
-    [[BigNumber(0xab), BigNumber(0xcd)], true],
+    [[BigInt(0xab), BigInt(0xcd)], true],
   ];
 
   const hex = '0x' +
@@ -63,7 +61,7 @@ test('function', () => {
   expect(coder.encodeInputs(params)).toEqual(hex);
   expect(coder.decodeInputs(hex)).toEqual(params);
   expect(coder.decodeOutputs('0x0000000000000000000000000000000000000000000000000000000000000001'))
-    .toEqual([BigNumber(1)]);
+    .toEqual([BigInt(1)]);
 });
 
 test('event', () => {
@@ -102,7 +100,7 @@ test('event', () => {
   expect(() => coder.encodeInputByIndex('', 2)).toThrow('invalid index');
 
   expect([...coder.decodeLog(log)])
-    .toEqual(['0x0123456789012345678901234567890123456789', BigNumber(10)]);
+    .toEqual(['0x0123456789012345678901234567890123456789', BigInt(10)]);
 });
 
 test('event.anonymous', () => {
@@ -131,5 +129,5 @@ test('event.anonymous', () => {
 
   const coder = new EventCoder(abi);
   expect([...coder.decodeLog(log)])
-    .toEqual(['0x0123456789012345678901234567890123456789', BigNumber(10)]);
+    .toEqual(['0x0123456789012345678901234567890123456789', BigInt(10)]);
 });

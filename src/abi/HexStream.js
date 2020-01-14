@@ -1,7 +1,7 @@
-const { assert, WORD_BYTES } = require('../util');
+const { assert } = require('../util');
 const callable = require('../lib/callable');
 
-const WORD_CHAR = WORD_BYTES * 2;
+const WORD_CHARS = 64;
 
 class HexStream {
   constructor(hex) {
@@ -17,7 +17,7 @@ class HexStream {
       stream: this,
     });
 
-    const size = Math.ceil(length / WORD_CHAR) * WORD_CHAR;
+    const size = Math.ceil(length / WORD_CHARS) * WORD_CHARS;
     const string = alignLeft
       ? this.string.substr(this.index, length)
       : this.string.substr(this.index + (size - length), length);

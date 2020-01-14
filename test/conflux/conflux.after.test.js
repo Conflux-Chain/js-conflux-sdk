@@ -1,5 +1,4 @@
 const lodash = require('lodash');
-const BigNumber = require('bignumber.js');
 
 const Conflux = require('../../src');
 const MockProvider = require('../../mock/MockProvider');
@@ -15,7 +14,7 @@ cfx.provider = new MockProvider();
 test('getGasPrice', async () => {
   const gasPrice = await cfx.getGasPrice();
 
-  expect(BigNumber.isBigNumber(gasPrice)).toEqual(true);
+  expect(gasPrice.constructor).toEqual(BigInt);
 });
 
 test('getEpochNumber', async () => {
@@ -47,8 +46,7 @@ test('getLogs', async () => {
 test('getBalance', async () => {
   const balance = await cfx.getBalance(ADDRESS);
 
-  expect(BigNumber.isBigNumber(balance)).toEqual(true);
-  expect(balance.isInteger()).toEqual(true);
+  expect(balance.constructor).toEqual(BigInt);
 });
 
 test('getTransactionCount', async () => {
@@ -90,8 +88,8 @@ test('getBlockByHash', async () => {
   expect(Number.isInteger(block.height)).toEqual(true);
   expect(Number.isInteger(block.timestamp)).toEqual(true);
   expect(block.nonce.startsWith('0x')).toEqual(true);
-  expect(BigNumber.isBigNumber(block.gasLimit)).toEqual(true);
-  expect(BigNumber.isBigNumber(block.difficulty)).toEqual(true);
+  expect(block.gasLimit.constructor).toEqual(BigInt);
+  expect(block.difficulty.constructor).toEqual(BigInt);
   expect(Array.isArray(block.refereeHashes)).toEqual(true);
   expect(Array.isArray(block.transactions)).toEqual(true);
   block.transactions.forEach(txHash => {
@@ -112,11 +110,11 @@ test('getBlockByEpochNumber', async () => {
 
 test('getBlockByHashWithPivotAssumption', async () => {
   const block = await cfx.getBlockByHashWithPivotAssumption(
-    '0xb000001040000000000000000000000000000000000000000000000000000000',
-    '0xb000001000000000000000000000000000000000000000000000000000000000',
+    '0xb000000104000000000000000000000000000000000000000000000000000000',
+    '0xb000000100000000000000000000000000000000000000000000000000000000',
     1,
   );
-  expect(block.hash).toEqual('0xb000001040000000000000000000000000000000000000000000000000000000');
+  expect(block.hash).toEqual('0xb000000104000000000000000000000000000000000000000000000000000000');
   expect(block.epochNumber).toEqual(1);
 });
 
@@ -133,11 +131,11 @@ test('getTransactionByHash', async () => {
   expect(lodash.isNull(transaction.contractCreated) || transaction.contractCreated.startsWith('0x')).toEqual(true);
   expect(Number.isInteger(transaction.transactionIndex)).toEqual(true);
   expect(Number.isInteger(transaction.nonce)).toEqual(true);
-  expect(Number.isInteger(transaction.status)).toEqual(true);
+  expect(lodash.isNull(transaction.status) || Number.isInteger(transaction.status)).toEqual(true);
   expect(Number.isInteger(transaction.v)).toEqual(true);
-  expect(BigNumber.isBigNumber(transaction.gas)).toEqual(true);
-  expect(BigNumber.isBigNumber(transaction.gasPrice)).toEqual(true);
-  expect(BigNumber.isBigNumber(transaction.value)).toEqual(true);
+  expect(transaction.gas.constructor).toEqual(BigInt);
+  expect(transaction.gasPrice.constructor).toEqual(BigInt);
+  expect(transaction.value.constructor).toEqual(BigInt);
 });
 
 test('getTransactionReceipt', async () => {
@@ -152,8 +150,8 @@ test('getTransactionReceipt', async () => {
   expect(lodash.isNull(receipt.contractCreated) || receipt.contractCreated.startsWith('0x')).toEqual(true);
   expect(Number.isInteger(receipt.index)).toEqual(true);
   expect(Number.isInteger(receipt.epochNumber)).toEqual(true);
-  expect(Number.isInteger(receipt.outcomeStatus)).toEqual(true);
-  expect(BigNumber.isBigNumber(receipt.gasUsed)).toEqual(true);
+  expect(lodash.isNull(receipt.outcomeStatus) || Number.isInteger(receipt.outcomeStatus)).toEqual(true);
+  expect(receipt.gasUsed.constructor).toEqual(BigInt);
   expect(Array.isArray(receipt.logs)).toEqual(true);
 });
 

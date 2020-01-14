@@ -1,4 +1,3 @@
-const BigNumber = require('bignumber.js');
 const format = require('../../src/util/format');
 
 const Conflux = require('../../src');
@@ -75,7 +74,7 @@ test('getBalance', async () => {
   cfx.provider.call = async (method, address, epochNumber) => {
     expect(method).toEqual('cfx_getBalance');
     expect(address).toEqual(ADDRESS);
-    expect(epochNumber).toEqual('0x00');
+    expect(epochNumber).toEqual('0x0');
     return '0x0';
   };
   await cfx.getBalance(ADDRESS, 0);
@@ -96,18 +95,18 @@ test('getTransactionCount', async () => {
   cfx.provider.call = async (method, address, epochNumber) => {
     expect(method).toEqual('cfx_getTransactionCount');
     expect(address).toEqual(ADDRESS);
-    expect(epochNumber).toEqual('0x00');
+    expect(epochNumber).toEqual('0x0');
     return '0x0';
   };
   await cfx.getTransactionCount(ADDRESS, 0);
 });
 
 test('getBlocksByEpochNumber', async () => {
-  await expect(cfx.getBlocksByEpochNumber()).rejects.toThrow('not match hex');
+  await expect(cfx.getBlocksByEpochNumber()).rejects.toThrow('Cannot convert undefined to a BigInt');
 
   cfx.provider.call = async (method, epochNumber) => {
     expect(method).toEqual('cfx_getBlocksByEpoch');
-    expect(epochNumber).toEqual('0x00');
+    expect(epochNumber).toEqual('0x0');
   };
   await cfx.getBlocksByEpochNumber(0);
 });
@@ -136,7 +135,7 @@ test('getBlockByHash', async () => {
 });
 
 test('getBlockByEpochNumber', async () => {
-  await expect(cfx.getBlockByEpochNumber()).rejects.toThrow('not match hex');
+  await expect(cfx.getBlockByEpochNumber()).rejects.toThrow('Cannot convert undefined to a BigInt');
   await expect(cfx.getBlockByEpochNumber(0, 1)).rejects.toThrow('not match boolean');
 
   cfx.provider.call = async (method, epochNumber, detail) => {
@@ -150,7 +149,7 @@ test('getBlockByEpochNumber', async () => {
 
   cfx.provider.call = async (method, epochNumber, detail) => {
     expect(method).toEqual('cfx_getBlockByEpochNumber');
-    expect(epochNumber).toEqual('0x00');
+    expect(epochNumber).toEqual('0x0');
     expect(detail).toEqual(true);
     return null;
   };
@@ -202,8 +201,8 @@ test('sendTransaction by address', async () => {
     expect(method).toEqual('cfx_sendTransaction');
     expect(options.from).toEqual(ADDRESS);
     expect(options.nonce).toEqual('0x0');
-    expect(options.gasPrice).toEqual(format.hexNumber(cfx.defaultGasPrice));
-    expect(options.gas).toEqual(format.hexNumber(cfx.defaultGas));
+    expect(options.gasPrice).toEqual(format.numberHex(cfx.defaultGasPrice));
+    expect(options.gas).toEqual(format.numberHex(cfx.defaultGas));
     expect(options.to).toEqual(undefined);
     expect(options.value).toEqual(undefined);
     expect(options.data).toEqual(undefined);
@@ -216,7 +215,7 @@ test('sendTransaction by address', async () => {
     expect(method).toEqual('cfx_sendTransaction');
     expect(options.from).toEqual(ADDRESS);
     expect(options.nonce).toEqual('0x64');
-    expect(options.gasPrice).toEqual(format.hexNumber(cfx.defaultGasPrice));
+    expect(options.gasPrice).toEqual(format.numberHex(cfx.defaultGasPrice));
     expect(options.gas).toEqual('0x1');
     expect(options.to).toEqual(ADDRESS);
     expect(options.value).toEqual('0x0');
@@ -227,7 +226,7 @@ test('sendTransaction by address', async () => {
     nonce: 100,
     from: ADDRESS,
     to: format.buffer(ADDRESS),
-    gas: BigNumber(1),
+    gas: 1,
     value: 0,
     data: '0x',
   });
@@ -275,7 +274,7 @@ test('getCode', async () => {
   cfx.provider.call = async (method, address, epochNumber) => {
     expect(method).toEqual('cfx_getCode');
     expect(address).toEqual(ADDRESS);
-    expect(epochNumber).toEqual('0x00');
+    expect(epochNumber).toEqual('0x0');
   };
   await cfx.getCode(ADDRESS, 0);
 });
@@ -294,8 +293,8 @@ test('call', async () => {
 
     expect(options.from).toEqual(undefined);
     expect(options.nonce).toEqual(undefined);
-    expect(options.gasPrice).toEqual(format.hexNumber(cfx.defaultGasPrice));
-    expect(options.gas).toEqual(format.hexNumber(cfx.defaultGas));
+    expect(options.gasPrice).toEqual(format.numberHex(cfx.defaultGasPrice));
+    expect(options.gas).toEqual(format.numberHex(cfx.defaultGas));
     expect(options.to).toEqual(ADDRESS);
     expect(options.value).toEqual(undefined);
     expect(options.data).toEqual(undefined);
@@ -309,7 +308,7 @@ test('call', async () => {
 
     expect(options.from).toEqual(ADDRESS);
     expect(options.nonce).toEqual('0x64');
-    expect(options.gasPrice).toEqual(format.hexNumber(cfx.defaultGasPrice));
+    expect(options.gasPrice).toEqual(format.numberHex(cfx.defaultGasPrice));
     expect(options.gas).toEqual('0x1');
     expect(options.to).toEqual(ADDRESS);
     expect(options.value).toEqual('0x64');
@@ -321,7 +320,7 @@ test('call', async () => {
     {
       from: format.buffer(ADDRESS),
       to: format.buffer(ADDRESS),
-      gas: BigNumber(1),
+      gas: '1',
       value: 100,
       data: '0x',
     },
@@ -342,8 +341,8 @@ test('estimateGas', async () => {
 
     expect(options.from).toEqual(undefined);
     expect(options.nonce).toEqual(undefined);
-    expect(options.gasPrice).toEqual(format.hexNumber(cfx.defaultGasPrice));
-    expect(options.gas).toEqual(format.hexNumber(cfx.defaultGas));
+    expect(options.gasPrice).toEqual(format.numberHex(cfx.defaultGasPrice));
+    expect(options.gas).toEqual(format.numberHex(cfx.defaultGas));
     expect(options.to).toEqual(ADDRESS);
     expect(options.value).toEqual(undefined);
     expect(options.data).toEqual(undefined);
@@ -356,7 +355,7 @@ test('estimateGas', async () => {
 
     expect(options.from).toEqual(ADDRESS);
     expect(options.nonce).toEqual('0x64');
-    expect(options.gasPrice).toEqual(format.hexNumber(cfx.defaultGasPrice));
+    expect(options.gasPrice).toEqual(format.numberHex(cfx.defaultGasPrice));
     expect(options.gas).toEqual('0x1');
     expect(options.to).toEqual(ADDRESS);
     expect(options.value).toEqual('0x64');
@@ -367,7 +366,7 @@ test('estimateGas', async () => {
     {
       from: format.buffer(ADDRESS),
       to: format.buffer(ADDRESS),
-      gas: BigNumber(1),
+      gas: '0x01',
       value: 100,
       data: '0x',
     },

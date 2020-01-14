@@ -1,5 +1,3 @@
-const format = require('./format');
-
 const UNIT_MATRIX = {
   cfx: { cfx: 1, gdrip: 1e9, drip: 1e18 },
   gdrip: { cfx: 1e-9, gdrip: 1, drip: 1e9 },
@@ -15,10 +13,10 @@ const UNIT_MATRIX = {
  *
  * @example
  * > unit('cfx', 'drip')(1)
- "1000000000000000000" // BigNumber
+ 1000000000000000000n
 
- * > unit('drip', 'cfx')(1)
- "0.000000000000000001" // BigNumber
+ * > unit('drip', 'cfx')(1000000000000000000)
+ 1n
  */
 function unit(from, to) {
   const keys = Object.keys(UNIT_MATRIX);
@@ -28,67 +26,75 @@ function unit(from, to) {
   if (!keys.includes(to)) {
     throw new Error(`"to" must in ${JSON.stringify(keys)}, got "${to}"`);
   }
-  return value => format.bigNumber(value).times(UNIT_MATRIX[from][to]);
+
+  const multiple = UNIT_MATRIX[from][to];
+  const reciprocal = UNIT_MATRIX[to][from];
+
+  return function (value) {
+    return multiple > 1
+      ? BigInt(value) * BigInt(multiple)
+      : BigInt(value) / BigInt(reciprocal);
+  };
 }
 
 // ----------------------------------------------------------------------------
 /**
- * @param {number|BigNumber|string}
- * @return {BigNumber}
+ * @param {number|BigInt|string}
+ * @return {BigInt}
  *
  * @example
- * > fromCFXToGDrip(3.14)
- "3140000000"
+ * > fromCFXToGDrip(123)
+ 123000000000n
  */
 unit.fromCFXToGDrip = unit('cfx', 'gdrip');
 
 /**
- * @param {number|BigNumber|string}
- * @return {BigNumber}
+ * @param {number|BigInt|string}
+ * @return {BigInt}
  *
  * @example
- * > fromCFXToDrip(3.14)
- "3140000000000000000"
+ * > fromCFXToDrip(123)
+ 123000000000000000000n
  */
 unit.fromCFXToDrip = unit('cfx', 'drip');
 
 /**
- * @param {number|BigNumber|string}
- * @return {BigNumber}
+ * @param {number|BigInt|string}
+ * @return {BigInt}
  *
  * @example
- * > fromGDripToCFX(3.14)
- "0.00000000314"
+ * > fromGDripToCFX(123456789012)
+ 123n
  */
 unit.fromGDripToCFX = unit('gdrip', 'cfx');
 
 /**
- * @param {number|BigNumber|string}
- * @return {BigNumber}
+ * @param {number|BigInt|string}
+ * @return {BigInt}
  *
  * @example
- * > fromGDripToDrip(3.14)
- "3140000000"
+ * > fromGDripToDrip(123)
+ 123000000000n
  */
 unit.fromGDripToDrip = unit('gdrip', 'drip');
 
 /**
- * @param {number|BigNumber|string}
- * @return {BigNumber}
+ * @param {number|BigInt|string}
+ * @return {BigInt}
  *
  * @example
- * > fromDripToCFX(3.14)
- "0.00000000000000000314"
+ * > fromDripToCFX(123456789012345678901)
+ 123n
  */
 unit.fromDripToCFX = unit('drip', 'cfx');
 
 /**
- * @param {number|BigNumber|string}
- * @return {BigNumber}
+ * @param {number|BigInt|string}
+ * @return {BigInt}
  *
  * @example
- * > fromDripToGDrip(3.14)
- "0.00000000314"
+ * > fromDripToGDrip(123456789012)
+ 123
  */
 unit.fromDripToGDrip = unit('drip', 'gdrip');
 

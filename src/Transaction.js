@@ -7,10 +7,10 @@ class Transaction {
    *
    * @param options {object}
    * @param options.nonce {string|number} - This allows to overwrite your own pending transactions that use the same nonce.
-   * @param options.gasPrice {string|number|BigNumber} - The price of gas for this transaction in drip.
+   * @param options.gasPrice {string|number} - The price of gas for this transaction in drip.
    * @param options.gas {string|number} - The amount of gas to use for the transaction (unused gas is refunded).
    * @param [options.to=null] {string} - The destination address of the message, left undefined for a contract-creation transaction.
-   * @param [options.value=0] {string|number|BigNumber} - The value transferred for the transaction in drip, also the endowment if it’s a contract-creation transaction.
+   * @param [options.value=0] {string|number} - The value transferred for the transaction in drip, also the endowment if it’s a contract-creation transaction.
    * @param [options.data='0x'] {string|Buffer} - Either a ABI byte string containing the data of the function call on a contract, or in the case of a contract-creation transaction the initialisation code.
    * @param [options.r] {string|Buffer} - ECDSA signature r
    * @param [options.s] {string|Buffer} - ECDSA signature s
@@ -72,7 +72,7 @@ class Transaction {
    * @param [includeSignature=false] {boolean} - Whether or not to include the signature.
    * @return {Buffer}
    */
-  encode(includeSignature = false) {
+  encode(includeSignature) {
     const { nonce, gasPrice, gas, to, value, data, v, r, s } = format.signTx(this);
 
     const raw = includeSignature
@@ -85,7 +85,7 @@ class Transaction {
   /**
    * Get the raw tx hex string.
    *
-   * @return {Buffer}
+   * @return {string} Hex string
    */
   serialize() {
     return format.hex(this.encode(true));

@@ -12,7 +12,7 @@ async function main() {
 
   // create contract instance by address, which deploy in `deploy.js`.
   const contract = cfx.Contract({
-    address: '0x32116df84f12e1fc936720a57bbdcba2a1e1ff05',
+    address: '0xf30ffa8833e44f33f362399bd39cca004ff3ffe1',
     abi: require('./contract/abi.json'),
   });
 
@@ -20,13 +20,13 @@ async function main() {
    * call contract function.
    * `count` is a function name, see `solidity.sol`
    */
-  console.log(await contract.count()); // BigNumber { _hex: '0x0a' }, 10 in hex set by 'contract.constructor(10)'
+  console.log(await contract.count()); // 10n, set by 'contract.constructor(10)'
 
   /**
    * call contract function with params.
    * (Executes a message call transaction, which is directly executed in the VM of the node, but never mined into the block chain.)
    */
-  console.log(await contract.inc(1)); // BigNumber { _hex: '0x0b' }, 11=10+1
+  console.log(await contract.inc(1)); // 11n, 11=10+1
 
   /**
    * get a encode data
@@ -37,14 +37,14 @@ async function main() {
   /**
    * as you see, above call operation not change the count!
    */
-  console.log(await contract.count()); // BigNumber { _hex: '0x0a' }
+  console.log(await contract.count()); // 10n
 
   /**
    * `self` is a function which emit a `SelfEvent` event, but will not level log cause `cfx_call` operate.
    */
   console.log(await contract.self()); // undefined
 
-  const iter = contract.SelfEvent().getLogs({ fromEpoch: 545896, toEpoch: 660500 });
+  const iter = contract.SelfEvent().getLogs({ fromEpoch: 228412, toEpoch: 228459 });
   for await (const log of iter) {
     console.log(log);
   }

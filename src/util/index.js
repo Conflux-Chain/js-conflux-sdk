@@ -1,6 +1,10 @@
 const lodash = require('lodash');
 
-const WORD_BYTES = 32; // byte number pre abi word
+// @see https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/BigInt
+// eslint-disable-next-line no-extend-native
+BigInt.prototype.toJSON = function () {
+  return this.toString();
+};
 
 function assert(bool, value) {
   if (!bool) {
@@ -49,14 +53,10 @@ async function loop({ delta = 1000, timeout = 30 * 1000 }, func) {
 
 function decorate(instance, name, func) {
   const method = instance[name];
-
-  instance[name] = function bind(...params) {
-    return func(method.bind(this), params);
-  };
+  instance[name] = (...params) => func(method.bind(instance), params);
 }
 
 module.exports = {
-  WORD_BYTES,
   assert,
   sleep,
   loop,

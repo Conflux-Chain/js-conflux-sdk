@@ -2,7 +2,7 @@
 
 const Conflux = require('../src');
 
-const PRIVATE_KEY = '0xa816a06117e572ca7ae2f786a046d2bc478051d0717b....................';
+const PRIVATE_KEY = 'Your Private Key';
 
 async function main() {
   const cfx = new Conflux({
@@ -18,18 +18,18 @@ async function main() {
   // ================================ Contract ================================
   // create contract instance
   const contract = cfx.Contract({
-    address: '0x32116df84f12e1fc936720a57bbdcba2a1e1ff05',
+    address: '0xf30ffa8833e44f33f362399bd39cca004ff3ffe1',
     abi: require('./contract/abi.json'),
     // code: require('./code.json'), unnecessary
   });
 
-  console.log(JSON.stringify(await contract.count())); // "10" set by 'contract.constructor(10)'
+  console.log(await contract.count()); // 10n, set by 'contract.constructor(10)'
 
   /*
    estimate gas if you not sure cfx.defaultGas is enough or not
    */
   const estimateIncGas = await contract.inc(1).estimateGas();
-  console.log(estimateIncGas); // 26950
+  console.log(estimateIncGas); // 26950n
 
   /*
    send transaction to contract, `gas` is optional and use cfx.defaultGas as default.
@@ -38,21 +38,21 @@ async function main() {
   const receipt = await contract.inc(1).sendTransaction({ from: account, gas: estimateIncGas }).confirmed();
   console.log(receipt);
   // {
-  //   blockHash: '0x278cc391a8fecfd9294e9cb20c837bd4f8d6692b3b5ff9ae48b17e88a600c4a0',
-  //   contractCreated: null,
-  //   epochNumber: 389862,
-  //   from: '0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b',
-  //   gasUsed: BigNumber { s: 1, e: 4, c: [ 26950 ] },
   //   index: 0,
+  //   epochNumber: 233560,
+  //   outcomeStatus: 0,
+  //   gasUsed: 26950n,
+  //   blockHash: '0xc16ba05ec2921e21129f265c13cc88d579ff9e80206f9181be95cf6ce98d6f22',
+  //   contractCreated: null,
+  //   from: '0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b',
   //   logs: [],
   //   logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
-  //   outcomeStatus: 0,
-  //   stateRoot: '0x7a3af18a984f5c0fdb4d0895f3b1bfda2989ba2af3aa826ff56f9c3f8d63d0e9',
-  //   to: '0xbd72de06cd4a94ad31ed9303cf32a2bccb82c404',
-  //   transactionHash: '0x254d0dac130c9ac5b23abdb1a65a2ac7f20c8fcc0c5e3a8e3e45aa6f58111f19'
+  //   stateRoot: '0x5426d5a953308ddc1a8e8ab6fb88fe95d3ff7fb8910f396b436ed20956ed3794',
+  //   to: '0xf30ffa8833e44f33f362399bd39cca004ff3ffe1',
+  //   transactionHash: '0x438247448eb97b9d2e71ee3f40bb2b7cd086f2e84f8d730561c5236cdc727ea6'
   // }
 
-  console.log(JSON.stringify(await contract.count())); // "11", data in block chain changed !!!
+  console.log(await contract.count()); // 11n, data in block chain changed !!!
 
   // FIXME: user might need to wait few seconds here
 
@@ -65,85 +65,62 @@ async function main() {
   // get transaction hash
   const txHash = await promise;
   console.log(txHash);
-  // "0xb0920df2ab4fe635304ca80e87a2c6c91a0bb29eefa5b8f2efab5a5dc23a197f"
+  // "0x7f52b883bda00323cc44848abb3e1944395d2d69d3c884986b4aca2ef2de849c"
 
   // get transaction immediate, `blockHash` still in this moment
   const getTx = await promise.get();
   console.log(getTx);
   // {
-  //   "blockHash": null,
-  //   "contractCreated": null,
-  //   "data": "0x812600df0000000000000000000000000000000000000000000000000000000000000001",
-  //   "from": "0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b",
-  //   "gas": "1000000",
-  //   "gasPrice": "100",
-  //   "hash": "0xb0920df2ab4fe635304ca80e87a2c6c91a0bb29eefa5b8f2efab5a5dc23a197f",
-  //   "nonce": 23,
-  //   "r": "0x4993a3b854ce6e24d79728fbd68c5abd99675f88d97174d97b4824fecc2c64fe",
-  //   "s": "0x21df8be0bdb0ed187b0c3fc55ea7d43e5ebdd2c59bc3a62fb5aecee5f4c69f3e",
-  //   "status": null,
-  //   "to": "0x32116df84f12e1fc936720a57bbdcba2a1e1ff05",
-  //   "transactionIndex": null,
-  //   "v": 0,
-  //   "value": "0"
+  //   nonce: 2,
+  //   value: 0n,
+  //   gasPrice: 100n,
+  //   gas: 1000000n,
+  //   v: 1,
+  //   transactionIndex: null,
+  //   status: null,
+  //   blockHash: null,
+  //   contractCreated: null,
+  //   data: '0x812600df0000000000000000000000000000000000000000000000000000000000000001',
+  //   from: '0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b',
+  //   hash: '0x7f52b883bda00323cc44848abb3e1944395d2d69d3c884986b4aca2ef2de849c',
+  //   r: '0x490164c23913460ee9312955c3f8d9186d9cf029978f2ae717ffd16826f1706f',
+  //   s: '0x2f2bd7975f4c804ec3b94e4d799a0bb07e929beb8ad35848307f2cad3df78ff8',
+  //   to: '0xf30ffa8833e44f33f362399bd39cca004ff3ffe1'
   // }
 
   // wait till transaction to be mined, and `blockHash` filled.
   const minedTx = await promise.mined();
   console.log(minedTx);
   // {
-  //   "blockHash": "0xd7832660edfa30cbfedb04056ba867399b32cc4175af73be42d9c625d8c0b728",
-  //   "contractCreated": null,
-  //   "data": "0x812600df0000000000000000000000000000000000000000000000000000000000000001",
-  //   "from": "0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b",
-  //   "gas": "1000000",
-  //   "gasPrice": "100",
-  //   "hash": "0xb0920df2ab4fe635304ca80e87a2c6c91a0bb29eefa5b8f2efab5a5dc23a197f",
-  //   "nonce": 23,
-  //   "r": "0x4993a3b854ce6e24d79728fbd68c5abd99675f88d97174d97b4824fecc2c64fe",
-  //   "s": "0x21df8be0bdb0ed187b0c3fc55ea7d43e5ebdd2c59bc3a62fb5aecee5f4c69f3e",
-  //   "status": 0,
-  //   "to": "0x32116df84f12e1fc936720a57bbdcba2a1e1ff05",
-  //   "transactionIndex": 0,
-  //   "v": 0,
-  //   "value": "0"
+  //   transactionIndex: 0,
+  //   status: 0,
+  //   blockHash: '0x679f316fbdbf6951393ddcbf36939ff44b024b7ee3416fe0b50cf75f347e3ce1',
+  //   contractCreated: null,
+  //   hash: '0x7f52b883bda00323cc44848abb3e1944395d2d69d3c884986b4aca2ef2de849c',
+  //   ...
   // }
 
   // wait till transaction to be executed, and can get receipt now.
   const executedReceipt = await promise.executed();
   console.log(executedReceipt);
   // {
-  //   "blockHash": "0xd7832660edfa30cbfedb04056ba867399b32cc4175af73be42d9c625d8c0b728",
-  //   "contractCreated": null,
-  //   "epochNumber": 774008,
-  //   "from": "0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b",
-  //   "gasUsed": "26950",
-  //   "index": 0,
-  //   "logs": [],
-  //   "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-  //   "outcomeStatus": 0,
-  //   "stateRoot": "0x27b8c390f75de6acd06d1898340b294321debf47faf9467fc4226ead1e38b218",
-  //   "to": "0x32116df84f12e1fc936720a57bbdcba2a1e1ff05",
-  //   "transactionHash": "0xb0920df2ab4fe635304ca80e87a2c6c91a0bb29eefa5b8f2efab5a5dc23a197f"
+  //   index: 0,
+  //   epochNumber: 233652,
+  //   outcomeStatus: 0,
+  //   gasUsed: 26950n,
+  //   blockHash: '0x679f316fbdbf6951393ddcbf36939ff44b024b7ee3416fe0b50cf75f347e3ce1',
+  //   contractCreated: null,
+  //   from: '0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b',
+  //   logs: [],
+  //   logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+  //   stateRoot: '0xa152983752e927a1e41c58155b11892362f29c6b1fa6cf3264be02d6f05d16a2',
+  //   to: '0xf30ffa8833e44f33f362399bd39cca004ff3ffe1',
+  //   transactionHash: '0x7f52b883bda00323cc44848abb3e1944395d2d69d3c884986b4aca2ef2de849c'
   // }
 
   // wait till transaction revert risk < 0.01
   const confirmedReceipt = await promise.confirmed({ threshold: 0.01 });
-  console.log(confirmedReceipt);
-  // {
-  //   "blockHash": "0xd7832660edfa30cbfedb04056ba867399b32cc4175af73be42d9c625d8c0b728",
-  //   "contractCreated": null,
-  //   "epochNumber": 774008,
-  //   "from": "0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b",
-  //   "gasUsed": "26950",
-  //   "index": 0,
-  //   "logs": [],
-  //   "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-  //   "outcomeStatus": 0,
-  //   "stateRoot": "0x27b8c390f75de6acd06d1898340b294321debf47faf9467fc4226ead1e38b218",
-  //   "to": "0x32116df84f12e1fc936720a57bbdcba2a1e1ff05",
-  //   "transactionHash": "0xb0920df2ab4fe635304ca80e87a2c6c91a0bb29eefa5b8f2efab5a5dc23a197f"
-  // }
+  console.log(confirmedReceipt); // same as above
 }
 
 main().catch(e => console.error(e));

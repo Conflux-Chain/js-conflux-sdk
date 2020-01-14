@@ -3,8 +3,8 @@
 const Conflux = require('../src');
 const unit = require('../src/util/unit');
 
-const PRIVATE_KEY_1 = '0xa816a06117e572ca7ae2f786a046d2bc478051d0717b....................';
-const PRIVATE_KEY_2 = '0x52a937219bbc01a232236ee16ec098e4acc951ec7a80....................';
+const PRIVATE_KEY = '0xa816a06117e572ca7ae2f786a046d2bc478051d0717bf5cc4f5397923258d393';
+const ADDRESS = '0x1ead8630345121d19ee3604128e5dc54b36e8ea6';
 
 async function main() {
   const cfx = new Conflux({
@@ -14,29 +14,27 @@ async function main() {
     logger: console,
   });
 
-  const account1 = cfx.wallet.add(PRIVATE_KEY_1);
-  const account2 = cfx.wallet.add(PRIVATE_KEY_2);
-  console.log(account1.address); // 0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b
-  console.log(account2.address); // 0x1ead8630345121d19ee3604128e5dc54b36e8ea6
+  const account = cfx.wallet.add(PRIVATE_KEY); // create account instance
+  console.log(account.address); // 0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b
 
   // --------------------------- sendTransaction ------------------------------
 
   // case 1: send transaction and get txHash
   const txHash = await cfx.sendTransaction({
-    from: account1,
-    to: account2,
-    value: unit.fromCFXToDrip(0.02),
+    from: account,
+    to: ADDRESS,
+    value: unit.fromGDripToDrip(123),
   });
-  console.log(txHash); // 0xaf93e8764813ded1e64b427d5f793a5c9e064f63f5e99492844f4eafae0a0add
+  console.log(txHash); // 0x4cda8297fc16e2d02018f0ffd484a3f9d38b1f500fe78d1a8451633e354f0c97
 
   // FIXME: user might need to wait few seconds here
 
   // case 2: send transaction and await XXX status
   const promise = cfx.sendTransaction({
     // nonce: if nonce miss, auto call `cfx.getTransactionCount` to get nonce, if you have a batch of transaction to be send, you **must** query `nonce` and increase manual.
-    from: account1,
-    to: account2,
-    value: unit.fromCFXToDrip(0.03),
+    from: account,
+    to: ADDRESS,
+    value: unit.fromGDripToDrip(456),
   });
 
   console.log(await promise); // await and get txHash
@@ -48,22 +46,20 @@ async function main() {
   // FIXME: user might need to wait few seconds here
 
   // case 3: sign and send transaction manual
-  const nonce = await cfx.getTransactionCount(account1);
-  const tx = account1.signTransaction({
+  const nonce = await cfx.getTransactionCount(account);
+  const tx = account.signTransaction({
     nonce,
-    to: account2,
-    value: unit.fromCFXToDrip(0.02),
+    to: ADDRESS,
+    value: unit.fromGDripToDrip(789),
     gasPrice: 100,
     gas: 1000000,
   });
 
   console.log(tx);
-  console.log(tx.from === account1.address); // true
-  console.log(tx.hash); // 0xfbc52b40335f6daae14bebced4f23b654d8db8c89f631b711828a8cd9a4994ca
-  console.log(tx.serialize()); // 0xf8671c64830f4240941e...
-
-  // ------------------------- sendRawTransaction -----------------------------
-
+  console.log(tx.from === account.address); // true
+  console.log(tx.hash); // 0x59541e47db709715fc407eb69a249f5dbabb55d6c06f328809fb24523f4a2cf4
+  console.log(tx.serialize()); // 0xf8650564830f4240941ead86303451...
+  // then
   // `const txHash = await cfx.sendRawTransaction(tx.serialize());` as case 1
   // `const promise = cfx.sendRawTransaction(tx.serialize());` as case 2
 }

@@ -81,9 +81,9 @@ class FunctionCoder {
    * > abi = { name: 'func', inputs: [{ type: 'int' }, { type: 'bool' }], outputs: [{ type: 'int' }] }
    * > coder = new FunctionCoder(abi)
    * > result = coder.decodeInputs('0x00000000000000000000000000000000000000000000000000000000000000640000000000000000000000000000000000000000000000000000000000000001')
-   NamedTuple(0,1) [ BigNumber { s: 1, e: 2, c: [ 100 ] }, true ]
+   NamedTuple(0,1) [ 100n, true ]
    * > console.log([...result])
-   [100, true]
+   [ 100n, true ]
    * > console.log(result[0])
    100
    * > console.log(result[1])
@@ -105,11 +105,11 @@ class FunctionCoder {
    * > abi = { name: 'func', inputs: [{ type: 'int' }, { type: 'bool' }], outputs: [{ type: 'int' }] }
    * > coder = new FunctionCoder(abi)
    * > result = coder.decodeOutputs('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')
-   NamedTuple(0) [ BigNumber { s: -1, e: 0, c: [ 1 ] } ]
+   NamedTuple(0) [ -1n ]
    * > console.log([...result])
-   [-1]
+   [-1n]
    * > console.log(result[0])
-   -1
+   -1n
    */
   decodeOutputs(hex) {
     const coder = getCoder({ type: 'tuple', components: this.outputs });
@@ -220,13 +220,13 @@ class EventCoder {
         '0x0000000000000000000000000123456789012345678901234567890123456789',
       ],
     })
-   NamedTuple(account,number) ['0x0123456789012345678901234567890123456789',BigNumber { s: 1, e: 1, c: [ 10 ] }]
+   NamedTuple(account,number) [ '0x0123456789012345678901234567890123456789', 10n ]
    * > console.log([...result])
-   [0x0123456789012345678901234567890123456789, 10]
+   [ 0x0123456789012345678901234567890123456789, 10n ]
    * > console.log(result.account) // `account` a field name in abi
    "0x0123456789012345678901234567890123456789"
    * > console.log(result.number) // `number` a field name in abi
-   10
+   10n
    */
   decodeLog({ topics, data }) {
     const stream = HexStream(data);

@@ -56,7 +56,7 @@ class LogIterator extends LazyPromise {
         return logs;
       }
 
-      await this._popUnconfirmed(logs, threshold); // logs will be change by `_popRisk`
+      await this._popUnconfirmed(logs, threshold); // logs will be change
       if (logs.length) {
         this._epoch = lodash.last(logs).epochNumber + 1;
         this._count += logs.length;

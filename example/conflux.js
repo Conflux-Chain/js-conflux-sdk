@@ -11,32 +11,42 @@ async function main() {
     logger: console,
   });
 
-  console.log(await cfx.getGasPrice()); // 0
-  console.log(await cfx.getEpochNumber()); // 823992
+  console.log(await cfx.getGasPrice()); // 819n
+  console.log(await cfx.getEpochNumber()); // 234686
 
   const balance = await cfx.getBalance('0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b');
-  console.log(balance); // BigNumber
-  console.log(balance.toString()); // 999999889185008600
-  console.log(unit.fromDripToCFX(balance).toString()); // 0.9999998891850086
+  console.log(balance); // 937499420597305000n
+  console.log(unit.fromDripToGDrip(balance)); // 937499420n
+  console.log(unit.fromDripToCFX(balance)); // 0n
+  console.log(balance.toString()); // "937499420597305000"
 
   console.log(await cfx.getTransactionCount('0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b'));
-
-  console.log(await cfx.getBlocksByEpochNumber(823498));
-  console.log(await cfx.getBlockByEpochNumber(823498));
-  console.log(await cfx.getBlockByEpochNumber(823498, true));
-  console.log(await cfx.getBlockByHash('0x1372b2a02c6f198037587863a8bd1044e0fbb8444cace771fd0f2120461da35f'));
-  console.log(await cfx.getBlockByHash('0x1372b2a02c6f198037587863a8bd1044e0fbb8444cace771fd0f2120461da35f', true));
-  console.log(await cfx.getTransactionByHash('0x8079e8fe30fd88e351c6f51a7b2dc81df847ca1395a248af240bca31d74221d9'));
-  console.log(await cfx.getTransactionReceipt('0x8079e8fe30fd88e351c6f51a7b2dc81df847ca1395a248af240bca31d74221d9'));
+  console.log(await cfx.getBlocksByEpochNumber(233211));
+  console.log(await cfx.getBlockByEpochNumber(233211));
+  console.log(await cfx.getBlockByEpochNumber(233211, true));
+  console.log(await cfx.getBlockByHash('0xc6fd0c924b1bb2a828d622b46bad4c3806bc1b778f545adb457c5de0aedd0e80'));
+  console.log(await cfx.getBlockByHash('0xc6fd0c924b1bb2a828d622b46bad4c3806bc1b778f545adb457c5de0aedd0e80', true));
+  console.log(await cfx.getTransactionByHash('0x62c94c660f6ae9191bd3ff5e6c078015f84a3ad3f22e14c97f3b1117549b8530'));
+  console.log(await cfx.getTransactionReceipt('0x62c94c660f6ae9191bd3ff5e6c078015f84a3ad3f22e14c97f3b1117549b8530'));
 
   const iter = cfx.getLogs({
-    address: '0x32116df84f12e1fc936720a57bbdcba2a1e1ff05',
-    fromEpoch: 545896,
-    toEpoch: 660500,
+    address: '0xfee5137bc15b602b4218b06613645538a3f5512e',
+    fromEpoch: 228412,
+    toEpoch: 228459,
   });
   for await (const log of iter) {
     console.log(log);
   }
+
+  /*
+    Direct RPC call.
+     you also can call method by rpc directly, but you should format arguments and parse return value your self.
+
+     JSON-RPC API @see https://conflux-chain.github.io/conflux-doc/json-rpc/
+   */
+  // console.log(await cfx.provider.call('cfx_gasPrice')); // 0x333
+  // console.log(await cfx.provider.call('cfx_epochNumber')); // 0x394be
+  // console.log(await cfx.provider.call('cfx_getBalance', '0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b')); // 0xd02aac185d63ea8
 }
 
 main().catch(e => console.error(e));
