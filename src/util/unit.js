@@ -39,7 +39,7 @@ function unit(from, to) {
 
 // ----------------------------------------------------------------------------
 /**
- * @param {number|BigInt|string}
+ * @param value {number|BigInt|string}
  * @return {BigInt}
  *
  * @example
@@ -49,7 +49,7 @@ function unit(from, to) {
 unit.fromCFXToGDrip = unit('cfx', 'gdrip');
 
 /**
- * @param {number|BigInt|string}
+ * @param value {number|BigInt|string}
  * @return {BigInt}
  *
  * @example
@@ -59,7 +59,7 @@ unit.fromCFXToGDrip = unit('cfx', 'gdrip');
 unit.fromCFXToDrip = unit('cfx', 'drip');
 
 /**
- * @param {number|BigInt|string}
+ * @param value {number|BigInt|string}
  * @return {BigInt}
  *
  * @example
@@ -69,7 +69,7 @@ unit.fromCFXToDrip = unit('cfx', 'drip');
 unit.fromGDripToCFX = unit('gdrip', 'cfx');
 
 /**
- * @param {number|BigInt|string}
+ * @param value {number|BigInt|string}
  * @return {BigInt}
  *
  * @example
@@ -79,7 +79,7 @@ unit.fromGDripToCFX = unit('gdrip', 'cfx');
 unit.fromGDripToDrip = unit('gdrip', 'drip');
 
 /**
- * @param {number|BigInt|string}
+ * @param value {number|BigInt|string}
  * @return {BigInt}
  *
  * @example
@@ -89,7 +89,7 @@ unit.fromGDripToDrip = unit('gdrip', 'drip');
 unit.fromDripToCFX = unit('drip', 'cfx');
 
 /**
- * @param {number|BigInt|string}
+ * @param value {number|BigInt|string}
  * @return {BigInt}
  *
  * @example

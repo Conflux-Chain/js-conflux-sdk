@@ -69,15 +69,19 @@ entropy |      | true     |         |
    Account {
       privateKey: '0x1a402b7c1a7417dc7236c152df5861a24d60a7beca7890bae10ccfb85e9ed037',
       address: '0xf0bf7c4ebb8b0acde3529aafd05b0bac7edb6ddc'
-    }> Account.random() // gen a different account from above
+    }
+> Account.random() // gen a different account from above
    Account {
       privateKey: '0x08c9201ea1de182f67a794f4a2ef3dfeb8f0bdf9488a78006c79048d08553299',
       address: '0xa5ec380e0378df6399b887ad1d45b60c8f3631f6'
-    }> Account.random('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
+    }
+> Account.random('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
    Account {
       privateKey: '0x6238653ddcd62238d7b47dd70a6059d9978b771cd99388fd6423f6a3a54be535',
       address: '0x20e3118c92c8f16e2307308c67db06cdd3978e13'
-    }> Account.random('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');// gen a different account from above, even use same entropy
+    }
+> Account.random('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
+// gen a different account from above, even use same entropy
    Account {
       privateKey: '0x4d6a462c78e7603ae4707672a4716799e9ebce4e267de42a0402665eee4a4e62',
       address: '0x881302cd9a3d85ccb7048ff5e679c23b5e80c0eb'
@@ -91,30 +95,33 @@ A sdk of conflux.
 
 ## Conflux.defaultEpoch (deprecated)
 
+`number,string`
+
 Default epoch number for following methods:
 - `Conflux.getBalance`
 - `Conflux.getTransactionCount`
 - `Conflux.getCode`
 - `Conflux.call`
-`number,string`
 
 
 ## Conflux.defaultGasPrice (deprecated)
+
+`number,string`
 
 Default gas price for following methods:
 - `Conflux.sendTransaction`
 - `Conflux.call`
 - `Conflux.estimateGas`
-`number,string`
 
 
 ## Conflux.defaultGas (deprecated)
+
+`number,string`
 
 Default gas limit for following methods:
 - `Conflux.sendTransaction`
 - `Conflux.call`
 - `Conflux.estimateGas`
-`number,string`
 
 
 ## Conflux.constructor
@@ -138,7 +145,8 @@ options.defaultGas      | string,number | false    |                | The defaul
 ### Example
 
 ```
-> const Conflux = require('conflux-web');> const cfx = new Conflux({url:'http://testnet-jsonrpc.conflux-chain.org:12537'});
+> const Conflux = require('conflux-web');
+> const cfx = new Conflux({url:'http://testnet-jsonrpc.conflux-chain.org:12537'});
 ```
 
 ```
@@ -173,7 +181,9 @@ options | object | false    |         | Provider constructor options.
      url: 'http://testnet-jsonrpc.conflux-chain.org:12537',
      timeout: 60000,
      ...
-   }> cfx.setProvider('http://localhost:8000');> cfx.provider;
+   }
+> cfx.setProvider('http://localhost:8000');
+> cfx.provider;
    HttpProvider {
      url: 'http://localhost:8000',
      timeout: 60000,
@@ -339,15 +349,18 @@ options.limit       | number                | false    |         | Limit log num
       address: '0xbd72de06cd4a94ad31ed9303cf32a2bccb82c404',
       fromEpoch: 'latest_mined',
       limit: 2,
-      })> await logIter.next({threshold: 0.01, delta: 1000});
+      })
+> await logIter.next({threshold: 0.01, delta: 1000});
    {
       address: '0xbd72de06cd4a94ad31ed9303cf32a2bccb82c404',
       ...
-   }> await logIter.next();
+   }
+> await logIter.next();
    {
       address: '0xbd72de06cd4a94ad31ed9303cf32a2bccb82c404',
       ...
-   }> await logIter.next();
+   }
+> await logIter.next();
    undefined
 ```
 
@@ -356,7 +369,8 @@ options.limit       | number                | false    |         | Limit log num
       address: '0xbd72de06cd4a94ad31ed9303cf32a2bccb82c404',
       fromEpoch: 'latest_mined',
       limit: 2,
-      })> for await (const log of iter) {
+      })
+> for await (const log of iter) {
        console.log(log);
      }
    {
@@ -384,8 +398,11 @@ epochNumber | string,number | false    | this.defaultEpoch | The end epochNumber
 ### Example
 
 ```
-> let balance = await cfx.getBalance("0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b");> balance;
-   1793636034970586632n> balance = await cfx.getBalance("0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b", 0);> balance.toString(10);
+> let balance = await cfx.getBalance("0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b");
+> balance;
+   1793636034970586632n
+> balance = await cfx.getBalance("0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b", 0);
+> balance.toString(10);
    "0"
 ```
 
@@ -408,7 +425,8 @@ epochNumber | string,number | false    | this.defaultEpoch | The end epochNumber
 
 ```
 > await cfx.getTransactionCount("0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b");
-   61> await cfx.getTransactionCount("0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b", 0);
+   61
+> await cfx.getTransactionCount("0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b", 0);
    0
 ```
 
@@ -455,7 +473,8 @@ epochNumber | string,number | true     |         | EpochNumber or string in ["la
 
 ```
 > await cfx.getBlocksByEpochNumber(0);
-   ['0x2da120ad267319c181b12136f9e36be9fba59e0d818f6cc789f04ee937b4f593']> await cfx.getBlocksByEpochNumber(449);
+   ['0x2da120ad267319c181b12136f9e36be9fba59e0d818f6cc789f04ee937b4f593']
+> await cfx.getBlocksByEpochNumber(449);
    [
    '0x3d8b71208f81fb823f4eec5eaf2b0ec6b1457d381615eff2fbe24605ea333c39',
    '0x59339ff28bc235cceac9fa588ebafcbf61316e6a8c86c7a1d7239b9445d98e40'
@@ -731,7 +750,8 @@ options | object | true     |         | See `format.sendTx`
 ```
 
 ```
-> const account = cfx.Account(KEY);> await cfx.sendTransaction({
+> const account = cfx.Account(KEY);
+> await cfx.sendTransaction({
       from: account, // from account instance will sign by local.
       to: ADDRESS,
       value: Drip.fromCFX(0.023),
@@ -765,27 +785,32 @@ options | object | true     |         | See `format.sendTx`
       from: account1,
       to: ADDRESS1,
       value: Drip.fromCFX(0.007),
-    });> await promise; // transaction
-   "0x91fbdfb33f3a585f932c627abbe268c7e3aedffc1633f9338f9779c64702c688"> await promise.get(); // get transaction
+    });
+> await promise; // transaction
+   "0x91fbdfb33f3a585f932c627abbe268c7e3aedffc1633f9338f9779c64702c688"
+> await promise.get(); // get transaction
    {
     "blockHash": null,
     "transactionIndex": null,
     "hash": "0x91fbdfb33f3a585f932c627abbe268c7e3aedffc1633f9338f9779c64702c688",
     ...
-   }> await promise.mined(); // wait till transaction mined
+   }
+> await promise.mined(); // wait till transaction mined
    {
     "blockHash": "0xe9b22ce311003e26c7330ac54eea9f8afea0ffcd4905828f27c9e2c02f3a00f7",
     "transactionIndex": 0,
     "hash": "0x91fbdfb33f3a585f932c627abbe268c7e3aedffc1633f9338f9779c64702c688",
     ...
-   }> await promise.executed(); // wait till transaction executed in right status. and return it's receipt.
+   }
+> await promise.executed(); // wait till transaction executed in right status. and return it's receipt.
    {
     "blockHash": "0xe9b22ce311003e26c7330ac54eea9f8afea0ffcd4905828f27c9e2c02f3a00f7",
     "index": 0,
     "transactionHash": "0x91fbdfb33f3a585f932c627abbe268c7e3aedffc1633f9338f9779c64702c688",
     "outcomeStatus": 0,
     ...
-   }> await promise.confirmed(); // wait till transaction risk coefficient '<' threshold.
+   }
+> await promise.confirmed(); // wait till transaction risk coefficient '<' threshold.
    {
     "blockHash": "0xe9b22ce311003e26c7330ac54eea9f8afea0ffcd4905828f27c9e2c02f3a00f7",
     "index": 0,
@@ -897,20 +922,31 @@ options.code    | string  | false    |         | The byte code of the contract, 
 ### Example
 
 ```
-> const contract = cfx.Contract({ abi, code });> contract instanceof Contract;
-   true> contract.abi; // input abi
-   [{type:'constructor', inputs:[...]}, ...]> contract.constructor.code; // input code
+> const contract = cfx.Contract({ abi, code });
+> contract instanceof Contract;
+   true
+> contract.abi; // input abi
+   [{type:'constructor', inputs:[...]}, ...]
+> contract.constructor.code; // input code
    "0x6080604052600080..."
 ```
 
 ```
-> const contract = cfx.Contract({ abi, address });> contract.address
-   "0xc3ed1a06471be1d3bcd014051fbe078387ec0ad8"> await contract.count(); // call a method without parameter, get decoded return value.
-   100n> await contract.inc(1); // call a method with parameters, get decoded return value.
-   101n> await contract.count().call({ from: account }); // call a method from a account.
-   100n> await contract.count().estimateGas();
-   21655n> await contract.count().estimateGas({ from: ADDRESS, nonce: 68 }); // if from is a address string, nonce is required
-   21655n// send transaction from account instance, then wait till confirmed, and get receipt.> await contract.inc(1)
+> const contract = cfx.Contract({ abi, address });
+> contract.address
+   "0xc3ed1a06471be1d3bcd014051fbe078387ec0ad8"
+> await contract.count(); // call a method without parameter, get decoded return value.
+   100n
+> await contract.inc(1); // call a method with parameters, get decoded return value.
+   101n
+> await contract.count().call({ from: account }); // call a method from a account.
+   100n
+> await contract.count().estimateGas();
+   21655n
+> await contract.count().estimateGas({ from: ADDRESS, nonce: 68 }); // if from is a address string, nonce is required
+   21655n
+// send transaction from account instance, then wait till confirmed, and get receipt.
+> await contract.inc(1)
    .sendTransaction({ from: account1 })
    .confirmed({ threshold: 0.01, timeout: 30 * 1000 });
    {
@@ -919,12 +955,16 @@ options.code    | string  | false    |         | The byte code of the contract, 
      "transactionHash": "0x8a5f48c2de0f1bdacfe90443810ad650e4b327a0d19ce49a53faffb224883e42",
      "outcomeStatus": 0,
      ...
-   }> tx = await cfx.getTransactionByHash('0x8a5f48c2de0f1bdacfe90443810ad650e4b327a0d19ce49a53faffb224883e42');> await contract.abi.decodeData(tx.data)
+   }
+> tx = await cfx.getTransactionByHash('0x8a5f48c2de0f1bdacfe90443810ad650e4b327a0d19ce49a53faffb224883e42');
+> await contract.abi.decodeData(tx.data)
    {
      name: 'inc',
      params: NamedTuple(num) [ 100n ]
-   }> await contract.count(); // data in block chain changed by transaction.
-   101n> logs = await contract.SelfEvent(account1.address).getLogs()
+   }
+> await contract.count(); // data in block chain changed by transaction.
+   101n
+> logs = await contract.SelfEvent(account1.address).getLogs()
    [
    {
       address: '0xc3ed1a06471be1d3bcd014051fbe078387ec0ad8',
@@ -943,7 +983,8 @@ options.code    | string  | false    |         | The byte code of the contract, 
       type: 'mined',
       params: [ '0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b', '10' ]
      }
-   ]> contract.abi.decodeLog(logs[0]);
+   ]
+> contract.abi.decodeLog(logs[0]);
    {
       name: "SelfEvent",
       params: NamedTuple(sender,current) [
@@ -998,7 +1039,8 @@ method    | string | true     |         | Json rpc method name.
 ### Example
 
 ```
-> await provider.call('cfx_epochNumber');> await provider.call('cfx_getBlockByHash', blockHash);
+> await provider.call('cfx_epochNumber');
+> await provider.call('cfx_getBlockByHash', blockHash);
 ```
 
 ----------
@@ -1149,11 +1191,16 @@ arg  | number,BigInt,string,Buffer,boolean,null | true     |         |
 
 ```
 > format.hex(null)
- '0x'> format.hex(1)
- "0x01"> format.hex(256)
- "0x0100"> format.hex(true)
- "0x01"> format.hex(Buffer.from([1,10,255]))
- "0x010aff"> format.hex("0x0a")
+ '0x'
+> format.hex(1)
+ "0x01"
+> format.hex(256)
+ "0x0100"
+> format.hex(true)
+ "0x01"
+> format.hex(Buffer.from([1,10,255]))
+ "0x010aff"
+> format.hex("0x0a")
  "0x0a"
 ```
 
@@ -1175,11 +1222,16 @@ arg  | number,BigInt,string,boolean | true     |         |
 
 ```
 > format.uint(-3.14)
- Error("not match uint")> format.uint('0')
- 0n> format.uint(1)
- 1n> format.uint(BigInt(100))
- 100n> format.uint('0x10')
- 16n> format.uint(Number.MAX_SAFE_INTEGER + 1) // unsafe integer
+ Error("not match uint")
+> format.uint('0')
+ 0n
+> format.uint(1)
+ 1n
+> format.uint(BigInt(100))
+ 100n
+> format.uint('0x10')
+ 16n
+> format.uint(Number.MAX_SAFE_INTEGER + 1) // unsafe integer
  Error("not match uint")
 ```
 
@@ -1201,15 +1253,24 @@ arg  | number,BigInt,string,boolean | true     |         |
 
 ```
 > format.uint(-3.14)
- Error("cannot be converted to a BigInt")> format.uint(null)
- Error("Cannot convert null to a BigInt")> format.uint('0')
- 0> format.uint(1)
- 1> format.uint(BigInt(100))
- 100> format.uint('0x10')
- 16> format.uint('')
- 0> format.uint(true)
- 1> format.uint(false)
- 0> format.uint(Number.MAX_SAFE_INTEGER + 1) // unsafe integer
+ Error("cannot be converted to a BigInt")
+> format.uint(null)
+ Error("Cannot convert null to a BigInt")
+> format.uint('0')
+ 0
+> format.uint(1)
+ 1
+> format.uint(BigInt(100))
+ 100
+> format.uint('0x10')
+ 16
+> format.uint('')
+ 0
+> format.uint(true)
+ 1
+> format.uint(false)
+ 0
+> format.uint(Number.MAX_SAFE_INTEGER + 1) // unsafe integer
  Error("not match uint")
 ```
 
@@ -1231,10 +1292,14 @@ arg  | number,string,boolean | true     |         |
 
 ```
 > format.numberHex(100)
- "0x64"> format.numberHex(10)
- "0xa"> format.numberHex(3.50)
- "0x4"> format.numberHex(3.49)
- "0x3"> format.numberHex(-1))
+ "0x64"
+> format.numberHex(10)
+ "0xa"
+> format.numberHex(3.50)
+ "0x4"
+> format.numberHex(3.49)
+ "0x3"
+> format.numberHex(-1))
  Error("not match uintHex")
 ```
 
@@ -1256,8 +1321,10 @@ arg  | number,string | true     |         | number or string in ['latest_state',
 
 ```
 > format.epochNumber(10)
- "0xa"> format.epochNumber('latest_state')
- "latest_state"> format.epochNumber('latest_mined')
+ "0xa"
+> format.epochNumber('latest_state')
+ "latest_state"
+> format.epochNumber('latest_mined')
  "latest_state"
 ```
 
@@ -1279,7 +1346,8 @@ arg  | string,Buffer | true     |         |
 
 ```
 > format.address('0x0123456789012345678901234567890123456789')
- "0x0123456789012345678901234567890123456789"> format.address('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
+ "0x0123456789012345678901234567890123456789"
+> format.address('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
  Error("not match hex40")
 ```
 
@@ -1301,7 +1369,8 @@ arg  | string,Buffer | true     |         |
 
 ```
 > format.privateKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
- "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"> format.privateKey('0x0123456789012345678901234567890123456789')
+ "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+> format.privateKey('0x0123456789012345678901234567890123456789')
  Error("not match hex64")
 ```
 
@@ -1323,7 +1392,8 @@ arg  | string,Buffer | true     |         |
 
 ```
 > format.privateKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
- "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"> format.privateKey('0x0123456789012345678901234567890123456789')
+ "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+> format.privateKey('0x0123456789012345678901234567890123456789')
  Error("not match hex64")
 ```
 
@@ -1345,7 +1415,8 @@ arg  | string,Buffer | true     |         |
 
 ```
 > format.privateKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
- "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"> format.privateKey('0x0123456789012345678901234567890123456789')
+ "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+> format.privateKey('0x0123456789012345678901234567890123456789')
  Error("not match hex64")
 ```
 
@@ -1367,11 +1438,16 @@ arg  | number,BigInt,string,Buffer,boolean,null | true     |         |
 
 ```
 > format.buffer(Buffer.from([0, 1]))
- <Buffer 00 01>> format.buffer(null)
- <Buffer >> format.buffer(1024)
- <Buffer 04 00>> format.buffer('0x0a')
- <Buffer 0a>> format.buffer(true)
- <Buffer 01>> format.buffer(3.14)
+ <Buffer 00 01>
+> format.buffer(null)
+ <Buffer >
+> format.buffer(1024)
+ <Buffer 04 00>
+> format.buffer('0x0a')
+ <Buffer 0a>
+> format.buffer(true)
+ <Buffer 01>
+> format.buffer(3.14)
  Error("not match hex")
 ```
 
@@ -1393,7 +1469,8 @@ arg  | boolean | true     |         |
 
 ```
 > format.boolean(true)
- true> format.boolean(false)
+ true
+> format.boolean(false)
  false
 ```
 
@@ -1465,8 +1542,10 @@ size | number | true     |         |
 
 ```
 > randomBuffer(0)
- <Buffer >> randomBuffer(1)
- <Buffer 33>> randomBuffer(1)
+ <Buffer >
+> randomBuffer(1)
+ <Buffer 33>
+> randomBuffer(1)
  <Buffer 5a>
 ```
 
@@ -1488,13 +1567,16 @@ entropy | Buffer | true     |         |
 
 ```
 > randomPrivateKey()
- <Buffer 23 fb 3b 2b 1f c9 36 8c a4 8e 5b dc c7 a9 e2 bd 67 81 43 3b f2 3a cc da da ff a9 dd dd b6 08 d4>> randomPrivateKey()
+ <Buffer 23 fb 3b 2b 1f c9 36 8c a4 8e 5b dc c7 a9 e2 bd 67 81 43 3b f2 3a cc da da ff a9 dd dd b6 08 d4>
+> randomPrivateKey()
  <Buffer e7 5b 68 fb f9 50 19 94 07 80 d5 13 2e 40 a7 f9 a1 b0 5d 72 c8 86 ca d1 c6 59 cd a6 bf 37 cb 73>
 ```
 
 ```
-> entropy = randomBuffer(32)> randomPrivateKey(entropy)
- <Buffer 57 90 e8 3d 16 10 02 b9 a4 33 87 e1 6b cd 40 7e f7 22 b1 d8 94 ae 98 bf 76 a4 56 fb b6 0c 4b 4a>> randomPrivateKey(entropy) // same `entropy`
+> entropy = randomBuffer(32)
+> randomPrivateKey(entropy)
+ <Buffer 57 90 e8 3d 16 10 02 b9 a4 33 87 e1 6b cd 40 7e f7 22 b1 d8 94 ae 98 bf 76 a4 56 fb b6 0c 4b 4a>
+> randomPrivateKey(entropy) // same `entropy`
  <Buffer 89 44 ef 31 d4 9c d0 25 9f b0 de 61 99 12 4a 21 57 43 d4 4b af ae ef ae e1 3a ba 05 c3 e6 ad 21>
 ```
 
@@ -1561,7 +1643,9 @@ privateKey | Buffer | true     |         |
 ### Example
 
 ```
-> privateKey = Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1]);> buffer32 = Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31])> ecdsaSign(buffer32, privateKey)
+> privateKey = Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1]);
+> buffer32 = Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31])
+> ecdsaSign(buffer32, privateKey)
  {
   r: <Buffer 21 ab b4 c3 fd 51 75 81 e6 c7 e7 e0 7f 40 4f a2 2c ba 8d 8f 71 27 0b 29 58 42 b8 3c 44 b5 a4 c6>,
   s: <Buffer 08 59 7b 69 8f 8f 3c c2 ba 0b 45 ee a7 7f 55 29 ad f9 5c a5 51 41 e7 9b 56 53 77 3d 00 5d 18 58>,
@@ -1590,8 +1674,11 @@ options.v | number | true     |         |
 ### Example
 
 ```
-> privateKey = Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1])> buffer32 = Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31])> privateKeyToAddress(privateKey)
- <Buffer 0d b9 e0 02 85 67 52 28 8b ef 47 60 fa 67 94 ec 83 a8 53 b9>> publicKeyToAddress(ecdsaRecover(buffer32, ecdsaSign(buffer32, privateKey)))
+> privateKey = Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1])
+> buffer32 = Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31])
+> privateKeyToAddress(privateKey)
+ <Buffer 0d b9 e0 02 85 67 52 28 8b ef 47 60 fa 67 94 ec 83 a8 53 b9>
+> publicKeyToAddress(ecdsaRecover(buffer32, ecdsaSign(buffer32, privateKey)))
  <Buffer 0d b9 e0 02 85 67 52 28 8b ef 47 60 fa 67 94 ec 83 a8 53 b9>
 ```
 
@@ -1607,9 +1694,9 @@ options.v | number | true     |         |
 
 ### Parameters
 
-Name | Type                 | Required | Default | Description
------|----------------------|----------|---------|------------
-     | number,BigInt,string | true     |         |
+Name  | Type                 | Required | Default | Description
+------|----------------------|----------|---------|------------
+value | number,BigInt,string | true     |         |
 
 ### Return
 
@@ -1628,9 +1715,9 @@ Name | Type                 | Required | Default | Description
 
 ### Parameters
 
-Name | Type                 | Required | Default | Description
------|----------------------|----------|---------|------------
-     | number,BigInt,string | true     |         |
+Name  | Type                 | Required | Default | Description
+------|----------------------|----------|---------|------------
+value | number,BigInt,string | true     |         |
 
 ### Return
 
@@ -1649,9 +1736,9 @@ Name | Type                 | Required | Default | Description
 
 ### Parameters
 
-Name | Type                 | Required | Default | Description
------|----------------------|----------|---------|------------
-     | number,BigInt,string | true     |         |
+Name  | Type                 | Required | Default | Description
+------|----------------------|----------|---------|------------
+value | number,BigInt,string | true     |         |
 
 ### Return
 
@@ -1670,9 +1757,9 @@ Name | Type                 | Required | Default | Description
 
 ### Parameters
 
-Name | Type                 | Required | Default | Description
------|----------------------|----------|---------|------------
-     | number,BigInt,string | true     |         |
+Name  | Type                 | Required | Default | Description
+------|----------------------|----------|---------|------------
+value | number,BigInt,string | true     |         |
 
 ### Return
 
@@ -1691,9 +1778,9 @@ Name | Type                 | Required | Default | Description
 
 ### Parameters
 
-Name | Type                 | Required | Default | Description
------|----------------------|----------|---------|------------
-     | number,BigInt,string | true     |         |
+Name  | Type                 | Required | Default | Description
+------|----------------------|----------|---------|------------
+value | number,BigInt,string | true     |         |
 
 ### Return
 
@@ -1712,9 +1799,9 @@ Name | Type                 | Required | Default | Description
 
 ### Parameters
 
-Name | Type                 | Required | Default | Description
------|----------------------|----------|---------|------------
-     | number,BigInt,string | true     |         |
+Name  | Type                 | Required | Default | Description
+------|----------------------|----------|---------|------------
+value | number,BigInt,string | true     |         |
 
 ### Return
 
@@ -1746,6 +1833,7 @@ to   | string | true     |         | Enum in ['cfx', 'gdrip', 'drip']
 
 ```
 > unit('cfx', 'drip')(1)
- 1000000000000000000n> unit('drip', 'cfx')(1000000000000000000)
+ 1000000000000000000n
+> unit('drip', 'cfx')(1000000000000000000)
  1n
 ```
