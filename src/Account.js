@@ -1,6 +1,7 @@
 const format = require('./util/format');
 const { privateKeyToAddress, randomPrivateKey } = require('./util/sign'); // and decrypt, encrypt
 const Transaction = require('./Transaction');
+const Message = require('./Message');
 
 class Account {
   /**
@@ -85,6 +86,43 @@ class Account {
       throw new Error(`Invalid signature, transaction.from !== ${this.address}`);
     }
     return tx;
+  }
+
+  /**
+   * Sign a string.
+   *
+   * @param string {string}
+   * @return {Message}
+   *
+   * @example
+   * > const account = new Account('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
+   * > const msg = account.signMessage('Hello World!')
+   * > console.log(msg);
+   Message {
+      message: 'Hello World',
+      hash: '0xa1de988600a42c4b4ab089b619297c17d53cffae5d5120d82d8a92d0bb3b78f2',
+      r: '0xe6bfbd768a421b9051fe86310f0f1eef9d5df65288b53f54d663f887a5b4bcd6',
+      s: '0x32efb64ccc67d7245545175953e811bc237fd83ab8722d8be0a66e92ec39da81',
+      v: 1
+    }
+
+   * @example
+   * > const msg = new Message({
+      hash: '0xa1de988600a42c4b4ab089b619297c17d53cffae5d5120d82d8a92d0bb3b78f2',
+      r: '0xe6bfbd768a421b9051fe86310f0f1eef9d5df65288b53f54d663f887a5b4bcd6',
+      s: '0x32efb64ccc67d7245545175953e811bc237fd83ab8722d8be0a66e92ec39da81',
+      v: 1
+    });
+   * > console.log(msg.form); // getter to recover address
+   "0xfcad0b19bb29d4674531d6f115237e16afce377c"
+   */
+  signMessage(string) {
+    const message = new Message(string);
+    message.sign(this.privateKey); // sign will cover r,s,v fields
+    if (message.from !== this.address) {
+      throw new Error(`Invalid signature, message.from !== ${this.address}`);
+    }
+    return message;
   }
 
   /**

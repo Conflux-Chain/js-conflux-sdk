@@ -7,11 +7,26 @@ test('Account', () => {
   const account = new Account(KEY);
   expect(account.privateKey).toEqual(KEY);
   expect(account.address).toEqual(ADDRESS);
+});
+
+test('Account.signTransaction', () => {
+  const account = new Account(KEY);
 
   const tx = account.signTransaction({ nonce: 0, gasPrice: 100, gas: 10000 });
   expect(tx.from).toEqual(ADDRESS);
+
   account.address = '0x0000000000000000000000000000000000000000';
   expect(() => account.signTransaction({ nonce: 0, gasPrice: 100, gas: 10000 })).toThrow('transaction.from !==');
+});
+
+test('Account.signMessage', () => {
+  const account = new Account(KEY);
+
+  const message = account.signMessage('Hello World');
+  expect(message.from).toEqual(ADDRESS);
+
+  account.address = '0x0000000000000000000000000000000000000000';
+  expect(() => account.signMessage('Hello World')).toThrow('message.from !==');
 });
 
 test('Account.random', () => {
