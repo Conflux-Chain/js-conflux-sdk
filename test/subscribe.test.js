@@ -1,4 +1,4 @@
-const Conflux = require('../src');
+const { Conflux } = require('../src');
 const MockProvider = require('../mock/MockProvider');
 
 const cfx = new Conflux({

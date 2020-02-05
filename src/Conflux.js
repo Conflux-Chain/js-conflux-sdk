@@ -18,7 +18,7 @@ class Conflux {
    * @param [options.defaultGas] {string|number} - The default maximum gas provided for a transaction.
    *
    * @example
-   * > const Conflux = require('conflux-web');
+   * > const { Conflux } = require('js-conflux-sdk');
    * > const cfx = new Conflux({url:'http://testnet-jsonrpc.conflux-chain.org:12537'});
    *
    * @example

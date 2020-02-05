@@ -1,5 +1,5 @@
-const Conflux = require('../../src');
-const MockProvider = require('../../mock/MockProvider');
+const { Conflux } = require('../../src');
+const { MockProvider } = require('../../mock');
 const { abi, code, address } = require('./contract.json');
 
 const ADDRESS = '0xfcad0b19bb29d4674531d6f115237e16afce377c';

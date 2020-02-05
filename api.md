@@ -178,7 +178,7 @@ options.defaultGas      | string,number | false    |                | The defaul
 ### Example
 
 ```
-> const Conflux = require('conflux-web');> const cfx = new Conflux({url:'http://testnet-jsonrpc.conflux-chain.org:12537'});
+> const { Conflux } = require('js-conflux-sdk');> const cfx = new Conflux({url:'http://testnet-jsonrpc.conflux-chain.org:12537'});
 ```
 
 ```
@@ -992,6 +992,61 @@ options.code    | string  | false    |         | The byte code of the contract, 
       ]
     }
 ```
+
+----------
+# Message
+
+
+
+
+## Message.constructor
+
+
+
+### Parameters
+
+Name                  | Type          | Required | Default | Description
+----------------------|---------------|----------|---------|-----------------------------
+messageOrOptions      | string,object | true     |         | The string or message object
+messageOrOptions.hash | string,Buffer | false    |         | The hashed message
+messageOrOptions.r    | string,Buffer | false    |         | ECDSA signature r
+messageOrOptions.s    | string,Buffer | false    |         | ECDSA signature s
+messageOrOptions.v    | number        | false    |         | ECDSA recovery id
+
+### Return
+
+`Message` 
+
+
+## Message.from
+
+Getter of sender address.
+
+> Note: calculate every time.
+
+### Parameters
+
+`void`
+
+### Return
+
+`string,undefined` If ECDSA recover success return address, else return undefined.
+
+
+## Message.sign
+
+Sign message and set 'r','s','v' and 'hash'.
+
+### Parameters
+
+Name       | Type   | Required | Default | Description
+-----------|--------|----------|---------|------------------------
+privateKey | string | true     |         | Private key hex string.
+
+### Return
+
+`void`
+
 
 ----------
 # provider.HttpProvider

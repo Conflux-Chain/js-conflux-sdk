@@ -1,7 +1,6 @@
 /* eslint-disable */
 
-const Conflux = require('../src');
-const unit = require('../src/util/unit');
+const { Conflux, util } = require('../src');
 
 const PRIVATE_KEY = '0xa816a06117e572ca7ae2f786a046d2bc478051d0717bf5cc4f5397923258d393';
 const ADDRESS = '0x1ead8630345121d19ee3604128e5dc54b36e8ea6';
@@ -23,7 +22,7 @@ async function main() {
   const txHash = await cfx.sendTransaction({
     from: account,
     to: ADDRESS,
-    value: unit.fromGDripToDrip(123),
+    value: util.unit.fromGDripToDrip(123),
   });
   console.log(txHash); // 0x4cda8297fc16e2d02018f0ffd484a3f9d38b1f500fe78d1a8451633e354f0c97
 
@@ -34,7 +33,7 @@ async function main() {
     // nonce: if nonce miss, auto call `cfx.getTransactionCount` to get nonce, if you have a batch of transaction to be send, you **must** query `nonce` and increase manual.
     from: account,
     to: ADDRESS,
-    value: unit.fromGDripToDrip(456),
+    value: util.unit.fromGDripToDrip(456),
   });
 
   console.log(await promise); // await and get txHash
@@ -50,7 +49,7 @@ async function main() {
   const tx = account.signTransaction({
     nonce,
     to: ADDRESS,
-    value: unit.fromGDripToDrip(789),
+    value: util.unit.fromGDripToDrip(789),
     gasPrice: 100,
     gas: 1000000,
   });

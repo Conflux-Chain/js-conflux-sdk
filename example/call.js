@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-const Conflux = require('../src');
+const { Conflux } = require('../src');
 
 async function main() {
   const cfx = new Conflux({

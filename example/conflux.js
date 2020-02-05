@@ -1,7 +1,6 @@
 /* eslint-disable */
 
-const Conflux = require('../src');
-const unit = require('../src/util/unit');
+const { Conflux, util } = require('../src');
 
 async function main() {
   const cfx = new Conflux({
@@ -16,8 +15,8 @@ async function main() {
 
   const balance = await cfx.getBalance('0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b');
   console.log(balance); // 937499420597305000n
-  console.log(unit.fromDripToGDrip(balance)); // 937499420n
-  console.log(unit.fromDripToCFX(balance)); // 0n
+  console.log(util.unit.fromDripToGDrip(balance)); // 937499420n
+  console.log(util.unit.fromDripToCFX(balance)); // 0n
   console.log(balance.toString()); // "937499420597305000"
 
   console.log(await cfx.getTransactionCount('0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b'));

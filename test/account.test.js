@@ -1,4 +1,4 @@
-const Account = require('../src/Account');
+const { Account } = require('../src');
 
 const KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 const ADDRESS = '0xfcad0b19bb29d4674531d6f115237e16afce377c';

@@ -1,7 +1,6 @@
+const { Conflux } = require('../../src');
+const { MockProvider } = require('../../mock');
 const format = require('../../src/util/format');
-
-const Conflux = require('../../src');
-const MockProvider = require('../../mock/MockProvider');
 
 const KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 const ADDRESS = '0xfcad0b19bb29d4674531d6f115237e16afce377c';

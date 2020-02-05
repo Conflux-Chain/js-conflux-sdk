@@ -1,4 +1,4 @@
-const unit = require('../../src/util/unit');
+const { util: { unit } } = require('../../src');
 
 test('unit', () => {
   expect(unit('cfx', 'cfx')(1)).toEqual(BigInt(1));
