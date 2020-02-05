@@ -8,9 +8,8 @@ JavaScript Conflux Software Development Kit
 
 ## Usage
 
-[api document](https://github.com/GeekBerry/js-conflux-sdk/blob/master/api.md)
+[api document](https://github.com/Conflux-Chain/js-conflux-sdk/blob/master/api.md)
 
 ## Example
 
-[example](https://github.com/GeekBerry/js-conflux-sdk/tree/master/example)
-
+[example](https://github.com/Conflux-Chain/js-conflux-sdk/tree/master/example)

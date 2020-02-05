@@ -1,16 +1,16 @@
 {
   "name": "js-conflux-sdk",
   "description": "JavaScript Conflux Software Development Kit",
-  "version": "0.6.0-alpha",
+  "version": "0.6.0",
   "license": "LGPL-3.0",
   "author": "Haizhou@conflux-chain.org",
-  "homepage": "https://github.com/GeekBerry/js-conflux-sdk#readme",
+  "homepage": "https://github.com/Conflux-Chain/js-conflux-sdk#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/GeekBerry/js-conflux-sdk.git"
+    "url": "git+https://github.com/Conflux-Chain/js-conflux-sdk.git"
   },
   "bugs": {
-    "url": "https://github.com/GeekBerry/js-conflux-sdk/issues"
+    "url": "https://github.com/Conflux-Chain/js-conflux-sdk/issues"
   },
   "keywords": [
     "conflux",
@@ -41,7 +41,7 @@
     "tinyify": "^2.5.2"
   },
   "scripts": {
-    "eslint:check": "eslint ./src ./test ./mock",
+    "eslint": "eslint ./src ./test ./mock",
     "scope": "npm config set scope conflux-dev & npm config set access public",
     "build": "node build.js",
     "prepublishOnly": "npm run build",
