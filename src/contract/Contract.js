@@ -1,12 +1,12 @@
-const ContractABICoder = require('./ContractABICoder');
-const ContractEvent = require('./ContractEvent');
-const ContractFunction = require('./ContractFunction');
-const ContractConstructor = require('./ContractConstructor');
+import ContractABICoder from './ContractABICoder';
+import ContractEvent from './ContractEvent';
+import ContractFunction from './ContractFunction';
+import ContractConstructor from './ContractConstructor';
 
 /**
  * Contract with all its methods and events defined in its abi.
  */
-class Contract {
+export default class Contract {
   /**
    *
    * @param cfx {Conflux} - Conflux instance.
@@ -124,5 +124,3 @@ class Contract {
     this.address = address; // XXX: Create a method named `address` in solidity is a `ParserError`
   }
 }
-
-module.exports = Contract;

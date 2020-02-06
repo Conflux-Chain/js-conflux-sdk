@@ -1,6 +1,6 @@
-const lodash = require('lodash');
+import lodash from 'lodash';
 
-function assert(bool, value) {
+export function assert(bool, value) {
   if (!bool) {
     if (lodash.isPlainObject(value)) {
       value = JSON.stringify(value);
@@ -16,7 +16,7 @@ function assert(bool, value) {
  * @param ms {number} - Sleep duration in ms.
  * @return {Promise<undefined>}
  */
-function sleep(ms) {
+export function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
@@ -30,7 +30,7 @@ function sleep(ms) {
  * @param func {function} - Function to execute.
  * @return {Promise<*>}
  */
-async function loop({ delta = 1000, timeout = 30 * 1000 }, func) {
+export async function loop({ delta = 1000, timeout = 30 * 1000 }, func) {
   const startTime = Date.now();
 
   for (let lastTime = startTime; Date.now() - startTime < timeout; lastTime = Date.now()) {
@@ -45,14 +45,7 @@ async function loop({ delta = 1000, timeout = 30 * 1000 }, func) {
   throw new Error(`Timeout after ${Date.now() - startTime} ms`);
 }
 
-function decorate(instance, name, func) {
+export function decorate(instance, name, func) {
   const method = instance[name];
   instance[name] = (...params) => func(method.bind(instance), params);
 }
-
-module.exports = {
-  assert,
-  sleep,
-  loop,
-  decorate,
-};

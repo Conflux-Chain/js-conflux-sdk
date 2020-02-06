@@ -1,7 +1,7 @@
-const { sha3, ecdsaSign, ecdsaRecover, publicKeyToAddress, rlpEncode } = require('./util/sign');
-const format = require('./util/format');
+import { sha3, ecdsaSign, ecdsaRecover, publicKeyToAddress, rlpEncode } from './util/sign';
+import format from './util/format';
 
-class Transaction {
+export default class Transaction {
   /**
    * Create a transaction.
    *
@@ -102,5 +102,3 @@ class Transaction {
     return format.hex(this.encode(true));
   }
 }
-
-module.exports = Transaction;

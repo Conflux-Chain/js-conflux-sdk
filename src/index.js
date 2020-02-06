@@ -1,13 +1,18 @@
-module.exports.Conflux = require('./Conflux');
+import * as util from './util';
+import * as sign from './util/sign';
+import unit from './util/unit';
+import format from './util/format';
 
-module.exports.Account = require('./Account');
-module.exports.Transaction = require('./Transaction');
-module.exports.Message = require('./Message');
+util.sign = sign;
+util.unit = unit;
+util.format = format;
 
-module.exports.provider = require('./provider');
-module.exports.provider.HttpProvider = require('./provider/HttpProvider');
+export { util };
 
-module.exports.util = require('./util');
-module.exports.util.sign = require('./util/sign');
-module.exports.util.unit = require('./util/unit');
-module.exports.util.format = require('./util/format');
+export { default as Conflux } from './Conflux';
+
+export { default as Account } from './Account';
+export { default as Transaction } from './Transaction';
+export { default as Message } from './Message';
+
+export { default as provider } from './provider';

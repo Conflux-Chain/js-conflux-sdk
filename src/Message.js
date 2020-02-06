@@ -1,7 +1,7 @@
-const { sha3, ecdsaSign, ecdsaRecover, publicKeyToAddress } = require('./util/sign');
-const format = require('./util/format');
+import { sha3, ecdsaSign, ecdsaRecover, publicKeyToAddress } from './util/sign';
+import format from './util/format';
 
-class Message {
+export default class Message {
   /**
    * @param options {string|object} - The string or message object
    * @param [options.message] {string|Buffer} - The hashed message, will cover 'hash' fields
@@ -115,5 +115,3 @@ class Message {
     return format.publicKey(publicKey);
   }
 }
-
-module.exports = Message;

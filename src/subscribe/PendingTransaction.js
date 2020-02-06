@@ -1,7 +1,7 @@
-const { sleep, loop } = require('../util');
-const LazyPromise = require('./LazyPromise');
+import { sleep, loop } from '../util';
+import LazyPromise from './LazyPromise';
 
-class PendingTransaction extends LazyPromise {
+export default class PendingTransaction extends LazyPromise {
   constructor(cfx, func, params) {
     super(func, params);
     this.cfx = cfx;
@@ -93,5 +93,3 @@ class PendingTransaction extends LazyPromise {
     });
   }
 }
-
-module.exports = PendingTransaction;

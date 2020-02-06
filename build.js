@@ -16,9 +16,17 @@ const browserifyOptions = {
 const OUTPUT_FILE_NAME = 'js-conflux-sdk';
 const ENTRY_POINT = pkg.main;
 
+// use babel to remove unused lodash code
+// https://www.blazemeter.com/blog/the-correct-way-to-import-lodash-libraries-a-benchmark/
+const babelTransform = babelify.configure({
+  presets: ['@babel/preset-env'],
+  plugins: ['lodash'],
+});
+
 browserify(browserifyOptions)
   .add(ENTRY_POINT)
   .ignore('crypto')
+  .transform(babelTransform)
   .plugin('tinyify')
   .bundle()
   .pipe(exorcist(`./dist/${OUTPUT_FILE_NAME}.umd.min.js.map`))
@@ -27,7 +35,7 @@ browserify(browserifyOptions)
 browserify(browserifyOptions)
   .add(ENTRY_POINT)
   .ignore('crypto')
-  .transform(babelify.configure({ presets: ['@babel/preset-env'] }))
+  .transform(babelTransform)
   .plugin(commonShake)
   .plugin(esmify)
   .bundle()

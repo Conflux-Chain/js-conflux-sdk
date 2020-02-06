@@ -1,5 +1,5 @@
-const { assert } = require('../util');
-const callable = require('../lib/callable');
+import { assert } from '../util';
+import { withoutNew } from '../lib/callable';
 
 const WORD_CHARS = 64;
 
@@ -34,4 +34,4 @@ class HexStream {
   }
 }
 
-module.exports = callable.withoutNew(HexStream);
+export default withoutNew(HexStream);

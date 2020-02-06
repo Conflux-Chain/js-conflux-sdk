@@ -20,7 +20,7 @@ const UNIT_MATRIX = {
  * > unit('drip', 'cfx')(1000000000000000000)
  JSBI.BigInt(1)
  */
-function unit(from, to) {
+export default function unit(from, to) {
   const keys = Object.keys(UNIT_MATRIX);
   if (!keys.includes(from)) {
     throw new Error(`"from" must in ${JSON.stringify(keys)}, got "${from}"`);
@@ -99,5 +99,3 @@ unit.fromDripToCFX = unit('drip', 'cfx');
  JSBI.BigInt(123)
  */
 unit.fromDripToGDrip = unit('drip', 'gdrip');
-
-module.exports = unit;

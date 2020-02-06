@@ -1,6 +1,6 @@
-const ContractFunction = require('./ContractFunction');
+import ContractFunction from './ContractFunction';
 
-class ContractConstructor extends ContractFunction {
+export default class ContractConstructor extends ContractFunction {
   encode(params) {
     if (!this.code) {
       throw new Error('contract.constructor.code is empty');
@@ -13,5 +13,3 @@ class ContractConstructor extends ContractFunction {
     return hex;
   }
 }
-
-module.exports = ContractConstructor;

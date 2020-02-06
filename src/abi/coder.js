@@ -1,16 +1,16 @@
 /* eslint-disable no-bitwise */
 
-const JSBI = require('jsbi');
-const lodash = require('lodash');
-const format = require('../util/format');
-const { assert } = require('../util');
-const namedTuple = require('../lib/namedTuple');
+import JSBI from 'jsbi';
+import lodash from 'lodash';
+import format from '../util/format';
+import { assert } from '../util';
+import namedTuple from '../lib/namedTuple';
 
 const WORD_BYTES = 32; // byte number pre abi word
 const ZERO_BUFFER = format.buffer('0x0000000000000000000000000000000000000000000000000000000000000000');
 const MAX_UINT = JSBI.leftShift(JSBI.BigInt(1), JSBI.BigInt(WORD_BYTES * 8));
 
-function padBuffer(buffer, alignLeft = false) {
+export function padBuffer(buffer, alignLeft = false) {
   buffer = format.buffer(buffer); // accept hex
 
   const count = WORD_BYTES - (buffer.length % WORD_BYTES);
@@ -510,7 +510,7 @@ const UINT_CODER = new IntegerCoder();
  * @param [component.components] {array} - For TupleCoder
  * @return {Coder}
  */
-function getCoder(component) {
+export function getCoder(component) {
   // sorted by probability
   const coder = TupleCoder.from(component)
     || AddressCoder.from(component)
@@ -528,6 +528,3 @@ function getCoder(component) {
 
   return coder;
 }
-
-module.exports = getCoder;
-module.exports.padBuffer = padBuffer;

@@ -1,6 +1,6 @@
-const lodash = require('lodash');
+import lodash from 'lodash';
 
-function callable(object, func) {
+export default function callable(object, func) {
   if (!lodash.isFunction(func)) {
     throw new Error('except to be function');
   }
@@ -16,9 +16,6 @@ function callable(object, func) {
   });
 }
 
-function withoutNew(Class) {
+export function withoutNew(Class) {
   return new Proxy(Class, { apply: (_, __, params) => new Class(...params) });
 }
-
-module.exports = callable;
-module.exports.withoutNew = withoutNew;
