@@ -1,8 +1,9 @@
-const crypto = require('crypto');
-const keccak = require('keccak');
-const secp256k1 = require('secp256k1');
-const { encode: rlpEncode } = require('../lib/rlp');
-// const scryptJs = require('scrypt.js'); // ^0.3.0. cause it's depends on python, might cause some problems
+import crypto from 'crypto';
+import keccak from 'keccak';
+import secp256k1 from 'secp256k1';
+
+export { encode as rlpEncode } from '../lib/rlp';
+// import scryptJs from 'scrypt.js'; // ^0.3.0. cause it's depends on python, might cause some problems
 
 // ----------------------------------------------------------------------------
 /**
@@ -15,7 +16,7 @@ const { encode: rlpEncode } = require('../lib/rlp');
  * > sha3(Buffer.from(''))
  <Buffer c5 d2 46 01 86 f7 23 3c 92 7e 7d b2 dc c7 03 c0 e5 00 b6 53 ca 82 27 3b 7b fa d8 04 5d 85 a4 70>
  */
-function sha3(buffer) {
+export function sha3(buffer) {
   return keccak('keccak256').update(buffer).digest();
 }
 
@@ -29,7 +30,7 @@ function sha3(buffer) {
  * > checksumAddress('0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359')
  "0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359"
  */
-function checksumAddress(address) {
+export function checksumAddress(address) {
   address = address.toLowerCase().replace('0x', '');
 
   const hash = sha3(Buffer.from(address)).toString('hex');
@@ -56,7 +57,7 @@ function checksumAddress(address) {
  * > randomBuffer(1)
  <Buffer 5a>
  */
-function randomBuffer(size) {
+export function randomBuffer(size) {
   return crypto.randomBytes(size);
 }
 
@@ -79,7 +80,7 @@ function randomBuffer(size) {
  * > randomPrivateKey(entropy) // same `entropy`
  <Buffer 89 44 ef 31 d4 9c d0 25 9f b0 de 61 99 12 4a 21 57 43 d4 4b af ae ef ae e1 3a ba 05 c3 e6 ad 21>
  */
-function randomPrivateKey(entropy = randomBuffer(32)) {
+export function randomPrivateKey(entropy = randomBuffer(32)) {
   if (!(Buffer.isBuffer(entropy) && entropy.length === 32)) {
     throw new Error(`entropy must be 32 length Buffer, got "${typeof entropy}"`);
   }
@@ -93,7 +94,7 @@ function randomPrivateKey(entropy = randomBuffer(32)) {
  * @param privateKey {Buffer}
  * @return {Buffer}
  */
-function privateKeyToPublicKey(privateKey) {
+export function privateKeyToPublicKey(privateKey) {
   return secp256k1.publicKeyCreate(privateKey, false).slice(1);
 }
 
@@ -107,7 +108,7 @@ function privateKeyToPublicKey(privateKey) {
  * > privateKeyToAddress(Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1]))
  <Buffer 4c 6f a3 22 12 5f a3 1a 42 cb dd a8 73 0d 4c f0 20 0d 72 db>
  */
-function publicKeyToAddress(publicKey) {
+export function publicKeyToAddress(publicKey) {
   return sha3(publicKey).slice(-20);
 }
 
@@ -121,7 +122,7 @@ function publicKeyToAddress(publicKey) {
  * > privateKeyToAddress(Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1]))
  <Buffer 0d b9 e0 02 85 67 52 28 8b ef 47 60 fa 67 94 ec 83 a8 53 b9>
  */
-function privateKeyToAddress(privateKey) {
+export function privateKeyToAddress(privateKey) {
   return publicKeyToAddress(privateKeyToPublicKey(privateKey));
 }
 
@@ -145,7 +146,7 @@ function privateKeyToAddress(privateKey) {
   v: 0
  }
  */
-function ecdsaSign(hash, privateKey) {
+export function ecdsaSign(hash, privateKey) {
   const sig = secp256k1.sign(hash, privateKey);
   return {
     r: sig.signature.slice(0, 32),
@@ -172,7 +173,7 @@ function ecdsaSign(hash, privateKey) {
  * > publicKeyToAddress(ecdsaRecover(buffer32, ecdsaSign(buffer32, privateKey)))
  <Buffer 0d b9 e0 02 85 67 52 28 8b ef 47 60 fa 67 94 ec 83 a8 53 b9>
  */
-function ecdsaRecover(hash, { r, s, v }) {
+export function ecdsaRecover(hash, { r, s, v }) {
   const senderPublic = secp256k1.recover(hash, Buffer.concat([r, s]), v);
   return secp256k1.publicKeyConvert(senderPublic, false).slice(1);
 }
@@ -212,22 +213,3 @@ function ecdsaRecover(hash, { r, s, v }) {
 //   }
 //   return crypto.createDecipheriv('aes-128-ctr', derived.slice(0, 16), iv).update(cipher);
 // }
-
-// ----------------------------------------------------------------------------
-module.exports = {
-  sha3,
-  checksumAddress,
-  randomBuffer,
-  randomPrivateKey,
-
-  privateKeyToPublicKey,
-  publicKeyToAddress,
-  privateKeyToAddress,
-
-  ecdsaSign,
-  ecdsaRecover,
-
-  // encrypt,
-  // decrypt,
-  rlpEncode,
-};

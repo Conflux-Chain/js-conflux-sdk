@@ -1,6 +1,6 @@
-const JSBI = require('jsbi');
-const lodash = require('lodash');
-const Parser = require('../lib/parser');
+import JSBI from 'jsbi';
+import lodash from 'lodash';
+import Parser from '../lib/parser';
 
 // https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/BigInt
 JSBI.prototype.toJSON = function () {
@@ -340,4 +340,4 @@ format.estimateTx = Parser({
   data: format.hex.or(undefined),
 });
 
-module.exports = format;
+export default format;

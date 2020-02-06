@@ -1,9 +1,9 @@
-const format = require('./util/format');
-const { randomPrivateKey, privateKeyToAddress, privateKeyToPublicKey } = require('./util/sign'); // and decrypt, encrypt
-const Transaction = require('./Transaction');
-const Message = require('./Message');
+import format from './util/format';
+import { randomPrivateKey, privateKeyToAddress, privateKeyToPublicKey } from './util/sign'; // and decrypt, encrypt
+import Transaction from './Transaction';
+import Message from './Message';
 
-class Account {
+export default class Account {
   /**
    * Create a new Account with random privateKey.
    *
@@ -136,5 +136,3 @@ class Account {
     return this.address;
   }
 }
-
-module.exports = Account;

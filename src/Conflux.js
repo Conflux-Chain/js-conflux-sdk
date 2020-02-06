@@ -1,15 +1,15 @@
-const { decorate } = require('./util');
-const format = require('./util/format');
+import { decorate } from './util';
+import format from './util/format';
 
-const providerFactory = require('./provider');
-const Contract = require('./contract');
-const Account = require('./Account');
-const { PendingTransaction, LogIterator } = require('./subscribe');
+import providerFactory from './provider';
+import Contract from './contract';
+import Account from './Account';
+import { PendingTransaction, LogIterator } from './subscribe';
 
 /**
  * A sdk of conflux.
  */
-class Conflux {
+export default class Conflux {
   /**
    * @param [options] {object} - Conflux and Provider constructor options.
    * @param [options.url=''] {string} - Url of provider to create.
@@ -783,5 +783,3 @@ class Conflux {
     return format.bigUInt(result);
   }
 }
-
-module.exports = Conflux;

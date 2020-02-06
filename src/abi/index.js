@@ -2,20 +2,20 @@
  @see https://solidity.readthedocs.io/en/v0.5.13/abi-spec.html
  */
 
-const { assert } = require('../util');
-const { sha3 } = require('../util/sign');
-const format = require('../util/format');
+import { assert } from '../util';
+import { sha3 } from '../util/sign';
+import format from '../util/format';
 
-const getCoder = require('./coder');
-const namedTuple = require('../lib/namedTuple');
-const HexStream = require('./HexStream');
+import { getCoder } from './coder';
+import namedTuple from '../lib/namedTuple';
+import HexStream from './HexStream';
 
 // ============================================================================
-function formatSignature({ name, inputs }) {
+export function formatSignature({ name, inputs }) {
   return `${name}(${inputs.map(param => getCoder(param).type).join(',')})`;
 }
 
-class FunctionCoder {
+export class FunctionCoder {
   /**
    * Function coder
    *
@@ -118,7 +118,7 @@ class FunctionCoder {
   }
 }
 
-class EventCoder {
+export class EventCoder {
   /**
    * Event coder
    *
@@ -248,10 +248,3 @@ class EventCoder {
     return new this.NamedTuple(...array);
   }
 }
-
-// ----------------------------------------------------------------------------
-module.exports = {
-  formatSignature,
-  FunctionCoder,
-  EventCoder,
-};

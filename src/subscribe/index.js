@@ -1,2 +1,2 @@
-module.exports.PendingTransaction = require('./PendingTransaction');
-module.exports.LogIterator = require('./LogIterator');
+export { default as PendingTransaction } from './PendingTransaction';
+export { default as LogIterator } from './LogIterator';

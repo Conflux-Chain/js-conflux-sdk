@@ -1,5 +1,5 @@
-const { FunctionCoder } = require('../abi');
-const callable = require('../lib/callable');
+import { FunctionCoder } from '../abi';
+import callable from '../lib/callable';
 
 /**
  * @memberOf Contract
@@ -79,7 +79,7 @@ class Called {
   }
 }
 
-class ContractFunction {
+export default class ContractFunction {
   constructor(cfx, contract, fragment) {
     this.cfx = cfx;
     this.contract = contract;
@@ -108,5 +108,3 @@ class ContractFunction {
     return array.length <= 1 ? array[0] : array;
   }
 }
-
-module.exports = ContractFunction;
