@@ -1,5 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const browserify = require('browserify');
+const babelify = require('babelify');
 const commonShake = require('common-shakeify');
 const fs = require('fs');
 const exorcist = require('exorcist');
@@ -26,6 +27,7 @@ browserify(browserifyOptions)
 browserify(browserifyOptions)
   .add(ENTRY_POINT)
   .ignore('crypto')
+  .transform(babelify.configure({ presets: ['@babel/preset-env'] }))
   .plugin(commonShake)
   .plugin(esmify)
   .bundle()
