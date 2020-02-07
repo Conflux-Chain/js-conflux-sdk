@@ -51,7 +51,12 @@ class Message {
     const { r, s, v } = ecdsaSign(hash, format.buffer(privateKey));
 
     // FIXME: hex for usable, but should Transaction.sign hex too ?
-    Object.assign(this, { hash: format.hex(hash), r: format.hex(r), s: format.hex(s), v });
+    Object.assign(this, {
+      hash: format.hex(hash),
+      r: format.hex(r),
+      s: format.hex(s),
+      v,
+    });
   }
 }
 
