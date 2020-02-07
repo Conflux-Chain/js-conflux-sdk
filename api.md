@@ -41,9 +41,9 @@ Sign a string.
 
 ### Parameters
 
-Name   | Type   | Required | Default | Description
--------|--------|----------|---------|------------
-string | string | true     |         |
+Name    | Type   | Required | Default | Description
+--------|--------|----------|---------|------------
+message | string | true     |         |
 
 ### Return
 
@@ -104,20 +104,24 @@ entropy |      | true     |         |
 ```
 > Account.random()
    Account {
-      privateKey: '0x1a402b7c1a7417dc7236c152df5861a24d60a7beca7890bae10ccfb85e9ed037',
-      address: '0xf0bf7c4ebb8b0acde3529aafd05b0bac7edb6ddc'
+      privateKey: '0xd28edbdb7bbe75787b84c5f525f47666a3274bb06561581f00839645f3c26f66',
+      publicKey: '0xc42b53ae2ef95fee489948d33df391c4a9da31b7a3e29cf772c24eb42f74e94ab3bfe00bf29a239c17786a5b921853b7c5344d36694db43aa849e401f91566a5',
+      address: '0xbcecb4a2922b7007e236daf0c797de6e55496e84'
     }> Account.random() // gen a different account from above
    Account {
-      privateKey: '0x08c9201ea1de182f67a794f4a2ef3dfeb8f0bdf9488a78006c79048d08553299',
-      address: '0xa5ec380e0378df6399b887ad1d45b60c8f3631f6'
+      privateKey: '0x1b67150f56f49556ef7e3899024d83c125d84990d311ec08fa98aa1433bc0f53',
+      publicKey: '0xd442207828ffd4dad918fea0d75d42dbea1fe5e3789c00a82e18ce8229714eae3f70b12f2f1abd795ad3e5c52a5a597289eb5096548438c233431f498b47b9a6',
+      address: '0xb6c25691aadc3363f5862d264072584f3ebf4613'
     }> Account.random('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
    Account {
-      privateKey: '0x6238653ddcd62238d7b47dd70a6059d9978b771cd99388fd6423f6a3a54be535',
-      address: '0x20e3118c92c8f16e2307308c67db06cdd3978e13'
+      privateKey: '0x1d41e006afd28ea339922d8ab4be93154a14d4f1b6d0ad4e7aabf807e7536a5f',
+      publicKey: '0x4c07c75d3fdc5b1d6afef6ec374b0eaac86bcaa771a1d536bc4ce6f111b1c60e414b370e4cf31bf7770ae6818a3518c485398a43857d9053153f6eb4f5644a90',
+      address: '0x613d49784c80d6f8fdbc0bef5a5ab0d9c9fee520'
     }> Account.random('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');// gen a different account from above, even use same entropy
    Account {
-      privateKey: '0x4d6a462c78e7603ae4707672a4716799e9ebce4e267de42a0402665eee4a4e62',
-      address: '0x881302cd9a3d85ccb7048ff5e679c23b5e80c0eb'
+      privateKey: '0x5a34ff3318674c33209ce856218890e9a6ee3811e8a51e3094ed1e6a94bf58ef',
+      publicKey: '0xe530d77c3ed6115cb46ba79821085bf67d2a7a8c808c1d52dec03fd7a82e569c2136dba84b21d40f46d90484722b21a9d5a8038495adf93f2eed564ababa2422',
+      address: '0x8f63fcef4aaa88c03cbb5c9fb34be69dee65d0a8'
     }
 ```
 
@@ -1005,18 +1009,41 @@ options.code    | string  | false    |         | The byte code of the contract, 
 
 ### Parameters
 
-Name                  | Type          | Required | Default | Description
-----------------------|---------------|----------|---------|-----------------------------
-messageOrOptions      | string,object | true     |         | The string or message object
-messageOrOptions.hash | string,Buffer | false    |         | The hashed message
-messageOrOptions.r    | string,Buffer | false    |         | ECDSA signature r
-messageOrOptions.s    | string,Buffer | false    |         | ECDSA signature s
-messageOrOptions.v    | number        | false    |         | ECDSA recovery id
+Name              | Type          | Required | Default | Description
+------------------|---------------|----------|---------|-----------------------------------------------
+options           | string,object | true     |         | The string or message object
+options.message   | string,Buffer | false    |         | The hashed message, will cover 'hash' fields
+options.hash      | string,Buffer | false    |         | The hashed message
+options.signature | string,Buffer | false    |         | ECDSA signature, will cover 'r','s','v' fields
+options.r         | string,Buffer | false    |         | ECDSA signature r
+options.s         | string,Buffer | false    |         | ECDSA signature s
+options.v         | number        | false    |         | ECDSA recovery id
 
 ### Return
 
 `Message` 
 
+### Example
+
+```
+> msg = new Message({ message: 'Hello World' });
+   Message {
+      message: 'Hello World',
+      hash: '0xa1de988600a42c4b4ab089b619297c17d53cffae5d5120d82d8a92d0bb3b78f2',
+      r: undefined,
+      s: undefined,
+      v: undefined
+    }> msg.sign('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef');
+   Message {
+      message: 'Hello World',
+      hash: '0xa1de988600a42c4b4ab089b619297c17d53cffae5d5120d82d8a92d0bb3b78f2',
+      r: '0xe6bfbd768a421b9051fe86310f0f1eef9d5df65288b53f54d663f887a5b4bcd6',
+      s: '0x32efb64ccc67d7245545175953e811bc237fd83ab8722d8be0a66e92ec39da81',
+      v: 1
+    }> msg.signature
+   "0xe6bfbd768a421b9051fe86310f0f1eef9d5df65288b53f54d663f887a5b4bcd632efb64ccc67d7245545175953e811bc237fd83ab8722d8be0a66e92ec39da8101"> msg.from
+   "0xfcad0b19bb29d4674531d6f115237e16afce377c"
+```
 
 ## Message.from
 
@@ -1031,6 +1058,19 @@ Getter of sender address.
 ### Return
 
 `string,undefined` If ECDSA recover success return address, else return undefined.
+
+
+## Message.signature
+
+Getter signature of message r,s,v.
+
+### Parameters
+
+`void`
+
+### Return
+
+`string` 
 
 
 ## Message.sign
@@ -1375,7 +1415,29 @@ arg  | string,Buffer | true     |         |
 ```
 > format.address('0x0123456789012345678901234567890123456789')
  "0x0123456789012345678901234567890123456789"> format.address('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
- Error("not match hex40")
+ Error("not match address")
+```
+
+## format.publicKey
+
+
+
+### Parameters
+
+Name | Type          | Required | Default | Description
+-----|---------------|----------|---------|------------
+arg  | string,Buffer | true     |         |
+
+### Return
+
+`string` Hex string
+
+### Example
+
+```
+> format.publicKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
+ "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"> format.publicKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
+ Error("not match publicKey")
 ```
 
 ## format.privateKey
@@ -1399,6 +1461,21 @@ arg  | string,Buffer | true     |         |
  "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"> format.privateKey('0x0123456789012345678901234567890123456789')
  Error("not match hex64")
 ```
+
+## format.signature
+
+
+
+### Parameters
+
+Name | Type          | Required | Default | Description
+-----|---------------|----------|---------|------------
+arg  | string,Buffer | true     |         |
+
+### Return
+
+`string` Hex string
+
 
 ## format.blockHash
 
@@ -1592,6 +1669,21 @@ entropy | Buffer | true     |         |
  <Buffer 57 90 e8 3d 16 10 02 b9 a4 33 87 e1 6b cd 40 7e f7 22 b1 d8 94 ae 98 bf 76 a4 56 fb b6 0c 4b 4a>> randomPrivateKey(entropy) // same `entropy`
  <Buffer 89 44 ef 31 d4 9c d0 25 9f b0 de 61 99 12 4a 21 57 43 d4 4b af ae ef ae e1 3a ba 05 c3 e6 ad 21>
 ```
+
+## sign.privateKeyToPublicKey
+
+
+
+### Parameters
+
+Name       | Type   | Required | Default | Description
+-----------|--------|----------|---------|------------
+privateKey | Buffer | true     |         |
+
+### Return
+
+`Buffer` 
+
 
 ## sign.publicKeyToAddress
 

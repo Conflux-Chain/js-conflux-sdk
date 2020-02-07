@@ -90,6 +90,14 @@ function randomPrivateKey(entropy = randomBuffer(32)) {
 }
 
 /**
+ * @param privateKey {Buffer}
+ * @return {Buffer}
+ */
+function privateKeyToPublicKey(privateKey) {
+  return secp256k1.publicKeyCreate(privateKey, false).slice(1);
+}
+
+/**
  * Get address by public key.
  *
  * @param publicKey {Buffer}
@@ -114,8 +122,7 @@ function publicKeyToAddress(publicKey) {
  <Buffer 0d b9 e0 02 85 67 52 28 8b ef 47 60 fa 67 94 ec 83 a8 53 b9>
  */
 function privateKeyToAddress(privateKey) {
-  const publicKey = secp256k1.publicKeyCreate(privateKey, false).slice(1);
-  return publicKeyToAddress(publicKey);
+  return publicKeyToAddress(privateKeyToPublicKey(privateKey));
 }
 
 /**
@@ -212,10 +219,14 @@ module.exports = {
   checksumAddress,
   randomBuffer,
   randomPrivateKey,
+
+  privateKeyToPublicKey,
   publicKeyToAddress,
   privateKeyToAddress,
+
   ecdsaSign,
   ecdsaRecover,
+
   // encrypt,
   // decrypt,
   rlpEncode,

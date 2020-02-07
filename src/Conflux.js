@@ -274,7 +274,7 @@ class Conflux {
    */
   async getLogs(options) {
     if (options.blockHashes !== undefined && (options.fromEpoch !== undefined || options.toEpoch !== undefined)) {
-      throw new Error('Override waring, do not use `blockHashes` with `fromEpoch` or `toEpoch`, cause only `blockHashes` will take effect');
+      throw new Error('OverrideError, do not use `blockHashes` with `fromEpoch` or `toEpoch`, cause only `blockHashes` will take effect');
     }
 
     const result = await this.provider.call('cfx_getLogs', format.getLogs(options));

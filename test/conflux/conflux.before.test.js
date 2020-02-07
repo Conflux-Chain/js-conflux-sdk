@@ -54,7 +54,7 @@ test('getLogs', async () => {
     limit: 100,
   });
 
-  await expect(cfx.getLogs({ blockHashes: [], fromEpoch: 0 })).rejects.toThrow('Override waring');
+  await expect(cfx.getLogs({ blockHashes: [], fromEpoch: 0 })).rejects.toThrow('OverrideError');
   await expect(cfx.getLogs({ topics: [[null]] })).rejects.toThrow('not match hex');
 });
 

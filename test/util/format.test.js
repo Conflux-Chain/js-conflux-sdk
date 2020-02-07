@@ -98,14 +98,6 @@ test('epochNumber', () => {
   expect(() => format.epochNumber('LATEST_MINED')).toThrow('not equal latest_mined');
 });
 
-test('hex40', () => {
-  expect(format.hex40(HEX_40)).toEqual(HEX_40);
-  expect(() => format.hex40(HEX_64)).toThrow('not match hex40');
-
-  expect(format.address(HEX_40)).toEqual(HEX_40);
-  expect(() => format.address(HEX_64)).toThrow('not match hex40');
-});
-
 test('hex64', () => {
   expect(format.hex64(HEX_64)).toEqual(HEX_64);
   expect(() => format.hex64(HEX_40)).toThrow('not match hex64');

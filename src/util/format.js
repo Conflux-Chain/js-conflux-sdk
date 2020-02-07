@@ -64,7 +64,6 @@ format.any = Parser(v => v);
  "0x0a"
  */
 format.hex = Parser(toHex);
-format.hex40 = format.hex.validate(v => v.length === 2 + 40, 'hex40');
 format.hex64 = format.hex.validate(v => v.length === 2 + 64, 'hex64');
 
 /**
@@ -159,9 +158,21 @@ format.epochNumber = format.numberHex.or('latest_state').or('latest_mined');
  * > format.address('0x0123456789012345678901234567890123456789')
  "0x0123456789012345678901234567890123456789"
  * > format.address('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
- Error("not match hex40")
+ Error("not match address")
  */
-format.address = format.hex40; // alias
+format.address = format.hex.validate(v => v.length === 2 + 40, 'address'); // alias
+
+/**
+ * @param arg {string|Buffer}
+ * @return {string} Hex string
+ *
+ * @example
+ * > format.publicKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
+ "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+ * > format.publicKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
+ Error("not match publicKey")
+ */
+format.publicKey = format.hex.validate(v => v.length === 2 + 128, 'publicKey');
 
 /**
  * @param arg {string|Buffer}
@@ -174,6 +185,12 @@ format.address = format.hex40; // alias
  Error("not match hex64")
  */
 format.privateKey = format.hex64; // alias
+
+/**
+ * @param arg {string|Buffer}
+ * @return {string} Hex string
+ */
+format.signature = format.hex.validate(v => v.length === 2 + 130, 'signature');
 
 /**
  * @param arg {string|Buffer}

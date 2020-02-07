@@ -6,7 +6,11 @@ const {
   checksumAddress,
   randomBuffer,
   randomPrivateKey,
+
+  privateKeyToPublicKey,
+  publicKeyToAddress,
   privateKeyToAddress,
+
   ecdsaSign,
   ecdsaRecover,
   // encrypt,
@@ -14,6 +18,7 @@ const {
 } = sign;
 
 const KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
+const PUBLIC = '0x4646ae5047316b4230d0086c8acec687f00b1cd9d1dc634f6cb358ac0a9a8ffffe77b4dd0a4bfb95851f3b7355c781dd60f8418fc8a65d14907aff47c903a559';
 const ADDRESS = '0xfcad0b19bb29d4674531d6f115237e16afce377c';
 
 test('checksumAddress', () => {
@@ -45,6 +50,16 @@ test('randomPrivateKey', () => {
 
   const entropyInvalid = format.buffer('0x0123456789');
   expect(() => randomPrivateKey(entropyInvalid)).toThrow('entropy must be 32 length Buffer');
+});
+
+test('privateKeyToPublicKey', () => {
+  const publicKey = format.publicKey(privateKeyToPublicKey(format.buffer(KEY)));
+  expect(publicKey).toEqual(PUBLIC);
+});
+
+test('publicKeyToAddress', () => {
+  const address = format.address(publicKeyToAddress(format.buffer(PUBLIC)));
+  expect(address).toEqual(ADDRESS);
 });
 
 test('privateKeyToAddress', () => {
