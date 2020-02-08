@@ -27,7 +27,7 @@ test('Account.signMessage', () => {
 
   const message = account.signMessage('Hello World');
   expect(message.from).toEqual(ADDRESS);
-  expect(message.signature).toEqual('0xe6bfbd768a421b9051fe86310f0f1eef9d5df65288b53f54d663f887a5b4bcd632efb64ccc67d7245545175953e811bc237fd83ab8722d8be0a66e92ec39da8101');
+  expect(message.signature).toEqual('0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01');
 
   account.privateKey = randomPrivateKey();
   expect(() => account.signMessage('Hello World')).toThrow('message.from !==');
