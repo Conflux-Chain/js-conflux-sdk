@@ -1,11 +1,5 @@
 const lodash = require('lodash');
 
-// @see https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/BigInt
-// eslint-disable-next-line no-extend-native
-BigInt.prototype.toJSON = function () {
-  return this.toString();
-};
-
 function assert(bool, value) {
   if (!bool) {
     if (lodash.isPlainObject(value)) {

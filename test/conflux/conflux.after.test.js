@@ -1,3 +1,5 @@
+const JSBI = require('jsbi');
+
 const lodash = require('lodash');
 const { Conflux } = require('../../src');
 const { MockProvider } = require('../../mock');
@@ -13,7 +15,7 @@ cfx.provider = new MockProvider();
 test('getGasPrice', async () => {
   const gasPrice = await cfx.getGasPrice();
 
-  expect(gasPrice.constructor).toEqual(BigInt);
+  expect(gasPrice.constructor).toEqual(JSBI);
 });
 
 test('getEpochNumber', async () => {
@@ -45,7 +47,7 @@ test('getLogs', async () => {
 test('getBalance', async () => {
   const balance = await cfx.getBalance(ADDRESS);
 
-  expect(balance.constructor).toEqual(BigInt);
+  expect(balance.constructor).toEqual(JSBI);
 });
 
 test('getTransactionCount', async () => {
@@ -87,8 +89,8 @@ test('getBlockByHash', async () => {
   expect(Number.isInteger(block.height)).toEqual(true);
   expect(Number.isInteger(block.timestamp)).toEqual(true);
   expect(block.nonce.startsWith('0x')).toEqual(true);
-  expect(block.gasLimit.constructor).toEqual(BigInt);
-  expect(block.difficulty.constructor).toEqual(BigInt);
+  expect(block.gasLimit.constructor).toEqual(JSBI);
+  expect(block.difficulty.constructor).toEqual(JSBI);
   expect(Array.isArray(block.refereeHashes)).toEqual(true);
   expect(Array.isArray(block.transactions)).toEqual(true);
   block.transactions.forEach(txHash => {
@@ -132,9 +134,9 @@ test('getTransactionByHash', async () => {
   expect(Number.isInteger(transaction.nonce)).toEqual(true);
   expect(lodash.isNull(transaction.status) || Number.isInteger(transaction.status)).toEqual(true);
   expect(Number.isInteger(transaction.v)).toEqual(true);
-  expect(transaction.gas.constructor).toEqual(BigInt);
-  expect(transaction.gasPrice.constructor).toEqual(BigInt);
-  expect(transaction.value.constructor).toEqual(BigInt);
+  expect(transaction.gas.constructor).toEqual(JSBI);
+  expect(transaction.gasPrice.constructor).toEqual(JSBI);
+  expect(transaction.value.constructor).toEqual(JSBI);
 });
 
 test('getTransactionReceipt', async () => {
@@ -150,7 +152,7 @@ test('getTransactionReceipt', async () => {
   expect(Number.isInteger(receipt.index)).toEqual(true);
   expect(Number.isInteger(receipt.epochNumber)).toEqual(true);
   expect(lodash.isNull(receipt.outcomeStatus) || Number.isInteger(receipt.outcomeStatus)).toEqual(true);
-  expect(receipt.gasUsed.constructor).toEqual(BigInt);
+  expect(receipt.gasUsed.constructor).toEqual(JSBI);
   expect(Array.isArray(receipt.logs)).toEqual(true);
 });
 

@@ -1,8 +1,9 @@
+const JSBI = require('jsbi');
 const lodash = require('lodash');
 const Parser = require('../lib/parser');
 
 function isBigInt(value) {
-  return lodash.get(value, 'constructor') === BigInt;
+  return value instanceof JSBI;
 }
 
 // ----------------------------------------------------------------------------
@@ -84,7 +85,7 @@ format.hex64 = format.hex.validate(v => v.length === 2 + 64, 'hex64');
  * > format.uint(Number.MAX_SAFE_INTEGER + 1) // unsafe integer
  Error("not match uint")
  */
-format.bigUInt = Parser(BigInt).validate(v => v >= 0, 'bigUInt');
+format.bigUInt = Parser(JSBI.BigInt).validate(v => v >= 0, 'bigUInt');
 
 /**
  * @param arg {number|BigInt|string|boolean}

@@ -1,5 +1,6 @@
 /* eslint-disable no-bitwise */
 
+const JSBI = require('jsbi');
 const lodash = require('lodash');
 const format = require('../util/format');
 const { assert } = require('../util');
@@ -7,7 +8,7 @@ const namedTuple = require('../lib/namedTuple');
 
 const WORD_BYTES = 32; // byte number pre abi word
 const ZERO_BUFFER = format.buffer('0x0000000000000000000000000000000000000000000000000000000000000000');
-const MAX_UINT = BigInt(1) << BigInt(WORD_BYTES * 8);
+const MAX_UINT = JSBI.leftShift(JSBI.BigInt(1), JSBI.BigInt(WORD_BYTES * 8));
 
 function padBuffer(buffer, alignLeft = false) {
   buffer = format.buffer(buffer); // accept hex
@@ -170,7 +171,7 @@ class BoolCoder extends Coder {
    * @return {boolean}
    */
   decode(stream) {
-    return UINT_CODER.decode(stream) !== BigInt(0);
+    return JSBI.notEqual(UINT_CODER.decode(stream), JSBI.BigInt(0));
   }
 }
 
@@ -227,7 +228,7 @@ class IntegerCoder extends Coder {
     this.type = `${type}${bits}`;
     this.signed = signed;
     this.size = bits / 8;
-    this.bound = BigInt(1) << BigInt(bits - (this.signed ? 1 : 0));
+    this.bound = JSBI.leftShift(JSBI.BigInt(1), JSBI.BigInt(bits - (this.signed ? 1 : 0)));
   }
 
   /**
@@ -235,18 +236,18 @@ class IntegerCoder extends Coder {
    * @return {Buffer}
    */
   encode(value) {
-    let number = BigInt(value);
+    let number = JSBI.BigInt(value);
     let twosComplement = number;
 
-    if (this.signed && number < 0) {
-      twosComplement = number + this.bound;
-      number += MAX_UINT;
+    if (this.signed && JSBI.LT(number, JSBI.BigInt(0))) {
+      twosComplement = JSBI.add(number, this.bound);
+      number = JSBI.add(number, MAX_UINT);
     }
 
-    assert(0 <= twosComplement && twosComplement < this.bound, {
+    assert(JSBI.LE(JSBI.BigInt(0), twosComplement) && JSBI.LT(twosComplement, this.bound), {
       message: 'bound error',
       expect: `0<= && <${this.bound}`,
-      got: twosComplement,
+      got: twosComplement.toString(),
       coder: this,
       value,
     });
@@ -259,10 +260,11 @@ class IntegerCoder extends Coder {
    * @return {BigInt}
    */
   decode(stream) {
-    let value = BigInt(`0x${stream.read(this.size * 2)}`); // 16: read out naked hex string
+    let value = JSBI.BigInt(`0x${stream.read(this.size * 2)}`); // 16: read out naked hex string
 
-    if (this.signed && value >= this.bound) {
-      value -= BigInt(1) << BigInt(this.size * 8);
+    if (this.signed && JSBI.GE(value, this.bound)) {
+      const mask = JSBI.leftShift(JSBI.BigInt(1), JSBI.BigInt(this.size * 8));
+      value = JSBI.subtract(value, mask);
     }
 
     return value;

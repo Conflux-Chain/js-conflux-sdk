@@ -1,3 +1,4 @@
+const JSBI = require('jsbi');
 const { Conflux } = require('../../src');
 const { MockProvider } = require('../../mock');
 const { abi, code, address } = require('./contract.json');
@@ -37,7 +38,7 @@ test('Contract', async () => {
   expect(value.toString()).toEqual('100');
 
   value = await contract.count().estimateGas({ gasPrice: 101 });
-  expect(value.constructor).toEqual(BigInt);
+  expect(value.constructor).toEqual(JSBI);
 
   const logs = await contract.SelfEvent(ADDRESS).getLogs();
   expect(logs.length).toEqual(2);
@@ -54,7 +55,7 @@ test('decodeData.constructor', () => {
   const value = contract.abi.decodeData(data);
   expect(value.name).toEqual('constructor');
   expect(value.params.length).toEqual(1);
-  expect(value.params[0]).toEqual(BigInt(50));
+  expect(value.params[0]).toEqual(JSBI.BigInt(50));
 });
 
 test('decodeData.function', () => {
@@ -63,7 +64,7 @@ test('decodeData.function', () => {
   const value = contract.abi.decodeData(data);
   expect(value.name).toEqual('inc');
   expect(value.params.length).toEqual(1);
-  expect(value.params[0]).toEqual(BigInt(100));
+  expect(value.params[0]).toEqual(JSBI.BigInt(100));
 
   expect(contract.abi.decodeData('0x')).toEqual(undefined);
 });
@@ -81,7 +82,7 @@ test('decodeLog', () => {
   expect(value.name).toEqual('SelfEvent');
   expect(value.params.length).toEqual(2);
   expect(value.params[0]).toEqual('0xa000000000000000000000000000000000000001');
-  expect(value.params[1]).toEqual(BigInt(100));
+  expect(value.params[1]).toEqual(JSBI.BigInt(100));
 
   expect(contract.abi.decodeLog({ topics: [] })).toEqual(undefined);
 });

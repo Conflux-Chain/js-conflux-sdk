@@ -7,7 +7,7 @@ test('Message.sign({message})', () => {
   const msg = new Message({ message: 'Hello World' });
 
   expect(msg.message).toEqual('Hello World');
-  expect(msg.hash).toEqual('0xa1de988600a42c4b4ab089b619297c17d53cffae5d5120d82d8a92d0bb3b78f2');
+  expect(msg.hash).toEqual('0x592fa743889fc7f92ac2a37bb1f5ba1daf2a5c84741ca0e0061d243a2e6707ba');
   expect(msg.r).toEqual(undefined);
   expect(msg.s).toEqual(undefined);
   expect(msg.v).toEqual(undefined);
@@ -17,12 +17,12 @@ test('Message.sign({message})', () => {
   msg.sign(KEY);
 
   expect(msg.message).toEqual('Hello World');
-  expect(msg.hash).toEqual('0xa1de988600a42c4b4ab089b619297c17d53cffae5d5120d82d8a92d0bb3b78f2');
-  expect(msg.r).toEqual('0xe6bfbd768a421b9051fe86310f0f1eef9d5df65288b53f54d663f887a5b4bcd6');
-  expect(msg.s).toEqual('0x32efb64ccc67d7245545175953e811bc237fd83ab8722d8be0a66e92ec39da81');
+  expect(msg.hash).toEqual('0x592fa743889fc7f92ac2a37bb1f5ba1daf2a5c84741ca0e0061d243a2e6707ba');
+  expect(msg.r).toEqual('0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c');
+  expect(msg.s).toEqual('0x29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f');
   expect(msg.v).toEqual(1);
   expect(msg.from).toEqual(ADDRESS); // virtual attribute
-  expect(msg.signature).toEqual('0xe6bfbd768a421b9051fe86310f0f1eef9d5df65288b53f54d663f887a5b4bcd632efb64ccc67d7245545175953e811bc237fd83ab8722d8be0a66e92ec39da8101'); // virtual attribute
+  expect(msg.signature).toEqual('0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01'); // virtual attribute
 
   msg.v = 0;
   expect(msg.from).not.toEqual(ADDRESS);
@@ -30,11 +30,11 @@ test('Message.sign({message})', () => {
 
 test('Message.sign({hash})', () => {
   const msg = new Message({
-    hash: '0xa1de988600a42c4b4ab089b619297c17d53cffae5d5120d82d8a92d0bb3b78f2',
+    hash: '0x592fa743889fc7f92ac2a37bb1f5ba1daf2a5c84741ca0e0061d243a2e6707ba',
   });
 
   expect(msg.message).toEqual(undefined);
-  expect(msg.hash).toEqual('0xa1de988600a42c4b4ab089b619297c17d53cffae5d5120d82d8a92d0bb3b78f2');
+  expect(msg.hash).toEqual('0x592fa743889fc7f92ac2a37bb1f5ba1daf2a5c84741ca0e0061d243a2e6707ba');
   expect(msg.r).toEqual(undefined);
   expect(msg.s).toEqual(undefined);
   expect(msg.v).toEqual(undefined);
@@ -44,12 +44,12 @@ test('Message.sign({hash})', () => {
   msg.sign(KEY);
 
   expect(msg.message).toEqual(undefined);
-  expect(msg.hash).toEqual('0xa1de988600a42c4b4ab089b619297c17d53cffae5d5120d82d8a92d0bb3b78f2');
-  expect(msg.r).toEqual('0xe6bfbd768a421b9051fe86310f0f1eef9d5df65288b53f54d663f887a5b4bcd6');
-  expect(msg.s).toEqual('0x32efb64ccc67d7245545175953e811bc237fd83ab8722d8be0a66e92ec39da81');
+  expect(msg.hash).toEqual('0x592fa743889fc7f92ac2a37bb1f5ba1daf2a5c84741ca0e0061d243a2e6707ba');
+  expect(msg.r).toEqual('0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c');
+  expect(msg.s).toEqual('0x29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f');
   expect(msg.v).toEqual(1);
   expect(msg.from).toEqual(ADDRESS); // virtual attribute
-  expect(msg.signature).toEqual('0xe6bfbd768a421b9051fe86310f0f1eef9d5df65288b53f54d663f887a5b4bcd632efb64ccc67d7245545175953e811bc237fd83ab8722d8be0a66e92ec39da8101'); // virtual attribute
+  expect(msg.signature).toEqual('0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01'); // virtual attribute
 });
 
 test('Message.sign({})', () => {
@@ -61,84 +61,84 @@ test('Message.sign({})', () => {
 test('Message.recover({message,r,s,v})', () => {
   const msg = new Message({
     message: 'Hello World',
-    r: '0xe6bfbd768a421b9051fe86310f0f1eef9d5df65288b53f54d663f887a5b4bcd6',
-    s: '0x32efb64ccc67d7245545175953e811bc237fd83ab8722d8be0a66e92ec39da81',
+    r: '0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c',
+    s: '0x29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f',
     v: 1,
   });
 
   expect(msg.message).toEqual('Hello World');
-  expect(msg.hash).toEqual('0xa1de988600a42c4b4ab089b619297c17d53cffae5d5120d82d8a92d0bb3b78f2');
-  expect(msg.r).toEqual('0xe6bfbd768a421b9051fe86310f0f1eef9d5df65288b53f54d663f887a5b4bcd6');
-  expect(msg.s).toEqual('0x32efb64ccc67d7245545175953e811bc237fd83ab8722d8be0a66e92ec39da81');
+  expect(msg.hash).toEqual('0x592fa743889fc7f92ac2a37bb1f5ba1daf2a5c84741ca0e0061d243a2e6707ba');
+  expect(msg.r).toEqual('0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c');
+  expect(msg.s).toEqual('0x29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f');
   expect(msg.v).toEqual(1);
   expect(msg.from).toEqual(ADDRESS); // virtual attribute
-  expect(msg.signature).toEqual('0xe6bfbd768a421b9051fe86310f0f1eef9d5df65288b53f54d663f887a5b4bcd632efb64ccc67d7245545175953e811bc237fd83ab8722d8be0a66e92ec39da8101'); // virtual attribute
+  expect(msg.signature).toEqual('0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01'); // virtual attribute
 });
 
 test('Message.recover({hash,r,s,v})', () => {
   const msg = new Message({
-    hash: '0xa1de988600a42c4b4ab089b619297c17d53cffae5d5120d82d8a92d0bb3b78f2',
-    r: '0xe6bfbd768a421b9051fe86310f0f1eef9d5df65288b53f54d663f887a5b4bcd6',
-    s: '0x32efb64ccc67d7245545175953e811bc237fd83ab8722d8be0a66e92ec39da81',
+    hash: '0x592fa743889fc7f92ac2a37bb1f5ba1daf2a5c84741ca0e0061d243a2e6707ba',
+    r: '0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c',
+    s: '0x29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f',
     v: 1,
   });
 
   expect(msg.message).toEqual(undefined);
-  expect(msg.hash).toEqual('0xa1de988600a42c4b4ab089b619297c17d53cffae5d5120d82d8a92d0bb3b78f2');
-  expect(msg.r).toEqual('0xe6bfbd768a421b9051fe86310f0f1eef9d5df65288b53f54d663f887a5b4bcd6');
-  expect(msg.s).toEqual('0x32efb64ccc67d7245545175953e811bc237fd83ab8722d8be0a66e92ec39da81');
+  expect(msg.hash).toEqual('0x592fa743889fc7f92ac2a37bb1f5ba1daf2a5c84741ca0e0061d243a2e6707ba');
+  expect(msg.r).toEqual('0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c');
+  expect(msg.s).toEqual('0x29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f');
   expect(msg.v).toEqual(1);
   expect(msg.from).toEqual(ADDRESS); // virtual attribute
-  expect(msg.signature).toEqual('0xe6bfbd768a421b9051fe86310f0f1eef9d5df65288b53f54d663f887a5b4bcd632efb64ccc67d7245545175953e811bc237fd83ab8722d8be0a66e92ec39da8101'); // virtual attribute
+  expect(msg.signature).toEqual('0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01'); // virtual attribute
 });
 
 test('Message.recover({message,signature})', () => {
   const msg = new Message({
     message: 'Hello World',
-    signature: '0xe6bfbd768a421b9051fe86310f0f1eef9d5df65288b53f54d663f887a5b4bcd632efb64ccc67d7245545175953e811bc237fd83ab8722d8be0a66e92ec39da8101',
+    signature: '0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01',
   });
 
   expect(msg.message).toEqual('Hello World');
-  expect(msg.hash).toEqual('0xa1de988600a42c4b4ab089b619297c17d53cffae5d5120d82d8a92d0bb3b78f2');
-  expect(msg.r).toEqual('0xe6bfbd768a421b9051fe86310f0f1eef9d5df65288b53f54d663f887a5b4bcd6');
-  expect(msg.s).toEqual('0x32efb64ccc67d7245545175953e811bc237fd83ab8722d8be0a66e92ec39da81');
+  expect(msg.hash).toEqual('0x592fa743889fc7f92ac2a37bb1f5ba1daf2a5c84741ca0e0061d243a2e6707ba');
+  expect(msg.r).toEqual('0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c');
+  expect(msg.s).toEqual('0x29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f');
   expect(msg.v).toEqual(1);
   expect(msg.from).toEqual(ADDRESS); // virtual attribute
-  expect(msg.signature).toEqual('0xe6bfbd768a421b9051fe86310f0f1eef9d5df65288b53f54d663f887a5b4bcd632efb64ccc67d7245545175953e811bc237fd83ab8722d8be0a66e92ec39da8101'); // virtual attribute
+  expect(msg.signature).toEqual('0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01'); // virtual attribute
 });
 
 test('Message.recover({hash,signature})', () => {
   const msg = new Message({
-    hash: '0xa1de988600a42c4b4ab089b619297c17d53cffae5d5120d82d8a92d0bb3b78f2',
-    signature: '0xe6bfbd768a421b9051fe86310f0f1eef9d5df65288b53f54d663f887a5b4bcd632efb64ccc67d7245545175953e811bc237fd83ab8722d8be0a66e92ec39da8101',
+    hash: '0x592fa743889fc7f92ac2a37bb1f5ba1daf2a5c84741ca0e0061d243a2e6707ba',
+    signature: '0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01',
   });
 
   expect(msg.message).toEqual(undefined);
-  expect(msg.hash).toEqual('0xa1de988600a42c4b4ab089b619297c17d53cffae5d5120d82d8a92d0bb3b78f2');
-  expect(msg.r).toEqual('0xe6bfbd768a421b9051fe86310f0f1eef9d5df65288b53f54d663f887a5b4bcd6');
-  expect(msg.s).toEqual('0x32efb64ccc67d7245545175953e811bc237fd83ab8722d8be0a66e92ec39da81');
+  expect(msg.hash).toEqual('0x592fa743889fc7f92ac2a37bb1f5ba1daf2a5c84741ca0e0061d243a2e6707ba');
+  expect(msg.r).toEqual('0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c');
+  expect(msg.s).toEqual('0x29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f');
   expect(msg.v).toEqual(1);
   expect(msg.from).toEqual(ADDRESS); // virtual attribute
-  expect(msg.signature).toEqual('0xe6bfbd768a421b9051fe86310f0f1eef9d5df65288b53f54d663f887a5b4bcd632efb64ccc67d7245545175953e811bc237fd83ab8722d8be0a66e92ec39da8101'); // virtual attribute
+  expect(msg.signature).toEqual('0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01'); // virtual attribute
 });
 
 test('Message encode signature', () => {
   const msg = new Message({
-    r: '0xe6bfbd768a421b9051fe86310f0f1eef9d5df65288b53f54d663f887a5b4bcd6',
-    s: '0x32efb64ccc67d7245545175953e811bc237fd83ab8722d8be0a66e92ec39da81',
+    r: '0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c',
+    s: '0x29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f',
     v: 1,
   });
 
-  expect(msg.signature).toEqual('0xe6bfbd768a421b9051fe86310f0f1eef9d5df65288b53f54d663f887a5b4bcd632efb64ccc67d7245545175953e811bc237fd83ab8722d8be0a66e92ec39da8101'); // virtual attribute
+  expect(msg.signature).toEqual('0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01'); // virtual attribute
 });
 
 test('Message decode signature', () => {
   const msg = new Message({
-    signature: '0xe6bfbd768a421b9051fe86310f0f1eef9d5df65288b53f54d663f887a5b4bcd632efb64ccc67d7245545175953e811bc237fd83ab8722d8be0a66e92ec39da8101',
+    signature: '0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01',
   });
 
-  expect(msg.r).toEqual('0xe6bfbd768a421b9051fe86310f0f1eef9d5df65288b53f54d663f887a5b4bcd6');
-  expect(msg.s).toEqual('0x32efb64ccc67d7245545175953e811bc237fd83ab8722d8be0a66e92ec39da81');
+  expect(msg.r).toEqual('0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c');
+  expect(msg.s).toEqual('0x29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f');
   expect(msg.v).toEqual(1);
 });
 
@@ -147,13 +147,13 @@ test('Message OverrideError', () => {
 
   expect(() => new Message({
     message: 'Hello World',
-    hash: '0xa1de988600a42c4b4ab089b619297c17d53cffae5d5120d82d8a92d0bb3b78f2',
+    hash: '0x592fa743889fc7f92ac2a37bb1f5ba1daf2a5c84741ca0e0061d243a2e6707ba',
   })).toThrow('OverrideError, can not set `message` with `hash`');
 
   expect(() => new Message({
-    signature: '0xe6bfbd768a421b9051fe86310f0f1eef9d5df65288b53f54d663f887a5b4bcd632efb64ccc67d7245545175953e811bc237fd83ab8722d8be0a66e92ec39da8101',
-    r: '0xe6bfbd768a421b9051fe86310f0f1eef9d5df65288b53f54d663f887a5b4bcd6',
-    s: '0x32efb64ccc67d7245545175953e811bc237fd83ab8722d8be0a66e92ec39da81',
+    signature: '0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01',
+    r: '0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c',
+    s: '0x29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f',
     v: 1,
   })).toThrow('OverrideError, can not set `signature` with `r` or `s` or `v`');
 });
