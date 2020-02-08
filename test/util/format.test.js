@@ -1,3 +1,4 @@
+const JSBI = require('jsbi');
 const format = require('../../src/util/format');
 
 const HEX_64 = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
@@ -54,22 +55,22 @@ test('hex(string)', () => {
 });
 
 test('bigUInt', () => {
-  expect(() => format.bigUInt(3.14)).toThrow('cannot be converted to a BigInt');
+  expect(() => format.bigUInt(3.14)).toThrow('cannot be converted to');
   expect(() => format.bigUInt(-1)).toThrow('not match bigUInt');
-  expect(format.bigUInt('0')).toEqual(BigInt(0));
-  expect(format.bigUInt(1)).toEqual(BigInt(1));
-  expect(format.bigUInt('0x10')).toEqual(BigInt(16));
-  expect(format.bigUInt(Number.MAX_SAFE_INTEGER + 1)).toEqual(BigInt(2 ** 53));
+  expect(format.bigUInt('0')).toEqual(JSBI.BigInt(0));
+  expect(format.bigUInt(1)).toEqual(JSBI.BigInt(1));
+  expect(format.bigUInt('0x10')).toEqual(JSBI.BigInt(16));
+  expect(format.bigUInt(Number.MAX_SAFE_INTEGER + 1)).toEqual(JSBI.BigInt(2 ** 53));
 });
 
 test('uint', () => {
   expect(() => format.uint()).toThrow('Cannot convert undefined to a BigInt');
-  expect(() => format.uint(null)).toThrow('Cannot convert null to a BigInt');
-  expect(() => format.uint(3.14)).toThrow('cannot be converted to a BigInt');
+  expect(() => format.uint(null)).toThrow('Cannot');
+  expect(() => format.uint(3.14)).toThrow('cannot be converted to');
   expect(() => format.uint(-1)).toThrow('not match bigUInt');
   expect(format.uint(0)).toEqual(0);
   expect(format.uint(1)).toEqual(1);
-  expect(format.uint(BigInt(100))).toEqual(100);
+  expect(format.uint(JSBI.BigInt(100))).toEqual(100);
   expect(format.uint('0x10')).toEqual(16);
   expect(format.uint(true)).toEqual(1);
   expect(format.uint(false)).toEqual(0);
@@ -83,10 +84,10 @@ test('numberHex', () => {
   expect(format.numberHex('')).toEqual('0x0');
   expect(format.numberHex(100)).toEqual('0x64');
   expect(format.numberHex('10')).toEqual('0xa');
-  expect(() => format.numberHex(3.50)).toThrow('cannot be converted to a BigInt');
-  expect(() => format.numberHex(-0.5)).toThrow('cannot be converted to a BigInt');
+  expect(() => format.numberHex(3.50)).toThrow('cannot be converted to');
+  expect(() => format.numberHex(-0.5)).toThrow('cannot be converted to');
   expect(() => format.numberHex(-1)).toThrow('not match bigUInt');
-  expect(() => format.numberHex(null)).toThrow('Cannot convert null to a BigInt');
+  expect(() => format.numberHex(null)).toThrow('Cannot');
 });
 
 test('epochNumber', () => {

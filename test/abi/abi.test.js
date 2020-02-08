@@ -1,3 +1,4 @@
+const JSBI = require('jsbi');
 const { formatSignature, FunctionCoder, EventCoder } = require('../../src/abi');
 
 test('function', () => {
@@ -34,9 +35,9 @@ test('function', () => {
   };
 
   const params = [
-    BigInt(-1),
+    JSBI.BigInt(-1),
     ['0x0123456789012345678901234567890123456789', ['Hello', 'World']],
-    [[BigInt(0xab), BigInt(0xcd)], true],
+    [[JSBI.BigInt(0xab), JSBI.BigInt(0xcd)], true],
   ];
 
   const hex = '0x' +
@@ -61,7 +62,7 @@ test('function', () => {
   expect(coder.encodeInputs(params)).toEqual(hex);
   expect(coder.decodeInputs(hex)).toEqual(params);
   expect(coder.decodeOutputs('0x0000000000000000000000000000000000000000000000000000000000000001'))
-    .toEqual([BigInt(1)]);
+    .toEqual([JSBI.BigInt(1)]);
 });
 
 test('event', () => {
@@ -100,7 +101,7 @@ test('event', () => {
   expect(() => coder.encodeInputByIndex('', 2)).toThrow('invalid index');
 
   expect([...coder.decodeLog(log)])
-    .toEqual(['0x0123456789012345678901234567890123456789', BigInt(10)]);
+    .toEqual(['0x0123456789012345678901234567890123456789', JSBI.BigInt(10)]);
 });
 
 test('event.anonymous', () => {
@@ -129,5 +130,5 @@ test('event.anonymous', () => {
 
   const coder = new EventCoder(abi);
   expect([...coder.decodeLog(log)])
-    .toEqual(['0x0123456789012345678901234567890123456789', BigInt(10)]);
+    .toEqual(['0x0123456789012345678901234567890123456789', JSBI.BigInt(10)]);
 });

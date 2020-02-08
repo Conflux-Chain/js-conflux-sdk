@@ -1,3 +1,5 @@
+const JSBI = require('jsbi');
+
 const UNIT_MATRIX = {
   cfx: { cfx: 1, gdrip: 1e9, drip: 1e18 },
   gdrip: { cfx: 1e-9, gdrip: 1, drip: 1e9 },
@@ -32,8 +34,8 @@ function unit(from, to) {
 
   return function (value) {
     return multiple > 1
-      ? BigInt(value) * BigInt(multiple)
-      : BigInt(value) / BigInt(reciprocal);
+      ? JSBI.multiply(JSBI.BigInt(value), JSBI.BigInt(multiple))
+      : JSBI.divide(JSBI.BigInt(value), JSBI.BigInt(reciprocal));
   };
 }
 
