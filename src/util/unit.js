@@ -15,10 +15,10 @@ const UNIT_MATRIX = {
  *
  * @example
  * > unit('cfx', 'drip')(1)
- 1000000000000000000n
+ JSBI.BigInt(1000000000000000000)
 
  * > unit('drip', 'cfx')(1000000000000000000)
- 1n
+ JSBI.BigInt(1)
  */
 function unit(from, to) {
   const keys = Object.keys(UNIT_MATRIX);
@@ -41,62 +41,62 @@ function unit(from, to) {
 
 // ----------------------------------------------------------------------------
 /**
- * @param value {number|BigInt|string}
- * @return {BigInt}
+ * @param value {number|JSBI|string}
+ * @return {JSBI}
  *
  * @example
  * > fromCFXToGDrip(123)
- 123000000000n
+ JSBI.BigInt(123000000000)
  */
 unit.fromCFXToGDrip = unit('cfx', 'gdrip');
 
 /**
- * @param value {number|BigInt|string}
- * @return {BigInt}
+ * @param value {number|JSBI|string}
+ * @return {JSBI}
  *
  * @example
  * > fromCFXToDrip(123)
- 123000000000000000000n
+ JSBI.BigInt(123000000000000000000)
  */
 unit.fromCFXToDrip = unit('cfx', 'drip');
 
 /**
- * @param value {number|BigInt|string}
- * @return {BigInt}
+ * @param value {number|JSBI|string}
+ * @return {JSBI}
  *
  * @example
  * > fromGDripToCFX(123456789012)
- 123n
+ JSBI.BigInt(123)
  */
 unit.fromGDripToCFX = unit('gdrip', 'cfx');
 
 /**
- * @param value {number|BigInt|string}
- * @return {BigInt}
+ * @param value {number|JSBI|string}
+ * @return {JSBI}
  *
  * @example
  * > fromGDripToDrip(123)
- 123000000000n
+ JSBI.BigInt(123000000000)
  */
 unit.fromGDripToDrip = unit('gdrip', 'drip');
 
 /**
- * @param value {number|BigInt|string}
- * @return {BigInt}
+ * @param value {number|JSBI|string}
+ * @return {JSBI}
  *
  * @example
  * > fromDripToCFX(123456789012345678901)
- 123n
+ JSBI.BigInt(123)
  */
 unit.fromDripToCFX = unit('drip', 'cfx');
 
 /**
- * @param value {number|BigInt|string}
- * @return {BigInt}
+ * @param value {number|JSBI|string}
+ * @return {JSBI}
  *
  * @example
  * > fromDripToGDrip(123456789012)
- 123
+ JSBI.BigInt(123)
  */
 unit.fromDripToGDrip = unit('drip', 'gdrip');
 

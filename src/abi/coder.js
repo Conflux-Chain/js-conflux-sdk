@@ -232,7 +232,7 @@ class IntegerCoder extends Coder {
   }
 
   /**
-   * @param value {number|BigInt|string}
+   * @param value {number|JSBI|string}
    * @return {Buffer}
    */
   encode(value) {
@@ -257,7 +257,7 @@ class IntegerCoder extends Coder {
 
   /**
    * @param stream {HexStream}
-   * @return {BigInt}
+   * @return {JSBI}
    */
   decode(stream) {
     let value = JSBI.BigInt(`0x${stream.read(this.size * 2)}`); // 16: read out naked hex string

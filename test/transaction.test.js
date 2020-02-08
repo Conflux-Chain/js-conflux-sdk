@@ -1,5 +1,4 @@
 const { Transaction } = require('../src');
-const format = require('../src/util/format');
 
 const KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 const ADDRESS = '0xfcad0b19bb29d4674531d6f115237e16afce377c';
@@ -27,11 +26,12 @@ test('Transaction', () => {
 
   tx.sign(KEY);
 
-  expect(format.hex(tx.r)).toEqual('0x489153a772628dd224e516f5231740a526dd4a7af90fe6d9b270286cb8cf2d68');
-  expect(format.hex(tx.s)).toEqual('0x40d27551b593ffba7a69a997690fc0461aed760a78236d4ed33e26c9c1a7c97b');
+  expect(tx.r).toEqual('0x489153a772628dd224e516f5231740a526dd4a7af90fe6d9b270286cb8cf2d68');
+  expect(tx.s).toEqual('0x40d27551b593ffba7a69a997690fc0461aed760a78236d4ed33e26c9c1a7c97b');
   expect(tx.v).toEqual(0);
   expect(tx.from).toEqual(ADDRESS);
   expect(tx.hash).toEqual('0xe3233c95242fd25af7a87fa5e97a4051146d84d4495c0495a9459fad5bd31907');
+  expect(tx.recover()).toEqual('0x4646ae5047316b4230d0086c8acec687f00b1cd9d1dc634f6cb358ac0a9a8ffffe77b4dd0a4bfb95851f3b7355c781dd60f8418fc8a65d14907aff47c903a559');
   expect(tx.serialize()).toEqual('0xf85f8001825208940123456789012345678901234567890123456789808080a0489153a772628dd224e516f5231740a526dd4a7af90fe6d9b270286cb8cf2d68a040d27551b593ffba7a69a997690fc0461aed760a78236d4ed33e26c9c1a7c97b');
 
   tx.value = 1;

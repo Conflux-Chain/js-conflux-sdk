@@ -158,7 +158,7 @@ class Conflux {
   /**
    * Returns the current gas price oracle. The gas price is determined by the last few blocks median gas price.
    *
-   * @return {Promise<BigInt>} Gas price in drip.
+   * @return {Promise<JSBI>} Gas price in drip.
    *
    * @example
    * > await cfx.getGasPrice();
@@ -288,7 +288,7 @@ class Conflux {
    *
    * @param address {string} - The address to get the balance of.
    * @param [epochNumber=this.defaultEpoch] {string|number} - The end epochNumber to count balance of.
-   * @return {Promise<BigInt>} Address balance number in drip.
+   * @return {Promise<JSBI>} Address balance number in drip.
    *
    * @example
    * > let balance = await cfx.getBalance("0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b");
@@ -764,7 +764,7 @@ class Conflux {
    * Executes a message call or transaction and returns the amount of the gas used.
    *
    * @param options {object} - See `format.estimateTx`
-   * @return {Promise<BigInt>} The used gas for the simulated call/transaction.
+   * @return {Promise<JSBI>} The used gas for the simulated call/transaction.
    */
   async estimateGas(options) {
     if (options.gasPrice === undefined) {

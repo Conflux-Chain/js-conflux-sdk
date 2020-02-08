@@ -1,6 +1,7 @@
 const { Message } = require('../src');
 
 const KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
+const PUBLIC = '0x4646ae5047316b4230d0086c8acec687f00b1cd9d1dc634f6cb358ac0a9a8ffffe77b4dd0a4bfb95851f3b7355c781dd60f8418fc8a65d14907aff47c903a559';
 const ADDRESS = '0xfcad0b19bb29d4674531d6f115237e16afce377c';
 
 test('Message.sign({message})', () => {
@@ -13,6 +14,7 @@ test('Message.sign({message})', () => {
   expect(msg.v).toEqual(undefined);
   expect(msg.from).toEqual(undefined); // virtual attribute
   expect(msg.signature).toEqual(undefined); // virtual attribute
+  expect(() => msg.recover()).toThrow('not match hex');
 
   msg.sign(KEY);
 
@@ -23,6 +25,7 @@ test('Message.sign({message})', () => {
   expect(msg.v).toEqual(1);
   expect(msg.from).toEqual(ADDRESS); // virtual attribute
   expect(msg.signature).toEqual('0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01'); // virtual attribute
+  expect(msg.recover()).toEqual(PUBLIC);
 
   msg.v = 0;
   expect(msg.from).not.toEqual(ADDRESS);
@@ -50,6 +53,7 @@ test('Message.sign({hash})', () => {
   expect(msg.v).toEqual(1);
   expect(msg.from).toEqual(ADDRESS); // virtual attribute
   expect(msg.signature).toEqual('0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01'); // virtual attribute
+  expect(msg.recover()).toEqual(PUBLIC);
 });
 
 test('Message.sign({})', () => {
@@ -73,6 +77,7 @@ test('Message.recover({message,r,s,v})', () => {
   expect(msg.v).toEqual(1);
   expect(msg.from).toEqual(ADDRESS); // virtual attribute
   expect(msg.signature).toEqual('0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01'); // virtual attribute
+  expect(msg.recover()).toEqual(PUBLIC);
 });
 
 test('Message.recover({hash,r,s,v})', () => {
@@ -90,6 +95,7 @@ test('Message.recover({hash,r,s,v})', () => {
   expect(msg.v).toEqual(1);
   expect(msg.from).toEqual(ADDRESS); // virtual attribute
   expect(msg.signature).toEqual('0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01'); // virtual attribute
+  expect(msg.recover()).toEqual(PUBLIC);
 });
 
 test('Message.recover({message,signature})', () => {
@@ -105,6 +111,7 @@ test('Message.recover({message,signature})', () => {
   expect(msg.v).toEqual(1);
   expect(msg.from).toEqual(ADDRESS); // virtual attribute
   expect(msg.signature).toEqual('0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01'); // virtual attribute
+  expect(msg.recover()).toEqual(PUBLIC);
 });
 
 test('Message.recover({hash,signature})', () => {
@@ -120,6 +127,7 @@ test('Message.recover({hash,signature})', () => {
   expect(msg.v).toEqual(1);
   expect(msg.from).toEqual(ADDRESS); // virtual attribute
   expect(msg.signature).toEqual('0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01'); // virtual attribute
+  expect(msg.recover()).toEqual(PUBLIC);
 });
 
 test('Message encode signature', () => {
@@ -130,6 +138,7 @@ test('Message encode signature', () => {
   });
 
   expect(msg.signature).toEqual('0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01'); // virtual attribute
+  expect(() => msg.recover()).toThrow('not match hex');
 });
 
 test('Message decode signature', () => {
@@ -140,6 +149,7 @@ test('Message decode signature', () => {
   expect(msg.r).toEqual('0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c');
   expect(msg.s).toEqual('0x29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f');
   expect(msg.v).toEqual(1);
+  expect(() => msg.recover()).toThrow('not match hex');
 });
 
 test('Message OverrideError', () => {

@@ -45,12 +45,7 @@ class Transaction {
    */
   get from() {
     try {
-      const publicKey = ecdsaRecover(sha3(this.encode(false)), {
-        r: format.buffer(this.r),
-        s: format.buffer(this.s),
-        v: format.uint(this.v),
-      });
-      return format.hex(publicKeyToAddress(publicKey));
+      return format.hex(publicKeyToAddress(format.buffer(this.recover())));
     } catch (e) {
       return undefined;
     }
@@ -60,10 +55,26 @@ class Transaction {
    * Sign transaction and set 'r','s','v'.
    *
    * @param privateKey {string} - Private key hex string.
+   * @return {Transaction}
    */
   sign(privateKey) {
     const { r, s, v } = ecdsaSign(sha3(this.encode(false)), format.buffer(privateKey));
-    Object.assign(this, { r, s, v });
+    Object.assign(this, { r: format.hex(r), s: format.hex(s), v });
+    return this;
+  }
+
+  /**
+   * Recover public key from signed Transaction.
+   *
+   * @return {string}
+   */
+  recover() {
+    const publicKey = ecdsaRecover(sha3(this.encode(false)), {
+      r: format.buffer(this.r),
+      s: format.buffer(this.s),
+      v: format.uint(this.v),
+    });
+    return format.publicKey(publicKey);
   }
 
   /**

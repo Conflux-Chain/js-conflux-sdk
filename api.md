@@ -283,7 +283,7 @@ Returns the current gas price oracle. The gas price is determined by the last fe
 
 ### Return
 
-`Promise.<BigInt>` Gas price in drip.
+`Promise.<JSBI>` Gas price in drip.
 
 ### Example
 
@@ -423,7 +423,7 @@ epochNumber | string,number | false    | this.defaultEpoch | The end epochNumber
 
 ### Return
 
-`Promise.<BigInt>` Address balance number in drip.
+`Promise.<JSBI>` Address balance number in drip.
 
 ### Example
 
@@ -911,7 +911,7 @@ options | object | true     |         | See `format.estimateTx`
 
 ### Return
 
-`Promise.<BigInt>` The used gas for the simulated call/transaction.
+`Promise.<JSBI>` The used gas for the simulated call/transaction.
 
 
 ----------
@@ -1085,7 +1085,20 @@ privateKey | string | true     |         | Private key hex string.
 
 ### Return
 
+`Message` 
+
+
+## Message.recover
+
+Recover public key from signed Transaction.
+
+### Parameters
+
 `void`
+
+### Return
+
+`string` 
 
 
 ----------
@@ -1208,7 +1221,20 @@ privateKey | string | true     |         | Private key hex string.
 
 ### Return
 
+`Transaction` 
+
+
+## Transaction.recover
+
+Recover public key from signed Transaction.
+
+### Parameters
+
 `void`
+
+### Return
+
+`string` 
 
 
 ## Transaction.encode
@@ -1272,9 +1298,9 @@ When encoding UNFORMATTED DATA (byte arrays, account addresses, hashes, bytecode
 
 ### Parameters
 
-Name | Type                                     | Required | Default | Description
------|------------------------------------------|----------|---------|------------
-arg  | number,BigInt,string,Buffer,boolean,null | true     |         |
+Name | Type                                   | Required | Default | Description
+-----|----------------------------------------|----------|---------|------------
+arg  | number,JSBI,string,Buffer,boolean,null | true     |         |
 
 ### Return
 
@@ -1298,23 +1324,23 @@ arg  | number,BigInt,string,Buffer,boolean,null | true     |         |
 
 ### Parameters
 
-Name | Type                         | Required | Default | Description
------|------------------------------|----------|---------|------------
-arg  | number,BigInt,string,boolean | true     |         |
+Name | Type                       | Required | Default | Description
+-----|----------------------------|----------|---------|------------
+arg  | number,JSBI,string,boolean | true     |         |
 
 ### Return
 
-`BigInt` 
+`JSBI` 
 
 ### Example
 
 ```
-> format.uint(-3.14)
- Error("not match uint")> format.uint('0')
- 0n> format.uint(1)
- 1n> format.uint(BigInt(100))
- 100n> format.uint('0x10')
- 16n> format.uint(Number.MAX_SAFE_INTEGER + 1) // unsafe integer
+> format.bigUInt(-3.14)
+ Error("not match uint")> format.bigUInt('0')
+ JSBI.BigInt(0)> format.bigUInt(1)
+ JSBI.BigInt(1)> format.bigUInt(JSBI(100))
+ JSBI.BigInt(100)> format.bigUInt('0x10')
+ JSBI.BigInt(16)> format.bigUInt(Number.MAX_SAFE_INTEGER + 1) // unsafe integer
  Error("not match uint")
 ```
 
@@ -1324,9 +1350,9 @@ arg  | number,BigInt,string,boolean | true     |         |
 
 ### Parameters
 
-Name | Type                         | Required | Default | Description
------|------------------------------|----------|---------|------------
-arg  | number,BigInt,string,boolean | true     |         |
+Name | Type                       | Required | Default | Description
+-----|----------------------------|----------|---------|------------
+arg  | number,JSBI,string,boolean | true     |         |
 
 ### Return
 
@@ -1336,10 +1362,10 @@ arg  | number,BigInt,string,boolean | true     |         |
 
 ```
 > format.uint(-3.14)
- Error("cannot be converted to a BigInt")> format.uint(null)
- Error("Cannot convert null to a BigInt")> format.uint('0')
+ Error("cannot be converted to a JSBI")> format.uint(null)
+ Error("Cannot convert null to a JSBI")> format.uint('0')
  0> format.uint(1)
- 1> format.uint(BigInt(100))
+ 1> format.uint(JSBI(100))
  100> format.uint('0x10')
  16> format.uint('')
  0> format.uint(true)
@@ -1527,9 +1553,9 @@ arg  | string,Buffer | true     |         |
 
 ### Parameters
 
-Name | Type                                     | Required | Default | Description
------|------------------------------------------|----------|---------|------------
-arg  | number,BigInt,string,Buffer,boolean,null | true     |         |
+Name | Type                                   | Required | Default | Description
+-----|----------------------------------------|----------|---------|------------
+arg  | number,JSBI,string,Buffer,boolean,null | true     |         |
 
 ### Return
 
@@ -1794,19 +1820,19 @@ options.v | number | true     |         |
 
 ### Parameters
 
-Name  | Type                 | Required | Default | Description
-------|----------------------|----------|---------|------------
-value | number,BigInt,string | true     |         |
+Name  | Type               | Required | Default | Description
+------|--------------------|----------|---------|------------
+value | number,JSBI,string | true     |         |
 
 ### Return
 
-`BigInt` 
+`JSBI` 
 
 ### Example
 
 ```
 > fromCFXToGDrip(123)
- 123000000000n
+ JSBI.BigInt(123000000000)
 ```
 
 ## unit.fromCFXToDrip
@@ -1815,19 +1841,19 @@ value | number,BigInt,string | true     |         |
 
 ### Parameters
 
-Name  | Type                 | Required | Default | Description
-------|----------------------|----------|---------|------------
-value | number,BigInt,string | true     |         |
+Name  | Type               | Required | Default | Description
+------|--------------------|----------|---------|------------
+value | number,JSBI,string | true     |         |
 
 ### Return
 
-`BigInt` 
+`JSBI` 
 
 ### Example
 
 ```
 > fromCFXToDrip(123)
- 123000000000000000000n
+ JSBI.BigInt(123000000000000000000)
 ```
 
 ## unit.fromGDripToCFX
@@ -1836,19 +1862,19 @@ value | number,BigInt,string | true     |         |
 
 ### Parameters
 
-Name  | Type                 | Required | Default | Description
-------|----------------------|----------|---------|------------
-value | number,BigInt,string | true     |         |
+Name  | Type               | Required | Default | Description
+------|--------------------|----------|---------|------------
+value | number,JSBI,string | true     |         |
 
 ### Return
 
-`BigInt` 
+`JSBI` 
 
 ### Example
 
 ```
 > fromGDripToCFX(123456789012)
- 123n
+ JSBI.BigInt(123)
 ```
 
 ## unit.fromGDripToDrip
@@ -1857,19 +1883,19 @@ value | number,BigInt,string | true     |         |
 
 ### Parameters
 
-Name  | Type                 | Required | Default | Description
-------|----------------------|----------|---------|------------
-value | number,BigInt,string | true     |         |
+Name  | Type               | Required | Default | Description
+------|--------------------|----------|---------|------------
+value | number,JSBI,string | true     |         |
 
 ### Return
 
-`BigInt` 
+`JSBI` 
 
 ### Example
 
 ```
 > fromGDripToDrip(123)
- 123000000000n
+ JSBI.BigInt(123000000000)
 ```
 
 ## unit.fromDripToCFX
@@ -1878,19 +1904,19 @@ value | number,BigInt,string | true     |         |
 
 ### Parameters
 
-Name  | Type                 | Required | Default | Description
-------|----------------------|----------|---------|------------
-value | number,BigInt,string | true     |         |
+Name  | Type               | Required | Default | Description
+------|--------------------|----------|---------|------------
+value | number,JSBI,string | true     |         |
 
 ### Return
 
-`BigInt` 
+`JSBI` 
 
 ### Example
 
 ```
 > fromDripToCFX(123456789012345678901)
- 123n
+ JSBI.BigInt(123)
 ```
 
 ## unit.fromDripToGDrip
@@ -1899,19 +1925,19 @@ value | number,BigInt,string | true     |         |
 
 ### Parameters
 
-Name  | Type                 | Required | Default | Description
-------|----------------------|----------|---------|------------
-value | number,BigInt,string | true     |         |
+Name  | Type               | Required | Default | Description
+------|--------------------|----------|---------|------------
+value | number,JSBI,string | true     |         |
 
 ### Return
 
-`BigInt` 
+`JSBI` 
 
 ### Example
 
 ```
 > fromDripToGDrip(123456789012)
- 123
+ JSBI.BigInt(123)
 ```
 
 ## unit.unit
@@ -1933,6 +1959,6 @@ to   | string | true     |         | Enum in ['cfx', 'gdrip', 'drip']
 
 ```
 > unit('cfx', 'drip')(1)
- 1000000000000000000n> unit('drip', 'cfx')(1000000000000000000)
- 1n
+ JSBI.BigInt(1000000000000000000)> unit('drip', 'cfx')(1000000000000000000)
+ JSBI.BigInt(1)
 ```

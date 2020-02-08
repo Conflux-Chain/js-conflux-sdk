@@ -66,12 +66,7 @@ class Message {
    */
   get from() {
     try {
-      const publicKey = ecdsaRecover(format.buffer(this.hash), {
-        r: format.buffer(this.r),
-        s: format.buffer(this.s),
-        v: format.uint(this.v),
-      });
-      return format.hex(publicKeyToAddress(publicKey));
+      return format.hex(publicKeyToAddress(format.buffer(this.recover())));
     } catch (e) {
       return undefined;
     }
@@ -98,12 +93,26 @@ class Message {
    * Sign message and set 'r','s','v' and 'hash'.
    *
    * @param privateKey {string} - Private key hex string.
+   * @return {Message}
    */
   sign(privateKey) {
     const { r, s, v } = ecdsaSign(format.buffer(this.hash), format.buffer(privateKey));
-
-    // FIXME: hex for usable, but should Transaction.sign hex too ?
     Object.assign(this, { r: format.hex(r), s: format.hex(s), v });
+    return this;
+  }
+
+  /**
+   * Recover public key from signed Transaction.
+   *
+   * @return {string}
+   */
+  recover() {
+    const publicKey = ecdsaRecover(format.buffer(this.hash), {
+      r: format.buffer(this.r),
+      s: format.buffer(this.s),
+      v: format.uint(this.v),
+    });
+    return format.publicKey(publicKey);
   }
 }
 

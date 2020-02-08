@@ -47,7 +47,7 @@ format.any = Parser(v => v);
 /**
  * When encoding UNFORMATTED DATA (byte arrays, account addresses, hashes, bytecode arrays): encode as hex, prefix with "0x", two hex digits per byte.
  *
- * @param arg {number|BigInt|string|Buffer|boolean|null}
+ * @param arg {number|JSBI|string|Buffer|boolean|null}
  * @return {string} Hex string
  *
  * @example
@@ -68,39 +68,39 @@ format.hex = Parser(toHex);
 format.hex64 = format.hex.validate(v => v.length === 2 + 64, 'hex64');
 
 /**
- * @param arg {number|BigInt|string|boolean}
- * @return {BigInt}
+ * @param arg {number|JSBI|string|boolean}
+ * @return {JSBI}
  *
  * @example
- * > format.uint(-3.14)
+ * > format.bigUInt(-3.14)
  Error("not match uint")
- * > format.uint('0')
- 0n
- * > format.uint(1)
- 1n
- * > format.uint(BigInt(100))
- 100n
- * > format.uint('0x10')
- 16n
- * > format.uint(Number.MAX_SAFE_INTEGER + 1) // unsafe integer
+ * > format.bigUInt('0')
+ JSBI.BigInt(0)
+ * > format.bigUInt(1)
+ JSBI.BigInt(1)
+ * > format.bigUInt(JSBI(100))
+ JSBI.BigInt(100)
+ * > format.bigUInt('0x10')
+ JSBI.BigInt(16)
+ * > format.bigUInt(Number.MAX_SAFE_INTEGER + 1) // unsafe integer
  Error("not match uint")
  */
 format.bigUInt = Parser(JSBI.BigInt).validate(v => v >= 0, 'bigUInt');
 
 /**
- * @param arg {number|BigInt|string|boolean}
+ * @param arg {number|JSBI|string|boolean}
  * @return {Number}
  *
  * @example
  * > format.uint(-3.14)
- Error("cannot be converted to a BigInt")
+ Error("cannot be converted to a JSBI")
  * > format.uint(null)
- Error("Cannot convert null to a BigInt")
+ Error("Cannot convert null to a JSBI")
  * > format.uint('0')
  0
  * > format.uint(1)
  1
- * > format.uint(BigInt(100))
+ * > format.uint(JSBI(100))
  100
  * > format.uint('0x10')
  16
@@ -218,7 +218,7 @@ format.blockHash = format.hex64; // alias
 format.txHash = format.hex64; // alias
 
 /**
- * @param arg {number|BigInt|string|Buffer|boolean|null}
+ * @param arg {number|JSBI|string|Buffer|boolean|null}
  * @return {Buffer}
  *
  * @example
