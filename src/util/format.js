@@ -2,9 +2,10 @@ const JSBI = require('jsbi');
 const lodash = require('lodash');
 const Parser = require('../lib/parser');
 
-function isBigInt(value) {
-  return value instanceof JSBI;
-}
+// https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/BigInt
+JSBI.prototype.toJSON = function () {
+  return this.toString();
+};
 
 // ----------------------------------------------------------------------------
 function toHex(value) {
@@ -12,7 +13,7 @@ function toHex(value) {
 
   if (lodash.isString(value)) {
     hex = value.toLowerCase(); // XXX: lower case for support checksum address
-  } else if (Number.isInteger(value) || isBigInt(value)) {
+  } else if (Number.isInteger(value) || (value instanceof JSBI)) {
     const string = value.toString(16);
     hex = string.length % 2 ? `0x0${string}` : `0x${string}`;
   } else if (Buffer.isBuffer(value)) {
