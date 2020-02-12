@@ -28,7 +28,7 @@ async function main() {
 
 main();
 ```
-require neseted file/dir  
+require deep nested file/dir  
 
 ``` javascript
 const util = require('js-conflux-sdk/lib/util');
