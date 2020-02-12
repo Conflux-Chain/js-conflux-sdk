@@ -1,7 +1,7 @@
 {
-  "name": "js-conflux-sdk",
+  "name": "@yqrashawn/js-conflux-sdk",
   "description": "JavaScript Conflux Software Development Kit",
-  "version": "0.7.4",
+  "version": "0.7.4-c",
   "license": "LGPL-3.0",
   "author": "Haizhou@conflux-chain.org",
   "homepage": "https://github.com/Conflux-Chain/js-conflux-sdk#readme",
@@ -16,15 +16,16 @@
     "conflux",
     "sdk"
   ],
-  "main": "src/main.js",
-  "module": "src/index.js",
+  "main": "lib/main.js",
+  "module": "esm/index.js",
   "browser": {
     "secp256k1": "secp256k1/elliptic",
-    "src/main.js": "src/index.js"
+    "lib/main.js": "esm/main.js"
   },
   "files": [
     "mock",
-    "src",
+    "lib",
+    "esm",
     "dist"
   ],
   "browserslit": "cover 99.5%",
@@ -49,20 +50,23 @@
     "babel-plugin-lodash": "^3.3.4",
     "babelify": "^10.0.0",
     "browserify": "^16.5.0",
-    "common-shakeify": "^0.6.2",
+    "concurrently": "^5.1.0",
     "eslint": "^6.3.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2",
-    "esmify": "^2.1.1",
     "exorcist": "^1.0.1",
+    "fs-extra": "^8.1.0",
     "jest": "^24.9.0",
-    "mkdirp": "^1.0.3",
-    "tinyify": "^2.5.2"
+    "prepend-file": "^1.3.1",
+    "tinyify": "^2.5.2",
+    "walker": "^1.0.7"
   },
   "scripts": {
     "eslint": "eslint ./src ./test ./mock",
     "scope": "npm config set scope conflux-dev & npm config set access public",
-    "build": "node build.js",
+    "build": "concurrently --names frontend,backend --prefix-colors blue,green 'npm run build:frontend' 'npm run build:backend'",
+    "build:frontend": "node development/build-frontend.js",
+    "build:backend": "node development/build-backend.js",
     "prepublishOnly": "npm run build",
     "test": "jest"
   }

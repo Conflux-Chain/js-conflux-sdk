@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/order
 const { Conflux } = require('../../src');
 
 // ----------------------------------------------------------------------------
@@ -55,3 +56,15 @@ test('cfx.close', () => {
   cfx.provider = undefined;
   cfx.close();
 });
+
+
+const fs = require('fs');
+const { resolve } = require('path');
+
+const confluxTestCode = fs.readFileSync('test/conflux/conflux.test.js');
+const confluxTestCodeEsmVersion = confluxTestCode.toString().replace('const { Conflux } = require(\'../../src\')', 'import { Conflux } from \'../../src\'');
+const esmTestFilePath = resolve(__dirname, './conflux.test.esm.js');
+fs.writeFileSync(esmTestFilePath, confluxTestCodeEsmVersion);
+// eslint-disable-next-line import/no-dynamic-require
+require(esmTestFilePath);
+require('fs-extra').removeSync(esmTestFilePath);
