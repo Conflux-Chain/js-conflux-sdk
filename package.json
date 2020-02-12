@@ -18,7 +18,10 @@
   ],
   "main": "src/main.js",
   "module": "src/index.js",
-  "browser": "src/index.js",
+  "browser": {
+    "secp256k1": "secp256k1/elliptic",
+    "src/main.js": "src/index.js"
+  },
   "files": [
     "mock",
     "src",
@@ -31,6 +34,7 @@
     }
   },
   "dependencies": {
+    "@babel/runtime": "^7.8.4",
     "esm": "^3.2.25",
     "jsbi": "^3.1.1",
     "keccak": "^2.0.0",
@@ -40,6 +44,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
+    "@babel/plugin-transform-runtime": "^7.8.3",
     "@babel/preset-env": "^7.8.4",
     "babel-plugin-lodash": "^3.3.4",
     "babelify": "^10.0.0",
@@ -51,6 +56,7 @@
     "esmify": "^2.1.1",
     "exorcist": "^1.0.1",
     "jest": "^24.9.0",
+    "mkdirp": "^1.0.3",
     "tinyify": "^2.5.2"
   },
   "scripts": {
