@@ -1,4 +1,7 @@
 import lodash from 'lodash';
+import * as sign from './sign';
+import unit from './unit';
+import format from './format';
 
 export function assert(bool, value) {
   if (!bool) {
@@ -49,3 +52,5 @@ export function decorate(instance, name, func) {
   const method = instance[name];
   instance[name] = (...params) => func(method.bind(instance), params);
 }
+
+export { sign, unit, format };
