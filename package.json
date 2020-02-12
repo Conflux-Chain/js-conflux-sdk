@@ -1,7 +1,7 @@
 {
-  "name": "@yqrashawn/js-conflux-sdk",
+  "name": "js-conflux-sdk",
   "description": "JavaScript Conflux Software Development Kit",
-  "version": "0.7.4-c",
+  "version": "0.7.4",
   "license": "LGPL-3.0",
   "author": "Haizhou@conflux-chain.org",
   "homepage": "https://github.com/Conflux-Chain/js-conflux-sdk#readme",

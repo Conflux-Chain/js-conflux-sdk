@@ -1,0 +1,18 @@
+dist: bionic
+language: node_js
+node_js:
+  - 10
+
+cache: yarn
+
+script:
+  - yarn --frozen-lockfile --ignore-scripts --har
+  - yarn eslint
+  - yarn test
+  - yarn build
+  - sh development/test-create-react-app-default-bundler.sh
+
+notifications:
+  email:
+    on_success: change
+    on_failure: always
