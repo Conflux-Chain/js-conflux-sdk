@@ -28,12 +28,18 @@ async function main() {
 
 main();
 ```
+require deep nested file/dir  
+
+``` javascript
+const util = require('js-conflux-sdk/lib/util');
+```
 
 ### Frontend
 
 #### esm
 ``` javascript
 import { Conflux } from 'js-conflux-sdk';
+import { util } from 'js-conflux-sdk/esm/util';
 ```
 
 Note: This assumes bundler will read the [package.json browser

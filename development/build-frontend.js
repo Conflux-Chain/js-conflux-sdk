@@ -1,11 +1,10 @@
 /* eslint-disable import/no-extraneous-dependencies */
-require('mkdirp').sync('dist');
+const { mkdirpSync, copySync, emptyDirSync, removeSync } = require('fs-extra');
 const browserify = require('browserify');
 const babelify = require('babelify');
-// const commonShake = require('common-shakeify');
 const fs = require('fs');
 const exorcist = require('exorcist');
-// const esmify = require('esmify');
+
 
 const browserifyOptions = {
   entries: ['./src/index.js'],
@@ -15,6 +14,13 @@ const browserifyOptions = {
 };
 
 const OUTPUT_FILE_NAME = 'js-conflux-sdk';
+
+mkdirpSync('dist');
+emptyDirSync('dist');
+mkdirpSync('esm');
+emptyDirSync('esm');
+copySync('src', 'esm');
+removeSync('esm/main.js');
 
 // use babel to remove unused lodash code
 // https://www.blazemeter.com/blog/the-correct-way-to-import-lodash-libraries-a-benchmark/
@@ -34,11 +40,3 @@ browserify(browserifyOptions)
   .bundle()
   .pipe(exorcist(`./dist/${OUTPUT_FILE_NAME}.umd.min.js.map`))
   .pipe(fs.createWriteStream(`./dist/${OUTPUT_FILE_NAME}.umd.min.js`));
-
-// browserify(browserifyOptions)
-//   .ignore('crypto')
-//   .transform(babelTransform)
-//   .plugin(commonShake)
-//   .plugin(esmify)
-//   .bundle()
-//   .pipe(fs.createWriteStream(`./dist/${OUTPUT_FILE_NAME}.esm.js`));
