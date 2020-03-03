@@ -48,7 +48,7 @@ test('Contract', async () => {
   const logs = await contract.SelfEvent(ADDRESS).getLogs();
   expect(logs.length).toEqual(2);
 
-  const iter = contract.SelfEvent(undefined, 10).getLogs({ toEpoch: 0x00 });
+  const iter = contract.SelfEvent().getLogs({ toEpoch: 0x00 });
   expect(Boolean(await iter.next())).toEqual(true);
   expect(Boolean(await iter.next())).toEqual(true);
   expect(Boolean(await iter.next())).toEqual(false);

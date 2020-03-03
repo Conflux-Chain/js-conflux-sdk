@@ -200,7 +200,15 @@ export class EventCoder {
       coder: this,
     });
 
-    const coder = getCoder(this.inputs[index]);
+    const component = this.inputs[index];
+    assert(component.indexed, {
+      message: 'component not indexed',
+      expect: `${index} to be indexed`,
+      got: component,
+      coder: this,
+    });
+
+    const coder = getCoder(component);
     return format.hex(coder.encodeIndex(value));
   }
 
@@ -229,19 +237,23 @@ export class EventCoder {
    10n
    */
   decodeLog({ topics, data }) {
-    const stream = HexStream(data);
     // XXX: for !this.anonymous, assert(topics[0] === this.signature)
 
-    let index = this.anonymous ? 0 : 1;
-    const array = this.inputs.map(input => {
-      const coder = getCoder(input);
+    const notIndexedCoder = getCoder({
+      type: 'tuple',
+      components: this.inputs.filter(component => !component.indexed),
+    });
+    const notIndexedNamedTuple = notIndexedCoder.decode(HexStream(data));
 
-      if (input.indexed) {
+    let index = this.anonymous ? 0 : 1;
+    const array = this.inputs.map(component => {
+      if (component.indexed) {
+        const coder = getCoder(component);
         const result = coder.decodeIndex(topics[index]);
         index += 1;
         return result;
       } else {
-        return coder.decode(stream);
+        return notIndexedNamedTuple[component.name];
       }
     });
 
