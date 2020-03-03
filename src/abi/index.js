@@ -187,12 +187,12 @@ export class EventCoder {
    *
    * @example
    * > coder = new EventCoder(abi)
-   * > coder.encodeInputByIndex('0x123456789012345678901234567890123456789', 0)
+   * > coder.encodeIndex('0x123456789012345678901234567890123456789', 0)
    "0x0000000000000000000000000123456789012345678901234567890123456789"
-   * > coder.encodeInputByIndex(10, 1)
+   * > coder.encodeIndex(10, 1)
    "0x000000000000000000000000000000000000000000000000000000000000000a"
    */
-  encodeInputByIndex(value, index) {
+  encodeIndex(value, index) {
     assert(index < this.inputs.length, {
       message: 'invalid index',
       expect: `<${this.inputs.length}`,
@@ -201,7 +201,7 @@ export class EventCoder {
     });
 
     const coder = getCoder(this.inputs[index]);
-    return format.hex(coder.encode(value));
+    return format.hex(coder.encodeIndex(value));
   }
 
   /**
@@ -237,7 +237,7 @@ export class EventCoder {
       const coder = getCoder(input);
 
       if (input.indexed) {
-        const result = coder.decode(HexStream(topics[index]));
+        const result = coder.decodeIndex(topics[index]);
         index += 1;
         return result;
       } else {

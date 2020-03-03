@@ -77,6 +77,57 @@
       ]
     },
     {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "string[3]",
+          "name": "_array",
+          "type": "string[3]"
+        }
+      ],
+      "name": "ArrayEvent",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "string",
+          "name": "_string",
+          "type": "string"
+        }
+      ],
+      "name": "StringEvent",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "internalType": "int32",
+              "name": "num",
+              "type": "int32"
+            }
+          ],
+          "indexed": true,
+          "internalType": "struct Test.Person",
+          "name": "_struct",
+          "type": "tuple"
+        }
+      ],
+      "name": "StructEvent",
+      "type": "event"
+    },
+    {
       "type": "fallback"
     },
     {

@@ -1,9 +1,10 @@
 const JSBI = require('jsbi');
-const { Conflux } = require('../../src');
+const { Conflux, util } = require('../../src');
 const { MockProvider } = require('../../mock');
 const { abi, code, address } = require('./contract.json');
 
 const ADDRESS = '0xfcad0b19bb29d4674531d6f115237e16afce377c';
+const HEX_64 = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 
 // ----------------------------------------------------------------------------
 const cfx = new Conflux({
@@ -17,6 +18,10 @@ const contract = cfx.Contract({ abi, code, address });
 test('without code', async () => {
   const contractWithoutCode = cfx.Contract({ abi, address });
   expect(() => contractWithoutCode.constructor(100)).toThrow('contract.constructor.code is empty');
+});
+
+test('without constructor', () => {
+  expect(() => cfx.Contract({ abi: [], address })).toThrow('contract "constructor" abi is missing');
 });
 
 test('Contract', async () => {
@@ -47,6 +52,48 @@ test('Contract', async () => {
   expect(Boolean(await iter.next())).toEqual(true);
   expect(Boolean(await iter.next())).toEqual(true);
   expect(Boolean(await iter.next())).toEqual(false);
+});
+
+test('contract.StringEvent', () => {
+  const string = 'string';
+  const index = util.format.hex(util.sign.sha3(string));
+
+  const { topics } = contract.StringEvent(string);
+
+  expect(topics.length).toEqual(2);
+  expect(topics[0]).toEqual(contract.StringEvent.code);
+  expect(topics[1]).toEqual(util.format.hex(util.sign.sha3(string)));
+
+  const params = contract.StringEvent.decode({ data: '0x', topics });
+  expect(params.length).toEqual(1);
+  expect(params[0]).toEqual(index);
+});
+
+test('contract.ArrayEvent', () => {
+  const { topics } = contract.ArrayEvent(HEX_64);
+
+  expect(topics.length).toEqual(2);
+  expect(topics[0]).toEqual(contract.ArrayEvent.code);
+  expect(topics[1]).toEqual(HEX_64);
+  expect(() => contract.ArrayEvent(['a', 'b', 'c'])).toThrow('not supported encode');
+
+  const params = contract.ArrayEvent.decode({ data: '0x', topics });
+  expect(params.length).toEqual(1);
+  expect(params[0]).toEqual(HEX_64);
+});
+
+test('contract.StructEvent', () => {
+  const { topics } = contract.StructEvent(HEX_64);
+
+  expect(topics.length).toEqual(2);
+  expect(topics[0]).toEqual(contract.StructEvent.code);
+  expect(topics[1]).toEqual(HEX_64);
+
+  expect(() => contract.StructEvent(['Tom', 18])).toThrow('not supported encode');
+
+  const params = contract.StructEvent.decode({ data: '0x', topics });
+  expect(params.length).toEqual(1);
+  expect(params[0]).toEqual(HEX_64);
 });
 
 test('decodeData.constructor', () => {
