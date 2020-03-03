@@ -122,5 +122,9 @@ export default class Contract {
 
     this.abi = new ContractABICoder(this); // XXX: Create a method named `abi` in solidity is a `Warning`.
     this.address = address; // XXX: Create a method named `address` in solidity is a `ParserError`
+
+    if (!(this.constructor instanceof ContractConstructor)) {
+      throw new Error('contract "constructor" abi is missing');
+    }
   }
 }
