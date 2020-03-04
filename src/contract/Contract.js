@@ -96,11 +96,12 @@ export default class Contract {
     }
    */
   constructor(cfx, { abi: contractABI, address, code }) {
+    let constructorFragment = { type: 'constructor', inputs: [] };
+
     contractABI.forEach(fragment => {
       switch (fragment.type) {
-        case 'constructor': // cover this.constructor
-          this.constructor = new ContractConstructor(cfx, this, fragment);
-          this.constructor.code = code;
+        case 'constructor':
+          constructorFragment = fragment;
           break;
 
         case 'function':
@@ -120,11 +121,11 @@ export default class Contract {
       }
     });
 
+    // cover this.constructor
+    this.constructor = new ContractConstructor(cfx, this, constructorFragment); // XXX: set before `this.abi=`
+    this.constructor.code = code;
+
     this.abi = new ContractABICoder(this); // XXX: Create a method named `abi` in solidity is a `Warning`.
     this.address = address; // XXX: Create a method named `address` in solidity is a `ParserError`
-
-    if (!(this.constructor instanceof ContractConstructor)) {
-      throw new Error('contract "constructor" abi is missing');
-    }
   }
 }
