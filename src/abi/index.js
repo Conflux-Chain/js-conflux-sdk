@@ -92,7 +92,16 @@ export class FunctionCoder {
   decodeInputs(hex) {
     const coder = getCoder({ type: 'tuple', components: this.inputs });
     const stream = HexStream(hex);
-    return coder.decode(stream);
+    const result = coder.decode(stream);
+
+    assert(stream.eof(), {
+      message: 'hex length to large',
+      expect: `${stream.string.length}`,
+      got: stream.index,
+      coder: this,
+    });
+
+    return result;
   }
 
   /**
@@ -114,7 +123,16 @@ export class FunctionCoder {
   decodeOutputs(hex) {
     const coder = getCoder({ type: 'tuple', components: this.outputs });
     const stream = HexStream(hex);
-    return coder.decode(stream);
+    const result = coder.decode(stream);
+
+    assert(stream.eof(), {
+      message: 'hex length to large',
+      expect: `${stream.string.length}`,
+      got: stream.index,
+      coder: this,
+    });
+
+    return result;
   }
 }
 
@@ -259,4 +277,21 @@ export class EventCoder {
 
     return new this.NamedTuple(...array);
   }
+}
+
+const ERROR_CODER = new FunctionCoder({
+  name: 'Error',
+  inputs: [
+    { type: 'string', name: 'message' },
+  ],
+});
+const ERROR_CODE = ERROR_CODER.signature();
+
+export function decodeError(hex) {
+  if (!hex.startsWith(ERROR_CODE)) {
+    return undefined;
+  }
+
+  const params = ERROR_CODER.decodeInputs(hex.slice(ERROR_CODE.length));
+  return Error(params.message);
 }

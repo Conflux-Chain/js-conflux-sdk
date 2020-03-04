@@ -9,6 +9,10 @@ class HexStream {
     this.index = hex.startsWith('0x') ? 2 : 0;
   }
 
+  eof() {
+    return this.index >= this.string.length;
+  }
+
   read(length, alignLeft = false) {
     assert(Number.isInteger(length) && 0 <= length, {
       message: 'invalid length',

@@ -56,6 +56,31 @@ test('Contract', async () => {
   expect(Boolean(await iter.next())).toEqual(false);
 });
 
+test('contract.call', async () => {
+  cfx.provider.call = async (method, tx, epochNumber) => {
+    expect(method).toEqual('cfx_call');
+    expect(tx.to).toEqual(address);
+    expect(epochNumber).toEqual('latest_state');
+    return '0x00000000000000000000000000000000000000000000000000000000000000ff';
+  };
+
+  const value = await contract.count();
+  expect(value.toString()).toEqual('255');
+
+  cfx.provider.call = async () => {
+    return '0x08c379a0' +
+      '0000000000000000000000000000000000000000000000000000000000000020' +
+      '0000000000000000000000000000000000000000000000000000000000000005' +
+      '4552524f52000000000000000000000000000000000000000000000000000000';
+  };
+  await expect(contract.count()).rejects.toThrow('ERROR');
+
+  cfx.provider.call = async () => {
+    return '0x0';
+  };
+  await expect(contract.count()).rejects.toThrow('length not match');
+});
+
 test('contract.StringEvent', () => {
   const string = 'string';
   const index = util.format.hex(util.sign.sha3(string));

@@ -1,4 +1,4 @@
-import { FunctionCoder } from '../abi';
+import { FunctionCoder, decodeError } from '../abi';
 import callable from '../lib/callable';
 
 /**
@@ -66,7 +66,12 @@ class Called {
       },
       epochNumber,
     );
-    return this.method.decode(result);
+
+    try {
+      return this.method.decode(result);
+    } catch (e) {
+      throw decodeError(result) || e;
+    }
   }
 
   async then(resolve, reject) {
