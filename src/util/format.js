@@ -14,8 +14,7 @@ function toHex(value) {
   if (lodash.isString(value)) {
     hex = value.toLowerCase(); // XXX: lower case for support checksum address
   } else if (Number.isInteger(value) || (value instanceof JSBI)) {
-    const string = value.toString(16);
-    hex = string.length % 2 ? `0x0${string}` : `0x${string}`;
+    hex = `0x${value.toString(16)}`;
   } else if (Buffer.isBuffer(value)) {
     hex = `0x${value.toString('hex')}`;
   } else if (lodash.isBoolean(value)) {
@@ -26,10 +25,10 @@ function toHex(value) {
     hex = `${value}`;
   }
 
-  if (!/^0x([0-9a-f][0-9a-f])*$/.test(hex)) {
+  if (!/^0x[0-9a-f]*$/.test(hex)) {
     throw new Error(`${value} not match hex`);
   }
-  return hex;
+  return hex.length % 2 ? `0x0${hex.slice(2)}` : hex;
 }
 
 // ----------------------------------------------------------------------------
@@ -315,7 +314,7 @@ format.sendTx = Parser({
   nonce: format.numberHex,
   gasPrice: format.numberHex,
   gas: format.numberHex,
-  to: format.address.or(undefined),
+  to: format.address.or(null).or(undefined),
   value: format.numberHex.or(undefined),
   data: format.hex.or(undefined),
 });
@@ -335,7 +334,7 @@ format.estimateTx = Parser({
   nonce: format.numberHex.or(undefined),
   gasPrice: format.numberHex.or(undefined),
   gas: format.numberHex.or(undefined),
-  to: format.address.or(undefined),
+  to: format.address.or(null).or(undefined),
   value: format.numberHex.or(undefined),
   data: format.hex.or(undefined),
 });

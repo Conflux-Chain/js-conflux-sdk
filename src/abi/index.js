@@ -92,7 +92,16 @@ export class FunctionCoder {
   decodeInputs(hex) {
     const coder = getCoder({ type: 'tuple', components: this.inputs });
     const stream = HexStream(hex);
-    return coder.decode(stream);
+    const result = coder.decode(stream);
+
+    assert(stream.eof(), {
+      message: 'hex length to large',
+      expect: `${stream.string.length}`,
+      got: stream.index,
+      coder: this,
+    });
+
+    return result;
   }
 
   /**
@@ -114,7 +123,16 @@ export class FunctionCoder {
   decodeOutputs(hex) {
     const coder = getCoder({ type: 'tuple', components: this.outputs });
     const stream = HexStream(hex);
-    return coder.decode(stream);
+    const result = coder.decode(stream);
+
+    assert(stream.eof(), {
+      message: 'hex length to large',
+      expect: `${stream.string.length}`,
+      got: stream.index,
+      coder: this,
+    });
+
+    return result;
   }
 }
 
@@ -187,12 +205,12 @@ export class EventCoder {
    *
    * @example
    * > coder = new EventCoder(abi)
-   * > coder.encodeInputByIndex('0x123456789012345678901234567890123456789', 0)
+   * > coder.encodeIndex('0x123456789012345678901234567890123456789', 0)
    "0x0000000000000000000000000123456789012345678901234567890123456789"
-   * > coder.encodeInputByIndex(10, 1)
+   * > coder.encodeIndex(10, 1)
    "0x000000000000000000000000000000000000000000000000000000000000000a"
    */
-  encodeInputByIndex(value, index) {
+  encodeIndex(value, index) {
     assert(index < this.inputs.length, {
       message: 'invalid index',
       expect: `<${this.inputs.length}`,
@@ -200,8 +218,16 @@ export class EventCoder {
       coder: this,
     });
 
-    const coder = getCoder(this.inputs[index]);
-    return format.hex(coder.encode(value));
+    const component = this.inputs[index];
+    assert(component.indexed, {
+      message: 'component not indexed',
+      expect: `${index} to be indexed`,
+      got: component,
+      coder: this,
+    });
+
+    const coder = getCoder(component);
+    return format.hex(coder.encodeIndex(value));
   }
 
   /**
@@ -229,22 +255,43 @@ export class EventCoder {
    10n
    */
   decodeLog({ topics, data }) {
-    const stream = HexStream(data);
     // XXX: for !this.anonymous, assert(topics[0] === this.signature)
 
-    let index = this.anonymous ? 0 : 1;
-    const array = this.inputs.map(input => {
-      const coder = getCoder(input);
+    const notIndexedCoder = getCoder({
+      type: 'tuple',
+      components: this.inputs.filter(component => !component.indexed),
+    });
+    const notIndexedNamedTuple = notIndexedCoder.decode(HexStream(data));
 
-      if (input.indexed) {
-        const result = coder.decode(HexStream(topics[index]));
+    let index = this.anonymous ? 0 : 1;
+    const array = this.inputs.map(component => {
+      if (component.indexed) {
+        const coder = getCoder(component);
+        const result = coder.decodeIndex(topics[index]);
         index += 1;
         return result;
       } else {
-        return coder.decode(stream);
+        return notIndexedNamedTuple[component.name];
       }
     });
 
     return new this.NamedTuple(...array);
   }
+}
+
+const ERROR_CODER = new FunctionCoder({
+  name: 'Error',
+  inputs: [
+    { type: 'string', name: 'message' },
+  ],
+});
+const ERROR_CODE = ERROR_CODER.signature();
+
+export function decodeError(hex) {
+  if (!hex.startsWith(ERROR_CODE)) {
+    return undefined;
+  }
+
+  const params = ERROR_CODER.decodeInputs(hex.slice(ERROR_CODE.length));
+  return Error(params.message);
 }

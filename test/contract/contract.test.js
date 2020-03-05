@@ -1,9 +1,11 @@
 const JSBI = require('jsbi');
-const { Conflux } = require('../../src');
+const { Conflux, util } = require('../../src');
 const { MockProvider } = require('../../mock');
 const { abi, code, address } = require('./contract.json');
+const ContractConstructor = require('../../src/contract/ContractConstructor');
 
 const ADDRESS = '0xfcad0b19bb29d4674531d6f115237e16afce377c';
+const HEX_64 = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 
 // ----------------------------------------------------------------------------
 const cfx = new Conflux({
@@ -17,6 +19,11 @@ const contract = cfx.Contract({ abi, code, address });
 test('without code', async () => {
   const contractWithoutCode = cfx.Contract({ abi, address });
   expect(() => contractWithoutCode.constructor(100)).toThrow('contract.constructor.code is empty');
+});
+
+test('with empty abi', () => {
+  const contractWithEmptyABI = cfx.Contract({ abi: [], address });
+  expect(contractWithEmptyABI.constructor instanceof ContractConstructor).toEqual(true);
 });
 
 test('Contract', async () => {
@@ -43,10 +50,77 @@ test('Contract', async () => {
   const logs = await contract.SelfEvent(ADDRESS).getLogs();
   expect(logs.length).toEqual(2);
 
-  const iter = contract.SelfEvent(undefined, 10).getLogs({ toEpoch: 0x00 });
+  const iter = contract.SelfEvent().getLogs({ toEpoch: 0x00 });
   expect(Boolean(await iter.next())).toEqual(true);
   expect(Boolean(await iter.next())).toEqual(true);
   expect(Boolean(await iter.next())).toEqual(false);
+});
+
+test('contract.call', async () => {
+  cfx.provider.call = async (method, tx, epochNumber) => {
+    expect(method).toEqual('cfx_call');
+    expect(tx.to).toEqual(address);
+    expect(epochNumber).toEqual('latest_state');
+    return '0x00000000000000000000000000000000000000000000000000000000000000ff';
+  };
+
+  const value = await contract.count();
+  expect(value.toString()).toEqual('255');
+
+  cfx.provider.call = async () => {
+    return '0x08c379a0' +
+      '0000000000000000000000000000000000000000000000000000000000000020' +
+      '0000000000000000000000000000000000000000000000000000000000000005' +
+      '4552524f52000000000000000000000000000000000000000000000000000000';
+  };
+  await expect(contract.count()).rejects.toThrow('ERROR');
+
+  cfx.provider.call = async () => {
+    return '0x0';
+  };
+  await expect(contract.count()).rejects.toThrow('length not match');
+});
+
+test('contract.StringEvent', () => {
+  const string = 'string';
+  const index = util.format.hex(util.sign.sha3(string));
+
+  const { topics } = contract.StringEvent(string);
+
+  expect(topics.length).toEqual(2);
+  expect(topics[0]).toEqual(contract.StringEvent.code);
+  expect(topics[1]).toEqual(util.format.hex(util.sign.sha3(string)));
+
+  const params = contract.StringEvent.decode({ data: '0x', topics });
+  expect(params.length).toEqual(1);
+  expect(params[0]).toEqual(index);
+});
+
+test('contract.ArrayEvent', () => {
+  const { topics } = contract.ArrayEvent(HEX_64);
+
+  expect(topics.length).toEqual(2);
+  expect(topics[0]).toEqual(contract.ArrayEvent.code);
+  expect(topics[1]).toEqual(HEX_64);
+  expect(() => contract.ArrayEvent(['a', 'b', 'c'])).toThrow('not supported encode');
+
+  const params = contract.ArrayEvent.decode({ data: '0x', topics });
+  expect(params.length).toEqual(1);
+  expect(params[0]).toEqual(HEX_64);
+});
+
+test('contract.StructEvent', () => {
+  const { topics } = contract.StructEvent(HEX_64);
+
+  expect(topics.length).toEqual(2);
+  expect(topics[0]).toEqual(contract.StructEvent.code);
+  expect(topics[1]).toEqual(HEX_64);
+
+  expect(() => contract.StructEvent(['Tom', 18])).toThrow('not supported encode');
+
+  const params = contract.StructEvent.decode({ data: '0x', topics });
+  expect(params.length).toEqual(1);
+  expect(params[0]).toEqual(HEX_64);
 });
 
 test('decodeData.constructor', () => {
