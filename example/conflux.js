@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-const { Conflux, util } = require('../src');
+const { Conflux, util } = require('js-conflux-sdk');
 
 async function main() {
   const cfx = new Conflux({

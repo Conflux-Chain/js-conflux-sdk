@@ -3931,6 +3931,19 @@ jest@^24.9.0:
     import-local "^2.0.0"
     jest-cli "^24.9.0"
 
+js-conflux-sdk@^0.7.5:
+  version "0.7.5"
+  resolved "https://registry.yarnpkg.com/js-conflux-sdk/-/js-conflux-sdk-0.7.5.tgz#5d47c33664156f16f61ad18e70ab172f97760e4e"
+  integrity sha512-NCo3b10+KDlXDlioKrPPk4DrYehX85+vVb944c0+uSPcy6ZHSWMu0vM7O5vu6M4o27rYhcfEJHxz7F2Au8N3pw==
+  dependencies:
+    "@babel/runtime" "^7.8.4"
+    esm "^3.2.25"
+    jsbi "^3.1.1"
+    keccak "^2.0.0"
+    lodash "^4.17.15"
+    secp256k1 "^3.7.1"
+    superagent "^5.1.0"
+
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"
