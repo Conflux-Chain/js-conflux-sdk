@@ -1,5 +1,30 @@
+import JSBI from 'jsbi';
 import { sha3, ecdsaSign, ecdsaRecover, publicKeyToAddress, rlpEncode } from './util/sign';
 import format from './util/format';
+
+/**
+ * Recursion format buffer
+ * @private
+ * @param value {array|*}
+ * @return {array|Buffer}
+ *
+ * @example
+ * > rlpBuffer(1)
+ <Buffer 01>
+
+ * > rlpBuffer([1])
+ [ <Buffer 01> ]
+
+ * > rlpBuffer([1, [2, 3]])
+ [ <Buffer 01>, [ <Buffer 02>, <Buffer 03> ] ]
+ */
+function rlpBuffer(value) {
+  if (Array.isArray(value) && !(value instanceof JSBI)) {
+    return value.map(rlpBuffer);
+  } else {
+    return format.buffer(value);
+  }
+}
 
 export default class Transaction {
   /**
@@ -87,10 +112,10 @@ export default class Transaction {
     const { nonce, gasPrice, gas, to, value, data, v, r, s } = format.signTx(this);
 
     const raw = includeSignature
-      ? [nonce, gasPrice, gas, to, value, data, v, r, s]
+      ? [[nonce, gasPrice, gas, to, value, data], v, r, s]
       : [nonce, gasPrice, gas, to, value, data];
 
-    return rlpEncode(raw.map(format.buffer));
+    return rlpEncode(rlpBuffer(raw));
   }
 
   /**

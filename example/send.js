@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-const { Conflux } = require('../src');
+const { Conflux } = require('js-conflux-sdk');
 
 const PRIVATE_KEY = 'Your Private Key';
 
