@@ -1,7 +1,7 @@
 {
   "name": "js-conflux-sdk",
   "description": "JavaScript Conflux Software Development Kit",
-  "version": "0.7.5",
+  "version": "0.8.0-alpha",
   "license": "LGPL-3.0",
   "author": "Haizhou@conflux-chain.org",
   "homepage": "https://github.com/Conflux-Chain/js-conflux-sdk#readme",
@@ -65,7 +65,7 @@
   "scripts": {
     "eslint": "eslint ./src ./test ./mock",
     "scope": "npm config set scope conflux-dev & npm config set access public",
-    "build": "concurrently --names frontend,backend --prefix-colors blue,green 'npm run build:frontend' 'npm run build:backend'",
+    "build": "npm run build:backend & npm run build:frontend",
     "build:frontend": "node development/build-frontend.js",
     "build:backend": "node development/build-backend.js",
     "prepublishOnly": "npm run build",
