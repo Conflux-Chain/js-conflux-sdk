@@ -97,7 +97,7 @@ test('event', () => {
   expect(coder.encodeIndex('0x0123456789012345678901234567890123456789', 0))
     .toEqual('0x0000000000000000000000000123456789012345678901234567890123456789');
   expect(() => coder.encodeIndex(10, 1)).toThrow('component not indexed');
-  expect(() => coder.encodeIndex('', 2)).toThrow('invalid index');
+  expect(() => coder.encodeIndex('', 2)).toThrow('component not indexed');
 
   expect([...coder.decodeLog(log)])
     .toEqual(['0x0123456789012345678901234567890123456789', JSBI.BigInt(10)]);

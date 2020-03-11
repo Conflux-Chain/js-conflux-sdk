@@ -386,7 +386,7 @@ class StringCoder extends BytesCoder {
 }
 
 class ArrayCoder extends Coder {
-  static from({ type, name }) {
+  static from({ type, name, components }) {
     const match = type.match(/^(.*)\[([0-9]*)]$/);
     if (!match) {
       return undefined;
@@ -395,7 +395,7 @@ class ArrayCoder extends Coder {
     const [, subType, size] = match;
     return new this({
       name,
-      coder: getCoder({ type: subType }),
+      coder: getCoder({ type: subType, components }),
       size: size ? parseInt(size, 10) : undefined,
     });
   }
@@ -476,7 +476,7 @@ class ArrayCoder extends Coder {
 
 class TupleCoder extends Coder {
   static from({ type, name, components }) {
-    if (!type.startsWith('tuple')) {
+    if (type !== 'tuple') {
       return undefined;
     }
     return new this({ name, coders: components.map(getCoder) });
@@ -553,13 +553,13 @@ const UINT_CODER = new IntegerCoder();
  * @return {Coder}
  */
 export function getCoder(component) {
-  // sorted by probability
-  const coder = TupleCoder.from(component)
+  // must parse ArrayCoder first, others sorted by probability
+  const coder = ArrayCoder.from(component)
+    || TupleCoder.from(component)
     || AddressCoder.from(component)
     || IntegerCoder.from(component)
     || StringCoder.from(component)
     || BytesCoder.from(component)
-    || ArrayCoder.from(component)
     || BoolCoder.from(component)
     || NullCoder.from(component);
 
