@@ -33,11 +33,14 @@ export class FunctionCoder {
       type: 'func(int256,bool)'
     }
    */
-  constructor({ name, inputs, outputs }) {
+  constructor({ name, inputs = [], outputs = [] }) {
     this.name = name;
-    this.inputs = inputs;
-    this.outputs = outputs;
+    // this.inputs = inputs;
+    // this.outputs = outputs;
+
     this.type = formatSignature({ name, inputs });
+    this.inputCoder = getCoder({ type: 'tuple', components: inputs });
+    this.outputCoder = getCoder({ type: 'tuple', components: outputs });
   }
 
   /**
@@ -67,8 +70,7 @@ export class FunctionCoder {
    "0x00000000000000000000000000000000000000000000000000000000000000640000000000000000000000000000000000000000000000000000000000000001"
    */
   encodeInputs(array) {
-    const coder = getCoder({ type: 'tuple', components: this.inputs });
-    return format.hex(coder.encode(array));
+    return format.hex(this.inputCoder.encode(array));
   }
 
   /**
@@ -90,9 +92,8 @@ export class FunctionCoder {
    true
    */
   decodeInputs(hex) {
-    const coder = getCoder({ type: 'tuple', components: this.inputs });
     const stream = HexStream(hex);
-    const result = coder.decode(stream);
+    const result = this.inputCoder.decode(stream);
 
     assert(stream.eof(), {
       message: 'hex length to large',
@@ -121,9 +122,8 @@ export class FunctionCoder {
    -1n
    */
   decodeOutputs(hex) {
-    const coder = getCoder({ type: 'tuple', components: this.outputs });
     const stream = HexStream(hex);
-    const result = coder.decode(stream);
+    const result = this.outputCoder.decode(stream);
 
     assert(stream.eof(), {
       message: 'hex length to large',
@@ -178,7 +178,10 @@ export class EventCoder {
     this.anonymous = anonymous;
     this.name = name;
     this.inputs = inputs;
+
     this.type = formatSignature({ name, inputs });
+    this.inputCoder = getCoder({ type: 'tuple', components: inputs });
+    this.notIndexedCoder = getCoder({ type: 'tuple', components: inputs.filter(component => !component.indexed) });
 
     this.NamedTuple = namedTuple(...inputs.map((input, index) => input.name || `${index}`));
   }
@@ -211,23 +214,15 @@ export class EventCoder {
    "0x000000000000000000000000000000000000000000000000000000000000000a"
    */
   encodeIndex(value, index) {
-    assert(index < this.inputs.length, {
-      message: 'invalid index',
-      expect: `<${this.inputs.length}`,
-      got: index,
-      coder: this,
-    });
-
-    const component = this.inputs[index];
-    assert(component.indexed, {
+    const { indexed } = this.inputs[index] || {};
+    assert(indexed, {
       message: 'component not indexed',
       expect: `${index} to be indexed`,
-      got: component,
+      got: indexed,
       coder: this,
     });
 
-    const coder = getCoder(component);
-    return format.hex(coder.encodeIndex(value));
+    return format.hex(this.inputCoder.coders[index].encodeIndex(value));
   }
 
   /**
@@ -257,18 +252,14 @@ export class EventCoder {
   decodeLog({ topics, data }) {
     // XXX: for !this.anonymous, assert(topics[0] === this.signature)
 
-    const notIndexedCoder = getCoder({
-      type: 'tuple',
-      components: this.inputs.filter(component => !component.indexed),
-    });
-    const notIndexedNamedTuple = notIndexedCoder.decode(HexStream(data));
+    const notIndexedNamedTuple = this.notIndexedCoder.decode(HexStream(data));
 
-    let index = this.anonymous ? 0 : 1;
-    const array = this.inputs.map(component => {
+    let offset = this.anonymous ? 0 : 1;
+
+    const array = this.inputs.map((component, index) => {
       if (component.indexed) {
-        const coder = getCoder(component);
-        const result = coder.decodeIndex(topics[index]);
-        index += 1;
+        const result = this.inputCoder.coders[index].decodeIndex(topics[offset]);
+        offset += 1;
         return result;
       } else {
         return notIndexedNamedTuple[component.name];

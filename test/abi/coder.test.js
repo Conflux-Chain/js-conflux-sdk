@@ -423,3 +423,28 @@ describe('tuple', () => {
     );
   });
 });
+
+test('array(tuple)', () => {
+  const coder = getCoder({
+    type: 'tuple[]',
+    components: [
+      { name: 'age', type: 'uint' },
+      { name: 'adult', type: 'bool' },
+    ],
+  });
+
+  expect(coder.type).toEqual('(uint256,bool)[]');
+  expect(coder.size).toEqual(undefined);
+  expect(coder.dynamic).toEqual(true);
+
+  testEncodeAndDecode(
+    coder,
+    [[JSBI.BigInt(16), false], [JSBI.BigInt(18), true]],
+    '0x' +
+    '0000000000000000000000000000000000000000000000000000000000000002' +
+    '0000000000000000000000000000000000000000000000000000000000000010' +
+    '0000000000000000000000000000000000000000000000000000000000000000' +
+    '0000000000000000000000000000000000000000000000000000000000000012' +
+    '0000000000000000000000000000000000000000000000000000000000000001',
+  );
+});
