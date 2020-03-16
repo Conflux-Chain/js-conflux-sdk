@@ -312,22 +312,29 @@ class BytesCoder extends Coder {
   }
 
   /**
-   * @param array {ArrayLike}
+   * @param value {ArrayLike}
    * @return {Buffer}
    */
-  encode(array) {
+  encode(value) {
+    assert(Buffer.isBuffer(value), {
+      message: 'value type error',
+      expect: Buffer.name,
+      got: value.constructor.name,
+      coder: this,
+    });
+
     if (this.size !== undefined) {
-      assert(array.length === this.size, {
+      assert(value.length === this.size, {
         message: 'length not match',
         expect: this.size,
-        got: array.length,
+        got: value.length,
         coder: this,
       });
     }
 
-    let buffer = padBuffer(Buffer.from(array), true);
+    let buffer = padBuffer(value, true);
     if (this.size === undefined) {
-      buffer = Buffer.concat([UINT_CODER.encode(array.length), buffer]);
+      buffer = Buffer.concat([UINT_CODER.encode(value.length), buffer]);
     }
     return buffer;
   }
@@ -346,6 +353,13 @@ class BytesCoder extends Coder {
   }
 
   encodeIndex(value) {
+    assert(Buffer.isBuffer(value), {
+      message: 'value type error',
+      expect: Buffer.name,
+      got: value.constructor.name,
+      coder: this,
+    });
+
     return sha3(value);
   }
 
@@ -372,6 +386,13 @@ class StringCoder extends BytesCoder {
    * @return {Buffer}
    */
   encode(value) {
+    assert(lodash.isString(value), {
+      message: 'value type error',
+      expect: 'string',
+      got: value.constructor.name,
+      coder: this,
+    });
+
     return super.encode(Buffer.from(value, 'utf8'));
   }
 
@@ -382,6 +403,17 @@ class StringCoder extends BytesCoder {
   decode(stream) {
     const bytes = super.decode(stream);
     return bytes.toString('utf8');
+  }
+
+  encodeIndex(value) {
+    assert(lodash.isString(value), {
+      message: 'value type error',
+      expect: 'string',
+      got: value.constructor.name,
+      coder: this,
+    });
+
+    return super.encodeIndex(Buffer.from(value, 'utf8'));
   }
 }
 

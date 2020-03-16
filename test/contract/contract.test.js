@@ -47,10 +47,10 @@ test('Contract', async () => {
   value = await contract.count().estimateGas({ gasPrice: 101 });
   expect(value.constructor).toEqual(JSBI);
 
-  const logs = await contract.SelfEvent(ADDRESS).getLogs();
+  const logs = await contract.SelfEvent(ADDRESS, null).getLogs();
   expect(logs.length).toEqual(2);
 
-  const iter = contract.SelfEvent().getLogs({ toEpoch: 0x00 });
+  const iter = contract.SelfEvent(null, null).getLogs({ toEpoch: 0x00 });
   expect(Boolean(await iter.next())).toEqual(true);
   expect(Boolean(await iter.next())).toEqual(true);
   expect(Boolean(await iter.next())).toEqual(false);
@@ -79,6 +79,17 @@ test('contract.call', async () => {
     return '0x0';
   };
   await expect(contract.count()).rejects.toThrow('length not match');
+});
+
+test('contract.override', () => {
+  expect(contract.override('str').method.coder.type).toEqual('override(string)');
+  expect(contract.override(Buffer.from('bytes')).method.coder.type).toEqual('override(bytes)');
+  expect(() => contract.override(100)).toThrow('can not match "override(bytes),override(string),override(uint256,string)"');
+
+  expect(contract.OverrideEvent('str').eventLog.coder.type).toEqual('OverrideEvent(string)');
+  expect(contract.OverrideEvent(Buffer.from('bytes')).eventLog.coder.type).toEqual('OverrideEvent(bytes)');
+  expect(() => contract.OverrideEvent(100).eventLog.coder.type).toThrow('can not match "OverrideEvent(bytes),OverrideEvent(string),OverrideEvent(uint256,string)" with args (100)');
+  expect(contract.OverrideEvent(100, null).eventLog.coder.type).toEqual('OverrideEvent(uint256,string)');
 });
 
 test('contract.StringEvent', () => {

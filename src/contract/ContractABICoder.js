@@ -2,20 +2,22 @@ import lodash from 'lodash';
 import ContractConstructor from './ContractConstructor';
 import ContractFunction from './ContractFunction';
 import ContractEvent from './ContractEvent';
+import ContractOverride from './ContractOverride';
 
 export default class ContractABICoder {
   constructor(contract) {
     this._constructorFunction = null;
-    this._codeToFunction = {};
-    this._codeToEvent = {};
+    this._codeToInstance = {};
 
     lodash.forEach(contract, (instance, name) => {
       if (instance.constructor === ContractConstructor) {
         this._constructorFunction = instance;
-      } else if (instance.constructor === ContractFunction) {
-        this._codeToFunction[instance.code] = instance;
-      } else if (instance.constructor === ContractEvent) {
-        this._codeToEvent[instance.code] = instance;
+      } else if (instance.constructor === ContractFunction || instance.constructor === ContractEvent) {
+        this._codeToInstance[instance.code] = instance;
+      } else if (instance.constructor === ContractOverride) {
+        instance.forEach(each => {
+          this._codeToInstance[each.code] = each;
+        });
       } else {
         throw new Error(`unexpected type of "${name}", got ${instance}`);
       }
@@ -23,7 +25,7 @@ export default class ContractABICoder {
   }
 
   decodeData(data) {
-    const _function = this._codeToFunction[data.slice(0, 10)]; // contract function code match '0x[0~9a-z]{8}'
+    const _function = this._codeToInstance[data.slice(0, 10)]; // contract function code match '0x[0~9a-z]{8}'
     if (_function) {
       const name = _function.fragment.name;
       const params = _function.coder.decodeInputs(data.slice(10)); // skip contract function code prefix
@@ -42,7 +44,7 @@ export default class ContractABICoder {
   }
 
   decodeLog(log) {
-    const event = this._codeToEvent[log.topics[0]];
+    const event = this._codeToInstance[log.topics[0]];
     if (event) {
       const name = event.fragment.name;
       const params = event.decode(log);

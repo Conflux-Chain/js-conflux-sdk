@@ -94,10 +94,11 @@ test('event', () => {
   const coder = new EventCoder(abi);
   expect(coder.signature()).toEqual('0xb0333e0e3a6b99318e4e2e0d7e5e5f93646f9cbf62da1587955a4092bf7df6e7');
 
-  expect(coder.encodeIndex('0x0123456789012345678901234567890123456789', 0))
-    .toEqual('0x0000000000000000000000000123456789012345678901234567890123456789');
-  expect(() => coder.encodeIndex(10, 1)).toThrow('component not indexed');
-  expect(() => coder.encodeIndex('', 2)).toThrow('component not indexed');
+  expect(coder.encodeTopics(['0x0123456789012345678901234567890123456789', null]))
+    .toEqual(['0x0000000000000000000000000123456789012345678901234567890123456789']);
+
+  expect(() => coder.encodeTopics(['0x0123456789012345678901234567890123456789']))
+    .toThrow('length not match');
 
   expect([...coder.decodeLog(log)])
     .toEqual(['0x0123456789012345678901234567890123456789', JSBI.BigInt(10)]);

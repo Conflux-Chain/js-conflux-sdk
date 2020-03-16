@@ -2,11 +2,11 @@
  @see https://solidity.readthedocs.io/en/v0.5.13/abi-spec.html
  */
 
-import { assert } from '../util';
-import { sha3 } from '../util/sign';
+import {assert} from '../util';
+import {sha3} from '../util/sign';
 import format from '../util/format';
 
-import { getCoder } from './coder';
+import {getCoder} from './coder';
 import namedTuple from '../lib/namedTuple';
 import HexStream from './HexStream';
 
@@ -196,33 +196,36 @@ export class EventCoder {
    "0xb0333e0e3a6b99318e4e2e0d7e5e5f93646f9cbf62da1587955a4092bf7df6e7"
    */
   signature() {
-    return format.hex(sha3(Buffer.from(this.type))); // {name:this.name, inputs:this.inputs}
+    return format.hex(sha3(Buffer.from(this.type)));
   }
 
   /**
-   * Encode input by index
+   * Encode topics by params
    *
-   * @param value {any}
-   * @param index {number}
-   * @return {string}
-   *
+   * @param array {*[]}
+   * @return {string[]}
    * @example
    * > coder = new EventCoder(abi)
-   * > coder.encodeIndex('0x123456789012345678901234567890123456789', 0)
-   "0x0000000000000000000000000123456789012345678901234567890123456789"
-   * > coder.encodeIndex(10, 1)
-   "0x000000000000000000000000000000000000000000000000000000000000000a"
+   * > coder.encodeTopics(['0x0123456789012345678901234567890123456789', null])
+   ['0x0000000000000000000000000123456789012345678901234567890123456789']
    */
-  encodeIndex(value, index) {
-    const { indexed } = this.inputs[index] || {};
-    assert(indexed, {
-      message: 'component not indexed',
-      expect: `${index} to be indexed`,
-      got: indexed,
+  encodeTopics(array) {
+    assert(array.length === this.inputCoder.coders.length, {
+      message: 'length not match',
+      expect: this.inputCoder.coders.length,
+      got: array.length,
       coder: this,
     });
 
-    return format.hex(this.inputCoder.coders[index].encodeIndex(value));
+    const topics = [];
+    this.inputCoder.coders.forEach((coder, index) => {
+      const value = array[index];
+
+      if (this.inputs[index].indexed) {
+        topics.push(value === null ? null : format.hex(coder.encodeIndex(value)));
+      }
+    });
+    return topics;
   }
 
   /**
@@ -250,19 +253,27 @@ export class EventCoder {
    10n
    */
   decodeLog({ topics, data }) {
-    // XXX: for !this.anonymous, assert(topics[0] === this.signature)
+    // XXX: for !this.anonymous, assert(topics[0] === this.signature())
 
-    const notIndexedNamedTuple = this.notIndexedCoder.decode(HexStream(data));
+    const stream = HexStream(data);
+    const notIndexedNamedTuple = this.notIndexedCoder.decode(stream);
+
+    assert(stream.eof(), {
+      message: 'hex length to large',
+      expect: `${stream.string.length}`,
+      got: stream.index,
+      coder: this,
+    });
 
     let offset = this.anonymous ? 0 : 1;
 
-    const array = this.inputs.map((component, index) => {
-      if (component.indexed) {
-        const result = this.inputCoder.coders[index].decodeIndex(topics[offset]);
+    const array = this.inputCoder.coders.map((coder, index) => {
+      if (this.inputs[index].indexed) {
+        const result = coder.decodeIndex(topics[offset]);
         offset += 1;
         return result;
       } else {
-        return notIndexedNamedTuple[component.name];
+        return notIndexedNamedTuple[this.inputs[index].name];
       }
     });
 

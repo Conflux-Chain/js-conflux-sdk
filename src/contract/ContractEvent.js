@@ -1,4 +1,3 @@
-import lodash from 'lodash';
 import callable from '../lib/callable';
 import { decorate } from '../util';
 import { EventCoder } from '../abi';
@@ -50,9 +49,7 @@ export default class ContractEvent {
   }
 
   encode(params) {
-    const topics = lodash.map(params, (param, index) => {
-      return param === undefined ? null : this.coder.encodeIndex(param, index);
-    });
+    const topics = this.coder.encodeTopics(params);
 
     return this.fragment.anonymous ? topics : [this.code, ...topics];
   }

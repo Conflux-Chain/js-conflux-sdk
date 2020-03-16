@@ -1,7 +1,8 @@
 import ContractABICoder from './ContractABICoder';
-import ContractEvent from './ContractEvent';
-import ContractFunction from './ContractFunction';
 import ContractConstructor from './ContractConstructor';
+import ContractFunction from './ContractFunction';
+import ContractEvent from './ContractEvent';
+import ContractOverride from './ContractOverride';
 
 /**
  * Contract with all its methods and events defined in its abi.
@@ -95,29 +96,34 @@ export default class Contract {
       ]
     }
    */
-  constructor(cfx, { abi: contractABI, address, code }) {
+  constructor(cfx, { abi, address, code }) {
     let constructorFragment = { type: 'constructor', inputs: [] };
 
-    contractABI.forEach(fragment => {
-      switch (fragment.type) {
-        case 'constructor':
-          constructorFragment = fragment;
-          break;
+    abi.forEach(fragment => {
+      if (fragment.type === 'constructor') {
+        constructorFragment = fragment;
+      } else if (fragment.type === 'function') {
+        const func = new ContractFunction(cfx, this, fragment);
 
-        case 'function':
-          this[fragment.name] = new ContractFunction(cfx, this, fragment);
-          break;
+        if (this[fragment.name] instanceof ContractOverride) {
+          this[fragment.name].push(func);
+        } else if (this[fragment.name] instanceof ContractFunction) {
+          this[fragment.name] = new ContractOverride(this[fragment.name], func);
+        } else {
+          this[fragment.name] = func;
+        }
+      } else if (fragment.type === 'event') {
+        const event = new ContractEvent(cfx, this, fragment);
 
-        case 'event':
-          this[fragment.name] = new ContractEvent(cfx, this, fragment);
-          break;
-
-        case 'fallback':
-          // see https://solidity.readthedocs.io/en/v0.5.13/contracts.html#fallback-function
-          break;
-
-        default:
-          break;
+        if (this[fragment.name] instanceof ContractOverride) {
+          this[fragment.name].push(event);
+        } else if (this[fragment.name] instanceof ContractEvent) {
+          this[fragment.name] = new ContractOverride(this[fragment.name], event);
+        } else {
+          this[fragment.name] = event;
+        }
+      } else {
+        // see https://solidity.readthedocs.io/en/v0.5.13/contracts.html#fallback-function
       }
     });
 

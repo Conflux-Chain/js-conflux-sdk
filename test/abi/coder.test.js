@@ -151,7 +151,7 @@ describe('bytes', () => {
     );
     testDecode(coder, Buffer.from([0, 1, 2, 3]), '0x00010203');
 
-    expect(() => coder.encode([0, 1, 2])).toThrow('length not match');
+    expect(() => coder.encode(Buffer.from([0, 1, 2]))).toThrow('length not match');
   });
 
   test('bytes', () => {
@@ -159,8 +159,6 @@ describe('bytes', () => {
     expect(coder.constructor.name).toEqual('BytesCoder');
     expect(coder.type).toEqual('bytes');
     expect(coder.size).toEqual(undefined);
-
-    testEncode(coder, [], '0x0000000000000000000000000000000000000000000000000000000000000000');
 
     testEncodeAndDecode(coder, Buffer.from([0, 1, 2, 3]), '0x' +
       '0000000000000000000000000000000000000000000000000000000000000004' +
