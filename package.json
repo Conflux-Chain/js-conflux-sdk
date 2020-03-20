@@ -70,5 +70,10 @@
     "build:backend": "node development/build-backend.js",
     "prepublishOnly": "npm run build",
     "test": "jest"
+  },
+  "resolutions": {
+    "tinyify/acorn-node/acorn": "7.1.1",
+    "eslint/espree/acorn": "7.1.1",
+    "tinyify/unassertify/unassert/acorn": "7.1.1"
   }
 }
