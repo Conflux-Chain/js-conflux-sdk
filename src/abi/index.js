@@ -2,11 +2,11 @@
  @see https://solidity.readthedocs.io/en/v0.5.13/abi-spec.html
  */
 
-import {assert} from '../util';
-import {sha3} from '../util/sign';
+import { assert } from '../util';
+import { sha3 } from '../util/sign';
 import format from '../util/format';
 
-import {getCoder} from './coder';
+import { getCoder } from './coder';
 import namedTuple from '../lib/namedTuple';
 import HexStream from './HexStream';
 

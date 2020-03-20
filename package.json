@@ -65,6 +65,7 @@
   },
   "scripts": {
     "eslint": "eslint ./src ./test ./mock",
+    "eslint:fix": "eslint --fix ./src ./test ./mock",
     "scope": "npm config set scope conflux-dev & npm config set access public",
     "build": "npm run build:backend & npm run build:frontend",
     "build:frontend": "node development/build-frontend.js",
