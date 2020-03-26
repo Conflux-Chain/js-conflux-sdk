@@ -151,7 +151,7 @@ describe('bytes', () => {
     );
     testDecode(coder, Buffer.from([0, 1, 2, 3]), '0x00010203');
 
-    expect(() => coder.encode([0, 1, 2])).toThrow('length not match');
+    expect(() => coder.encode(Buffer.from([0, 1, 2]))).toThrow('length not match');
   });
 
   test('bytes', () => {
@@ -159,8 +159,6 @@ describe('bytes', () => {
     expect(coder.constructor.name).toEqual('BytesCoder');
     expect(coder.type).toEqual('bytes');
     expect(coder.size).toEqual(undefined);
-
-    testEncode(coder, [], '0x0000000000000000000000000000000000000000000000000000000000000000');
 
     testEncodeAndDecode(coder, Buffer.from([0, 1, 2, 3]), '0x' +
       '0000000000000000000000000000000000000000000000000000000000000004' +
@@ -422,4 +420,29 @@ describe('tuple', () => {
       '48656c6c6f2c20776f726c642100000000000000000000000000000000000000',
     );
   });
+});
+
+test('array(tuple)', () => {
+  const coder = getCoder({
+    type: 'tuple[]',
+    components: [
+      { name: 'age', type: 'uint' },
+      { name: 'adult', type: 'bool' },
+    ],
+  });
+
+  expect(coder.type).toEqual('(uint256,bool)[]');
+  expect(coder.size).toEqual(undefined);
+  expect(coder.dynamic).toEqual(true);
+
+  testEncodeAndDecode(
+    coder,
+    [[JSBI.BigInt(16), false], [JSBI.BigInt(18), true]],
+    '0x' +
+    '0000000000000000000000000000000000000000000000000000000000000002' +
+    '0000000000000000000000000000000000000000000000000000000000000010' +
+    '0000000000000000000000000000000000000000000000000000000000000000' +
+    '0000000000000000000000000000000000000000000000000000000000000012' +
+    '0000000000000000000000000000000000000000000000000000000000000001',
+  );
 });

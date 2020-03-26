@@ -52,7 +52,9 @@ message | string | true     |         |
 ### Example
 
 ```
-> const account = new Account('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')> const msg = account.signMessage('Hello World!')> console.log(msg);
+> const account = new Account('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
+> const msg = account.signMessage('Hello World!')
+> console.log(msg);
    Message {
       message: 'Hello World',
       hash: '0xa1de988600a42c4b4ab089b619297c17d53cffae5d5120d82d8a92d0bb3b78f2',
@@ -68,7 +70,8 @@ message | string | true     |         |
       r: '0xe6bfbd768a421b9051fe86310f0f1eef9d5df65288b53f54d663f887a5b4bcd6',
       s: '0x32efb64ccc67d7245545175953e811bc237fd83ab8722d8be0a66e92ec39da81',
       v: 1
-    });> console.log(msg.form); // getter to recover address
+    });
+> console.log(msg.form); // getter to recover address
    "0xfcad0b19bb29d4674531d6f115237e16afce377c"
 ```
 
@@ -107,17 +110,21 @@ entropy |      | true     |         |
       privateKey: '0xd28edbdb7bbe75787b84c5f525f47666a3274bb06561581f00839645f3c26f66',
       publicKey: '0xc42b53ae2ef95fee489948d33df391c4a9da31b7a3e29cf772c24eb42f74e94ab3bfe00bf29a239c17786a5b921853b7c5344d36694db43aa849e401f91566a5',
       address: '0xbcecb4a2922b7007e236daf0c797de6e55496e84'
-    }> Account.random() // gen a different account from above
+    }
+> Account.random() // gen a different account from above
    Account {
       privateKey: '0x1b67150f56f49556ef7e3899024d83c125d84990d311ec08fa98aa1433bc0f53',
       publicKey: '0xd442207828ffd4dad918fea0d75d42dbea1fe5e3789c00a82e18ce8229714eae3f70b12f2f1abd795ad3e5c52a5a597289eb5096548438c233431f498b47b9a6',
       address: '0xb6c25691aadc3363f5862d264072584f3ebf4613'
-    }> Account.random('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
+    }
+> Account.random('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
    Account {
       privateKey: '0x1d41e006afd28ea339922d8ab4be93154a14d4f1b6d0ad4e7aabf807e7536a5f',
       publicKey: '0x4c07c75d3fdc5b1d6afef6ec374b0eaac86bcaa771a1d536bc4ce6f111b1c60e414b370e4cf31bf7770ae6818a3518c485398a43857d9053153f6eb4f5644a90',
       address: '0x613d49784c80d6f8fdbc0bef5a5ab0d9c9fee520'
-    }> Account.random('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');// gen a different account from above, even use same entropy
+    }
+> Account.random('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
+// gen a different account from above, even use same entropy
    Account {
       privateKey: '0x5a34ff3318674c33209ce856218890e9a6ee3811e8a51e3094ed1e6a94bf58ef',
       publicKey: '0xe530d77c3ed6115cb46ba79821085bf67d2a7a8c808c1d52dec03fd7a82e569c2136dba84b21d40f46d90484722b21a9d5a8038495adf93f2eed564ababa2422',
@@ -182,7 +189,8 @@ options.defaultGas      | string,number | false    |                | The defaul
 ### Example
 
 ```
-> const { Conflux } = require('js-conflux-sdk');> const cfx = new Conflux({url:'http://testnet-jsonrpc.conflux-chain.org:12537'});
+> const { Conflux } = require('js-conflux-sdk');
+> const cfx = new Conflux({url:'http://testnet-jsonrpc.conflux-chain.org:12537'});
 ```
 
 ```
@@ -217,7 +225,9 @@ options | object | false    |         | Provider constructor options.
      url: 'http://testnet-jsonrpc.conflux-chain.org:12537',
      timeout: 60000,
      ...
-   }> cfx.setProvider('http://localhost:8000');> cfx.provider;
+   }
+> cfx.setProvider('http://localhost:8000');
+> cfx.provider;
    HttpProvider {
      url: 'http://localhost:8000',
      timeout: 60000,
@@ -383,15 +393,18 @@ options.limit       | number                | false    |         | Limit log num
       address: '0xbd72de06cd4a94ad31ed9303cf32a2bccb82c404',
       fromEpoch: 'latest_mined',
       limit: 2,
-      })> await logIter.next({threshold: 0.01, delta: 1000});
+      })
+> await logIter.next({threshold: 0.01, delta: 1000});
    {
       address: '0xbd72de06cd4a94ad31ed9303cf32a2bccb82c404',
       ...
-   }> await logIter.next();
+   }
+> await logIter.next();
    {
       address: '0xbd72de06cd4a94ad31ed9303cf32a2bccb82c404',
       ...
-   }> await logIter.next();
+   }
+> await logIter.next();
    undefined
 ```
 
@@ -400,7 +413,8 @@ options.limit       | number                | false    |         | Limit log num
       address: '0xbd72de06cd4a94ad31ed9303cf32a2bccb82c404',
       fromEpoch: 'latest_mined',
       limit: 2,
-      })> for await (const log of iter) {
+      })
+> for await (const log of iter) {
        console.log(log);
      }
    {
@@ -428,8 +442,11 @@ epochNumber | string,number | false    | this.defaultEpoch | The end epochNumber
 ### Example
 
 ```
-> let balance = await cfx.getBalance("0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b");> balance;
-   1793636034970586632n> balance = await cfx.getBalance("0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b", 0);> balance.toString(10);
+> let balance = await cfx.getBalance("0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b");
+> balance;
+   1793636034970586632n
+> balance = await cfx.getBalance("0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b", 0);
+> balance.toString(10);
    "0"
 ```
 
@@ -452,7 +469,8 @@ epochNumber | string,number | false    | this.defaultEpoch | The end epochNumber
 
 ```
 > await cfx.getTransactionCount("0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b");
-   61> await cfx.getTransactionCount("0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b", 0);
+   61
+> await cfx.getTransactionCount("0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b", 0);
    0
 ```
 
@@ -499,7 +517,8 @@ epochNumber | string,number | true     |         | EpochNumber or string in ["la
 
 ```
 > await cfx.getBlocksByEpochNumber(0);
-   ['0x2da120ad267319c181b12136f9e36be9fba59e0d818f6cc789f04ee937b4f593']> await cfx.getBlocksByEpochNumber(449);
+   ['0x2da120ad267319c181b12136f9e36be9fba59e0d818f6cc789f04ee937b4f593']
+> await cfx.getBlocksByEpochNumber(449);
    [
    '0x3d8b71208f81fb823f4eec5eaf2b0ec6b1457d381615eff2fbe24605ea333c39',
    '0x59339ff28bc235cceac9fa588ebafcbf61316e6a8c86c7a1d7239b9445d98e40'
@@ -775,7 +794,8 @@ options | object | true     |         | See `format.sendTx`
 ```
 
 ```
-> const account = cfx.Account(KEY);> await cfx.sendTransaction({
+> const account = cfx.Account(KEY);
+> await cfx.sendTransaction({
       from: account, // from account instance will sign by local.
       to: ADDRESS,
       value: Drip.fromCFX(0.023),
@@ -809,27 +829,32 @@ options | object | true     |         | See `format.sendTx`
       from: account1,
       to: ADDRESS1,
       value: Drip.fromCFX(0.007),
-    });> await promise; // transaction
-   "0x91fbdfb33f3a585f932c627abbe268c7e3aedffc1633f9338f9779c64702c688"> await promise.get(); // get transaction
+    });
+> await promise; // transaction
+   "0x91fbdfb33f3a585f932c627abbe268c7e3aedffc1633f9338f9779c64702c688"
+> await promise.get(); // get transaction
    {
     "blockHash": null,
     "transactionIndex": null,
     "hash": "0x91fbdfb33f3a585f932c627abbe268c7e3aedffc1633f9338f9779c64702c688",
     ...
-   }> await promise.mined(); // wait till transaction mined
+   }
+> await promise.mined(); // wait till transaction mined
    {
     "blockHash": "0xe9b22ce311003e26c7330ac54eea9f8afea0ffcd4905828f27c9e2c02f3a00f7",
     "transactionIndex": 0,
     "hash": "0x91fbdfb33f3a585f932c627abbe268c7e3aedffc1633f9338f9779c64702c688",
     ...
-   }> await promise.executed(); // wait till transaction executed in right status. and return it's receipt.
+   }
+> await promise.executed(); // wait till transaction executed in right status. and return it's receipt.
    {
     "blockHash": "0xe9b22ce311003e26c7330ac54eea9f8afea0ffcd4905828f27c9e2c02f3a00f7",
     "index": 0,
     "transactionHash": "0x91fbdfb33f3a585f932c627abbe268c7e3aedffc1633f9338f9779c64702c688",
     "outcomeStatus": 0,
     ...
-   }> await promise.confirmed(); // wait till transaction risk coefficient '<' threshold.
+   }
+> await promise.confirmed(); // wait till transaction risk coefficient '<' threshold.
    {
     "blockHash": "0xe9b22ce311003e26c7330ac54eea9f8afea0ffcd4905828f27c9e2c02f3a00f7",
     "index": 0,
@@ -941,20 +966,31 @@ options.code    | string  | false    |         | The byte code of the contract, 
 ### Example
 
 ```
-> const contract = cfx.Contract({ abi, code });> contract instanceof Contract;
-   true> contract.abi; // input abi
-   [{type:'constructor', inputs:[...]}, ...]> contract.constructor.code; // input code
+> const contract = cfx.Contract({ abi, code });
+> contract instanceof Contract;
+   true
+> contract.abi; // input abi
+   [{type:'constructor', inputs:[...]}, ...]
+> contract.constructor.code; // input code
    "0x6080604052600080..."
 ```
 
 ```
-> const contract = cfx.Contract({ abi, address });> contract.address
-   "0xc3ed1a06471be1d3bcd014051fbe078387ec0ad8"> await contract.count(); // call a method without parameter, get decoded return value.
-   100n> await contract.inc(1); // call a method with parameters, get decoded return value.
-   101n> await contract.count().call({ from: account }); // call a method from a account.
-   100n> await contract.count().estimateGas();
-   21655n> await contract.count().estimateGas({ from: ADDRESS, nonce: 68 }); // if from is a address string, nonce is required
-   21655n// send transaction from account instance, then wait till confirmed, and get receipt.> await contract.inc(1)
+> const contract = cfx.Contract({ abi, address });
+> contract.address
+   "0xc3ed1a06471be1d3bcd014051fbe078387ec0ad8"
+> await contract.count(); // call a method without parameter, get decoded return value.
+   100n
+> await contract.inc(1); // call a method with parameters, get decoded return value.
+   101n
+> await contract.count().call({ from: account }); // call a method from a account.
+   100n
+> await contract.count().estimateGas();
+   21655n
+> await contract.count().estimateGas({ from: ADDRESS, nonce: 68 }); // if from is a address string, nonce is required
+   21655n
+// send transaction from account instance, then wait till confirmed, and get receipt.
+> await contract.inc(1)
    .sendTransaction({ from: account1 })
    .confirmed({ threshold: 0.01, timeout: 30 * 1000 });
    {
@@ -963,12 +999,16 @@ options.code    | string  | false    |         | The byte code of the contract, 
      "transactionHash": "0x8a5f48c2de0f1bdacfe90443810ad650e4b327a0d19ce49a53faffb224883e42",
      "outcomeStatus": 0,
      ...
-   }> tx = await cfx.getTransactionByHash('0x8a5f48c2de0f1bdacfe90443810ad650e4b327a0d19ce49a53faffb224883e42');> await contract.abi.decodeData(tx.data)
+   }
+> tx = await cfx.getTransactionByHash('0x8a5f48c2de0f1bdacfe90443810ad650e4b327a0d19ce49a53faffb224883e42');
+> await contract.abi.decodeData(tx.data)
    {
      name: 'inc',
      params: NamedTuple(num) [ 100n ]
-   }> await contract.count(); // data in block chain changed by transaction.
-   101n> logs = await contract.SelfEvent(account1.address).getLogs()
+   }
+> await contract.count(); // data in block chain changed by transaction.
+   101n
+> logs = await contract.SelfEvent(account1.address).getLogs()
    [
    {
       address: '0xc3ed1a06471be1d3bcd014051fbe078387ec0ad8',
@@ -987,7 +1027,8 @@ options.code    | string  | false    |         | The byte code of the contract, 
       type: 'mined',
       params: [ '0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b', '10' ]
      }
-   ]> contract.abi.decodeLog(logs[0]);
+   ]
+> contract.abi.decodeLog(logs[0]);
    {
       name: "SelfEvent",
       params: NamedTuple(sender,current) [
@@ -1033,15 +1074,18 @@ options.v         | number        | false    |         | ECDSA recovery id
       r: undefined,
       s: undefined,
       v: undefined
-    }> msg.sign('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef');
+    }
+> msg.sign('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef');
    Message {
       message: 'Hello World',
       hash: '0x592fa743889fc7f92ac2a37bb1f5ba1daf2a5c84741ca0e0061d243a2e6707ba',
       r: '0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c',
       s: '0x29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f',
       v: 1,
-    }> msg.signature
-   "0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01"> msg.from
+    }
+> msg.signature
+   "0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01"
+> msg.from
    "0xfcad0b19bb29d4674531d6f115237e16afce377c"
 ```
 
@@ -1146,7 +1190,8 @@ method    | string | true     |         | Json rpc method name.
 ### Example
 
 ```
-> await provider.call('cfx_epochNumber');> await provider.call('cfx_getBlockByHash', blockHash);
+> await provider.call('cfx_epochNumber');
+> await provider.call('cfx_getBlockByHash', blockHash);
 ```
 
 ----------
@@ -1310,11 +1355,16 @@ arg  | number,JSBI,string,Buffer,boolean,null | true     |         |
 
 ```
 > format.hex(null)
- '0x'> format.hex(1)
- "0x01"> format.hex(256)
- "0x0100"> format.hex(true)
- "0x01"> format.hex(Buffer.from([1,10,255]))
- "0x010aff"> format.hex("0x0a")
+ '0x'
+> format.hex(1)
+ "0x01"
+> format.hex(256)
+ "0x0100"
+> format.hex(true)
+ "0x01"
+> format.hex(Buffer.from([1,10,255]))
+ "0x010aff"
+> format.hex("0x0a")
  "0x0a"
 ```
 
@@ -1336,11 +1386,16 @@ arg  | number,JSBI,string,boolean | true     |         |
 
 ```
 > format.bigUInt(-3.14)
- Error("not match uint")> format.bigUInt('0')
- JSBI.BigInt(0)> format.bigUInt(1)
- JSBI.BigInt(1)> format.bigUInt(JSBI(100))
- JSBI.BigInt(100)> format.bigUInt('0x10')
- JSBI.BigInt(16)> format.bigUInt(Number.MAX_SAFE_INTEGER + 1) // unsafe integer
+ Error("not match uint")
+> format.bigUInt('0')
+ JSBI.BigInt(0)
+> format.bigUInt(1)
+ JSBI.BigInt(1)
+> format.bigUInt(JSBI(100))
+ JSBI.BigInt(100)
+> format.bigUInt('0x10')
+ JSBI.BigInt(16)
+> format.bigUInt(Number.MAX_SAFE_INTEGER + 1) // unsafe integer
  Error("not match uint")
 ```
 
@@ -1362,15 +1417,24 @@ arg  | number,JSBI,string,boolean | true     |         |
 
 ```
 > format.uint(-3.14)
- Error("cannot be converted to a JSBI")> format.uint(null)
- Error("Cannot convert null to a JSBI")> format.uint('0')
- 0> format.uint(1)
- 1> format.uint(JSBI(100))
- 100> format.uint('0x10')
- 16> format.uint('')
- 0> format.uint(true)
- 1> format.uint(false)
- 0> format.uint(Number.MAX_SAFE_INTEGER + 1) // unsafe integer
+ Error("cannot be converted to a JSBI")
+> format.uint(null)
+ Error("Cannot convert null to a JSBI")
+> format.uint('0')
+ 0
+> format.uint(1)
+ 1
+> format.uint(JSBI(100))
+ 100
+> format.uint('0x10')
+ 16
+> format.uint('')
+ 0
+> format.uint(true)
+ 1
+> format.uint(false)
+ 0
+> format.uint(Number.MAX_SAFE_INTEGER + 1) // unsafe integer
  Error("not match uint")
 ```
 
@@ -1392,10 +1456,14 @@ arg  | number,string,boolean | true     |         |
 
 ```
 > format.numberHex(100)
- "0x64"> format.numberHex(10)
- "0xa"> format.numberHex(3.50)
- "0x4"> format.numberHex(3.49)
- "0x3"> format.numberHex(-1))
+ "0x64"
+> format.numberHex(10)
+ "0xa"
+> format.numberHex(3.50)
+ "0x4"
+> format.numberHex(3.49)
+ "0x3"
+> format.numberHex(-1))
  Error("not match uintHex")
 ```
 
@@ -1417,8 +1485,10 @@ arg  | number,string | true     |         | number or string in ['latest_state',
 
 ```
 > format.epochNumber(10)
- "0xa"> format.epochNumber('latest_state')
- "latest_state"> format.epochNumber('latest_mined')
+ "0xa"
+> format.epochNumber('latest_state')
+ "latest_state"
+> format.epochNumber('latest_mined')
  "latest_state"
 ```
 
@@ -1440,7 +1510,8 @@ arg  | string,Buffer | true     |         |
 
 ```
 > format.address('0x0123456789012345678901234567890123456789')
- "0x0123456789012345678901234567890123456789"> format.address('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
+ "0x0123456789012345678901234567890123456789"
+> format.address('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
  Error("not match address")
 ```
 
@@ -1462,7 +1533,8 @@ arg  | string,Buffer | true     |         |
 
 ```
 > format.publicKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
- "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"> format.publicKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
+ "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+> format.publicKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
  Error("not match publicKey")
 ```
 
@@ -1484,7 +1556,8 @@ arg  | string,Buffer | true     |         |
 
 ```
 > format.privateKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
- "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"> format.privateKey('0x0123456789012345678901234567890123456789')
+ "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+> format.privateKey('0x0123456789012345678901234567890123456789')
  Error("not match hex64")
 ```
 
@@ -1521,7 +1594,8 @@ arg  | string,Buffer | true     |         |
 
 ```
 > format.privateKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
- "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"> format.privateKey('0x0123456789012345678901234567890123456789')
+ "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+> format.privateKey('0x0123456789012345678901234567890123456789')
  Error("not match hex64")
 ```
 
@@ -1543,7 +1617,8 @@ arg  | string,Buffer | true     |         |
 
 ```
 > format.privateKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
- "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"> format.privateKey('0x0123456789012345678901234567890123456789')
+ "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+> format.privateKey('0x0123456789012345678901234567890123456789')
  Error("not match hex64")
 ```
 
@@ -1565,11 +1640,16 @@ arg  | number,JSBI,string,Buffer,boolean,null | true     |         |
 
 ```
 > format.buffer(Buffer.from([0, 1]))
- <Buffer 00 01>> format.buffer(null)
- <Buffer >> format.buffer(1024)
- <Buffer 04 00>> format.buffer('0x0a')
- <Buffer 0a>> format.buffer(true)
- <Buffer 01>> format.buffer(3.14)
+ <Buffer 00 01>
+> format.buffer(null)
+ <Buffer >
+> format.buffer(1024)
+ <Buffer 04 00>
+> format.buffer('0x0a')
+ <Buffer 0a>
+> format.buffer(true)
+ <Buffer 01>
+> format.buffer(3.14)
  Error("not match hex")
 ```
 
@@ -1591,7 +1671,8 @@ arg  | boolean | true     |         |
 
 ```
 > format.boolean(true)
- true> format.boolean(false)
+ true
+> format.boolean(false)
  false
 ```
 
@@ -1663,8 +1744,10 @@ size | number | true     |         |
 
 ```
 > randomBuffer(0)
- <Buffer >> randomBuffer(1)
- <Buffer 33>> randomBuffer(1)
+ <Buffer >
+> randomBuffer(1)
+ <Buffer 33>
+> randomBuffer(1)
  <Buffer 5a>
 ```
 
@@ -1686,13 +1769,16 @@ entropy | Buffer | true     |         |
 
 ```
 > randomPrivateKey()
- <Buffer 23 fb 3b 2b 1f c9 36 8c a4 8e 5b dc c7 a9 e2 bd 67 81 43 3b f2 3a cc da da ff a9 dd dd b6 08 d4>> randomPrivateKey()
+ <Buffer 23 fb 3b 2b 1f c9 36 8c a4 8e 5b dc c7 a9 e2 bd 67 81 43 3b f2 3a cc da da ff a9 dd dd b6 08 d4>
+> randomPrivateKey()
  <Buffer e7 5b 68 fb f9 50 19 94 07 80 d5 13 2e 40 a7 f9 a1 b0 5d 72 c8 86 ca d1 c6 59 cd a6 bf 37 cb 73>
 ```
 
 ```
-> entropy = randomBuffer(32)> randomPrivateKey(entropy)
- <Buffer 57 90 e8 3d 16 10 02 b9 a4 33 87 e1 6b cd 40 7e f7 22 b1 d8 94 ae 98 bf 76 a4 56 fb b6 0c 4b 4a>> randomPrivateKey(entropy) // same `entropy`
+> entropy = randomBuffer(32)
+> randomPrivateKey(entropy)
+ <Buffer 57 90 e8 3d 16 10 02 b9 a4 33 87 e1 6b cd 40 7e f7 22 b1 d8 94 ae 98 bf 76 a4 56 fb b6 0c 4b 4a>
+> randomPrivateKey(entropy) // same `entropy`
  <Buffer 89 44 ef 31 d4 9c d0 25 9f b0 de 61 99 12 4a 21 57 43 d4 4b af ae ef ae e1 3a ba 05 c3 e6 ad 21>
 ```
 
@@ -1774,7 +1860,9 @@ privateKey | Buffer | true     |         |
 ### Example
 
 ```
-> privateKey = Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1]);> buffer32 = Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31])> ecdsaSign(buffer32, privateKey)
+> privateKey = Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1]);
+> buffer32 = Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31])
+> ecdsaSign(buffer32, privateKey)
  {
   r: <Buffer 21 ab b4 c3 fd 51 75 81 e6 c7 e7 e0 7f 40 4f a2 2c ba 8d 8f 71 27 0b 29 58 42 b8 3c 44 b5 a4 c6>,
   s: <Buffer 08 59 7b 69 8f 8f 3c c2 ba 0b 45 ee a7 7f 55 29 ad f9 5c a5 51 41 e7 9b 56 53 77 3d 00 5d 18 58>,
@@ -1803,8 +1891,11 @@ options.v | number | true     |         |
 ### Example
 
 ```
-> privateKey = Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1])> buffer32 = Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31])> privateKeyToAddress(privateKey)
- <Buffer 0d b9 e0 02 85 67 52 28 8b ef 47 60 fa 67 94 ec 83 a8 53 b9>> publicKeyToAddress(ecdsaRecover(buffer32, ecdsaSign(buffer32, privateKey)))
+> privateKey = Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1])
+> buffer32 = Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31])
+> privateKeyToAddress(privateKey)
+ <Buffer 0d b9 e0 02 85 67 52 28 8b ef 47 60 fa 67 94 ec 83 a8 53 b9>
+> publicKeyToAddress(ecdsaRecover(buffer32, ecdsaSign(buffer32, privateKey)))
  <Buffer 0d b9 e0 02 85 67 52 28 8b ef 47 60 fa 67 94 ec 83 a8 53 b9>
 ```
 
@@ -1873,7 +1964,7 @@ value | number,JSBI,string | true     |         |
 ### Example
 
 ```
-> fromGDripToCFX(123456789012)
+> fromGDripToCFX(123000000000)
  JSBI.BigInt(123)
 ```
 
@@ -1915,7 +2006,7 @@ value | number,JSBI,string | true     |         |
 ### Example
 
 ```
-> fromDripToCFX(123456789012345678901)
+> fromDripToCFX(123000000000000000000)
  JSBI.BigInt(123)
 ```
 
@@ -1936,7 +2027,7 @@ value | number,JSBI,string | true     |         |
 ### Example
 
 ```
-> fromDripToGDrip(123456789012)
+> fromDripToGDrip(123000000000)
  JSBI.BigInt(123)
 ```
 
@@ -1959,6 +2050,7 @@ to   | string | true     |         | Enum in ['cfx', 'gdrip', 'drip']
 
 ```
 > unit('cfx', 'drip')(1)
- JSBI.BigInt(1000000000000000000)> unit('drip', 'cfx')(1000000000000000000)
+ JSBI.BigInt(1000000000000000000)
+> unit('drip', 'cfx')(1000000000000000000)
  JSBI.BigInt(1)
 ```

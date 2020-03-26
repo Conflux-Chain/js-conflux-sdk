@@ -36,6 +36,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.8.4",
+    "big.js": "^5.2.2",
     "esm": "^3.2.25",
     "jsbi": "^3.1.1",
     "keccak": "^2.0.0",
@@ -64,6 +65,7 @@
   },
   "scripts": {
     "eslint": "eslint ./src ./test ./mock",
+    "eslint:fix": "eslint --fix ./src ./test ./mock",
     "scope": "npm config set scope conflux-dev & npm config set access public",
     "build": "npm run build:backend & npm run build:frontend",
     "build:frontend": "node development/build-frontend.js",

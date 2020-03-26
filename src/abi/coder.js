@@ -312,22 +312,29 @@ class BytesCoder extends Coder {
   }
 
   /**
-   * @param array {ArrayLike}
+   * @param value {ArrayLike}
    * @return {Buffer}
    */
-  encode(array) {
+  encode(value) {
+    assert(Buffer.isBuffer(value), {
+      message: 'value type error',
+      expect: Buffer.name,
+      got: value.constructor.name,
+      coder: this,
+    });
+
     if (this.size !== undefined) {
-      assert(array.length === this.size, {
+      assert(value.length === this.size, {
         message: 'length not match',
         expect: this.size,
-        got: array.length,
+        got: value.length,
         coder: this,
       });
     }
 
-    let buffer = padBuffer(Buffer.from(array), true);
+    let buffer = padBuffer(value, true);
     if (this.size === undefined) {
-      buffer = Buffer.concat([UINT_CODER.encode(array.length), buffer]);
+      buffer = Buffer.concat([UINT_CODER.encode(value.length), buffer]);
     }
     return buffer;
   }
@@ -346,6 +353,13 @@ class BytesCoder extends Coder {
   }
 
   encodeIndex(value) {
+    assert(Buffer.isBuffer(value), {
+      message: 'value type error',
+      expect: Buffer.name,
+      got: value.constructor.name,
+      coder: this,
+    });
+
     return sha3(value);
   }
 
@@ -372,6 +386,13 @@ class StringCoder extends BytesCoder {
    * @return {Buffer}
    */
   encode(value) {
+    assert(lodash.isString(value), {
+      message: 'value type error',
+      expect: 'string',
+      got: value.constructor.name,
+      coder: this,
+    });
+
     return super.encode(Buffer.from(value, 'utf8'));
   }
 
@@ -383,10 +404,21 @@ class StringCoder extends BytesCoder {
     const bytes = super.decode(stream);
     return bytes.toString('utf8');
   }
+
+  encodeIndex(value) {
+    assert(lodash.isString(value), {
+      message: 'value type error',
+      expect: 'string',
+      got: value.constructor.name,
+      coder: this,
+    });
+
+    return super.encodeIndex(Buffer.from(value, 'utf8'));
+  }
 }
 
 class ArrayCoder extends Coder {
-  static from({ type, name }) {
+  static from({ type, name, components }) {
     const match = type.match(/^(.*)\[([0-9]*)]$/);
     if (!match) {
       return undefined;
@@ -395,7 +427,7 @@ class ArrayCoder extends Coder {
     const [, subType, size] = match;
     return new this({
       name,
-      coder: getCoder({ type: subType }),
+      coder: getCoder({ type: subType, components }),
       size: size ? parseInt(size, 10) : undefined,
     });
   }
@@ -476,7 +508,7 @@ class ArrayCoder extends Coder {
 
 class TupleCoder extends Coder {
   static from({ type, name, components }) {
-    if (!type.startsWith('tuple')) {
+    if (type !== 'tuple') {
       return undefined;
     }
     return new this({ name, coders: components.map(getCoder) });
@@ -553,13 +585,13 @@ const UINT_CODER = new IntegerCoder();
  * @return {Coder}
  */
 export function getCoder(component) {
-  // sorted by probability
-  const coder = TupleCoder.from(component)
+  // must parse ArrayCoder first, others sorted by probability
+  const coder = ArrayCoder.from(component)
+    || TupleCoder.from(component)
     || AddressCoder.from(component)
     || IntegerCoder.from(component)
     || StringCoder.from(component)
     || BytesCoder.from(component)
-    || ArrayCoder.from(component)
     || BoolCoder.from(component)
     || NullCoder.from(component);
 

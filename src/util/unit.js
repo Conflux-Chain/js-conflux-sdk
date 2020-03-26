@@ -1,23 +1,24 @@
 const JSBI = require('jsbi');
+const Big = require('big.js');
 
 const UNIT_MATRIX = {
-  cfx: { cfx: 1, gdrip: 1e9, drip: 1e18 },
-  gdrip: { cfx: 1e-9, gdrip: 1, drip: 1e9 },
-  drip: { cfx: 1e-18, gdrip: 1e-9, drip: 1 },
+  CFX: { CFX: 1, GDrip: 1e9, Drip: 1e18 },
+  GDrip: { CFX: 1e-9, GDrip: 1, Drip: 1e9 },
+  Drip: { CFX: 1e-18, GDrip: 1e-9, Drip: 1 },
 };
 
 /**
  * Unit converter factory
  *
- * @param from {string} - Enum in ['cfx', 'gdrip', 'drip']
- * @param to {string} - Enum in ['cfx', 'gdrip', 'drip']
+ * @param from {string} - Enum in ['CFX', 'GDrip', 'Drip']
+ * @param to {string} - Enum in ['CFX', 'GDrip', 'Drip']
  * @return {function}
  *
  * @example
- * > unit('cfx', 'drip')(1)
+ * > unit('CFX', 'Drip')(1)
  JSBI.BigInt(1000000000000000000)
 
- * > unit('drip', 'cfx')(1000000000000000000)
+ * > unit('Drip', 'CFX')(1000000000000000000)
  JSBI.BigInt(1)
  */
 export default function unit(from, to) {
@@ -30,13 +31,8 @@ export default function unit(from, to) {
   }
 
   const multiple = UNIT_MATRIX[from][to];
-  const reciprocal = UNIT_MATRIX[to][from];
 
-  return function (value) {
-    return multiple > 1
-      ? JSBI.multiply(JSBI.BigInt(value), JSBI.BigInt(multiple))
-      : JSBI.divide(JSBI.BigInt(value), JSBI.BigInt(reciprocal));
-  };
+  return value => JSBI.BigInt(Big(value).times(multiple));
 }
 
 // ----------------------------------------------------------------------------
@@ -48,7 +44,7 @@ export default function unit(from, to) {
  * > fromCFXToGDrip(123)
  JSBI.BigInt(123000000000)
  */
-unit.fromCFXToGDrip = unit('cfx', 'gdrip');
+unit.fromCFXToGDrip = unit('CFX', 'GDrip');
 
 /**
  * @param value {number|JSBI|string}
@@ -58,17 +54,17 @@ unit.fromCFXToGDrip = unit('cfx', 'gdrip');
  * > fromCFXToDrip(123)
  JSBI.BigInt(123000000000000000000)
  */
-unit.fromCFXToDrip = unit('cfx', 'drip');
+unit.fromCFXToDrip = unit('CFX', 'Drip');
 
 /**
  * @param value {number|JSBI|string}
  * @return {JSBI}
  *
  * @example
- * > fromGDripToCFX(123456789012)
+ * > fromGDripToCFX(123000000000)
  JSBI.BigInt(123)
  */
-unit.fromGDripToCFX = unit('gdrip', 'cfx');
+unit.fromGDripToCFX = unit('GDrip', 'CFX');
 
 /**
  * @param value {number|JSBI|string}
@@ -78,24 +74,24 @@ unit.fromGDripToCFX = unit('gdrip', 'cfx');
  * > fromGDripToDrip(123)
  JSBI.BigInt(123000000000)
  */
-unit.fromGDripToDrip = unit('gdrip', 'drip');
+unit.fromGDripToDrip = unit('GDrip', 'Drip');
 
 /**
  * @param value {number|JSBI|string}
  * @return {JSBI}
  *
  * @example
- * > fromDripToCFX(123456789012345678901)
+ * > fromDripToCFX(123000000000000000000)
  JSBI.BigInt(123)
  */
-unit.fromDripToCFX = unit('drip', 'cfx');
+unit.fromDripToCFX = unit('Drip', 'CFX');
 
 /**
  * @param value {number|JSBI|string}
  * @return {JSBI}
  *
  * @example
- * > fromDripToGDrip(123456789012)
+ * > fromDripToGDrip(123000000000)
  JSBI.BigInt(123)
  */
-unit.fromDripToGDrip = unit('drip', 'gdrip');
+unit.fromDripToGDrip = unit('Drip', 'GDrip');
