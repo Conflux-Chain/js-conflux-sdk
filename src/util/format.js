@@ -164,6 +164,30 @@ format.epochNumber = format.numberHex.or('latest_state').or('latest_mined');
 format.address = format.hex.validate(v => v.length === 2 + 40, 'address'); // alias
 
 /**
+ * Account address starts with '0x1'
+ *
+ * @param arg {string|Buffer}
+ * @return {string} Hex string
+ *
+ * @example
+ * > format.accountAddress('0x0123456789012345678901234567890123456789')
+ "0x1123456789012345678901234567890123456789"
+ */
+format.accountAddress = format.address.parse(v => v.replace(/^0x[0-9a-f]/, () => '0x1'));
+
+/**
+ * Contract address starts with '0x8'
+ *
+ * @param arg {string|Buffer}
+ * @return {string} Hex string
+ *
+ * @example
+ * > format.contractAddress('0x0123456789012345678901234567890123456789')
+ "0x8123456789012345678901234567890123456789"
+ */
+format.contractAddress = format.address.parse(v => v.replace(/^0x[0-9a-f]/, () => '0x8'));
+
+/**
  * @param arg {string|Buffer}
  * @return {string} Hex string
  *

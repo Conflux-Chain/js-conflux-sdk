@@ -70,7 +70,9 @@ export default class Transaction {
    */
   get from() {
     try {
-      return format.hex(publicKeyToAddress(format.buffer(this.recover())));
+      const publicKey = format.buffer(this.recover());
+      const address = publicKeyToAddress(publicKey);
+      return format.accountAddress(address);
     } catch (e) {
       return undefined;
     }
