@@ -35,11 +35,11 @@ class Called {
    * set contract.address as `to`,
    * set contract method encode as `data`.
    *
-   * @param options {object} - See `format.sendTx`
-   * @return {Promise<number>} The used gas for the simulated call/transaction.
+   * @param options {object} - See `format.estimateTx`
+   * @return {Promise<object>} The gas used and storage occupied for the simulated call/transaction.
    */
-  estimateGas(options) {
-    return this.cfx.estimateGas({
+  estimateGasAndCollateral(options) {
+    return this.cfx.estimateGasAndCollateral({
       to: this.to,
       data: this.data,
       ...options,
@@ -53,7 +53,7 @@ class Called {
    *
    * > Note: Can not alter the smart contract state.
    *
-   * @param options {object} - See `format.sendTx`.
+   * @param options {object} - See `format.callTx`.
    * @param epochNumber {string|number} - See `Conflux.call`.
    * @return {Promise<*>} Decoded contact call return.
    */

@@ -684,16 +684,23 @@ export default class Conflux {
    }
    */
   async sendTransaction(options) {
+    if (options.nonce === undefined) {
+      options.nonce = await this.getTransactionCount(options.from);
+    }
+
     if (options.gasPrice === undefined) {
       options.gasPrice = this.defaultGasPrice;
+    }
+    if (options.gasPrice === undefined) {
+      options.gasPrice = await this.getGasPrice() || 1; // MIN_GAS_PRICE
     }
 
     if (options.gas === undefined) {
       options.gas = this.defaultGas;
     }
-
-    if (options.nonce === undefined) {
-      options.nonce = await this.getTransactionCount(options.from);
+    if (options.gas === undefined) {
+      const { gasUsed } = await this.estimateGasAndCollateral(options);
+      options.gas = gasUsed;
     }
 
     if (options.from instanceof Account) {
@@ -764,9 +771,15 @@ export default class Conflux {
    * Executes a message call or transaction and returns the amount of the gas used.
    *
    * @param options {object} - See `format.estimateTx`
-   * @return {Promise<JSBI>} The used gas for the simulated call/transaction.
+   * @return {Promise<object>} The gas used and storage occupied for the simulated call/transaction.
+   * - `BigInt` gasUsed: The gas used in Drip
+   * - `BigInt` storageOccupied: The storage occupied in Drip
    */
-  async estimateGas(options) {
+  async estimateGasAndCollateral(options) {
+    if (options.from && options.nonce === undefined) {
+      options.nonce = await this.getTransactionCount(options.from);
+    }
+
     if (options.gasPrice === undefined) {
       options.gasPrice = this.defaultGasPrice;
     }
@@ -775,11 +788,7 @@ export default class Conflux {
       options.gas = this.defaultGas;
     }
 
-    if (options.from && options.nonce === undefined) {
-      options.nonce = await this.getTransactionCount(options.from);
-    }
-
-    const result = await this.provider.call('cfx_estimateGas', format.estimateTx(options));
-    return format.bigUInt(result);
+    const result = await this.provider.call('cfx_estimateGasAndCollateral', format.estimateTx(options));
+    return format.estimate(result);
   }
 }

@@ -256,8 +256,11 @@ class MockProvider {
     return padHex(100, 64);
   }
 
-  cfx_estimateGas() {
-    return randomHex(4);
+  cfx_estimateGasAndCollateral() {
+    return {
+      gasUsed: randomHex(4),
+      storageOccupied: randomHex(4),
+    };
   }
 }
 

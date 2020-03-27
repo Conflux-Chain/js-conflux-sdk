@@ -260,6 +260,11 @@ format.transaction = Parser({
   status: format.uint.or(null), // XXX: might be remove in rpc returned
 });
 
+format.estimate = Parser({
+  gasUsed: format.bigUInt,
+  storageOccupied: format.bigUInt,
+});
+
 format.block = Parser({
   epochNumber: format.uint.or(null), // FIXME null for getBlockByEpochNumber(0)
   height: format.uint,

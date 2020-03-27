@@ -327,16 +327,16 @@ test('call', async () => {
   );
 });
 
-test('estimateGas', async () => {
+test('estimateGasAndCollateral', async () => {
   cfx.getTransactionCount = async address => {
     expect(format.hex(address)).toEqual(ADDRESS);
     return 100;
   };
 
-  await expect(cfx.estimateGas()).rejects.toThrow('Cannot read property');
+  await expect(cfx.estimateGasAndCollateral()).rejects.toThrow('Cannot read property');
 
   cfx.provider.call = async (method, options) => {
-    expect(method).toEqual('cfx_estimateGas');
+    expect(method).toEqual('cfx_estimateGasAndCollateral');
 
     expect(options.from).toEqual(undefined);
     expect(options.nonce).toEqual(undefined);
@@ -345,12 +345,15 @@ test('estimateGas', async () => {
     expect(options.to).toEqual(ADDRESS);
     expect(options.value).toEqual(undefined);
     expect(options.data).toEqual(undefined);
-    return '0x0';
+    return {
+      gasUsed: '0x0',
+      storageOccupied: '0x0',
+    };
   };
-  await cfx.estimateGas({ to: ADDRESS });
+  await cfx.estimateGasAndCollateral({ to: ADDRESS });
 
   cfx.provider.call = async (method, options) => {
-    expect(method).toEqual('cfx_estimateGas');
+    expect(method).toEqual('cfx_estimateGasAndCollateral');
 
     expect(options.from).toEqual(ADDRESS);
     expect(options.nonce).toEqual('0x64');
@@ -359,9 +362,12 @@ test('estimateGas', async () => {
     expect(options.to).toEqual(ADDRESS);
     expect(options.value).toEqual('0x64');
     expect(options.data).toEqual('0x');
-    return '0x1';
+    return {
+      gasUsed: '0x1',
+      storageOccupied: '0x0',
+    };
   };
-  await cfx.estimateGas(
+  await cfx.estimateGasAndCollateral(
     {
       from: format.buffer(ADDRESS),
       to: format.buffer(ADDRESS),
