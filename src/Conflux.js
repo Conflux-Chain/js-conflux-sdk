@@ -698,19 +698,31 @@ export default class Conflux {
     if (options.gas === undefined) {
       options.gas = this.defaultGas;
     }
-    if (options.gas === undefined) {
-      const { gasUsed } = await this.estimateGasAndCollateral(options);
-      options.gas = gasUsed;
+
+    if (options.gas === undefined || options.storageLimit === undefined) {
+      const { gasUsed, storageOccupied } = await this.estimateGasAndCollateral(options);
+
+      if (options.gas === undefined) {
+        options.gas = gasUsed;
+      }
+
+      if (options.storageLimit === undefined) {
+        options.storageLimit = storageOccupied;
+      }
+    }
+
+    if (options.epochHeight === undefined) {
+      options.epochHeight = await this.getEpochNumber();
     }
 
     if (options.from instanceof Account) {
       // sign by local
       const tx = options.from.signTransaction(options);
       return this.sendRawTransaction(tx.serialize());
+    } else {
+      // sign by remote
+      return this.provider.call('cfx_sendTransaction', format.sendTx(options));
     }
-
-    // sign by remote
-    return this.provider.call('cfx_sendTransaction', format.sendTx(options));
   }
 
   /**
