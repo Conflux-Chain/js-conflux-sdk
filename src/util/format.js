@@ -327,15 +327,18 @@ format.getLogs = Parser({
 
 // FIXME: accept null ?
 format.signTx = Parser({
-  nonce: format.uint,
-  gasPrice: format.bigUInt,
-  gas: format.bigUInt,
-  to: format.address.or(null).default(null),
-  value: format.bigUInt.default(0),
-  data: format.hex.default('0x'),
-  r: format.hex64.or(undefined),
-  s: format.hex64.or(undefined),
-  v: format.uint.or(undefined),
+  nonce: format.uint.parse(format.buffer),
+  gasPrice: format.bigUInt.parse(format.buffer),
+  gas: format.bigUInt.parse(format.buffer),
+  to: Parser(format.address.or(null).default(null)).parse(format.buffer),
+  value: format.bigUInt.default(0).parse(format.buffer),
+  storageLimit: format.numberHex.parse(format.buffer),
+  epochHeight: format.uint.parse(format.buffer),
+  chainId: format.uint.default(0).parse(format.buffer),
+  data: format.hex.default('0x').parse(format.buffer),
+  r: format.hex64.parse(format.buffer).or(undefined),
+  s: format.hex64.parse(format.buffer).or(undefined),
+  v: format.uint.parse(format.buffer).or(undefined),
 });
 
 format.sendTx = Parser({
@@ -345,6 +348,9 @@ format.sendTx = Parser({
   gas: format.numberHex,
   to: format.address.or(null).or(undefined),
   value: format.numberHex.or(undefined),
+  storageLimit: format.numberHex,
+  epochHeight: format.uint,
+  chainId: format.uint.default(0),
   data: format.hex.or(undefined),
 });
 
@@ -353,8 +359,11 @@ format.callTx = Parser({
   nonce: format.numberHex.or(undefined),
   gasPrice: format.numberHex.or(undefined),
   gas: format.numberHex.or(undefined),
-  to: format.address,
+  to: format.address.or(null),
   value: format.numberHex.or(undefined),
+  storageLimit: format.numberHex.or(undefined),
+  epochHeight: format.uint.or(undefined),
+  chainId: format.uint.or(undefined),
   data: format.hex.or(undefined),
 });
 
@@ -365,6 +374,9 @@ format.estimateTx = Parser({
   gas: format.numberHex.or(undefined),
   to: format.address.or(null).or(undefined),
   value: format.numberHex.or(undefined),
+  storageLimit: format.numberHex.or(undefined),
+  epochHeight: format.uint.or(undefined),
+  chainId: format.uint.or(undefined),
   data: format.hex.or(undefined),
 });
 

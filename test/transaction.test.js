@@ -10,6 +10,8 @@ test('Transaction', () => {
     gas: 21000,
     to: '0x0123456789012345678901234567890123456789',
     value: 0,
+    storageLimit: 0,
+    epochHeight: 0,
   });
 
   expect(tx.nonce).toEqual(0);
@@ -17,6 +19,8 @@ test('Transaction', () => {
   expect(tx.gas).toEqual(21000);
   expect(tx.to).toEqual('0x0123456789012345678901234567890123456789');
   expect(tx.value).toEqual(0);
+  expect(tx.storageLimit).toEqual(0);
+  expect(tx.epochHeight).toEqual(0);
   expect(tx.data).toEqual(undefined);
   expect(tx.r).toEqual(undefined);
   expect(tx.s).toEqual(undefined);
@@ -26,13 +30,13 @@ test('Transaction', () => {
 
   tx.sign(KEY);
 
-  expect(tx.r).toEqual('0x489153a772628dd224e516f5231740a526dd4a7af90fe6d9b270286cb8cf2d68');
-  expect(tx.s).toEqual('0x40d27551b593ffba7a69a997690fc0461aed760a78236d4ed33e26c9c1a7c97b');
+  expect(tx.r).toEqual('0xa370e3562713fb50513ff5d77f18a7dffe7588d3d05413d28211e300a262c7ee');
+  expect(tx.s).toEqual('0x784961a41aba10dfd5d97193d6c35bfc50a15030254bc91ae5a85df6d79d77b1');
   expect(tx.v).toEqual(0);
   expect(tx.from).toEqual(ADDRESS);
-  expect(tx.hash).toEqual('0x449fce992f97790a1f10d7c703658ad3c1246a01fb3e52a5e0cd2915da67520b');
+  expect(tx.hash).toEqual('0x42bed0d43b492261eee4b1c59a4fcd3a2fa7bc7cc1cd208469d0075f0f0a2e7d');
   expect(tx.recover()).toEqual('0x4646ae5047316b4230d0086c8acec687f00b1cd9d1dc634f6cb358ac0a9a8ffffe77b4dd0a4bfb95851f3b7355c781dd60f8418fc8a65d14907aff47c903a559');
-  expect(tx.serialize()).toEqual('0xf860dc8001825208940123456789012345678901234567890123456789808080a0489153a772628dd224e516f5231740a526dd4a7af90fe6d9b270286cb8cf2d68a040d27551b593ffba7a69a997690fc0461aed760a78236d4ed33e26c9c1a7c97b');
+  expect(tx.serialize()).toEqual('0xf863df8001825208940123456789012345678901234567890123456789808080808080a0a370e3562713fb50513ff5d77f18a7dffe7588d3d05413d28211e300a262c7eea0784961a41aba10dfd5d97193d6c35bfc50a15030254bc91ae5a85df6d79d77b1');
 
   tx.value = 1;
   expect(tx.from).not.toEqual(ADDRESS);
