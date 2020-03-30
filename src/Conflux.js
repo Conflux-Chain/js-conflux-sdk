@@ -181,7 +181,7 @@ export default class Conflux {
    */
   async getEpochNumber(epochNumber = 'latest_mined') {
     const result = await this.provider.call('cfx_epochNumber', format.epochNumber(epochNumber));
-    return format.uint(result);
+    return format.uInt(result);
   }
 
   /**
@@ -324,7 +324,7 @@ export default class Conflux {
     const result = await this.provider.call('cfx_getTransactionCount',
       format.address(address), format.epochNumber(epochNumber),
     );
-    return format.uint(result);
+    return format.uInt(result);
   }
 
   // -------------------------------- epoch -----------------------------------
