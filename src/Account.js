@@ -104,24 +104,11 @@ export default class Account {
    * > console.log(msg);
    Message {
       message: 'Hello World',
-      hash: '0xa1de988600a42c4b4ab089b619297c17d53cffae5d5120d82d8a92d0bb3b78f2',
-      r: '0xe6bfbd768a421b9051fe86310f0f1eef9d5df65288b53f54d663f887a5b4bcd6',
-      s: '0x32efb64ccc67d7245545175953e811bc237fd83ab8722d8be0a66e92ec39da81',
-      v: 1
+      signature: '0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01'
     }
-
-   * @example
-   * > const msg = new Message({
-      hash: '0xa1de988600a42c4b4ab089b619297c17d53cffae5d5120d82d8a92d0bb3b78f2',
-      r: '0xe6bfbd768a421b9051fe86310f0f1eef9d5df65288b53f54d663f887a5b4bcd6',
-      s: '0x32efb64ccc67d7245545175953e811bc237fd83ab8722d8be0a66e92ec39da81',
-      v: 1
-    });
-   * > console.log(msg.form); // getter to recover address
-   "0xfcad0b19bb29d4674531d6f115237e16afce377c"
    */
   signMessage(message) {
-    const msg = new Message({ message });
+    const msg = new Message(message);
     msg.sign(this.privateKey); // sign will cover r,s,v fields
     if (msg.from !== this.address) {
       throw new Error(`Invalid signature, message.from !== ${this.address}`);

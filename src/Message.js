@@ -3,58 +3,88 @@ import format from './util/format';
 
 export default class Message {
   /**
-   * @param options {string|object} - The string or message object
-   * @param [options.message] {string|Buffer} - The hashed message, will cover 'hash' fields
-   * @param [options.hash] {string|Buffer} - The hashed message
-   * @param [options.signature] {string|Buffer} - ECDSA signature, will cover 'r','s','v' fields
-   * @param [options.r] {string|Buffer} - ECDSA signature r
-   * @param [options.s] {string|Buffer} - ECDSA signature s
-   * @param [options.v] {number} - ECDSA recovery id
+   * Signs the hash with the privateKey.
+   *
+   * @param privateKey {string|Buffer}
+   * @param messageHash {string|Buffer}
+   * @return {string} The signature as hex string.
+   *
+   * @example
+   * > Message.sign(
+   '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef', // privateKey
+   '0x592fa743889fc7f92ac2a37bb1f5ba1daf2a5c84741ca0e0061d243a2e6707ba',
+   )
+   "0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01"
+   */
+  static sign(privateKey, messageHash) {
+    const { r, s, v } = ecdsaSign(format.buffer(messageHash), format.buffer(privateKey));
+    const buffer = Buffer.concat([r, s, format.buffer(v)]);
+    return format.signature(buffer);
+  }
+
+  /**
+   * Recovers the signers publicKey from the signature.
+   *
+   * @param signature {string|Buffer}
+   * @param messageHash {string|Buffer}
+   * @return {string} The publicKey as hex string.
+   *
+   * @example
+   * > Message.recover(
+   '0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01',
+   '0x592fa743889fc7f92ac2a37bb1f5ba1daf2a5c84741ca0e0061d243a2e6707ba',
+   )
+   "0x4646ae5047316b4230d0086c8acec687f00b1cd9d1dc634f6cb358ac0a9a8ffffe77b4dd0a4bfb95851f3b7355c781dd60f8418fc8a65d14907aff47c903a559"
+   */
+  static recover(signature, messageHash) {
+    const signatureBuffer = format.buffer(signature);
+    const r = signatureBuffer.slice(0, 32);
+    const s = signatureBuffer.slice(32, 64);
+    const v = signatureBuffer[64];
+    const buffer = ecdsaRecover(format.buffer(messageHash), { r, s, v });
+    return format.publicKey(buffer);
+  }
+
+  /**
+   * @param message {string}
    * @return {Message}
    *
    * @example
-   * > msg = new Message({ message: 'Hello World' });
+   * > msg = new Message('Hello World');
    Message {
       message: 'Hello World',
-      hash: '0x592fa743889fc7f92ac2a37bb1f5ba1daf2a5c84741ca0e0061d243a2e6707ba',
-      r: undefined,
-      s: undefined,
-      v: undefined
     }
    * > msg.sign('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef');
    Message {
       message: 'Hello World',
-      hash: '0x592fa743889fc7f92ac2a37bb1f5ba1daf2a5c84741ca0e0061d243a2e6707ba',
-      r: '0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c',
-      s: '0x29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f',
-      v: 1,
+      signature: '0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01'
     }
    * > msg.signature
    "0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01"
+   * > msg.hash
+   "0x592fa743889fc7f92ac2a37bb1f5ba1daf2a5c84741ca0e0061d243a2e6707ba"
    * > msg.from
-   "0xfcad0b19bb29d4674531d6f115237e16afce377c"
+   "0x1cad0b19bb29d4674531d6f115237e16afce377c"
+   * > msg.r
+   "0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c"
+   * > msg.s
+   "0x29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f"
+   * > msg.v
+   1
    */
-  constructor({ message, hash, signature, r, s, v }) {
-    if (message !== undefined) {
-      if (hash !== undefined) {
-        throw new Error('OverrideError, can not set `message` with `hash`');
-      }
+  constructor(message) {
+    this.message = message;
+  }
 
-      hash = format.hex(sha3(Buffer.from(message)));
-    }
-
-    if (signature !== undefined) {
-      if (r !== undefined || s !== undefined || v !== undefined) {
-        throw new Error('OverrideError, can not set `signature` with `r` or `s` or `v`');
-      }
-
-      const signatureBuffer = format.buffer(signature);
-      r = format.hex64(signatureBuffer.slice(0, 32));
-      s = format.hex64(signatureBuffer.slice(32, 64));
-      v = format.uInt(signatureBuffer[64]);
-    }
-
-    Object.assign(this, { message, hash, r, s, v });
+  /**
+   * Getter of message hash include signature.
+   *
+   * > Note: calculate every time.
+   *
+   * @return {string}
+   */
+  get hash() {
+    return format.hex(sha3(Buffer.from(this.message)));
   }
 
   /**
@@ -66,24 +96,8 @@ export default class Message {
    */
   get from() {
     try {
-      return format.hex(publicKeyToAddress(format.buffer(this.recover())));
-    } catch (e) {
-      return undefined;
-    }
-  }
-
-  /**
-   * Getter signature of message r,s,v.
-   *
-   * @return {string}
-   */
-  get signature() {
-    try {
-      return format.signature(Buffer.concat([
-        format.buffer(this.r),
-        format.buffer(this.s),
-        format.buffer(this.v),
-      ]));
+      const publicKey = Message.recover(this.signature, this.hash);
+      return format.address(publicKeyToAddress(format.buffer(publicKey)));
     } catch (e) {
       return undefined;
     }
@@ -96,22 +110,31 @@ export default class Message {
    * @return {Message}
    */
   sign(privateKey) {
-    const { r, s, v } = ecdsaSign(format.buffer(this.hash), format.buffer(privateKey));
-    Object.assign(this, { r: format.hex(r), s: format.hex(s), v });
+    this.signature = Message.sign(privateKey, this.hash);
     return this;
   }
 
-  /**
-   * Recover public key from signed Transaction.
-   *
-   * @return {string}
-   */
-  recover() {
-    const publicKey = ecdsaRecover(format.buffer(this.hash), {
-      r: format.buffer(this.r),
-      s: format.buffer(this.s),
-      v: format.uInt(this.v),
-    });
-    return format.publicKey(publicKey);
+  get r() {
+    try {
+      return this.signature.slice(0, 2 + 64);
+    } catch (e) {
+      return undefined;
+    }
+  }
+
+  get s() {
+    try {
+      return `0x${this.signature.slice(2 + 64, 2 + 128)}`;
+    } catch (e) {
+      return undefined;
+    }
+  }
+
+  get v() {
+    try {
+      return parseInt(this.signature.slice(2 + 128, 2 + 130), 16);
+    } catch (e) {
+      return undefined;
+    }
   }
 }

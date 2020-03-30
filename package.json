@@ -63,21 +63,19 @@
     "tinyify": "^2.5.2",
     "walker": "^1.0.7"
   },
-  "scripts": {
-    "eslint": "eslint ./src ./test ./mock",
-    "eslint:fix": "eslint --fix ./src ./test ./mock",
-    "scope": "npm config set scope conflux-dev & npm config set access public",
-    "build": "npm run build:backend & npm run build:frontend",
-    "build:frontend": "node development/build-frontend.js",
-    "build:backend": "node development/build-backend.js",
-    "prepublishOnly": "npm run build",
-    "test": "jest"
-  },
   "resolutions": {
     "tinyify/acorn-node/acorn": "7.1.1",
     "eslint/espree/acorn": "7.1.1",
     "tinyify/unassertify/unassert/acorn": "7.1.1",
     "**/minimist": "1.2.2",
     "jest/jest-cli/jest-config/jest-environment-jsdom/jsdom/acorn-globals/acorn": "6.4.1"
+  },
+  "scripts": {
+    "eslint:fix": "eslint --fix ./src ./test ./mock",
+    "build": "npm run build:backend & npm run build:frontend",
+    "build:frontend": "node development/build-frontend.js",
+    "build:backend": "node development/build-backend.js",
+    "prepublishOnly": "npm run build",
+    "test": "jest"
   }
 }

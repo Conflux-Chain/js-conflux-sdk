@@ -785,7 +785,7 @@ export default class Conflux {
    * @param options {object} - See `format.estimateTx`
    * @return {Promise<object>} The gas used and storage occupied for the simulated call/transaction.
    * - `BigInt` gasUsed: The gas used
-   * - `BigInt` storageOccupied: The storage occupied in Drip
+   * - `BigInt` storageOccupied: The storage occupied
    */
   async estimateGasAndCollateral(options) {
     if (options.from && options.nonce === undefined) {
