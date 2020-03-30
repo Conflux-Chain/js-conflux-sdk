@@ -81,17 +81,17 @@ test('bigUInt', () => {
   expect(format.bigUInt(Number.MAX_SAFE_INTEGER + 1)).toEqual(JSBI.BigInt(2 ** 53));
 });
 
-test('numberHex', () => {
-  expect(format.numberHex(false)).toEqual('0x0');
-  expect(format.numberHex(true)).toEqual('0x1');
-  expect(format.numberHex('')).toEqual('0x0');
-  expect(format.numberHex(100)).toEqual('0x64');
-  expect(format.numberHex('10')).toEqual('0xa');
-  expect(format.numberHex(Buffer.from([0, 1, 2]))).toEqual('0x102');
-  expect(() => format.numberHex(3.50)).toThrow('cannot be converted to');
-  expect(() => format.numberHex(-0.5)).toThrow('cannot be converted to');
-  expect(() => format.numberHex(-1)).toThrow('not match bigUInt');
-  expect(() => format.numberHex(null)).toThrow('Cannot');
+test('hexUInt', () => {
+  expect(format.hexUInt(false)).toEqual('0x0');
+  expect(format.hexUInt(true)).toEqual('0x1');
+  expect(format.hexUInt('')).toEqual('0x0');
+  expect(format.hexUInt(100)).toEqual('0x64');
+  expect(format.hexUInt('10')).toEqual('0xa');
+  expect(format.hexUInt(Buffer.from([0, 1, 2]))).toEqual('0x102');
+  expect(() => format.hexUInt(3.50)).toThrow('cannot be converted to');
+  expect(() => format.hexUInt(-0.5)).toThrow('cannot be converted to');
+  expect(() => format.hexUInt(-1)).toThrow('not match bigUInt');
+  expect(() => format.hexUInt(null)).toThrow('Cannot');
 });
 
 test('epochNumber', () => {
