@@ -48,9 +48,7 @@ export default class Transaction {
    */
   get from() {
     try {
-      const publicKey = format.buffer(this.recover());
-      const address = publicKeyToAddress(publicKey);
-      return format.accountAddress(address);
+      return format.hex(publicKeyToAddress(format.buffer(this.recover())));
     } catch (e) {
       return undefined;
     }

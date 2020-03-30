@@ -51,7 +51,7 @@ export default class Account {
   constructor(privateKey) {
     this.privateKey = format.privateKey(privateKey);
     this.publicKey = format.publicKey(privateKeyToPublicKey(format.buffer(privateKey)));
-    this.address = format.accountAddress(privateKeyToAddress(format.buffer(privateKey)));
+    this.address = format.address(privateKeyToAddress(format.buffer(privateKey)));
   }
 
   // /**
