@@ -51,7 +51,7 @@ export default class Message {
       const signatureBuffer = format.buffer(signature);
       r = format.hex64(signatureBuffer.slice(0, 32));
       s = format.hex64(signatureBuffer.slice(32, 64));
-      v = format.uint(signatureBuffer[64]);
+      v = format.uInt(signatureBuffer[64]);
     }
 
     Object.assign(this, { message, hash, r, s, v });
@@ -110,7 +110,7 @@ export default class Message {
     const publicKey = ecdsaRecover(format.buffer(this.hash), {
       r: format.buffer(this.r),
       s: format.buffer(this.s),
-      v: format.uint(this.v),
+      v: format.uInt(this.v),
     });
     return format.publicKey(publicKey);
   }

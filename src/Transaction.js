@@ -1,30 +1,5 @@
-import JSBI from 'jsbi';
 import { sha3, ecdsaSign, ecdsaRecover, publicKeyToAddress, rlpEncode } from './util/sign';
 import format from './util/format';
-
-/**
- * Recursion format buffer
- * @private
- * @param value {array|*}
- * @return {array|Buffer}
- *
- * @example
- * > rlpBuffer(1)
- <Buffer 01>
-
- * > rlpBuffer([1])
- [ <Buffer 01> ]
-
- * > rlpBuffer([1, [2, 3]])
- [ <Buffer 01>, [ <Buffer 02>, <Buffer 03> ] ]
- */
-function rlpBuffer(value) {
-  if (Array.isArray(value) && !(value instanceof JSBI)) {
-    return value.map(rlpBuffer);
-  } else {
-    return format.buffer(value);
-  }
-}
 
 export default class Transaction {
   /**
@@ -36,14 +11,17 @@ export default class Transaction {
    * @param options.gas {string|number} - The amount of gas to use for the transaction (unused gas is refunded).
    * @param [options.to=null] {string} - The destination address of the message, left undefined for a contract-creation transaction.
    * @param [options.value=0] {string|number} - The value transferred for the transaction in drip, also the endowment if it’s a contract-creation transaction.
+   * @param options.storageLimit {string|number} - TODO
+   * @param options.epochHeight {string|number} - TODO
+   * @param [options.chainId=0] {string|number} - TODO
    * @param [options.data='0x'] {string|Buffer} - Either a ABI byte string containing the data of the function call on a contract, or in the case of a contract-creation transaction the initialisation code.
    * @param [options.r] {string|Buffer} - ECDSA signature r
    * @param [options.s] {string|Buffer} - ECDSA signature s
    * @param [options.v] {number} - ECDSA recovery id
    * @return {Transaction}
    */
-  constructor({ nonce, gasPrice, gas, to, value, data, v, r, s }) {
-    Object.assign(this, { nonce, gasPrice, gas, to, value, data, v, r, s });
+  constructor({ nonce, gasPrice, gas, to, value, storageLimit, epochHeight, chainId, data, v, r, s }) {
+    Object.assign(this, { nonce, gasPrice, gas, to, value, storageLimit, epochHeight, chainId, data, v, r, s });
   }
 
   /**
@@ -97,7 +75,7 @@ export default class Transaction {
     const publicKey = ecdsaRecover(sha3(this.encode(false)), {
       r: format.buffer(this.r),
       s: format.buffer(this.s),
-      v: format.uint(this.v),
+      v: format.uInt(this.v),
     });
     return format.publicKey(publicKey);
   }
@@ -109,13 +87,13 @@ export default class Transaction {
    * @return {Buffer}
    */
   encode(includeSignature) {
-    const { nonce, gasPrice, gas, to, value, data, v, r, s } = format.signTx(this);
+    const { nonce, gasPrice, gas, to, value, storageLimit, epochHeight, chainId, data, v, r, s } = format.signTx(this);
 
     const raw = includeSignature
-      ? [[nonce, gasPrice, gas, to, value, data], v, r, s]
-      : [nonce, gasPrice, gas, to, value, data];
+      ? [[nonce, gasPrice, gas, to, value, storageLimit, epochHeight, chainId, data], v, r, s]
+      : [nonce, gasPrice, gas, to, value, storageLimit, epochHeight, chainId, data];
 
-    return rlpEncode(rlpBuffer(raw));
+    return rlpEncode(raw);
   }
 
   /**

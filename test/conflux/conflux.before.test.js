@@ -3,7 +3,7 @@ const { MockProvider } = require('../../mock');
 const format = require('../../src/util/format');
 
 const KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
-const ADDRESS = '0xfcad0b19bb29d4674531d6f115237e16afce377c';
+const ADDRESS = '0x1cad0b19bb29d4674531d6f115237e16afce377c';
 const BLOCK_HASH = '0xe0b0000000000000000000000000000000000000000000000000000000000000';
 const TX_HASH = '0xb0a0000000000000000000000000000000000000000000000000000000000000';
 const DEFAULT_GAS = 100;
@@ -187,66 +187,6 @@ test('getTransactionReceipt', async () => {
   await cfx.getTransactionReceipt(TX_HASH);
 });
 
-test('sendTransaction by address', async () => {
-  cfx.getTransactionCount = async address => {
-    expect(address).toEqual(ADDRESS);
-    return 0;
-  };
-
-  await expect(cfx.sendTransaction()).rejects.toThrow('Cannot read property');
-  await expect(cfx.sendTransaction({ nonce: 0 })).rejects.toThrow('not match hex');
-
-  cfx.provider.call = async (method, options) => {
-    expect(method).toEqual('cfx_sendTransaction');
-    expect(options.from).toEqual(ADDRESS);
-    expect(options.nonce).toEqual('0x0');
-    expect(options.gasPrice).toEqual(format.numberHex(cfx.defaultGasPrice));
-    expect(options.gas).toEqual(format.numberHex(cfx.defaultGas));
-    expect(options.to).toEqual(undefined);
-    expect(options.value).toEqual(undefined);
-    expect(options.data).toEqual(undefined);
-    return TX_HASH;
-  };
-  await cfx.sendTransaction({ from: ADDRESS });
-  await cfx.sendTransaction({ nonce: 0, from: ADDRESS });
-
-  cfx.provider.call = async (method, options) => {
-    expect(method).toEqual('cfx_sendTransaction');
-    expect(options.from).toEqual(ADDRESS);
-    expect(options.nonce).toEqual('0x64');
-    expect(options.gasPrice).toEqual(format.numberHex(cfx.defaultGasPrice));
-    expect(options.gas).toEqual('0x1');
-    expect(options.to).toEqual(ADDRESS);
-    expect(options.value).toEqual('0x0');
-    expect(options.data).toEqual('0x');
-    return TX_HASH;
-  };
-  await cfx.sendTransaction({
-    nonce: 100,
-    from: ADDRESS,
-    to: format.buffer(ADDRESS),
-    gas: 1,
-    value: 0,
-    data: '0x',
-  });
-});
-
-test('sendTransaction by account', async () => {
-  const account = cfx.Account(KEY);
-
-  cfx.getTransactionCount = async address => {
-    expect(format.hex(address)).toEqual(ADDRESS);
-    return 0;
-  };
-
-  cfx.provider.call = async (method, hex) => {
-    expect(method).toEqual('cfx_sendRawTransaction');
-    expect(hex.startsWith('0x')).toEqual(true);
-    return TX_HASH;
-  };
-  await cfx.sendTransaction({ from: account });
-});
-
 test('sendRawTransaction', async () => {
   await expect(cfx.sendRawTransaction()).rejects.toThrow('not match hex');
 
@@ -327,16 +267,16 @@ test('call', async () => {
   );
 });
 
-test('estimateGas', async () => {
+test('estimateGasAndCollateral', async () => {
   cfx.getTransactionCount = async address => {
     expect(format.hex(address)).toEqual(ADDRESS);
     return 100;
   };
 
-  await expect(cfx.estimateGas()).rejects.toThrow('Cannot read property');
+  await expect(cfx.estimateGasAndCollateral()).rejects.toThrow('Cannot read property');
 
   cfx.provider.call = async (method, options) => {
-    expect(method).toEqual('cfx_estimateGas');
+    expect(method).toEqual('cfx_estimateGasAndCollateral');
 
     expect(options.from).toEqual(undefined);
     expect(options.nonce).toEqual(undefined);
@@ -345,12 +285,15 @@ test('estimateGas', async () => {
     expect(options.to).toEqual(ADDRESS);
     expect(options.value).toEqual(undefined);
     expect(options.data).toEqual(undefined);
-    return '0x0';
+    return {
+      gasUsed: '0x0',
+      storageOccupied: '0x0',
+    };
   };
-  await cfx.estimateGas({ to: ADDRESS });
+  await cfx.estimateGasAndCollateral({ to: ADDRESS });
 
   cfx.provider.call = async (method, options) => {
-    expect(method).toEqual('cfx_estimateGas');
+    expect(method).toEqual('cfx_estimateGasAndCollateral');
 
     expect(options.from).toEqual(ADDRESS);
     expect(options.nonce).toEqual('0x64');
@@ -359,9 +302,12 @@ test('estimateGas', async () => {
     expect(options.to).toEqual(ADDRESS);
     expect(options.value).toEqual('0x64');
     expect(options.data).toEqual('0x');
-    return '0x1';
+    return {
+      gasUsed: '0x1',
+      storageOccupied: '0x0',
+    };
   };
-  await cfx.estimateGas(
+  await cfx.estimateGasAndCollateral(
     {
       from: format.buffer(ADDRESS),
       to: format.buffer(ADDRESS),
@@ -370,4 +316,86 @@ test('estimateGas', async () => {
       data: '0x',
     },
   );
+});
+
+test('sendTransaction by address', async () => {
+  cfx.getTransactionCount = async address => {
+    expect(address).toEqual(ADDRESS);
+    return 0;
+  };
+
+  cfx.estimateGasAndCollateral = async () => {
+    return {
+      gasUsed: format.bigUInt(1024),
+      storageOccupied: format.bigUInt(2048),
+    };
+  };
+
+  cfx.getEpochNumber = async () => {
+    return 1000;
+  };
+
+  await expect(cfx.sendTransaction()).rejects.toThrow('Cannot read property');
+  await expect(cfx.sendTransaction({ nonce: 0 })).rejects.toThrow('not match hex');
+
+  cfx.provider.call = async (method, options) => {
+    expect(method).toEqual('cfx_sendTransaction');
+    expect(options.from).toEqual(ADDRESS);
+    expect(options.nonce).toEqual('0x0');
+    expect(options.gasPrice).toEqual(format.numberHex(cfx.defaultGasPrice));
+    expect(options.gas).toEqual(format.numberHex(cfx.defaultGas));
+    expect(options.to).toEqual(undefined);
+    expect(options.value).toEqual(undefined);
+    expect(options.data).toEqual(undefined);
+    return TX_HASH;
+  };
+  await cfx.sendTransaction({ from: ADDRESS });
+  await cfx.sendTransaction({ nonce: 0, from: ADDRESS });
+
+  cfx.provider.call = async (method, options) => {
+    expect(method).toEqual('cfx_sendTransaction');
+    expect(options.from).toEqual(ADDRESS);
+    expect(options.nonce).toEqual('0x64');
+    expect(options.gasPrice).toEqual(format.numberHex(cfx.defaultGasPrice));
+    expect(options.gas).toEqual('0x1');
+    expect(options.to).toEqual(ADDRESS);
+    expect(options.value).toEqual('0x0');
+    expect(options.data).toEqual('0x');
+    return TX_HASH;
+  };
+  await cfx.sendTransaction({
+    nonce: 100,
+    from: ADDRESS,
+    to: format.buffer(ADDRESS),
+    gas: 1,
+    value: 0,
+    data: '0x',
+  });
+});
+
+test('sendTransaction by account', async () => {
+  const account = cfx.Account(KEY);
+
+  cfx.getTransactionCount = async address => {
+    expect(format.hex(address)).toEqual(ADDRESS);
+    return 0;
+  };
+
+  cfx.estimateGasAndCollateral = async () => {
+    return {
+      gasUsed: format.bigUInt(0),
+      storageOccupied: format.bigUInt(2048),
+    };
+  };
+
+  cfx.getEpochNumber = async () => {
+    return 1000;
+  };
+
+  cfx.provider.call = async (method, hex) => {
+    expect(method).toEqual('cfx_sendRawTransaction');
+    expect(hex.startsWith('0x')).toEqual(true);
+    return TX_HASH;
+  };
+  await cfx.sendTransaction({ from: account });
 });

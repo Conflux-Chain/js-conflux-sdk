@@ -2,7 +2,6 @@ const format = require('../../src/util/format');
 const { util: { sign } } = require('../../src');
 
 const {
-  sha3,
   checksumAddress,
   randomBuffer,
   randomPrivateKey,
@@ -19,7 +18,7 @@ const {
 
 const KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 const PUBLIC = '0x4646ae5047316b4230d0086c8acec687f00b1cd9d1dc634f6cb358ac0a9a8ffffe77b4dd0a4bfb95851f3b7355c781dd60f8418fc8a65d14907aff47c903a559';
-const ADDRESS = '0xfcad0b19bb29d4674531d6f115237e16afce377c';
+const ADDRESS = '0x1cad0b19bb29d4674531d6f115237e16afce377c';
 
 test('checksumAddress', () => {
   expect(checksumAddress('0XFB6916095CA1DF60BB79CE92CE3EA74C37C5D359'))
@@ -88,6 +87,6 @@ test('ecdsaSign and ecdsaRecover', () => {
   expect(Number.isInteger(v)).toEqual(true);
 
   const publicKey = ecdsaRecover(hash, { r, s, v });
-  const address = format.hex(sha3(publicKey).slice(-20));
+  const address = format.hex(publicKeyToAddress(publicKey));
   expect(address).toEqual(ADDRESS);
 });
