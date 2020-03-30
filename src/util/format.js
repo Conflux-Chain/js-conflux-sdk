@@ -138,20 +138,20 @@ format.bigUInt = Parser(toBigInt).validate(v => v >= 0, 'bigUInt');
  * @return {string} Hex string
  *
  * @example
- * > format.numberHex(100)
+ * > format.hexUInt(100)
  "0x64"
- * > format.numberHex(10)
+ * > format.hexUInt(10)
  "0xa"
- * > format.numberHex(3.50)
+ * > format.hexUInt(3.50)
  "0x4"
- * > format.numberHex(3.49)
+ * > format.hexUInt(3.49)
  "0x3"
- * > format.numberHex(-1))
+ * > format.hexUInt(-1))
  Error("not match uintHex")
  */
-format.numberHex = format.bigUInt
+format.hexUInt = format.bigUInt
   .parse(v => `0x${v.toString(16)}`)
-  .validate(v => /^0x[0-9a-f]+$/.test(v), 'numberHex');
+  .validate(v => /^0x[0-9a-f]+$/.test(v), 'hexUInt');
 
 /**
  * @param arg {number|string} - number or string in ['latest_state', 'latest_mined']
@@ -165,7 +165,7 @@ format.numberHex = format.bigUInt
  * > format.epochNumber('latest_mined')
  "latest_state"
  */
-format.epochNumber = format.numberHex.or('latest_state').or('latest_mined');
+format.epochNumber = format.hexUInt.or('latest_state').or('latest_mined');
 
 /**
  * @param arg {string|Buffer}
@@ -278,7 +278,7 @@ format.transaction = Parser({
 
 format.estimate = Parser({
   gasUsed: format.bigUInt,
-  storageOccupied: format.bigUInt,
+  storageCollateralized: format.bigUInt,
 });
 
 format.block = Parser({
@@ -309,7 +309,7 @@ format.logs = Parser([
 
 // -------------------------- format method arguments -------------------------
 format.getLogs = Parser({
-  limit: format.numberHex.or(undefined),
+  limit: format.hexUInt.or(undefined),
   fromEpoch: format.epochNumber.or(undefined),
   toEpoch: format.epochNumber.or(undefined),
   blockHashes: format.blockHash.or([format.blockHash]).or(undefined),
@@ -319,28 +319,28 @@ format.getLogs = Parser({
 
 // FIXME: accept null ?
 format.signTx = Parser({
-  nonce: format.uInt.parse(format.buffer),
-  gasPrice: format.bigUInt.parse(format.buffer),
-  gas: format.bigUInt.parse(format.buffer),
+  nonce: format.hexUInt.parse(format.buffer),
+  gasPrice: format.hexUInt.parse(format.buffer),
+  gas: format.hexUInt.parse(format.buffer),
   to: Parser(format.address.or(null).default(null)).parse(format.buffer),
-  value: format.bigUInt.default(0).parse(format.buffer),
-  storageLimit: format.numberHex.parse(format.buffer),
+  value: format.hexUInt.default(0).parse(format.buffer),
+  storageLimit: format.hexUInt.parse(format.buffer),
   epochHeight: format.uInt.parse(format.buffer),
   chainId: format.uInt.default(0).parse(format.buffer),
   data: format.hex.default('0x').parse(format.buffer),
-  r: format.numberHex.parse(format.buffer).or(undefined),
-  s: format.numberHex.parse(format.buffer).or(undefined),
+  r: format.hexUInt.parse(format.buffer).or(undefined),
+  s: format.hexUInt.parse(format.buffer).or(undefined),
   v: format.uInt.parse(format.buffer).or(undefined),
 });
 
 format.sendTx = Parser({
   from: format.address,
-  nonce: format.numberHex,
-  gasPrice: format.numberHex,
-  gas: format.numberHex,
+  nonce: format.hexUInt,
+  gasPrice: format.hexUInt,
+  gas: format.hexUInt,
   to: format.address.or(null).or(undefined),
-  value: format.numberHex.or(undefined),
-  storageLimit: format.numberHex,
+  value: format.hexUInt.or(undefined),
+  storageLimit: format.hexUInt,
   epochHeight: format.uInt,
   chainId: format.uInt.default(0),
   data: format.hex.or(undefined),
@@ -348,12 +348,12 @@ format.sendTx = Parser({
 
 format.callTx = Parser({
   from: format.address.or(undefined),
-  nonce: format.numberHex.or(undefined),
-  gasPrice: format.numberHex.or(undefined),
-  gas: format.numberHex.or(undefined),
+  nonce: format.hexUInt.or(undefined),
+  gasPrice: format.hexUInt.or(undefined),
+  gas: format.hexUInt.or(undefined),
   to: format.address.or(null),
-  value: format.numberHex.or(undefined),
-  storageLimit: format.numberHex.or(undefined),
+  value: format.hexUInt.or(undefined),
+  storageLimit: format.hexUInt.or(undefined),
   epochHeight: format.uInt.or(undefined),
   chainId: format.uInt.or(undefined),
   data: format.hex.or(undefined),
@@ -361,12 +361,12 @@ format.callTx = Parser({
 
 format.estimateTx = Parser({
   from: format.address.or(undefined),
-  nonce: format.numberHex.or(undefined),
-  gasPrice: format.numberHex.or(undefined),
-  gas: format.numberHex.or(undefined),
+  nonce: format.hexUInt.or(undefined),
+  gasPrice: format.hexUInt.or(undefined),
+  gas: format.hexUInt.or(undefined),
   to: format.address.or(null).or(undefined),
-  value: format.numberHex.or(undefined),
-  storageLimit: format.numberHex.or(undefined),
+  value: format.hexUInt.or(undefined),
+  storageLimit: format.hexUInt.or(undefined),
   epochHeight: format.uInt.or(undefined),
   chainId: format.uInt.or(undefined),
   data: format.hex.or(undefined),

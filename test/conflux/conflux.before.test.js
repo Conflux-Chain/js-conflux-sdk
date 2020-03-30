@@ -79,25 +79,25 @@ test('getBalance', async () => {
   await cfx.getBalance(ADDRESS, 0);
 });
 
-test('getTransactionCount', async () => {
-  await expect(cfx.getTransactionCount()).rejects.toThrow('not match hex');
+test('getNextNonce', async () => {
+  await expect(cfx.getNextNonce()).rejects.toThrow('not match hex');
 
   cfx.provider.call = async (method, address, epochNumber) => {
-    expect(method).toEqual('cfx_getTransactionCount');
+    expect(method).toEqual('cfx_getNextNonce');
     expect(address).toEqual(ADDRESS);
     expect(epochNumber).toEqual(cfx.defaultEpoch);
     return '0x0';
   };
-  await cfx.getTransactionCount(ADDRESS);
-  await cfx.getTransactionCount(ADDRESS, 'latest_state');
+  await cfx.getNextNonce(ADDRESS);
+  await cfx.getNextNonce(ADDRESS, 'latest_state');
 
   cfx.provider.call = async (method, address, epochNumber) => {
-    expect(method).toEqual('cfx_getTransactionCount');
+    expect(method).toEqual('cfx_getNextNonce');
     expect(address).toEqual(ADDRESS);
     expect(epochNumber).toEqual('0x0');
     return '0x0';
   };
-  await cfx.getTransactionCount(ADDRESS, 0);
+  await cfx.getNextNonce(ADDRESS, 0);
 });
 
 test('getBlocksByEpochNumber', async () => {
@@ -219,7 +219,7 @@ test('getCode', async () => {
 });
 
 test('call', async () => {
-  cfx.getTransactionCount = async address => {
+  cfx.getNextNonce = async address => {
     expect(format.hex(address)).toEqual(ADDRESS);
     return 100;
   };
@@ -232,8 +232,8 @@ test('call', async () => {
 
     expect(options.from).toEqual(undefined);
     expect(options.nonce).toEqual(undefined);
-    expect(options.gasPrice).toEqual(format.numberHex(cfx.defaultGasPrice));
-    expect(options.gas).toEqual(format.numberHex(cfx.defaultGas));
+    expect(options.gasPrice).toEqual(format.hexUInt(cfx.defaultGasPrice));
+    expect(options.gas).toEqual(format.hexUInt(cfx.defaultGas));
     expect(options.to).toEqual(ADDRESS);
     expect(options.value).toEqual(undefined);
     expect(options.data).toEqual(undefined);
@@ -247,7 +247,7 @@ test('call', async () => {
 
     expect(options.from).toEqual(ADDRESS);
     expect(options.nonce).toEqual('0x64');
-    expect(options.gasPrice).toEqual(format.numberHex(cfx.defaultGasPrice));
+    expect(options.gasPrice).toEqual(format.hexUInt(cfx.defaultGasPrice));
     expect(options.gas).toEqual('0x1');
     expect(options.to).toEqual(ADDRESS);
     expect(options.value).toEqual('0x64');
@@ -268,7 +268,7 @@ test('call', async () => {
 });
 
 test('estimateGasAndCollateral', async () => {
-  cfx.getTransactionCount = async address => {
+  cfx.getNextNonce = async address => {
     expect(format.hex(address)).toEqual(ADDRESS);
     return 100;
   };
@@ -280,14 +280,14 @@ test('estimateGasAndCollateral', async () => {
 
     expect(options.from).toEqual(undefined);
     expect(options.nonce).toEqual(undefined);
-    expect(options.gasPrice).toEqual(format.numberHex(cfx.defaultGasPrice));
-    expect(options.gas).toEqual(format.numberHex(cfx.defaultGas));
+    expect(options.gasPrice).toEqual(format.hexUInt(cfx.defaultGasPrice));
+    expect(options.gas).toEqual(format.hexUInt(cfx.defaultGas));
     expect(options.to).toEqual(ADDRESS);
     expect(options.value).toEqual(undefined);
     expect(options.data).toEqual(undefined);
     return {
       gasUsed: '0x0',
-      storageOccupied: '0x0',
+      storageCollateralized: '0x0',
     };
   };
   await cfx.estimateGasAndCollateral({ to: ADDRESS });
@@ -297,14 +297,14 @@ test('estimateGasAndCollateral', async () => {
 
     expect(options.from).toEqual(ADDRESS);
     expect(options.nonce).toEqual('0x64');
-    expect(options.gasPrice).toEqual(format.numberHex(cfx.defaultGasPrice));
+    expect(options.gasPrice).toEqual(format.hexUInt(cfx.defaultGasPrice));
     expect(options.gas).toEqual('0x1');
     expect(options.to).toEqual(ADDRESS);
     expect(options.value).toEqual('0x64');
     expect(options.data).toEqual('0x');
     return {
       gasUsed: '0x1',
-      storageOccupied: '0x0',
+      storageCollateralized: '0x0',
     };
   };
   await cfx.estimateGasAndCollateral(
@@ -319,7 +319,7 @@ test('estimateGasAndCollateral', async () => {
 });
 
 test('sendTransaction by address', async () => {
-  cfx.getTransactionCount = async address => {
+  cfx.getNextNonce = async address => {
     expect(address).toEqual(ADDRESS);
     return 0;
   };
@@ -327,7 +327,7 @@ test('sendTransaction by address', async () => {
   cfx.estimateGasAndCollateral = async () => {
     return {
       gasUsed: format.bigUInt(1024),
-      storageOccupied: format.bigUInt(2048),
+      storageCollateralized: format.bigUInt(2048),
     };
   };
 
@@ -342,8 +342,8 @@ test('sendTransaction by address', async () => {
     expect(method).toEqual('cfx_sendTransaction');
     expect(options.from).toEqual(ADDRESS);
     expect(options.nonce).toEqual('0x0');
-    expect(options.gasPrice).toEqual(format.numberHex(cfx.defaultGasPrice));
-    expect(options.gas).toEqual(format.numberHex(cfx.defaultGas));
+    expect(options.gasPrice).toEqual(format.hexUInt(cfx.defaultGasPrice));
+    expect(options.gas).toEqual(format.hexUInt(cfx.defaultGas));
     expect(options.to).toEqual(undefined);
     expect(options.value).toEqual(undefined);
     expect(options.data).toEqual(undefined);
@@ -356,7 +356,7 @@ test('sendTransaction by address', async () => {
     expect(method).toEqual('cfx_sendTransaction');
     expect(options.from).toEqual(ADDRESS);
     expect(options.nonce).toEqual('0x64');
-    expect(options.gasPrice).toEqual(format.numberHex(cfx.defaultGasPrice));
+    expect(options.gasPrice).toEqual(format.hexUInt(cfx.defaultGasPrice));
     expect(options.gas).toEqual('0x1');
     expect(options.to).toEqual(ADDRESS);
     expect(options.value).toEqual('0x0');
@@ -376,7 +376,7 @@ test('sendTransaction by address', async () => {
 test('sendTransaction by account', async () => {
   const account = cfx.Account(KEY);
 
-  cfx.getTransactionCount = async address => {
+  cfx.getNextNonce = async address => {
     expect(format.hex(address)).toEqual(ADDRESS);
     return 0;
   };
@@ -384,7 +384,7 @@ test('sendTransaction by account', async () => {
   cfx.estimateGasAndCollateral = async () => {
     return {
       gasUsed: format.bigUInt(0),
-      storageOccupied: format.bigUInt(2048),
+      storageCollateralized: format.bigUInt(2048),
     };
   };
 
