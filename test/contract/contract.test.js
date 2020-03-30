@@ -46,7 +46,7 @@ test('Contract', async () => {
 
   value = await contract.count().estimateGasAndCollateral({ gasPrice: 101 });
   expect(value.gasUsed.constructor).toEqual(JSBI);
-  expect(value.storageOccupied.constructor).toEqual(JSBI);
+  expect(value.storageCollateralized.constructor).toEqual(JSBI);
 
   const logs = await contract.SelfEvent(ADDRESS, null).getLogs();
   expect(logs.length).toEqual(2);
