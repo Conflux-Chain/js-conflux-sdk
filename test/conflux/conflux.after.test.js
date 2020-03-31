@@ -50,8 +50,8 @@ test('getBalance', async () => {
   expect(balance.constructor).toEqual(JSBI);
 });
 
-test('getTransactionCount', async () => {
-  const txCount = await cfx.getTransactionCount(ADDRESS);
+test('getNextNonce', async () => {
+  const txCount = await cfx.getNextNonce(ADDRESS);
 
   expect(Number.isInteger(txCount)).toEqual(true);
 });
