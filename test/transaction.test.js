@@ -37,3 +37,19 @@ test('Transaction', () => {
   tx.value = 1;
   expect(tx.from).not.toEqual(ADDRESS);
 });
+
+test('s starts with 0x00', () => {
+  const tx = new Transaction({
+    nonce: 429,
+    gasPrice: 2001,
+    gas: 1000000,
+    to: '0x3838197c0c88d0d5b13b67e1bfdbdc132d4842e3',
+    value: 100000000000000000000,
+    data: null,
+  });
+
+  tx.sign('0x4bb79797807812587dd6e02b39fee03056c11eec5ec599609d9175a1275a9a10');
+
+  expect(tx.s).toEqual('0x0097188648aa672aa9c69369ecffa6eacdd30cec3fd41e4a4a562ccd5c2abc3b');
+  expect(tx.serialize()).toEqual('0xf86dea8201ad8207d1830f4240943838197c0c88d0d5b13b67e1bfdbdc132d4842e389056bc75e2d631000008080a0d36763020cf5c63cc4f7f5463768082b6466f834c8a9ee4ee0f12fa24e7863649f97188648aa672aa9c69369ecffa6eacdd30cec3fd41e4a4a562ccd5c2abc3b');
+});

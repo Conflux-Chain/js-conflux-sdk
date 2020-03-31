@@ -304,8 +304,8 @@ format.signTx = Parser({
   to: format.address.or(null).default(null),
   value: format.bigUInt.default(0),
   data: format.hex.default('0x'),
-  r: format.hex64.or(undefined),
-  s: format.hex64.or(undefined),
+  r: format.numberHex.or(undefined),
+  s: format.numberHex.or(undefined),
   v: format.uint.or(undefined),
 });
 
