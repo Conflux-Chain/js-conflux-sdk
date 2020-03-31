@@ -1,25 +1,23 @@
 /* eslint-disable */
 
-const { Conflux, util } = require('js-conflux-sdk');
+const { Conflux } = require('js-conflux-sdk');
 
 async function main() {
   const cfx = new Conflux({
     url: 'http://testnet-jsonrpc.conflux-chain.org:12537',
     defaultGasPrice: 100,
     defaultGas: 1000000,
-    logger: console,
+    logger: console, // FIXME: add for debug
   });
 
-  console.log(await cfx.getGasPrice()); // 819n
-  console.log(await cfx.getEpochNumber()); // 234686
+  const gasPrice = await cfx.getGasPrice();
+  console.log(gasPrice.toString()); // "0", ret instance of JSBI.BigInt
 
-  const balance = await cfx.getBalance('0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b');
-  console.log(balance); // 937499420597305000n
-  console.log(util.unit.fromDripToGDrip(balance)); // 937499420n
-  console.log(util.unit.fromDripToCFX(balance)); // 0n
-  console.log(balance.toString()); // "937499420597305000"
+  const balance = await cfx.getBalance('0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b');
+  console.log(balance.toString()); // 937499420597305000
 
-  console.log(await cfx.getTransactionCount('0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b'));
+  console.log(await cfx.getEpochNumber()); // "1353812", ret instance of JSBI.BigInt
+  console.log(await cfx.getNextNonce('0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b')); // 0
   console.log(await cfx.getBlocksByEpochNumber(233211));
   console.log(await cfx.getBlockByEpochNumber(233211));
   console.log(await cfx.getBlockByEpochNumber(233211, true));
@@ -43,9 +41,9 @@ async function main() {
 
      JSON-RPC API @see https://conflux-chain.github.io/conflux-doc/json-rpc/
    */
-  // console.log(await cfx.provider.call('cfx_gasPrice')); // 0x333
-  // console.log(await cfx.provider.call('cfx_epochNumber')); // 0x394be
-  // console.log(await cfx.provider.call('cfx_getBalance', '0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b')); // 0xd02aac185d63ea8
+  console.log(await cfx.provider.call('cfx_gasPrice')); // "0x333"
+  console.log(await cfx.provider.call('cfx_epochNumber')); // "0x394be"
+  console.log(await cfx.provider.call('cfx_getBalance', '0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b')); // "0xd02aac185d63ea8"
 }
 
 main().catch(e => console.error(e));

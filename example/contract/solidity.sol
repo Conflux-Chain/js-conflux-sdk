@@ -1,18 +1,20 @@
-pragma solidity ^0.5.0;
+pragma solidity ^0.6.0;
 
 contract Counter {
-    uint public count=0;
-    event SelfEvent(address indexed sender, uint current);
+    uint private count=0;
+    event Event(address indexed sender, uint count);
 
     constructor(uint num) public {
         count = num;
     }
 
-    function inc(uint num) public returns (uint){
-        return count += num;
+    function inc(uint num) public returns (uint) {
+        emit Event(msg.sender, count);
+        count += num;
+        return count;
     }
 
-    function self() public {
-        emit SelfEvent(msg.sender, count);
+    function get() public view returns (uint) {
+        return count;
     }
 }
