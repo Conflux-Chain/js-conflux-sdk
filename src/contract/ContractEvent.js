@@ -11,18 +11,26 @@ class EventLog {
   }
 
   getLogs(options = {}) {
+    const _decodeLog = log => {
+      if (log !== undefined) {
+        log.params = this.eventLog.decode(log);
+      }
+      return log;
+    };
+
+    // new LogIterator and decorate for decode params
     const iter = this.eventLog.cfx.getLogs({
       ...options,
       address: this.address,
       topics: this.topics,
     });
 
-    decorate(iter, 'next', async (func, params) => {
-      const log = await func(...params);
-      if (log) {
-        log.params = this.eventLog.decode(log);
-      }
-      return log;
+    decorate(iter, 'next', async (func, args) => {
+      return _decodeLog(await func(...args));
+    });
+
+    decorate(iter, 'then', (func, [resolve, reject]) => {
+      return func(logs => resolve(logs.map(_decodeLog)), reject);
     });
 
     return iter;
