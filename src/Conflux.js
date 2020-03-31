@@ -324,7 +324,7 @@ export default class Conflux {
     const result = await this.provider.call('cfx_getNextNonce',
       format.address(address), format.epochNumber(epochNumber),
     );
-    return format.uInt(result);
+    return format.bigUInt(result);
   }
 
   // -------------------------------- epoch -----------------------------------
