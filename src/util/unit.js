@@ -1,4 +1,3 @@
-const JSBI = require('jsbi');
 const Big = require('big.js');
 
 const UNIT_MATRIX = {
@@ -32,7 +31,10 @@ export default function unit(from, to) {
 
   const multiple = UNIT_MATRIX[from][to];
 
-  return value => JSBI.BigInt(Big(value).times(multiple));
+  return value => {
+    const string = Big(value).times(multiple).toFixed(18);
+    return string.endsWith('.000000000000000000') ? string.slice(0, -19) : string;
+  };
 }
 
 // ----------------------------------------------------------------------------
