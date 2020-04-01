@@ -46,9 +46,10 @@ test('bool', () => {
   expect(coder.constructor.name).toEqual('BoolCoder');
   expect(coder.type).toEqual('bool');
 
-  testEncode(coder, '', '0x0000000000000000000000000000000000000000000000000000000000000000');
-  testEncode(coder, 1, '0x0000000000000000000000000000000000000000000000000000000000000001');
-  testEncode(coder, 'false', '0x0000000000000000000000000000000000000000000000000000000000000001');
+  expect(() => coder.encode()).toThrow('unexpected type');
+  expect(() => coder.encode(null)).toThrow('unexpected type');
+  expect(() => coder.encode(1)).toThrow('unexpected type');
+  expect(() => coder.encode('false')).toThrow('unexpected type');
   testEncodeAndDecode(coder, true, '0x0000000000000000000000000000000000000000000000000000000000000001');
   testEncodeAndDecode(coder, false, '0x0000000000000000000000000000000000000000000000000000000000000000');
 });
@@ -118,7 +119,7 @@ describe('number', () => {
     testEncode(coder, 1.0, '0x0000000000000000000000000000000000000000000000000000000000000001');
     testEncode(coder, 256, '0x0000000000000000000000000000000000000000000000000000000000000100');
     testEncodeAndDecode(coder, JSBI.BigInt(-129), '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f');
-    expect(() => coder.encode(0.1)).toThrow('cannot be converted to');
+    expect(() => coder.encode(0.1)).toThrow('unexpected type');
   });
 
   test('uint', () => {
@@ -213,7 +214,7 @@ describe('array', () => {
       '00000000000000000000000000000000000000000000000000000000000000cd',
     );
 
-    testEncode(coder, [0xab, '0xcd'], '0x' +
+    testEncode(coder, [0xab, 0xcd], '0x' +
       '00000000000000000000000000000000000000000000000000000000000000ab' +
       '00000000000000000000000000000000000000000000000000000000000000cd',
     );

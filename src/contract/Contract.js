@@ -1,8 +1,7 @@
 import ContractABICoder from './ContractABICoder';
 import ContractConstructor from './ContractConstructor';
-import ContractFunction from './ContractFunction';
+import ContractMethod from './ContractMethod';
 import ContractEvent from './ContractEvent';
-import ContractOverride from './ContractOverride';
 
 /**
  * Contract with all its methods and events defined in its abi.
@@ -14,18 +13,18 @@ export default class Contract {
    * @param options {object}
    * @param options.abi {array} - The json interface for the contract to instantiate
    * @param [options.address] {string} - The address of the smart contract to call, can be added later using `contract.address = '0x1234...'`
-   * @param [options.code] {string} - The byte code of the contract, can be added later using `contract.constructor.code = '0x1234...'`
+   * @param [options.bytecode] {string} - The byte code of the contract, can be added later using `contract.constructor.code = '0x1234...'`
    * @return {object}
    *
    * @example
-   * > const contract = cfx.Contract({ abi, code });
+   * > const contract = cfx.Contract({ abi, bytecode });
    * > contract instanceof Contract;
    true
 
    * > contract.abi; // input abi
    [{type:'constructor', inputs:[...]}, ...]
 
-   * > contract.constructor.code; // input code
+   * > contract.constructor.bytecode; // input code
    "0x6080604052600080..."
 
    * @example
@@ -96,40 +95,34 @@ export default class Contract {
       ]
     }
    */
-  constructor(cfx, { abi, address, code }) {
-    let constructorFragment = { type: 'constructor', inputs: [] };
+  constructor(cfx, { abi, address, bytecode }) {
+    this.constructor = new ContractConstructor(cfx, this, { inputs: [] }, bytecode); // cover this.constructor
 
     abi.forEach(fragment => {
-      if (fragment.type === 'constructor') {
-        constructorFragment = fragment;
-      } else if (fragment.type === 'function') {
-        const func = new ContractFunction(cfx, this, fragment);
+      switch (fragment.type) {
+        case 'constructor':
+          this.constructor = new ContractConstructor(cfx, this, fragment, bytecode);
+          break;
 
-        if (this[fragment.name] instanceof ContractOverride) {
-          this[fragment.name].push(func);
-        } else if (this[fragment.name] instanceof ContractFunction) {
-          this[fragment.name] = new ContractOverride(this[fragment.name], func);
-        } else {
-          this[fragment.name] = func;
-        }
-      } else if (fragment.type === 'event') {
-        const event = new ContractEvent(cfx, this, fragment);
+        case 'function':
+          if (!(this[fragment.name] instanceof ContractMethod)) {
+            this[fragment.name] = new ContractMethod(cfx, this, fragment.name);
+          }
+          this[fragment.name].add(fragment);
+          break;
 
-        if (this[fragment.name] instanceof ContractOverride) {
-          this[fragment.name].push(event);
-        } else if (this[fragment.name] instanceof ContractEvent) {
-          this[fragment.name] = new ContractOverride(this[fragment.name], event);
-        } else {
-          this[fragment.name] = event;
-        }
-      } else {
-        // see https://solidity.readthedocs.io/en/v0.5.13/contracts.html#fallback-function
+        case 'event':
+          if (!(this[fragment.name] instanceof ContractEvent)) {
+            this[fragment.name] = new ContractEvent(cfx, this, fragment.name);
+          }
+          this[fragment.name].add(fragment);
+          break;
+
+        default:
+          // see https://solidity.readthedocs.io/en/v0.5.13/contracts.html#fallback-function
+          break;
       }
     });
-
-    // cover this.constructor
-    this.constructor = new ContractConstructor(cfx, this, constructorFragment); // XXX: set before `this.abi=`
-    this.constructor.code = code;
 
     this.abi = new ContractABICoder(this); // XXX: Create a method named `abi` in solidity is a `Warning`.
     this.address = address; // XXX: Create a method named `address` in solidity is a `ParserError`

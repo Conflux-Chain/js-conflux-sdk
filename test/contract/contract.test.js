@@ -1,24 +1,27 @@
 const JSBI = require('jsbi');
-const { Conflux, util } = require('../../src');
+const { Conflux } = require('../../src');
+const sign = require('../../src/util/sign');
+const format = require('../../src/util/format');
 const { MockProvider } = require('../../mock');
-const { abi, code, address } = require('./contract.json');
+const { abi, bytecode, address } = require('./contract.json');
 const ContractConstructor = require('../../src/contract/ContractConstructor');
 
 const ADDRESS = '0xfcad0b19bb29d4674531d6f115237e16afce377c';
 const HEX_64 = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 
+function sha3(string) {
+  return format.hex(sign.sha3(Buffer.from(string)));
+}
+
 // ----------------------------------------------------------------------------
-const cfx = new Conflux({
-  defaultGasPrice: 100,
-  defaultGas: 1000000,
-});
+const cfx = new Conflux();
 cfx.provider = new MockProvider();
 
-const contract = cfx.Contract({ abi, code, address });
+const contract = cfx.Contract({ abi, bytecode, address });
 
 test('without code', async () => {
   const contractWithoutCode = cfx.Contract({ abi, address });
-  expect(() => contractWithoutCode.constructor(100)).toThrow('contract.constructor.code is empty');
+  expect(() => contractWithoutCode.constructor(100)).toThrow('contract.constructor.bytecode is empty');
 });
 
 test('with empty abi', () => {
@@ -30,7 +33,7 @@ test('Contract', async () => {
   let value;
 
   expect(contract.address).toEqual(address);
-  expect(contract.constructor.code).toEqual(code);
+  expect(contract.constructor.bytecode).toEqual(bytecode);
 
   const { contractCreated } = await contract.constructor(100).sendTransaction({ from: ADDRESS, nonce: 0 }).confirmed();
   expect(contractCreated === null || contractCreated.startsWith('0x')).toEqual(true);
@@ -48,7 +51,7 @@ test('Contract', async () => {
   expect(value.gasUsed.constructor).toEqual(JSBI);
   expect(value.storageCollateralized.constructor).toEqual(JSBI);
 
-  const logs = await contract.SelfEvent(ADDRESS, null).getLogs();
+  const logs = await contract.SelfEvent(ADDRESS, null).getLogs({ fromEpoch: 0 }); // `fromEpoch` for mock parse
   expect(logs.length).toEqual(2);
 
   const iter = contract.SelfEvent(null, null).getLogs({ toEpoch: 0x00 });
@@ -83,56 +86,82 @@ test('contract.call', async () => {
 });
 
 test('contract.override', () => {
-  expect(contract.override('str').method.coder.type).toEqual('override(string)');
-  expect(contract.override(Buffer.from('bytes')).method.coder.type).toEqual('override(bytes)');
+  expect(contract.override('str').coder.type).toEqual('override(string)');
+  expect(contract.override(Buffer.from('bytes')).coder.type).toEqual('override(bytes)');
   expect(() => contract.override(100)).toThrow('can not match "override(bytes),override(string),override(uint256,string)"');
 
-  expect(contract.OverrideEvent('str').eventLog.coder.type).toEqual('OverrideEvent(string)');
-  expect(contract.OverrideEvent(Buffer.from('bytes')).eventLog.coder.type).toEqual('OverrideEvent(bytes)');
-  expect(() => contract.OverrideEvent(100).eventLog.coder.type).toThrow('can not match "OverrideEvent(bytes),OverrideEvent(string),OverrideEvent(uint256,string)" with args (100)');
-  expect(contract.OverrideEvent(100, null).eventLog.coder.type).toEqual('OverrideEvent(uint256,string)');
+  let event;
+
+  expect(() => contract.OverrideEvent()).toThrow('can not match "OverrideEvent(bytes),OverrideEvent(string),OverrideEvent(uint256,string)" with args ()');
+
+  event = contract.OverrideEvent('str');
+  expect(event.topics).toEqual([
+    [sha3('OverrideEvent(string)')],
+    [sha3('str')],
+  ]);
+
+  event = contract.OverrideEvent(Buffer.from('bytes'));
+  expect(event.topics).toEqual([
+    [sha3('OverrideEvent(bytes)')],
+    [sha3('bytes')],
+  ]);
+
+  event = contract.OverrideEvent(100, null);
+  expect(event.topics).toEqual([
+    [sha3('OverrideEvent(uint256,string)')],
+    ['0x0000000000000000000000000000000000000000000000000000000000000064'],
+  ]);
+
+  expect(() => contract.OverrideEvent(100)).toThrow('can not match "OverrideEvent(bytes),OverrideEvent(string),OverrideEvent(uint256,string)" with args (100)');
+
+  event = contract.OverrideEvent(null);
+  expect(event.topics).toEqual([
+    [sha3('OverrideEvent(bytes)'), sha3('OverrideEvent(string)')],
+    null,
+  ]);
+
+  event = contract.OverrideEvent(null, null);
+  expect(event.topics).toEqual([
+    [sha3('OverrideEvent(uint256,string)')],
+    null,
+  ]);
 });
 
 test('contract.StringEvent', () => {
-  const string = 'string';
-  const index = util.format.hex(util.sign.sha3(string));
+  const { topics } = contract.StringEvent('string');
+  expect(topics).toEqual([
+    [sha3('StringEvent(string)')],
+    [sha3('string')],
+  ]);
 
-  const { topics } = contract.StringEvent(string);
-
-  expect(topics.length).toEqual(2);
-  expect(topics[0]).toEqual(contract.StringEvent.code);
-  expect(topics[1]).toEqual(util.format.hex(util.sign.sha3(string)));
-
-  const params = contract.StringEvent.decode({ data: '0x', topics });
-  expect(params.length).toEqual(1);
-  expect(params[0]).toEqual(index);
+  const params = contract.StringEvent.decodeLog({ data: '0x', topics: [topics[0][0], topics[1][0]] });
+  expect(params).toEqual([sha3('string')]);
 });
 
 test('contract.ArrayEvent', () => {
   const { topics } = contract.ArrayEvent(HEX_64);
+  expect(topics).toEqual([
+    [sha3('ArrayEvent(string[3])')],
+    [HEX_64],
+  ]);
 
-  expect(topics.length).toEqual(2);
-  expect(topics[0]).toEqual(contract.ArrayEvent.code);
-  expect(topics[1]).toEqual(HEX_64);
-  expect(() => contract.ArrayEvent(['a', 'b', 'c'])).toThrow('not supported encode');
+  expect(() => contract.ArrayEvent(['a', 'b', 'c'])).toThrow('can not match "ArrayEvent(string[3])" with args (a,b,c)');
 
-  const params = contract.ArrayEvent.decode({ data: '0x', topics });
-  expect(params.length).toEqual(1);
-  expect(params[0]).toEqual(HEX_64);
+  const params = contract.ArrayEvent.decodeLog({ data: '0x', topics: [topics[0][0], topics[1][0]] });
+  expect(params).toEqual([HEX_64]);
 });
 
 test('contract.StructEvent', () => {
   const { topics } = contract.StructEvent(HEX_64);
+  expect(topics).toEqual([
+    [sha3('StructEvent((string,int32))')],
+    [HEX_64],
+  ]);
 
-  expect(topics.length).toEqual(2);
-  expect(topics[0]).toEqual(contract.StructEvent.code);
-  expect(topics[1]).toEqual(HEX_64);
+  expect(() => contract.StructEvent(['Tom', 18])).toThrow('can not match "StructEvent((string,int32))" with args (Tom,18)');
 
-  expect(() => contract.StructEvent(['Tom', 18])).toThrow('not supported encode');
-
-  const params = contract.StructEvent.decode({ data: '0x', topics });
-  expect(params.length).toEqual(1);
-  expect(params[0]).toEqual(HEX_64);
+  const params = contract.StructEvent.decodeLog({ data: '0x', topics: [topics[0][0], topics[1][0]] });
+  expect(params).toEqual([HEX_64]);
 });
 
 test('decodeData.constructor', () => {

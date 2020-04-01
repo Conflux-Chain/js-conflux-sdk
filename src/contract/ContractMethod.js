@@ -1,13 +1,14 @@
-import { FunctionCoder, decodeError } from '../abi';
+import { assert } from '../util';
+import { FunctionCoder, errorCoder } from '../abi';
 import callable from '../lib/callable';
 
 /**
  * @memberOf Contract
  */
 class Called {
-  constructor(cfx, method, { to, data }) {
+  constructor(cfx, coder, { to, data }) {
     this.cfx = cfx;
-    this.method = method;
+    this.coder = coder;
     this.to = to;
     this.data = data;
   }
@@ -58,7 +59,7 @@ class Called {
    * @return {Promise<*>} Decoded contact call return.
    */
   async call(options, epochNumber) {
-    const result = await this.cfx.call(
+    const hex = await this.cfx.call(
       {
         to: this.to,
         data: this.data,
@@ -68,9 +69,10 @@ class Called {
     );
 
     try {
-      return this.method.decode(result);
+      const array = this.coder.decodeOutputs(hex);
+      return array.length <= 1 ? array[0] : array;
     } catch (e) {
-      throw decodeError(result) || e;
+      throw errorCoder.decodeError(hex) || e;
     }
   }
 
@@ -84,32 +86,54 @@ class Called {
   }
 }
 
-export default class ContractFunction {
-  constructor(cfx, contract, fragment) {
+export default class ContractMethod {
+  static get Called() {
+    return Called;
+  }
+
+  constructor(cfx, contract, name) {
     this.cfx = cfx;
     this.contract = contract;
-    this.fragment = fragment;
-
-    this.coder = new FunctionCoder(this.fragment);
-    this.code = this.coder.signature();
+    this.name = name;
+    this.signatureToCoder = {};
 
     return callable(this, this.call.bind(this));
   }
 
-  call(...params) {
-    return new Called(this.cfx, this, {
-      to: this.contract.address,
-      data: this.encode(params),
+  add(fragment) {
+    const coder = new FunctionCoder(fragment);
+    this.signatureToCoder[coder.signature()] = coder;
+  }
+
+  call(...args) {
+    const types = [];
+
+    for (const [signature, coder] of Object.entries(this.signatureToCoder)) {
+      try {
+        const to = this.contract.address;
+        const data = `${signature}${coder.encodeInputs(args).substring(2)}`;
+
+        return new Called(this.cfx, coder, { to, data });
+      } catch (e) {
+        types.push(coder.type);
+      }
+    }
+
+    throw new Error(`can not match "${types.join(',')}" with args (${args.join(',')})`);
+  }
+
+  decodeData(hex) {
+    const signature = hex.slice(0, 10); // '0x' + 8 hex
+    const data = hex.slice(10);
+    const coder = this.signatureToCoder[signature];
+
+    assert(coder, {
+      message: 'ContractMethod.decodeData signature missing',
+      expect: signature,
+      got: coder,
+      coder: this,
     });
-  }
 
-  encode(params) {
-    const hex = this.coder.encodeInputs(params);
-    return `${this.code}${hex.substring(2)}`;
-  }
-
-  decode(hex) {
-    const array = this.coder.decodeOutputs(hex);
-    return array.length <= 1 ? array[0] : array;
+    return coder.decodeInputs(data);
   }
 }

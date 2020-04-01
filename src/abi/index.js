@@ -180,7 +180,7 @@ export class EventCoder {
     this.inputs = inputs;
 
     this.type = formatSignature({ name, inputs });
-    this.inputCoder = getCoder({ type: 'tuple', components: inputs });
+    this.topicCoders = inputs.map(getCoder);
     this.notIndexedCoder = getCoder({ type: 'tuple', components: inputs.filter(component => !component.indexed) });
 
     this.NamedTuple = namedTuple(...inputs.map((input, index) => input.name || `${index}`));
@@ -210,15 +210,15 @@ export class EventCoder {
    ['0x0000000000000000000000000123456789012345678901234567890123456789']
    */
   encodeTopics(array) {
-    assert(array.length === this.inputCoder.coders.length, {
+    assert(array.length === this.topicCoders.length, {
       message: 'length not match',
-      expect: this.inputCoder.coders.length,
+      expect: this.topicCoders.length,
       got: array.length,
       coder: this,
     });
 
     const topics = [];
-    this.inputCoder.coders.forEach((coder, index) => {
+    this.topicCoders.forEach((coder, index) => {
       const value = array[index];
 
       if (this.inputs[index].indexed) {
@@ -267,7 +267,7 @@ export class EventCoder {
 
     let offset = this.anonymous ? 0 : 1;
 
-    const array = this.inputCoder.coders.map((coder, index) => {
+    const array = this.topicCoders.map((coder, index) => {
       if (this.inputs[index].indexed) {
         const result = coder.decodeIndex(topics[offset]);
         offset += 1;
@@ -281,19 +281,24 @@ export class EventCoder {
   }
 }
 
-const ERROR_CODER = new FunctionCoder({
-  name: 'Error',
-  inputs: [
-    { type: 'string', name: 'message' },
-  ],
-});
-const ERROR_CODE = ERROR_CODER.signature();
-
-export function decodeError(hex) {
-  if (!hex.startsWith(ERROR_CODE)) {
-    return undefined;
+// ----------------------------------------------------------------------------
+class ErrorCoder {
+  constructor(fragment = { name: 'Error', inputs: [{ type: 'string', name: 'message' }] }) {
+    this.coder = new FunctionCoder(fragment);
+    this.signature = this.coder.signature();
   }
 
-  const params = ERROR_CODER.decodeInputs(hex.slice(ERROR_CODE.length));
-  return Error(params.message);
+  decodeError(hex) {
+    const signature = hex.slice(0, 10); // '0x' + 8 hex
+    const data = hex.slice(10);
+
+    if (signature !== this.signature) {
+      return undefined;
+    }
+
+    const params = this.coder.decodeInputs(data);
+    return Error(params.message);
+  }
 }
+
+export const errorCoder = new ErrorCoder();
