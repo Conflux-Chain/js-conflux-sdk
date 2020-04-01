@@ -6,6 +6,11 @@ const addressStruct = new HexStruct('0xa0', { address: 4 }, 40);
 const blockHashStruct = new HexStruct('0xb0', { epochNumber: 6, blockIndex: 2 }, 64);
 const txHashStruct = new HexStruct('0xf0', { epochNumber: 6, blockIndex: 2, transactionIndex: 4 }, 64);
 
+/**
+ * @param self {MockProvider}
+ * @param epochNumber {number}
+ * @return {string[]}
+ */
 function mockBlockHashArray(self, epochNumber) {
   const blockHashArray = lodash.range(self.epochBlockCount).map(
     i => blockHashStruct.encode({ epochNumber, blockIndex: i }),
@@ -67,23 +72,34 @@ function mockTxByHash(self, txHash) {
   };
 }
 
-function mockLog(epochNumber) {
-  return {
-    address: randomHex(40),
-    blockHash: randomHex(64),
-    data: randomHex(64),
-    epochNumber: toHex(epochNumber),
-    logIndex: randomHex(1),
-    removed: false,
-    topics: [
-      randomHex(64),
-      randomHex(64),
-    ],
-    transactionHash: randomHex(64),
-    transactionIndex: randomHex(1),
-    transactionLogIndex: randomHex(1),
-    type: 'mined',
-  };
+function mockLogsByEpochNumber(self, epochNumber, [topic] = []) {
+  const [blockHash] = mockBlockHashArray(self, epochNumber);
+  if (!blockHash) {
+    return [];
+  }
+
+  const [txHash] = mockTxHashArray(self, blockHash);
+  if (!txHash) {
+    return [];
+  }
+
+  return lodash.range(self.txLogCount)
+    .map(index => ({
+      address: randomHex(40),
+      blockHash: randomHex(64),
+      data: randomHex(64),
+      epochNumber: toHex(epochNumber),
+      logIndex: randomHex(1),
+      removed: false,
+      topics: [
+        topic || randomHex(64),
+        randomHex(64),
+      ],
+      transactionHash: txHash,
+      transactionIndex: toHex(0),
+      transactionLogIndex: toHex(index),
+      type: 'mined',
+    }));
 }
 
 // ----------------------------------------------------------------------------
@@ -94,6 +110,7 @@ class MockProvider {
     addressCount = 10,
     epochBlockCount = 5,
     blockTxCount = 2,
+    txLogCount = 2,
     stable = true,
   } = {}) {
     this.startTimestamp = startTimestamp;
@@ -101,6 +118,7 @@ class MockProvider {
     this.addressCount = addressCount;
     this.epochBlockCount = epochBlockCount;
     this.blockTxCount = blockTxCount;
+    this.txLogCount = txLogCount;
     this.stable = stable;
   }
 
@@ -119,9 +137,11 @@ class MockProvider {
     return toHex(Number.MAX_SAFE_INTEGER);
   }
 
-  cfx_getLogs({ fromEpoch }) {
-    if (!fromEpoch || !Number(fromEpoch)) {
-      return [mockLog(1), mockLog(1)];
+  cfx_getLogs({ fromEpoch, topics }) {
+    const epochNumber = Number(fromEpoch); // Number or NaN
+
+    if (Number.isInteger(epochNumber)) {
+      return mockLogsByEpochNumber(this, epochNumber, topics);
     }
 
     return [];
