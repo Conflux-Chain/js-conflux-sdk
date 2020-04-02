@@ -58,9 +58,12 @@ test('uint', () => {
   expect(() => format.uInt()).toThrow('not match uint');
   expect(() => format.uInt(null)).toThrow('not match number');
   expect(() => format.uInt(3.14)).toThrow('not match uint');
+  expect(() => format.uInt('3.14')).toThrow('not match uint');
   expect(() => format.uInt(-1)).toThrow('not match uint');
   expect(format.uInt(0)).toEqual(0);
   expect(format.uInt(1)).toEqual(1);
+  expect(format.uInt(3.00)).toEqual(3);
+  expect(format.uInt('3.00')).toEqual(3);
   expect(format.uInt(JSBI.BigInt(100))).toEqual(100);
   expect(format.uInt('0x10')).toEqual(16);
   expect(format.uInt(true)).toEqual(1);
@@ -73,9 +76,12 @@ test('uint', () => {
 
 test('bigUInt', () => {
   expect(() => format.bigUInt(3.14)).toThrow('cannot be converted to');
+  expect(() => format.bigUInt('3.14')).toThrow('Cannot convert 3.14 to a BigInt');
   expect(() => format.bigUInt(-1)).toThrow('not match bigUInt');
   expect(format.bigUInt('0')).toEqual(JSBI.BigInt(0));
   expect(format.bigUInt(1)).toEqual(JSBI.BigInt(1));
+  expect(format.bigUInt(3.00)).toEqual(JSBI.BigInt(3));
+  expect(format.bigUInt('3.00')).toEqual(JSBI.BigInt(3));
   expect(format.bigUInt('0x10')).toEqual(JSBI.BigInt(16));
   expect(format.bigUInt(Buffer.from([0, 1, 2]))).toEqual(JSBI.BigInt(0x102));
   expect(format.bigUInt(Number.MAX_SAFE_INTEGER + 1)).toEqual(JSBI.BigInt(2 ** 53));

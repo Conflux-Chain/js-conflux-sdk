@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-const { Conflux } = require('js-conflux-sdk');
+const { Conflux, util } = require('js-conflux-sdk');
 
 async function main() {
   const cfx = new Conflux({
@@ -15,6 +15,7 @@ async function main() {
 
   const balance = await cfx.getBalance('0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b');
   console.log(balance.toString()); // 937499420597305000
+  console.log(util.unit.fromDripToCFX(balance)); // "93.7499420597305000"
 
   console.log(await cfx.getEpochNumber()); // "1353812", ret instance of JSBI.BigInt
   console.log(await cfx.getNextNonce('0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b')); // 0
