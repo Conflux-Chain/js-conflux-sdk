@@ -69,8 +69,8 @@ class Called {
     );
 
     try {
-      const array = this.coder.decodeOutputs(hex);
-      return array.length <= 1 ? array[0] : array;
+      const namedTuple = this.coder.decodeOutputs(hex);
+      return namedTuple.length <= 1 ? namedTuple[0] : namedTuple;
     } catch (e) {
       throw errorCoder.decodeError(hex) || e;
     }
@@ -87,10 +87,6 @@ class Called {
 }
 
 export default class ContractMethod {
-  static get Called() {
-    return Called;
-  }
-
   constructor(cfx, contract, name) {
     this.cfx = cfx;
     this.contract = contract;
@@ -134,6 +130,16 @@ export default class ContractMethod {
       coder: this,
     });
 
-    return coder.decodeInputs(data);
+    const namedTuple = coder.decodeInputs(data);
+    return {
+      name: this.name,
+      fullName: coder.fullName,
+      type: coder.type,
+      signature,
+      array: [...namedTuple],
+      object: namedTuple.toObject(),
+    };
   }
 }
+
+ContractMethod.Called = Called;

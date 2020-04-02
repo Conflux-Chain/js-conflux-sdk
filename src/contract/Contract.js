@@ -96,12 +96,13 @@ export default class Contract {
     }
    */
   constructor(cfx, { abi, address, bytecode }) {
-    this.constructor = new ContractConstructor(cfx, this, { inputs: [] }, bytecode); // cover this.constructor
+    this.constructor = new ContractConstructor(cfx, this); // cover this.constructor
+    this.constructor.bytecode = bytecode;
 
     abi.forEach(fragment => {
       switch (fragment.type) {
         case 'constructor':
-          this.constructor = new ContractConstructor(cfx, this, fragment, bytecode);
+          this.constructor.add(fragment);
           break;
 
         case 'function':

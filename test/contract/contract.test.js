@@ -134,8 +134,17 @@ test('contract.StringEvent', () => {
     [sha3('string')],
   ]);
 
-  const params = contract.StringEvent.decodeLog({ data: '0x', topics: [topics[0][0], topics[1][0]] });
-  expect(params).toEqual([sha3('string')]);
+  const result = contract.StringEvent.decodeLog({ data: '0x', topics: [topics[0][0], topics[1][0]] });
+  expect(result).toEqual({
+    name: 'StringEvent',
+    fullName: 'StringEvent(string indexed _string)',
+    type: 'StringEvent(string)',
+    signature: sha3('StringEvent(string)'),
+    array: [sha3('string')],
+    object: {
+      _string: sha3('string'),
+    },
+  });
 });
 
 test('contract.ArrayEvent', () => {
@@ -147,8 +156,17 @@ test('contract.ArrayEvent', () => {
 
   expect(() => contract.ArrayEvent(['a', 'b', 'c'])).toThrow('can not match "ArrayEvent(string[3])" with args (a,b,c)');
 
-  const params = contract.ArrayEvent.decodeLog({ data: '0x', topics: [topics[0][0], topics[1][0]] });
-  expect(params).toEqual([HEX_64]);
+  const result = contract.ArrayEvent.decodeLog({ data: '0x', topics: [topics[0][0], topics[1][0]] });
+  expect(result).toEqual({
+    name: 'ArrayEvent',
+    fullName: 'ArrayEvent(string[3] indexed _array)',
+    type: 'ArrayEvent(string[3])',
+    signature: sha3('ArrayEvent(string[3])'),
+    array: [HEX_64],
+    object: {
+      _array: HEX_64,
+    },
+  });
 });
 
 test('contract.StructEvent', () => {
@@ -160,26 +178,47 @@ test('contract.StructEvent', () => {
 
   expect(() => contract.StructEvent(['Tom', 18])).toThrow('can not match "StructEvent((string,int32))" with args (Tom,18)');
 
-  const params = contract.StructEvent.decodeLog({ data: '0x', topics: [topics[0][0], topics[1][0]] });
-  expect(params).toEqual([HEX_64]);
+  const result = contract.StructEvent.decodeLog({ data: '0x', topics: [topics[0][0], topics[1][0]] });
+  expect(result).toEqual({
+    name: 'StructEvent',
+    fullName: 'StructEvent((string,int32) indexed _struct)',
+    type: 'StructEvent((string,int32))',
+    signature: sha3('StructEvent((string,int32))'),
+    array: [HEX_64],
+    object: {
+      _struct: HEX_64,
+    },
+  });
 });
 
 test('decodeData.constructor', () => {
   const data = contract.constructor(50).data;
 
-  const value = contract.abi.decodeData(data);
-  expect(value.name).toEqual('constructor');
-  expect(value.params.length).toEqual(1);
-  expect(value.params[0]).toEqual(JSBI.BigInt(50));
+  const result = contract.abi.decodeData(data);
+  expect(result).toEqual({
+    name: 'constructor',
+    fullName: 'constructor(uint256 num)',
+    type: 'constructor(uint256)',
+    signature: null,
+    array: [JSBI.BigInt(50)],
+    object: { num: JSBI.BigInt(50) },
+  });
 });
 
 test('decodeData.function', () => {
   const data = contract.inc(100).data;
 
-  const value = contract.abi.decodeData(data);
-  expect(value.name).toEqual('inc');
-  expect(value.params.length).toEqual(1);
-  expect(value.params[0]).toEqual(JSBI.BigInt(100));
+  const result = contract.abi.decodeData(data);
+  expect(result).toEqual({
+    name: 'inc',
+    fullName: 'inc(uint256 num)',
+    type: 'inc(uint256)',
+    signature: '0x812600df',
+    array: [JSBI.BigInt(100)],
+    object: {
+      num: JSBI.BigInt(100),
+    },
+  });
 
   expect(contract.abi.decodeData('0x')).toEqual(undefined);
 });
@@ -193,11 +232,18 @@ test('decodeLog', () => {
     ],
   };
 
-  const value = contract.abi.decodeLog(log);
-  expect(value.name).toEqual('SelfEvent');
-  expect(value.params.length).toEqual(2);
-  expect(value.params[0]).toEqual('0xa000000000000000000000000000000000000001');
-  expect(value.params[1]).toEqual(JSBI.BigInt(100));
+  const result = contract.abi.decodeLog(log);
+  expect(result).toEqual({
+    name: 'SelfEvent',
+    fullName: 'SelfEvent(address indexed sender, uint256 current)',
+    type: 'SelfEvent(address,uint256)',
+    signature: '0xc4c01f6de493c58245fb681341f3a76bba9551ce81b11cbbb5d6d297844594df',
+    array: ['0xa000000000000000000000000000000000000001', JSBI.BigInt(100)],
+    object: {
+      sender: '0xa000000000000000000000000000000000000001',
+      current: JSBI.BigInt(100),
+    },
+  });
 
   expect(contract.abi.decodeLog({ topics: [] })).toEqual(undefined);
 });

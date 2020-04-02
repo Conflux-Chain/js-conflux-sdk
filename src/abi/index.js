@@ -15,6 +15,10 @@ export function formatSignature({ name, inputs }) {
   return `${name}(${inputs.map(param => getCoder(param).type).join(',')})`;
 }
 
+export function formatFullName({ name, inputs }) {
+  return `${name}(${inputs.map(param => `${getCoder(param).type} ${param.indexed ? 'indexed ' : ''}${param.name}`).join(', ')})`;
+}
+
 export class FunctionCoder {
   /**
    * Function coder
@@ -28,6 +32,7 @@ export class FunctionCoder {
    * > coder = new FunctionCoder(abi)
    FunctionCoder {
       name: 'func',
+      fullName: 'func(int256 , bool )',
       inputs: [ { type: 'int' }, { type: 'bool' } ],
       outputs: [ { type: 'int' } ],
       type: 'func(int256,bool)'
@@ -35,11 +40,13 @@ export class FunctionCoder {
    */
   constructor({ name, inputs = [], outputs = [] }) {
     this.name = name;
-    // this.inputs = inputs;
-    // this.outputs = outputs;
-
+    this.fullName = formatFullName({ name, inputs });
     this.type = formatSignature({ name, inputs });
+
+    // this.inputs = inputs;
     this.inputCoder = getCoder({ type: 'tuple', components: inputs });
+
+    // this.outputs = outputs;
     this.outputCoder = getCoder({ type: 'tuple', components: outputs });
   }
 
@@ -136,6 +143,16 @@ export class FunctionCoder {
   }
 }
 
+export class ConstructorCoder extends FunctionCoder {
+  constructor({ inputs = [] } = {}) {
+    super({ name: 'constructor', inputs });
+  }
+
+  decodeOutputs(hex) {
+    return hex;
+  }
+}
+
 export class EventCoder {
   /**
    * Event coder
@@ -177,10 +194,13 @@ export class EventCoder {
   constructor({ anonymous, name, inputs }) {
     this.anonymous = anonymous;
     this.name = name;
-    this.inputs = inputs;
+    this.fullName = formatFullName({ name, inputs });
 
     this.type = formatSignature({ name, inputs });
+
+    this.inputs = inputs;
     this.topicCoders = inputs.map(getCoder);
+
     this.notIndexedCoder = getCoder({ type: 'tuple', components: inputs.filter(component => !component.indexed) });
 
     this.NamedTuple = namedTuple(...inputs.map((input, index) => input.name || `${index}`));
