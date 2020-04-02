@@ -28,18 +28,14 @@ export default class ContractABICoder {
   }
 
   decodeData(data) {
-    const _function = this._codeToInstance[data.slice(0, 10)]; // contract function code match '0x[0~9a-z]{8}'
-    if (_function) {
-      const name = _function.name;
-      const params = _function.decodeData(data); // skip contract function code prefix
-      return { name, params };
+    const _method = this._codeToInstance[data.slice(0, 10)]; // contract function code match '0x[0~9a-z]{8}'
+    if (_method) {
+      return _method.decodeData(data);
     }
 
     const _constructor = this._constructorFunction;
     if (_constructor && data.startsWith(_constructor.bytecode)) {
-      const name = _constructor.name;
-      const params = _constructor.decodeData(data);
-      return { name, params };
+      return _constructor.decodeData(data);
     }
 
     return undefined;
@@ -48,9 +44,7 @@ export default class ContractABICoder {
   decodeLog(log) {
     const _event = this._codeToInstance[log.topics[0]];
     if (_event) {
-      const name = _event.name;
-      const params = _event.decodeLog(log);
-      return { name, params };
+      return _event.decodeLog(log);
     }
 
     return undefined;

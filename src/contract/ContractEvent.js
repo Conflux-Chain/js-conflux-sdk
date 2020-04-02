@@ -3,7 +3,7 @@ import { assert, decorate } from '../util';
 import { EventCoder } from '../abi';
 import callable from '../lib/callable';
 
-export class Event {
+class Event {
   constructor(cfx, eventLog, { address, topics }) {
     this.cfx = cfx;
     this.eventLog = eventLog;
@@ -92,6 +92,16 @@ export default class ContractEvent {
       coder: this,
     });
 
-    return coder.decodeLog(log);
+    const namedTuple = coder.decodeLog(log);
+    return {
+      name: this.name,
+      fullName: coder.fullName,
+      type: coder.type,
+      signature: topic,
+      array: [...namedTuple],
+      object: namedTuple.toObject(),
+    };
   }
 }
+
+ContractEvent.Event = Event;
