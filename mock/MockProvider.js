@@ -63,6 +63,7 @@ function mockTxByHash(self, txHash) {
   const to = addressStruct.encode({ address: toIndex });
 
   return {
+    epochNumber,
     blockHash,
     transactionIndex: toHex(transactionIndex),
     from,
@@ -223,7 +224,7 @@ class MockProvider {
 
   // ----------------------------- transaction --------------------------------
   cfx_getTransactionByHash(txHash) {
-    const { blockHash, from, nonce, to, transactionIndex, status } = mockTxByHash(this, txHash);
+    const { epochNumber, blockHash, from, nonce, to, transactionIndex, status } = mockTxByHash(this, txHash);
 
     return {
       blockHash,
@@ -241,6 +242,9 @@ class MockProvider {
       transactionIndex,
       v: randomPick('0x0', '0x1'),
       value: randomHex(4),
+      storageLimit: randomHex(10),
+      chainId: '0x0',
+      epochHeight: epochNumber,
     };
   }
 
