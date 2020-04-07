@@ -23,7 +23,7 @@ async function main() {
   // create contract instance
   const contract = cfx.Contract({
     abi: require('../contract/abi.json'),
-    code: require('../contract/bytecode.json'),
+    bytecode: require('../contract/bytecode.json'),
     // address is empty and wait for deploy
   });
 
