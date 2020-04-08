@@ -253,14 +253,7 @@ class IntegerCoder extends Coder {
    * @return {Buffer}
    */
   encode(value) {
-    assert(Number.isInteger(value) || value instanceof JSBI, {
-      message: 'unexpected type',
-      expect: 'int|BigInt',
-      got: value,
-      coder: this,
-    });
-
-    let number = JSBI.BigInt(value);
+    let number = format.bigInt(value);
     let twosComplement = number;
 
     if (this.signed && JSBI.LT(number, JSBI.BigInt(0))) {
@@ -284,7 +277,7 @@ class IntegerCoder extends Coder {
    * @return {JSBI}
    */
   decode(stream) {
-    let value = JSBI.BigInt(`0x${stream.read(this.size * 2)}`); // 16: read out naked hex string
+    let value = format.bigInt(`0x${stream.read(this.size * 2)}`); // 16: read out naked hex string
 
     if (this.signed && JSBI.GE(value, this.bound)) {
       const mask = JSBI.leftShift(JSBI.BigInt(1), JSBI.BigInt(this.size * 8));

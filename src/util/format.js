@@ -118,20 +118,34 @@ format.uInt = Parser(toNumber).validate(v => Number.isSafeInteger(v) && v >= 0, 
  * @return {JSBI}
  *
  * @example
- * > format.bigUInt(-3.14)
- Error("not match uint")
- * > format.bigUInt('0')
+ * > format.bigInt(-3.14)
+ Error("not match bigInt")
+ * > format.bigInt('0.0')
  JSBI.BigInt(0)
- * > format.bigUInt(1)
+ * > format.bigInt('-1')
+ JSBI.BigInt(-1)
+ * > format.bigInt(1)
  JSBI.BigInt(1)
- * > format.bigUInt(JSBI(100))
+ * > format.bigInt(JSBI(100))
  JSBI.BigInt(100)
- * > format.bigUInt('0x10')
+ * > format.bigInt('0x10')
  JSBI.BigInt(16)
- * > format.bigUInt(Number.MAX_SAFE_INTEGER + 1) // unsafe integer
+ * > format.bigInt(Number.MAX_SAFE_INTEGER + 1) // unsafe integer
  Error("not match uint")
  */
-format.bigUInt = Parser(toBigInt).validate(v => v >= 0, 'bigUInt');
+format.bigInt = Parser(toBigInt);
+
+/**
+ * @param arg {number|JSBI|string|boolean}
+ * @return {JSBI}
+ *
+ * @example
+ * > format.bigUInt('0.0')
+ JSBI.BigInt(0)
+ * > format.bigUInt('-1')
+ Error("not match bigUInt")
+ */
+format.bigUInt = format.bigInt.validate(v => v >= 0, 'bigUInt');
 
 /**
  * When encoding QUANTITIES (integers, numbers): encode as hex, prefix with "0x", the most compact representation (slight exception: zero should be represented as "0x0")
