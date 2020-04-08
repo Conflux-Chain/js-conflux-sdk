@@ -66,6 +66,11 @@ or
 </script>
 ```
 
+## Change log
+
+[see](https://github.com/Conflux-Chain/js-conflux-sdk/tree/master/CHANGE_LOG.md)
+
+
 ## Example
 
 [example](https://github.com/Conflux-Chain/js-conflux-sdk/tree/master/example)
