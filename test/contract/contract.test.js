@@ -14,7 +14,7 @@ function sha3(string) {
 }
 
 // ----------------------------------------------------------------------------
-const cfx = new Conflux();
+const cfx = new Conflux({ defaultChainId: 0 });
 cfx.provider = new MockProvider();
 
 const contract = cfx.Contract({ abi, bytecode, address });

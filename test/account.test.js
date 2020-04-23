@@ -15,11 +15,11 @@ test('Account', () => {
 test('Account.signTransaction', () => {
   const account = new Account(KEY);
 
-  const tx = account.signTransaction({ nonce: 0, gasPrice: 100, gas: 10000, storageLimit: 10000, epochHeight: 100 });
+  const tx = account.signTransaction({ nonce: 0, gasPrice: 100, gas: 10000, storageLimit: 10000, epochHeight: 100, chainId: 0 });
   expect(tx.from).toEqual(ADDRESS);
 
   account.privateKey = randomPrivateKey();
-  expect(() => account.signTransaction({ nonce: 0, gasPrice: 100, gas: 10000, storageLimit: 10000, epochHeight: 100 }))
+  expect(() => account.signTransaction({ nonce: 0, gasPrice: 100, gas: 10000, storageLimit: 10000, epochHeight: 100, chainId: 0 }))
     .toThrow('transaction.from !==');
 });
 

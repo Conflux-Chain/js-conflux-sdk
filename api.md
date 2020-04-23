@@ -159,6 +159,7 @@ options.url             | `string`        | false    | ''             | Url of p
 options.defaultEpoch    | `string,number` | false    | "latest_state" | Default epochNumber.
 options.defaultGasPrice | `string,number` | false    |                | The default gas price in drip to use for transactions.
 options.defaultGas      | `string,number` | false    |                | The default maximum gas provided for a transaction.
+options.defaultChainId  | `number`        | false    |                | the chain ID of the connected network
 
 * **Examples**
 
@@ -176,7 +177,7 @@ options.defaultGas      | `string,number` | false    |                | The defa
    });
 ```
 
-## ~~Conflux.prototype.defaultEpoch~~ <a id="Conflux.js/defaultEpoch"></a>
+## Conflux.prototype.defaultEpoch <a id="Conflux.js/defaultEpoch"></a>
 
 `number,string`
 
@@ -186,7 +187,7 @@ Default epoch number for following methods:
 - `Conflux.getCode`
 - `Conflux.call`
 
-## ~~Conflux.prototype.defaultGasPrice~~ <a id="Conflux.js/defaultGasPrice"></a>
+## Conflux.prototype.defaultGasPrice <a id="Conflux.js/defaultGasPrice"></a>
 
 `number,string`
 
@@ -195,11 +196,20 @@ Default gas price for following methods:
 - `Conflux.call`
 - `Conflux.estimateGas`
 
-## ~~Conflux.prototype.defaultGas~~ <a id="Conflux.js/defaultGas"></a>
+## Conflux.prototype.defaultGas <a id="Conflux.js/defaultGas"></a>
 
 `number,string`
 
 Default gas limit for following methods:
+- `Conflux.sendTransaction`
+- `Conflux.call`
+- `Conflux.estimateGas`
+
+## Conflux.prototype.defaultChainId <a id="Conflux.js/defaultChainId"></a>
+
+`number`
+
+Default chain id for following methods:
 - `Conflux.sendTransaction`
 - `Conflux.call`
 - `Conflux.estimateGas`
@@ -320,8 +330,8 @@ Gets past logs, matching the given options.
 Name                | Type                    | Required | Default | Description
 --------------------|-------------------------|----------|---------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 options             | `object`                | false    |         |
-options.fromEpoch   | `string,number`         | false    |         | The number of the start block. (>=)
-options.toEpoch     | `string,number`         | false    |         | The number of the stop block.(<=)
+options.fromEpoch   | `string,number`         | false    |         | The number of the start block(>=), 'latest_mined' or 'latest_state'.
+options.toEpoch     | `string,number`         | false    |         | The number of the stop block(<=), 'latest_mined' or 'latest_state'.
 options.blockHashes | `Array.<string>`        | false    |         | The block hash list
 options.address     | `string,Array.<string>` | false    |         | An address or a list of addresses to only get logs from particular account(s).
 options.topics      | `array`                 | false    |         | An array of values which must each appear in the log entries. The order is important, if you want to leave topics out use null, e.g. [null, '0x12...']. You can also pass an array for each topic with options for that topic e.g. [null, ['option1', 'option2']]

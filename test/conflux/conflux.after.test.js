@@ -164,6 +164,7 @@ test('sendTransaction by address', async () => {
     from: ADDRESS,
     gasPrice: 100,
     gas: 21000,
+    chainId: 0,
   });
 
   const txHash = await promise;

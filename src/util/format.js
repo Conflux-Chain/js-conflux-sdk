@@ -361,7 +361,7 @@ format.sendTx = Parser({
   value: format.hexUInt.or(undefined),
   storageLimit: format.hexUInt,
   epochHeight: format.uInt,
-  chainId: format.uInt.default(0),
+  chainId: format.uInt,
   data: format.hex.or(undefined),
 });
 
