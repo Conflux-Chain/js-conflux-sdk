@@ -1,7 +1,7 @@
 import { sleep, loop } from '../util';
 import LazyPromise from './LazyPromise';
 
-export default class PendingTransaction extends LazyPromise {
+class PendingTransaction extends LazyPromise {
   constructor(cfx, func, params) {
     super(func, params);
     this.cfx = cfx;
@@ -93,3 +93,5 @@ export default class PendingTransaction extends LazyPromise {
     });
   }
 }
+
+export default PendingTransaction;

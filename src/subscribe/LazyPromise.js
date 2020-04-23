@@ -1,4 +1,4 @@
-export default class LazyPromise {
+class LazyPromise {
   constructor(func, params) {
     this._func = func;
     this._params = params;
@@ -15,3 +15,5 @@ export default class LazyPromise {
     }
   }
 }
+
+export default LazyPromise;

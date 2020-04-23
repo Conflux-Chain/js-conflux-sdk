@@ -7,7 +7,7 @@ export { encode as rlpEncode } from '../lib/rlp';
 
 // ----------------------------------------------------------------------------
 /**
- * sha3
+ * alias of keccak256
  *
  * @param buffer {Buffer}
  * @return {Buffer}

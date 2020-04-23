@@ -1,7 +1,7 @@
 import { sha3, ecdsaSign, ecdsaRecover, publicKeyToAddress, rlpEncode } from './util/sign';
 import format from './util/format';
 
-export default class Transaction {
+class Transaction {
   /**
    * Create a transaction.
    *
@@ -105,3 +105,5 @@ export default class Transaction {
     return format.hex(this.encode(true));
   }
 }
+
+export default Transaction;

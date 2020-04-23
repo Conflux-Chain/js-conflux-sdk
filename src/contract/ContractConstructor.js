@@ -1,7 +1,7 @@
 import ContractMethod from './ContractMethod';
 import { ConstructorCoder } from '../abi';
 
-export default class ContractConstructor extends ContractMethod {
+class ContractConstructor extends ContractMethod {
   constructor(cfx, contract) {
     super(cfx, contract, 'constructor');
     this.bytecode = undefined;
@@ -38,3 +38,5 @@ export default class ContractConstructor extends ContractMethod {
     };
   }
 }
+
+export default ContractConstructor;
