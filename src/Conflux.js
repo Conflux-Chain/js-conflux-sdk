@@ -16,7 +16,8 @@ class Conflux {
    * @param [options.defaultEpoch="latest_state"] {string|number} - Default epochNumber.
    * @param [options.defaultGasPrice] {string|number} - The default gas price in drip to use for transactions.
    * @param [options.defaultGas] {string|number} - The default maximum gas provided for a transaction.
-   * @param [options.defaultChainId] {number} the chain ID of the connected network
+   * @param [options.defaultStorageLimit] {string|number} - The default maximum storage limit bytes for a transaction.
+   * @param [options.defaultChainId] {number} - The default chain ID of the connected network
    * @example
    * > const { Conflux } = require('js-conflux-sdk');
    * > const cfx = new Conflux({url:'http://testnet-jsonrpc.conflux-chain.org:12537'});
@@ -34,6 +35,7 @@ class Conflux {
     defaultEpoch = 'latest_state',
     defaultGasPrice,
     defaultGas,
+    defaultStorageLimit,
     defaultChainId,
     ...rest
   } = {}) {
@@ -46,6 +48,7 @@ class Conflux {
      * - `Conflux.getCode`
      * - `Conflux.call`
      *
+     * @deprecated
      * @type {number|string}
      */
     this.defaultEpoch = defaultEpoch;
@@ -56,6 +59,7 @@ class Conflux {
      * - `Conflux.call`
      * - `Conflux.estimateGas`
      *
+     * @deprecated
      * @type {number|string}
      */
     this.defaultGasPrice = defaultGasPrice;
@@ -66,9 +70,21 @@ class Conflux {
      * - `Conflux.call`
      * - `Conflux.estimateGas`
      *
+     * @deprecated
      * @type {number|string}
      */
     this.defaultGas = defaultGas;
+
+    /**
+     * Default storage limit for following methods:
+     * - `Conflux.sendTransaction`
+     * - `Conflux.call`
+     * - `Conflux.estimateGas`
+     *
+     * @deprecated
+     * @type {number|string}
+     */
+    this.defaultStorageLimit = defaultStorageLimit;
 
     /**
      * Default chain id for following methods:
@@ -76,6 +92,7 @@ class Conflux {
      * - `Conflux.call`
      * - `Conflux.estimateGas`
      *
+     * @deprecated
      * @type {number}
      */
     this.defaultChainId = defaultChainId;
@@ -707,6 +724,10 @@ class Conflux {
       options.gas = this.defaultGas;
     }
 
+    if (options.storageLimit === undefined) {
+      options.storageLimit = this.defaultStorageLimit;
+    }
+
     if (options.gas === undefined || options.storageLimit === undefined) {
       const { gasUsed, storageCollateralized } = await this.estimateGasAndCollateral(options);
 
@@ -784,6 +805,10 @@ class Conflux {
       options.gas = this.defaultGas;
     }
 
+    if (options.storageLimit === undefined) {
+      options.storageLimit = this.defaultStorageLimit;
+    }
+
     if (options.chainId === undefined) {
       options.chainId = this.defaultChainId;
     }
@@ -814,6 +839,10 @@ class Conflux {
 
     if (options.gas === undefined) {
       options.gas = this.defaultGas;
+    }
+
+    if (options.storageLimit === undefined) {
+      options.storageLimit = this.defaultStorageLimit;
     }
 
     if (options.chainId === undefined) {
