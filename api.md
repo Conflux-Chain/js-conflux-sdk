@@ -152,14 +152,15 @@ A sdk of conflux.
 
 * **Parameters**
 
-Name                    | Type            | Required | Default        | Description
-------------------------|-----------------|----------|----------------|-------------------------------------------------------
-options                 | `object`        | false    |                | Conflux and Provider constructor options.
-options.url             | `string`        | false    | ''             | Url of provider to create.
-options.defaultEpoch    | `string,number` | false    | "latest_state" | Default epochNumber.
-options.defaultGasPrice | `string,number` | false    |                | The default gas price in drip to use for transactions.
-options.defaultGas      | `string,number` | false    |                | The default maximum gas provided for a transaction.
-options.defaultChainId  | `number`        | false    |                | the chain ID of the connected network
+Name                        | Type            | Required | Default        | Description
+----------------------------|-----------------|----------|----------------|-----------------------------------------------------------
+options                     | `object`        | false    |                | Conflux and Provider constructor options.
+options.url                 | `string`        | false    | ''             | Url of provider to create.
+options.defaultEpoch        | `string,number` | false    | "latest_state" | Default epochNumber.
+options.defaultGasPrice     | `string,number` | false    |                | The default gas price in drip to use for transactions.
+options.defaultGas          | `string,number` | false    |                | The default maximum gas provided for a transaction.
+options.defaultStorageLimit | `string,number` | false    |                | The default maximum storage limit bytes for a transaction.
+options.defaultChainId      | `number`        | false    |                | The default chain ID of the connected network
 
 * **Examples**
 
@@ -177,7 +178,7 @@ options.defaultChainId  | `number`        | false    |                | the chai
    });
 ```
 
-## Conflux.prototype.defaultEpoch <a id="Conflux.js/defaultEpoch"></a>
+## ~~Conflux.prototype.defaultEpoch~~ <a id="Conflux.js/defaultEpoch"></a>
 
 `number,string`
 
@@ -187,7 +188,7 @@ Default epoch number for following methods:
 - `Conflux.getCode`
 - `Conflux.call`
 
-## Conflux.prototype.defaultGasPrice <a id="Conflux.js/defaultGasPrice"></a>
+## ~~Conflux.prototype.defaultGasPrice~~ <a id="Conflux.js/defaultGasPrice"></a>
 
 `number,string`
 
@@ -196,7 +197,7 @@ Default gas price for following methods:
 - `Conflux.call`
 - `Conflux.estimateGas`
 
-## Conflux.prototype.defaultGas <a id="Conflux.js/defaultGas"></a>
+## ~~Conflux.prototype.defaultGas~~ <a id="Conflux.js/defaultGas"></a>
 
 `number,string`
 
@@ -205,7 +206,16 @@ Default gas limit for following methods:
 - `Conflux.call`
 - `Conflux.estimateGas`
 
-## Conflux.prototype.defaultChainId <a id="Conflux.js/defaultChainId"></a>
+## ~~Conflux.prototype.defaultStorageLimit~~ <a id="Conflux.js/defaultStorageLimit"></a>
+
+`number,string`
+
+Default storage limit for following methods:
+- `Conflux.sendTransaction`
+- `Conflux.call`
+- `Conflux.estimateGas`
+
+## ~~Conflux.prototype.defaultChainId~~ <a id="Conflux.js/defaultChainId"></a>
 
 `number`
 

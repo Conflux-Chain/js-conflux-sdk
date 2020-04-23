@@ -8,11 +8,13 @@ const BLOCK_HASH = '0xe0b0000000000000000000000000000000000000000000000000000000
 const TX_HASH = '0xb0a0000000000000000000000000000000000000000000000000000000000000';
 const DEFAULT_GAS = 100;
 const DEFAULT_GAS_PRICE = 1000000;
+const DEFAULT_STORAGE_LIMIT = 1000000;
 
 // ----------------------------------------------------------------------------
 const cfx = new Conflux({
   defaultGas: DEFAULT_GAS,
   defaultGasPrice: DEFAULT_GAS_PRICE,
+  defaultStorageLimit: DEFAULT_STORAGE_LIMIT,
   defaultChainId: 0,
 });
 cfx.provider = new MockProvider();
@@ -235,9 +237,11 @@ test('call', async () => {
     expect(options.nonce).toEqual(undefined);
     expect(options.gasPrice).toEqual(format.hexUInt(cfx.defaultGasPrice));
     expect(options.gas).toEqual(format.hexUInt(cfx.defaultGas));
+    expect(options.storageLimit).toEqual(format.hexUInt(cfx.defaultStorageLimit));
     expect(options.to).toEqual(ADDRESS);
     expect(options.value).toEqual(undefined);
     expect(options.data).toEqual(undefined);
+    expect(options.chainId).toEqual(format.uInt(0));
 
     expect(epochNumber).toEqual(cfx.defaultEpoch);
   };
