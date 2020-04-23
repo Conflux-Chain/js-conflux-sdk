@@ -16,7 +16,7 @@ class Conflux {
    * @param [options.defaultEpoch="latest_state"] {string|number} - Default epochNumber.
    * @param [options.defaultGasPrice] {string|number} - The default gas price in drip to use for transactions.
    * @param [options.defaultGas] {string|number} - The default maximum gas provided for a transaction.
-   *
+   * @param [options.defaultChainId] {number} the chain ID of the connected network
    * @example
    * > const { Conflux } = require('js-conflux-sdk');
    * > const cfx = new Conflux({url:'http://testnet-jsonrpc.conflux-chain.org:12537'});
@@ -34,6 +34,7 @@ class Conflux {
     defaultEpoch = 'latest_state',
     defaultGasPrice,
     defaultGas,
+    defaultChainId,
     ...rest
   } = {}) {
     this.provider = this.setProvider(url, rest);
@@ -45,7 +46,6 @@ class Conflux {
      * - `Conflux.getCode`
      * - `Conflux.call`
      *
-     * @deprecated
      * @type {number|string}
      */
     this.defaultEpoch = defaultEpoch;
@@ -56,7 +56,6 @@ class Conflux {
      * - `Conflux.call`
      * - `Conflux.estimateGas`
      *
-     * @deprecated
      * @type {number|string}
      */
     this.defaultGasPrice = defaultGasPrice;
@@ -67,10 +66,19 @@ class Conflux {
      * - `Conflux.call`
      * - `Conflux.estimateGas`
      *
-     * @deprecated
      * @type {number|string}
      */
     this.defaultGas = defaultGas;
+
+    /**
+     * Default chain id for following methods:
+     * - `Conflux.sendTransaction`
+     * - `Conflux.call`
+     * - `Conflux.estimateGas`
+     *
+     * @type {number}
+     */
+    this.defaultChainId = defaultChainId;
 
     decorate(this, 'sendTransaction', (func, params) => {
       return new PendingTransaction(this, func, params);
@@ -188,8 +196,8 @@ class Conflux {
    * Gets past logs, matching the given options.
    *
    * @param [options] {object}
-   * @param [options.fromEpoch] {string|number} - The number of the start block. (>=)
-   * @param [options.toEpoch] {string|number} - The number of the stop block.(<=)
+   * @param [options.fromEpoch] {string|number} - The number of the start block(>=), 'latest_mined' or 'latest_state'.
+   * @param [options.toEpoch] {string|number} - The number of the stop block(<=), 'latest_mined' or 'latest_state'.
    * @param [options.blockHashes] {string[]} - The block hash list
    * @param [options.address] {string|string[]} - An address or a list of addresses to only get logs from particular account(s).
    * @param [options.topics] {array} - An array of values which must each appear in the log entries. The order is important, if you want to leave topics out use null, e.g. [null, '0x12...']. You can also pass an array for each topic with options for that topic e.g. [null, ['option1', 'option2']]
@@ -715,6 +723,10 @@ class Conflux {
       options.epochHeight = await this.getEpochNumber();
     }
 
+    if (options.chainId === undefined) {
+      options.chainId = this.defaultChainId;
+    }
+
     if (options.from instanceof Account) {
       // sign by local
       const tx = options.from.signTransaction(options);
@@ -772,6 +784,10 @@ class Conflux {
       options.gas = this.defaultGas;
     }
 
+    if (options.chainId === undefined) {
+      options.chainId = this.defaultChainId;
+    }
+
     if (options.from && options.nonce === undefined) {
       options.nonce = await this.getNextNonce(options.from);
     }
@@ -798,6 +814,10 @@ class Conflux {
 
     if (options.gas === undefined) {
       options.gas = this.defaultGas;
+    }
+
+    if (options.chainId === undefined) {
+      options.chainId = this.defaultChainId;
     }
 
     const result = await this.provider.call('cfx_estimateGasAndCollateral', format.estimateTx(options));

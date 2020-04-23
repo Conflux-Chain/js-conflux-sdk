@@ -12,6 +12,7 @@ test('Transaction', () => {
     value: 0,
     storageLimit: 0,
     epochHeight: 0,
+    chainId: 0,
   });
 
   expect(tx.nonce).toEqual(0);
@@ -21,6 +22,7 @@ test('Transaction', () => {
   expect(tx.value).toEqual(0);
   expect(tx.storageLimit).toEqual(0);
   expect(tx.epochHeight).toEqual(0);
+  expect(tx.chainId).toEqual(0);
   expect(tx.data).toEqual(undefined);
   expect(tx.r).toEqual(undefined);
   expect(tx.s).toEqual(undefined);
@@ -51,6 +53,7 @@ test('s starts with 0x00', () => {
     value: 0,
     storageLimit: 0,
     epochHeight: 0,
+    chainId: 0,
   });
 
   tx.sign(KEY);

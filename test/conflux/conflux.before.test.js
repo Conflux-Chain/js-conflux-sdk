@@ -13,6 +13,7 @@ const DEFAULT_GAS_PRICE = 1000000;
 const cfx = new Conflux({
   defaultGas: DEFAULT_GAS,
   defaultGasPrice: DEFAULT_GAS_PRICE,
+  defaultChainId: 0,
 });
 cfx.provider = new MockProvider();
 
