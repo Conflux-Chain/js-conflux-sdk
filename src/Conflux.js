@@ -27,6 +27,8 @@ class Conflux {
      url: 'http://localhost:8000',
      defaultGasPrice: 100,
      defaultGas: 100000,
+     defaultStorageLimit: 4096,
+     defaultChainId: 0,
      logger: console,
    });
    */

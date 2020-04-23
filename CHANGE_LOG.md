@@ -1,5 +1,27 @@
 # change log
 
+## v0.9.2
+
+* add defaultStorageLimit and defaultChainId for Conflux
+
+```
+// old
+const cfx = new Conflux({
+  url: 'http://localhost:8000',
+  defaultGasPrice: 100,
+  defaultGas: 100000,
+})
+
+// new
+const cfx = new Conflux({
+  url: 'http://localhost:8000',
+  defaultGasPrice: 100,
+  defaultGas: 100000,
+  defaultStorageLimit: 4096,
+  defaultChainId: 0,
+})
+```
+
 ## v0.9.1
 
 * abi implicitly converting string to number
