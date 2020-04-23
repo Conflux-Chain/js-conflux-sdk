@@ -11,8 +11,8 @@ emptyDirSync('lib');
 copySync('src', 'lib');
 
 walker('lib').on('file', file => {
-  if (file.endsWith('.js') && file !== 'lib/main.js') {
-    transforms.push(prependFile(file, "require = require('esm')(module);\n"));
+  if (file.endsWith('.js') && file !== 'lib/main.js' && file !== 'lib\\main.js') {
+    transforms.push(prependFile(file, 'require = require(\'esm\')(module);\n'));
   }
 });
 
