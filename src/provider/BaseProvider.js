@@ -1,11 +1,11 @@
-export class RPCError extends Error {
+class RPCError extends Error {
   constructor(object) {
     super(object);
     Object.assign(this, object);
   }
 }
 
-export class BaseProvider {
+class BaseProvider {
   /**
    * @param url {string} - Full json rpc http url
    * @param [options] {object}
@@ -38,3 +38,7 @@ export class BaseProvider {
 
   close() {}
 }
+
+BaseProvider.RPCError = RPCError;
+
+export default BaseProvider;

@@ -1,4 +1,4 @@
-import { BaseProvider } from './BaseProvider';
+import BaseProvider from './BaseProvider';
 import HttpProvider from './HttpProvider';
 // import WebsocketProvider from './WebsocketProvider';
 

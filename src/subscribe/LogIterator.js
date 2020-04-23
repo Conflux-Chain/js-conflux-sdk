@@ -2,7 +2,7 @@ import lodash from 'lodash';
 import { loop } from '../util';
 import LazyPromise from './LazyPromise';
 
-export default class LogIterator extends LazyPromise {
+class LogIterator extends LazyPromise {
   constructor(cfx, func, [filter]) {
     super(func, [filter]);
 
@@ -85,3 +85,5 @@ export default class LogIterator extends LazyPromise {
     };
   }
 }
+
+export default LogIterator;

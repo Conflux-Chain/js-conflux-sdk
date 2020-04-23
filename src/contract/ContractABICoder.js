@@ -3,7 +3,7 @@ import ContractConstructor from './ContractConstructor';
 import ContractMethod from './ContractMethod';
 import ContractEvent from './ContractEvent';
 
-export default class ContractABICoder {
+class ContractABICoder {
   constructor(contract) {
     this._constructorFunction = null;
     this._codeToInstance = {};
@@ -50,3 +50,5 @@ export default class ContractABICoder {
     return undefined;
   }
 }
+
+export default ContractABICoder;

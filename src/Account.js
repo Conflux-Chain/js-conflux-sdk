@@ -3,7 +3,7 @@ import { randomPrivateKey, privateKeyToAddress, privateKeyToPublicKey } from './
 import Transaction from './Transaction';
 import Message from './Message';
 
-export default class Account {
+class Account {
   /**
    * Create a new Account with random privateKey.
    *
@@ -123,3 +123,5 @@ export default class Account {
     return this.address;
   }
 }
+
+export default Account;

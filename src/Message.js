@@ -1,7 +1,7 @@
 import { sha3, ecdsaSign, ecdsaRecover, publicKeyToAddress } from './util/sign';
 import format from './util/format';
 
-export default class Message {
+class Message {
   /**
    * Signs the hash with the privateKey.
    *
@@ -138,3 +138,5 @@ export default class Message {
     }
   }
 }
+
+export default Message;

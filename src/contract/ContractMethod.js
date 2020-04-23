@@ -86,7 +86,7 @@ class Called {
   }
 }
 
-export default class ContractMethod {
+class ContractMethod {
   constructor(cfx, contract, name) {
     this.cfx = cfx;
     this.contract = contract;
@@ -143,3 +143,5 @@ export default class ContractMethod {
 }
 
 ContractMethod.Called = Called;
+
+export default ContractMethod;

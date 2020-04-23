@@ -38,7 +38,7 @@ class Event {
   }
 }
 
-export default class ContractEvent {
+class ContractEvent {
   constructor(cfx, contract, name) {
     this.cfx = cfx;
     this.contract = contract;
@@ -105,3 +105,5 @@ export default class ContractEvent {
 }
 
 ContractEvent.Event = Event;
+
+export default ContractEvent;

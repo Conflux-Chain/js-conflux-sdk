@@ -1,10 +1,10 @@
 import superagent from 'superagent';
-import { BaseProvider, RPCError } from './BaseProvider';
+import BaseProvider from './BaseProvider';
 
 /**
  * Http protocol json rpc provider.
  */
-export default class HttpProvider extends BaseProvider {
+class HttpProvider extends BaseProvider {
   /**
    * @param url {string} - Full json rpc http url
    * @param [options] {object} - See `BaseProvider.constructor`
@@ -41,7 +41,7 @@ export default class HttpProvider extends BaseProvider {
 
     if (error) {
       this.logger.error({ data, error, duration: Date.now() - startTime });
-      throw new RPCError(error);
+      throw new BaseProvider.RPCError(error);
     } else {
       this.logger.info({ data, result, duration: Date.now() - startTime });
     }
@@ -49,3 +49,5 @@ export default class HttpProvider extends BaseProvider {
     return result;
   }
 }
+
+export default HttpProvider;

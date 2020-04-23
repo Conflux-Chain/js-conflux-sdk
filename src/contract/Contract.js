@@ -6,7 +6,7 @@ import ContractEvent from './ContractEvent';
 /**
  * Contract with all its methods and events defined in its abi.
  */
-export default class Contract {
+class Contract {
   /**
    *
    * @param cfx {Conflux} - Conflux instance.
@@ -18,11 +18,6 @@ export default class Contract {
    *
    * @example
    * > const contract = cfx.Contract({ abi, bytecode });
-   * > contract instanceof Contract;
-   true
-
-   * > contract.abi; // input abi
-   [{type:'constructor', inputs:[...]}, ...]
 
    * > contract.constructor.bytecode; // input code
    "0x6080604052600080..."
@@ -58,12 +53,16 @@ export default class Contract {
    * > tx = await cfx.getTransactionByHash('0x8a5f48c2de0f1bdacfe90443810ad650e4b327a0d19ce49a53faffb224883e42');
    * > await contract.abi.decodeData(tx.data)
    {
-     name: 'inc',
-     params: NamedTuple(num) [ 100n ]
+      name: 'inc',
+      fullName: 'inc(uint256 num)',
+      type: 'inc(uint256)',
+      signature: '0x7f98a45e',
+      array: [ JSBI.BigInt(101) ],
+      object: { num: JSBI.BigInt(101) }
    }
 
    * > await contract.count(); // data in block chain changed by transaction.
-   101n
+   JSBI.BigInt(101)
 
    * > logs = await contract.SelfEvent(account1.address).getLogs()
    [
@@ -88,11 +87,15 @@ export default class Contract {
 
    * > contract.abi.decodeLog(logs[0]);
    {
-      name: "SelfEvent",
-      params: NamedTuple(sender,current) [
-        '0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b',
-        100n
-      ]
+      name: 'SelfEvent',
+      fullName: 'SelfEvent(address indexed sender, uint256 current)',
+      type: 'SelfEvent(address,uint256))',
+      signature: '0xc4c01f6de493c58245fb681341f3a76bba9551ce81b11cbbb5d6d297844594df',
+      array: [ '0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b', JSBI.BigInt(100) ],
+      object: {
+        sender: '0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b',
+        current: JSBI.BigInt(100),
+      },
     }
    */
   constructor(cfx, { abi, address, bytecode }) {
@@ -129,3 +132,5 @@ export default class Contract {
     this.address = address; // XXX: Create a method named `address` in solidity is a `ParserError`
   }
 }
+
+export default Contract;

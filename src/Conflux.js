@@ -9,7 +9,7 @@ import { PendingTransaction, LogIterator } from './subscribe';
 /**
  * A sdk of conflux.
  */
-export default class Conflux {
+class Conflux {
   /**
    * @param [options] {object} - Conflux and Provider constructor options.
    * @param [options.url=''] {string} - Url of provider to create.
@@ -804,3 +804,5 @@ export default class Conflux {
     return format.estimate(result);
   }
 }
+
+export default Conflux;
