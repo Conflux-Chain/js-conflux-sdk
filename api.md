@@ -1,3 +1,4 @@
+
 ---
 id: javascript_sdk
 title: Javascript SDK
@@ -7,7 +8,6 @@ keywords:
   - javascript
   - sdk
 ---
-
 
 - Account.js
     - [Account](#Account.js/Account)
@@ -185,6 +185,8 @@ options.defaultChainId      | `number`        | false    |                | The 
      url: 'http://localhost:8000',
      defaultGasPrice: 100,
      defaultGas: 100000,
+     defaultStorageLimit: 4096,
+     defaultChainId: 0,
      logger: console,
    });
 ```
