@@ -1,4 +1,3 @@
-
 ---
 id: javascript_sdk
 title: Javascript SDK
