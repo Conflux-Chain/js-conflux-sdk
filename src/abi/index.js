@@ -2,24 +2,24 @@
  @see https://solidity.readthedocs.io/en/v0.5.13/abi-spec.html
  */
 
-import { assert } from '../util';
-import { sha3 } from '../util/sign';
-import format from '../util/format';
+const { assert } = require('../util');
+const { sha3 } = require('../util/sign');
+const format = require('../util/format');
 
-import { getCoder } from './coder';
-import namedTuple from '../lib/namedTuple';
-import HexStream from './HexStream';
+const { getCoder } = require('./coder');
+const namedTuple = require('../lib/namedTuple');
+const HexStream = require('./HexStream');
 
 // ============================================================================
-export function formatSignature({ name, inputs }) {
+function formatSignature({ name, inputs }) {
   return `${name}(${inputs.map(param => getCoder(param).type).join(',')})`;
 }
 
-export function formatFullName({ name, inputs }) {
+function formatFullName({ name, inputs }) {
   return `${name}(${inputs.map(param => `${getCoder(param).type} ${param.indexed ? 'indexed ' : ''}${param.name}`).join(', ')})`;
 }
 
-export class FunctionCoder {
+class FunctionCoder {
   /**
    * Function coder
    *
@@ -143,7 +143,7 @@ export class FunctionCoder {
   }
 }
 
-export class ConstructorCoder extends FunctionCoder {
+class ConstructorCoder extends FunctionCoder {
   constructor({ inputs = [] } = {}) {
     super({ name: 'constructor', inputs });
   }
@@ -153,7 +153,7 @@ export class ConstructorCoder extends FunctionCoder {
   }
 }
 
-export class EventCoder {
+class EventCoder {
   /**
    * Event coder
    *
@@ -321,4 +321,13 @@ class ErrorCoder {
   }
 }
 
-export const errorCoder = new ErrorCoder();
+const errorCoder = new ErrorCoder();
+
+module.exports = {
+  formatSignature,
+  errorCoder,
+  formatFullName,
+  FunctionCoder,
+  ConstructorCoder,
+  EventCoder,
+};

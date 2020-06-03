@@ -1,9 +1,9 @@
-import lodash from 'lodash';
-import * as sign from './sign';
-import unit from './unit';
-import format from './format';
+const lodash = require('lodash');
+const sign = require('./sign');
+const unit = require('./unit');
+const format = require('./format');
 
-export function assert(bool, value) {
+function assert(bool, value) {
   if (!bool) {
     if (lodash.isPlainObject(value)) {
       value = JSON.stringify(value);
@@ -19,7 +19,7 @@ export function assert(bool, value) {
  * @param ms {number} - Sleep duration in ms.
  * @return {Promise<undefined>}
  */
-export function sleep(ms) {
+function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
@@ -33,7 +33,7 @@ export function sleep(ms) {
  * @param func {function} - Function to execute.
  * @return {Promise<*>}
  */
-export async function loop({ delta = 1000, timeout = 30 * 1000 }, func) {
+async function loop({ delta = 1000, timeout = 30 * 1000 }, func) {
   const startTime = Date.now();
 
   for (let lastTime = startTime; Date.now() - startTime < timeout; lastTime = Date.now()) {
@@ -48,9 +48,9 @@ export async function loop({ delta = 1000, timeout = 30 * 1000 }, func) {
   throw new Error(`Timeout after ${Date.now() - startTime} ms`);
 }
 
-export function decorate(instance, name, func) {
+function decorate(instance, name, func) {
   const method = instance[name];
   instance[name] = (...params) => func(method.bind(instance), params);
 }
 
-export { sign, unit, format };
+module.exports = { sign, unit, format, assert, sleep, loop, decorate };

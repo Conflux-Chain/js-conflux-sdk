@@ -1,8 +1,8 @@
-import BaseProvider from './BaseProvider';
-import HttpProvider from './HttpProvider';
-// import WebsocketProvider from './WebsocketProvider';
+const BaseProvider = require('./BaseProvider');
+const HttpProvider = require('./HttpProvider');
+// const WebsocketProvider = require('./WebsocketProvider');
 
-export default function providerFactory(url, options) {
+function providerFactory(url, options) {
   let provider;
 
   if (typeof url !== 'string') {
@@ -22,3 +22,5 @@ export default function providerFactory(url, options) {
 
   return provider;
 }
+
+module.exports = providerFactory;

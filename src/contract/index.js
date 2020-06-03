@@ -1,1 +1,1 @@
-export { default } from './Contract';
+module.exports = require('./Contract');

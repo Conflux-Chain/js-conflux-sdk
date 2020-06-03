@@ -1,2 +1,7 @@
-export { default as PendingTransaction } from './PendingTransaction';
-export { default as LogIterator } from './LogIterator';
+const PendingTransaction = require('./PendingTransaction');
+const LogIterator = require('./LogIterator');
+
+module.exports = {
+  PendingTransaction,
+  LogIterator,
+};
