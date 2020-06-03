@@ -31,21 +31,10 @@ main();
 require deep nested file/dir  
 
 ``` javascript
-const util = require('js-conflux-sdk/lib/util');
+const util = require('js-conflux-sdk/src/util');
 ```
 
 ### Frontend
-
-#### esm
-``` javascript
-import { Conflux } from 'js-conflux-sdk';
-import { util } from 'js-conflux-sdk/esm/util';
-```
-
-Note: This assumes bundler will read the [package.json browser
-field](https://docs.npmjs.com/files/package.json#browser) as module entry. For
-bundlers don't support that, additional configurations needs to be add to
-support that. Please checkout the bundlers documentation.
 
 #### umd
 ``` javascript

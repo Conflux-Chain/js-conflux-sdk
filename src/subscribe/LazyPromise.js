@@ -16,4 +16,4 @@ class LazyPromise {
   }
 }
 
-export default LazyPromise;
+module.exports = LazyPromise;

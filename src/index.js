@@ -1,11 +1,15 @@
-import * as util from './util';
+const util = require('./util');
+const Conflux = require('./Conflux');
+const Account = require('./Account');
+const Transaction = require('./Transaction');
+const Message = require('./Message');
+const provider = require('./provider');
 
-export { util };
-
-export { default as Conflux } from './Conflux';
-
-export { default as Account } from './Account';
-export { default as Transaction } from './Transaction';
-export { default as Message } from './Message';
-
-export { default as provider } from './provider';
+module.exports = {
+  util,
+  Conflux,
+  Account,
+  Transaction,
+  Message,
+  provider,
+};

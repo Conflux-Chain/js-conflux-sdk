@@ -1,7 +1,7 @@
-import lodash from 'lodash';
-import { assert, decorate } from '../util';
-import { EventCoder } from '../abi';
-import callable from '../lib/callable';
+const lodash = require('lodash');
+const { assert, decorate } = require('../util');
+const { EventCoder } = require('../abi');
+const callable = require('../lib/callable');
 
 class Event {
   constructor(cfx, eventLog, { address, topics }) {
@@ -106,4 +106,4 @@ class ContractEvent {
 
 ContractEvent.Event = Event;
 
-export default ContractEvent;
+module.exports = ContractEvent;

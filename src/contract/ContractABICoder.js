@@ -1,7 +1,7 @@
-import lodash from 'lodash';
-import ContractConstructor from './ContractConstructor';
-import ContractMethod from './ContractMethod';
-import ContractEvent from './ContractEvent';
+const lodash = require('lodash');
+const ContractConstructor = require('./ContractConstructor');
+const ContractMethod = require('./ContractMethod');
+const ContractEvent = require('./ContractEvent');
 
 class ContractABICoder {
   constructor(contract) {
@@ -51,4 +51,4 @@ class ContractABICoder {
   }
 }
 
-export default ContractABICoder;
+module.exports = ContractABICoder;

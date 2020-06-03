@@ -1,5 +1,5 @@
-import superagent from 'superagent';
-import BaseProvider from './BaseProvider';
+const superagent = require('superagent');
+const BaseProvider = require('./BaseProvider');
 
 /**
  * Http protocol json rpc provider.
@@ -50,4 +50,4 @@ class HttpProvider extends BaseProvider {
   }
 }
 
-export default HttpProvider;
+module.exports = HttpProvider;

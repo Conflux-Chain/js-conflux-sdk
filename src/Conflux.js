@@ -1,10 +1,9 @@
-import { decorate } from './util';
-import format from './util/format';
-
-import providerFactory from './provider';
-import Contract from './contract';
-import Account from './Account';
-import { PendingTransaction, LogIterator } from './subscribe';
+const { decorate } = require('./util');
+const format = require('./util/format');
+const providerFactory = require('./provider');
+const Contract = require('./contract');
+const Account = require('./Account');
+const { PendingTransaction, LogIterator } = require('./subscribe');
 
 /**
  * A sdk of conflux.
@@ -856,4 +855,4 @@ class Conflux {
   }
 }
 
-export default Conflux;
+module.exports = Conflux;

@@ -1,7 +1,7 @@
-import ContractABICoder from './ContractABICoder';
-import ContractConstructor from './ContractConstructor';
-import ContractMethod from './ContractMethod';
-import ContractEvent from './ContractEvent';
+const ContractABICoder = require('./ContractABICoder');
+const ContractConstructor = require('./ContractConstructor');
+const ContractMethod = require('./ContractMethod');
+const ContractEvent = require('./ContractEvent');
 
 /**
  * Contract with all its methods and events defined in its abi.
@@ -133,4 +133,4 @@ class Contract {
   }
 }
 
-export default Contract;
+module.exports = Contract;

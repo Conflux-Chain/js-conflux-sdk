@@ -1,5 +1,5 @@
-import lodash from 'lodash';
-import callable, { withoutNew } from './callable';
+const lodash = require('lodash');
+const callable = require('./callable');
 
 // ============================================================================
 class ParserError extends Error {
@@ -158,4 +158,4 @@ class Parser {
   }
 }
 
-export default withoutNew(Parser);
+module.exports = callable.withoutNew(Parser);

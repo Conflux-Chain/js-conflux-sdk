@@ -1,18 +1,18 @@
 /* eslint-disable no-bitwise */
 
-import JSBI from 'jsbi';
-import lodash from 'lodash';
-import format from '../util/format';
-import { assert } from '../util';
-import { sha3 } from '../util/sign';
-import namedTuple from '../lib/namedTuple';
-import HexStream from './HexStream';
+const JSBI = require('jsbi');
+const lodash = require('lodash');
+const format = require('../util/format');
+const { assert } = require('../util');
+const { sha3 } = require('../util/sign');
+const namedTuple = require('../lib/namedTuple');
+const HexStream = require('./HexStream');
 
 const WORD_BYTES = 32; // byte number pre abi word
 const ZERO_BUFFER = format.buffer('0x0000000000000000000000000000000000000000000000000000000000000000');
 const MAX_UINT = JSBI.leftShift(JSBI.BigInt(1), JSBI.BigInt(WORD_BYTES * 8));
 
-export function padBuffer(buffer, alignLeft = false) {
+function padBuffer(buffer, alignLeft = false) {
   buffer = format.buffer(buffer); // accept hex
 
   const count = WORD_BYTES - (buffer.length % WORD_BYTES);
@@ -591,7 +591,7 @@ const UINT_CODER = new IntegerCoder();
  * @param [component.components] {array} - For TupleCoder
  * @return {Coder}
  */
-export function getCoder(component) {
+function getCoder(component) {
   // must parse ArrayCoder first, others sorted by probability
   const coder = ArrayCoder.from(component)
     || TupleCoder.from(component)
@@ -609,3 +609,8 @@ export function getCoder(component) {
 
   return coder;
 }
+
+module.exports = {
+  padBuffer,
+  getCoder,
+};

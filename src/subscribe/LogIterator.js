@@ -1,6 +1,6 @@
-import lodash from 'lodash';
-import { loop } from '../util';
-import LazyPromise from './LazyPromise';
+const lodash = require('lodash');
+const { loop } = require('../util');
+const LazyPromise = require('./LazyPromise');
 
 class LogIterator extends LazyPromise {
   constructor(cfx, func, [filter]) {
@@ -86,4 +86,4 @@ class LogIterator extends LazyPromise {
   }
 }
 
-export default LogIterator;
+module.exports = LogIterator;

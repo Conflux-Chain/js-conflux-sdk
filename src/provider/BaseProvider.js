@@ -41,4 +41,4 @@ class BaseProvider {
 
 BaseProvider.RPCError = RPCError;
 
-export default BaseProvider;
+module.exports = BaseProvider;

@@ -1,7 +1,7 @@
-import format from './util/format';
-import { randomPrivateKey, privateKeyToAddress, privateKeyToPublicKey } from './util/sign'; // and decrypt, encrypt
-import Transaction from './Transaction';
-import Message from './Message';
+const format = require('./util/format');
+const { randomPrivateKey, privateKeyToAddress, privateKeyToPublicKey } = require('./util/sign'); // and decrypt, encrypt
+const Transaction = require('./Transaction');
+const Message = require('./Message');
 
 class Account {
   /**
@@ -124,4 +124,4 @@ class Account {
   }
 }
 
-export default Account;
+module.exports = Account;
