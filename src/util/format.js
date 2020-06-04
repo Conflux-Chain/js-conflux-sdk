@@ -281,6 +281,23 @@ format.buffer = Parser(v => (Buffer.isBuffer(v) ? v : Buffer.from(format.hex(v).
  */
 format.boolean = format.any.validate(lodash.isBoolean, 'boolean');
 
+// ----------------------------- encrypt & decrypt ---------------------------
+format.encrypt = Parser({
+  version: () => 4,
+  salt: format.hex,
+  iv: format.hex,
+  cipher: format.hex,
+  mac: format.hex,
+});
+
+format.decrypt = Parser({
+  version: 4,
+  salt: format.buffer,
+  iv: format.buffer,
+  cipher: format.buffer,
+  mac: format.buffer,
+});
+
 // ----------------------------- parse rpc returned ---------------------------
 format.transaction = Parser({
   nonce: format.uInt,

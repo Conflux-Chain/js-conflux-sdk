@@ -47,12 +47,14 @@ test('Account.random', () => {
   expect(account3UseEntropy.privateKey).not.toEqual(account4UseEntropy.privateKey);
 });
 
-// test('encrypt and decrypt', () => {
-//   const account = new Account(KEY);
-//
-//   const info = account.encrypt('password');
-//   const loadAccount = Account.decrypt(info, 'password');
-//
-//   expect(loadAccount.privateKey).toEqual(account.privateKey);
-//   expect(loadAccount.address).toEqual(account.address);
-// });
+test('encrypt and decrypt', () => {
+  const account = new Account(KEY);
+
+  expect(account.encrypt('password').salt).not.toEqual(account.encrypt('password').salt);
+
+  const info = account.encrypt('password');
+  const loadAccount = Account.decrypt('password', info);
+
+  expect(loadAccount.privateKey).toEqual(account.privateKey);
+  expect(loadAccount.address).toEqual(account.address);
+});

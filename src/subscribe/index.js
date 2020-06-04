@@ -1,7 +1,2 @@
-const PendingTransaction = require('./PendingTransaction');
-const LogIterator = require('./LogIterator');
-
-module.exports = {
-  PendingTransaction,
-  LogIterator,
-};
+module.exports.PendingTransaction = require('./PendingTransaction');
+module.exports.LogIterator = require('./LogIterator');

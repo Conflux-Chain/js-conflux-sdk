@@ -1,5 +1,9 @@
 /* eslint-disable no-bitwise */
 
+/*
+@see https://solidity.readthedocs.io/en/v0.5.13/abi-spec.html#encoding-of-indexed-event-parameters
+ */
+
 const JSBI = require('jsbi');
 const lodash = require('lodash');
 const format = require('../util/format');
@@ -610,7 +614,5 @@ function getCoder(component) {
   return coder;
 }
 
-module.exports = {
-  padBuffer,
-  getCoder,
-};
+module.exports = getCoder;
+module.exports.padBuffer = padBuffer;
