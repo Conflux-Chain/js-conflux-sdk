@@ -5,8 +5,8 @@ const babelify = require('babelify');
 const fs = require('fs');
 const exorcist = require('exorcist');
 
-
 const browserifyOptions = {
+  browserField: 'browserify-browser',
   entries: ['./src/index.js'],
   debug: true, // gen inline sourcemap to extract with exorcist
   standalone: 'Conflux', // generate a umd file to load directly into browser
@@ -21,11 +21,15 @@ mkdirpSync('dist');
 // https://www.blazemeter.com/blog/the-correct-way-to-import-lodash-libraries-a-benchmark/
 const babelTransform = babelify.configure({
   presets: ['@babel/preset-env'],
-  plugins: ['lodash', ['@babel/plugin-transform-runtime',
-    {
-      regenerator: true,
-    },
-  ]],
+  plugins: [
+    'lodash',
+    [
+      '@babel/plugin-transform-runtime',
+      {
+        regenerator: true,
+      },
+    ],
+  ],
 });
 
 browserify(browserifyOptions)
