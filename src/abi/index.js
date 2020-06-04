@@ -6,7 +6,7 @@ const { assert } = require('../util');
 const { sha3 } = require('../util/sign');
 const format = require('../util/format');
 
-const { getCoder } = require('./coder');
+const getCoder = require('./coder');
 const namedTuple = require('../lib/namedTuple');
 const HexStream = require('./HexStream');
 

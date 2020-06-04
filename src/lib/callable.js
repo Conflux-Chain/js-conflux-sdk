@@ -20,5 +20,5 @@ function withoutNew(Class) {
   return new Proxy(Class, { apply: (_, __, params) => new Class(...params) });
 }
 
-callable.withoutNew = withoutNew;
 module.exports = callable;
+module.exports.withoutNew = withoutNew;
