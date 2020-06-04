@@ -21,6 +21,9 @@
     "secp256k1": "secp256k1/elliptic",
     "./src/index.js": "./dist/js-conflux-sdk.umd.min.js"
   },
+  "browserify-browser": {
+    "secp256k1": "secp256k1/elliptic"
+  },
   "files": [
     "src",
     "dist"
