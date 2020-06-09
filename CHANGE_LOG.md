@@ -2,6 +2,12 @@
 
 ## v1.0.0-alpha
 
+* add `getStatus`
+
+```
+cfx.getStatus()
+```
+
 * remove `getRiskCoefficient` and replace with `getConfirmationRiskByHash`
 
 ```

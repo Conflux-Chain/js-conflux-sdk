@@ -11,6 +11,16 @@ const TX_HASH = '0xb0a0000000000000000000000000000000000000000000000000000000000
 const cfx = new Conflux();
 cfx.provider = new MockProvider();
 
+test('getStatus', async () => {
+  const status = await cfx.getStatus();
+
+  expect(Number.isInteger(status.chainId)).toEqual(true);
+  expect(Number.isInteger(status.epochNumber)).toEqual(true);
+  expect(Number.isInteger(status.blockNumber)).toEqual(true);
+  expect(Number.isInteger(status.pendingTxNumber)).toEqual(true);
+  expect(status.bestHash.startsWith('0x')).toEqual(true);
+});
+
 test('getGasPrice', async () => {
   const gasPrice = await cfx.getGasPrice();
 

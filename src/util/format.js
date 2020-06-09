@@ -314,6 +314,12 @@ format.decrypt = Parser({
 });
 
 // ----------------------------- parse rpc returned ---------------------------
+format.status = Parser({
+  chainId: format.uInt,
+  epochNumber: format.uInt,
+  blockNumber: format.uInt,
+});
+
 format.transaction = Parser({
   nonce: format.uInt,
   value: format.bigUInt,

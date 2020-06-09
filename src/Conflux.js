@@ -182,6 +182,21 @@ class Conflux {
 
   // --------------------------------------------------------------------------
   /**
+   * Get status
+   * @return {Promise<object>} Status information object
+   * - `number` chainId: Chain id
+   * - `number` epochNumber: Epoch number
+   * - `number` blockNumber: Block number
+   * - `number` pendingTxNumber: Pending transaction number
+   * - `string` bestHash: TODO
+   */
+  async getStatus() {
+    const result = await this.provider.call('cfx_getStatus');
+
+    return format.status(result);
+  }
+
+  /**
    * Returns the current gas price oracle. The gas price is determined by the last few blocks median gas price.
    *
    * @return {Promise<JSBI>} Gas price in drip.
@@ -754,6 +769,10 @@ class Conflux {
     if (options.chainId === undefined) {
       options.chainId = this.defaultChainId;
     }
+    if (options.chainId === undefined) {
+      const status = await this.getStatus();
+      options.chainId = status.chainId;
+    }
 
     if (options.from instanceof Account) {
       // sign by local
@@ -819,6 +838,10 @@ class Conflux {
     if (options.chainId === undefined) {
       options.chainId = this.defaultChainId;
     }
+    if (options.chainId === undefined) {
+      const status = await this.getStatus();
+      options.chainId = status.chainId;
+    }
 
     if (options.from && options.nonce === undefined) {
       options.nonce = await this.getNextNonce(options.from);
@@ -854,6 +877,10 @@ class Conflux {
 
     if (options.chainId === undefined) {
       options.chainId = this.defaultChainId;
+    }
+    if (options.chainId === undefined) {
+      const status = await this.getStatus();
+      options.chainId = status.chainId;
     }
 
     const result = await this.provider.call('cfx_estimateGasAndCollateral', format.estimateTx(options));
