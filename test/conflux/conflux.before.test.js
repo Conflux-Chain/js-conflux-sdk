@@ -162,8 +162,15 @@ test('getBlockByHashWithPivotAssumption', async () => {
   // TODO
 });
 
-test('getRiskCoefficient', async () => {
-  // TODO
+test('getConfirmationRiskByHash', async () => {
+  await expect(cfx.getConfirmationRiskByHash()).rejects.toThrow('not match hex');
+
+  cfx.provider.call = async (method, blockHash) => {
+    expect(method).toEqual('cfx_getConfirmationRiskByHash');
+    expect(blockHash).toEqual(BLOCK_HASH);
+    return null;
+  };
+  await cfx.getConfirmationRiskByHash(BLOCK_HASH);
 });
 
 test('getTransactionByHash', async () => {

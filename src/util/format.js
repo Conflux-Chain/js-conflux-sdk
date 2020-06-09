@@ -1,6 +1,9 @@
 const JSBI = require('jsbi');
+const Big = require('big.js');
 const lodash = require('lodash');
 const Parser = require('../lib/parser');
+
+const MAX_UINT_256 = JSBI.BigInt('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
 
 // https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/BigInt
 JSBI.prototype.toJSON = function () {
@@ -168,6 +171,18 @@ format.bigUInt = format.bigInt.validate(v => v >= 0, 'bigUInt');
 format.hexUInt = format.bigUInt
   .parse(v => `0x${v.toString(16)}`)
   .validate(v => /^0x[0-9a-f]+$/.test(v), 'hexUInt');
+
+/**
+ * @param hex {string}
+ * @return {number}
+ *
+ * @example
+ * > format.riskNumber('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')
+ 1
+ * > format.riskNumber('0xe666666666666666666666666666666666666666666666666666666666666665')
+ 0.9
+ */
+format.riskNumber = format.bigUInt.parse(v => Number(Big(v).div(MAX_UINT_256))).or(null);
 
 /**
  * @param arg {number|string} - number or string in ['latest_state', 'latest_mined']

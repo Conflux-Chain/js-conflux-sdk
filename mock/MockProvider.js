@@ -286,6 +286,10 @@ class MockProvider {
       storageCollateralized: randomHex(4),
     };
   }
+
+  cfx_getConfirmationRiskByHash() {
+    return randomHex(64);
+  }
 }
 
 module.exports = MockProvider;

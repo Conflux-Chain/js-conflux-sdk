@@ -55,6 +55,12 @@ test('getNextNonce', async () => {
   expect(txCount.constructor).toEqual(JSBI);
 });
 
+test('getConfirmationRiskByHash', async () => {
+  const risk = await cfx.getConfirmationRiskByHash(BLOCK_HASH);
+
+  expect(Number.isFinite(risk)).toEqual(true);
+});
+
 test('getBestBlockHash', async () => {
   const txHash = await cfx.getBestBlockHash();
 
@@ -179,7 +185,7 @@ test('sendTransaction by address', async () => {
   const receiptExecute = await promise.executed();
   expect(receiptExecute.outcomeStatus).toEqual(0);
 
-  const receiptConfirmed = await promise.confirmed({ bar: 0.01 });
+  const receiptConfirmed = await promise.confirmed({ threshold: 1 });
   expect(receiptConfirmed.outcomeStatus).toEqual(0);
 
   await expect(promise.confirmed({ timeout: 0 })).rejects.toThrow('Timeout');

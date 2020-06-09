@@ -35,7 +35,7 @@ test('Contract', async () => {
   expect(contract.address).toEqual(address);
   expect(contract.constructor.bytecode).toEqual(bytecode);
 
-  const { contractCreated } = await contract.constructor(100).sendTransaction({ from: ADDRESS, nonce: 0 }).confirmed();
+  const { contractCreated } = await contract.constructor(100).sendTransaction({ from: ADDRESS, nonce: 0 }).executed();
   expect(contractCreated === null || contractCreated.startsWith('0x')).toEqual(true);
 
   value = await contract.constructor(100);
@@ -55,9 +55,9 @@ test('Contract', async () => {
   expect(logs.length).toEqual(2);
 
   const iter = contract.SelfEvent(null, null).getLogs({ toEpoch: 0x00 });
-  expect(Boolean(await iter.next())).toEqual(true);
-  expect(Boolean(await iter.next())).toEqual(true);
-  expect(Boolean(await iter.next())).toEqual(false);
+  expect(Boolean(await iter.next({ threshold: 1 }))).toEqual(true);
+  expect(Boolean(await iter.next({ threshold: 1 }))).toEqual(true);
+  expect(Boolean(await iter.next({ threshold: 1 }))).toEqual(false);
 });
 
 test('contract.call', async () => {
