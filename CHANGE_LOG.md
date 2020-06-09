@@ -1,6 +1,6 @@
 # change log
 
-## v1.0.0-alpha
+## v0.10.0-alpha
 
 * add `getStatus`
 
