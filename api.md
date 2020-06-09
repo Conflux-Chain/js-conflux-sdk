@@ -349,7 +349,7 @@ Get status
 - `number` epochNumber: Epoch number
 - `number` blockNumber: Block number
 - `number` pendingTxNumber: Pending transaction number
-- `string` bestHash: TODO
+- `string` bestHash: The block hash of best pivot block
 
 ## Conflux.prototype.getGasPrice <a id="Conflux.js/getGasPrice"></a>
 
@@ -540,8 +540,8 @@ epochNumber | `string,number` | false    | this.defaultEpoch | The end epochNumb
 
 ## Conflux.prototype.getConfirmationRiskByHash <a id="Conflux.js/getConfirmationRiskByHash"></a>
 
-Get block revert risk.
-All block in epoch returned same risk number
+Get the risk of the block could be reverted.
+All block in one same epoch returned same risk number
 
 * **Parameters**
 
