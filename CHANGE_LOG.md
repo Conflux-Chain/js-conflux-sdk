@@ -1,5 +1,21 @@
 # change log
 
+## v1.0.0-alpha
+
+* remove `getRiskCoefficient` and replace with `getConfirmationRiskByHash`
+
+```
+// old
+cfx.getRiskCoefficient(epochNumber)
+
+// new
+cfx.getConfirmationRiskByHash(blockHash)
+```
+
+* remove `getAccount` cause it's internal RPC.
+
+* use `require` replace `import` to gen code.
+
 ## v0.9.2
 
 * add defaultStorageLimit and defaultChainId for Conflux

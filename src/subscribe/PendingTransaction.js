@@ -81,11 +81,11 @@ class PendingTransaction extends LazyPromise {
    * @param [options.threshold=0.01] {number} - Number in range (0,1)
    * @return {Promise<object>} See `Conflux.getTransactionReceipt`
    */
-  async confirmed({ threshold = 0.01, delta = 1000, timeout = 30 * 60 * 1000 } = {}) {
+  async confirmed({ threshold = 1e-8, delta = 1000, timeout = 30 * 60 * 1000 } = {}) {
     return loop({ delta, timeout }, async () => {
       const receipt = await this.executed({ delta, timeout });
-      const risk = await this.cfx.getRiskCoefficient(receipt.epochNumber);
-      if (risk < threshold) {
+      const risk = await this.cfx.getConfirmationRiskByHash(receipt.blockHash);
+      if (risk <= threshold) {
         return receipt;
       }
 

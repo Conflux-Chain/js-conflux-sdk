@@ -19,7 +19,8 @@ class LogIterator extends LazyPromise {
       return false;
     }
 
-    const risk = await this.cfx.getRiskCoefficient(epochNumber);
+    const blockHashArray = await this.cfx.getBlocksByEpochNumber(epochNumber);
+    const risk = await this.cfx.getConfirmationRiskByHash(lodash.last(blockHashArray));
     return risk < threshold;
   }
 
