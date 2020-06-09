@@ -35,6 +35,8 @@ keywords:
         - [privateKeyToAddress](#util/sign.js/privateKeyToAddress)
         - [ecdsaSign](#util/sign.js/ecdsaSign)
         - [ecdsaRecover](#util/sign.js/ecdsaRecover)
+        - [encrypt](#util/sign.js/encrypt)
+        - [decrypt](#util/sign.js/decrypt)
     - unit.js
         - [unit](#util/unit.js/unit)
 
@@ -88,6 +90,21 @@ entropy |      | true     |         |
     }
 ```
 
+## Account.decrypt <a id="Account.js/decrypt"></a>
+
+Decrypt account encrypt info.
+
+* **Parameters**
+
+Name     | Type     | Required | Default | Description
+---------|----------|----------|---------|------------
+password | `string` | true     |         |
+info     | `object` | true     |         |
+
+* **Returns**
+
+`Account` 
+
 ## Account.prototype.constructor <a id="Account.js/constructor"></a>
 
 Create a account by privateKey.
@@ -101,6 +118,20 @@ privateKey | `string,Buffer` | true     |         |
 * **Returns**
 
 `Account` 
+
+## Account.prototype.encrypt <a id="Account.js/encrypt"></a>
+
+Encrypt account privateKey to object.
+
+* **Parameters**
+
+Name     | Type     | Required | Default | Description
+---------|----------|----------|---------|------------
+password | `string` | true     |         |
+
+* **Returns**
+
+`object` 
 
 ## Account.prototype.signTransaction <a id="Account.js/signTransaction"></a>
 
@@ -307,6 +338,19 @@ close connection.
 > cfx.close();
 ```
 
+## Conflux.prototype.getStatus <a id="Conflux.js/getStatus"></a>
+
+Get status
+
+* **Returns**
+
+`Promise.<object>` Status information object
+- `number` chainId: Chain id
+- `number` epochNumber: Epoch number
+- `number` blockNumber: Block number
+- `number` pendingTxNumber: Pending transaction number
+- `string` bestHash: TODO
+
 ## Conflux.prototype.getGasPrice <a id="Conflux.js/getGasPrice"></a>
 
 Returns the current gas price oracle. The gas price is determined by the last few blocks median gas price.
@@ -493,6 +537,21 @@ epochNumber | `string,number` | false    | this.defaultEpoch | The end epochNumb
 > await cfx.getNextNonce("0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b", 0);
    0
 ```
+
+## Conflux.prototype.getConfirmationRiskByHash <a id="Conflux.js/getConfirmationRiskByHash"></a>
+
+Get block revert risk.
+All block in epoch returned same risk number
+
+* **Parameters**
+
+Name      | Type     | Required | Default | Description
+----------|----------|----------|---------|------------
+blockHash | `string` | true     |         |
+
+* **Returns**
+
+`Promise.<(number|null)>` 
 
 ## Conflux.prototype.getBlockByEpochNumber <a id="Conflux.js/getBlockByEpochNumber"></a>
 
@@ -1543,6 +1602,29 @@ arg  | `number,string,boolean` | true     |         |
  Error("not match uintHex")
 ```
 
+## format.riskNumber (setter) <a id="util/format.js/riskNumber (setter)"></a>
+
+*no description*
+
+* **Parameters**
+
+Name | Type     | Required | Default | Description
+-----|----------|----------|---------|------------
+hex  | `string` | true     |         |
+
+* **Returns**
+
+`number` 
+
+* **Examples**
+
+```
+> format.riskNumber('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')
+ 1
+> format.riskNumber('0xe666666666666666666666666666666666666666666666666666666666666665')
+ 0.9
+```
+
 ## format.epochNumber (setter) <a id="util/format.js/epochNumber (setter)"></a>
 
 *no description*
@@ -1986,6 +2068,59 @@ options.v | `number` | true     |         |
 > publicKeyToAddress(ecdsaRecover(buffer32, ecdsaSign(buffer32, privateKey)))
  <Buffer 0d b9 e0 02 85 67 52 28 8b ef 47 60 fa 67 94 ec 83 a8 53 b9>
 ```
+
+----------------------------------------
+
+## encrypt <a id="util/sign.js/encrypt"></a>
+
+*no description*
+
+* **Parameters**
+
+Name     | Type     | Required | Default | Description
+---------|----------|----------|---------|------------
+key      | `Buffer` | true     |         |
+password | `Buffer` | true     |         |
+options  | `object` | true     |         |
+
+* **Returns**
+
+`object` Encrypt info
+- salt {Buffer}
+- iv {Buffer}
+- cipher {Buffer}
+- mac {Buffer}
+- algorithm {string}
+- N {number}
+- r {number}
+- p {number}
+- dkLen {number}
+
+----------------------------------------
+
+## decrypt <a id="util/sign.js/decrypt"></a>
+
+*no description*
+
+* **Parameters**
+
+Name              | Type     | Required | Default       | Description
+------------------|----------|----------|---------------|------------
+password          | `Buffer` | true     |               |
+options           | `object` | true     |               |
+options.algorithm | `string` | false    | 'aes-128-ctr' |
+options.N         | `number` | false    | 8192          |
+options.r         | `number` | false    | 8             |
+options.p         | `number` | false    | 1             |
+options.dkLen     | `number` | false    | 32            |
+options.salt      | `Buffer` | true     |               |
+options.iv        | `Buffer` | true     |               |
+options.cipher    | `Buffer` | true     |               |
+options.mac       | `Buffer` | true     |               |
+
+* **Returns**
+
+`Buffer` 
 
 ----------------------------------------
 
