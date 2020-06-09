@@ -188,12 +188,20 @@ class Conflux {
    * - `number` epochNumber: Epoch number
    * - `number` blockNumber: Block number
    * - `number` pendingTxNumber: Pending transaction number
-   * - `string` bestHash: TODO
+   * - `string` bestHash: The block hash of best pivot block
    */
   async getStatus() {
-    const result = await this.provider.call('cfx_getStatus');
+    try {
+      const result = await this.provider.call('cfx_getStatus');
 
-    return format.status(result);
+      return format.status(result);
+    } catch (e) {
+      if (/Method not found/.test(e.message)) {
+        return { chainId: 0 };
+      } else {
+        throw e;
+      }
+    }
   }
 
   /**
@@ -371,8 +379,8 @@ class Conflux {
 
   // -------------------------------- epoch -----------------------------------
   /**
-   * Get block revert risk.
-   * All block in epoch returned same risk number
+   * Get the risk of the block could be reverted.
+   * All block in one same epoch returned same risk number
    *
    * @param blockHash {string}
    * @return {Promise<number|null>}
