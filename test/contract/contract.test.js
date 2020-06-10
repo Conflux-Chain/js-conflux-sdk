@@ -5,6 +5,7 @@ const format = require('../../src/util/format');
 const { MockProvider } = require('../../mock');
 const { abi, bytecode, address } = require('./contract.json');
 const ContractConstructor = require('../../src/contract/ContractConstructor');
+/* eslint global-require: 0 */
 
 const ADDRESS = '0xfcad0b19bb29d4674531d6f115237e16afce377c';
 const HEX_64 = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
@@ -220,7 +221,256 @@ test('decodeData.function', () => {
     },
   });
 
-  expect(contract.abi.decodeData('0x')).toEqual(undefined);
+  const dataInput = '0x';
+  expect(contract.abi.decodeData(dataInput)).toEqual(undefined);
+});
+
+test('decodeData.constructor1', () => {
+  const contract1 = cfx.Contract({
+    abi: require('../contract/testConstructor1.json').abi,
+    bytecode: require('../contract/testConstructor1.json').bytecode,
+  });
+  const data1 = contract1.constructor('param1-param1-param1-param1-param199', 'param2-param2-param2', 2333, '0xa000000000000000000000000000000000000001', false);
+  const contract2 = cfx.Contract({
+    abi: require('../contract/testConstructor1.json').abi,
+  });
+
+  // const coder0 = getCoder({ type: 'bool' });
+  // const hex0 = format.hex(coder0.encode(false))
+  // console.log(hex0, 'hex0')
+
+  // const coder1 = getCoder({ type: 'address' });
+  // const hex1 = format.hex(coder1.encode('0xa000000000000000000000000000000000000001'));
+  // console.log(hex1, 'hex1')
+
+  // const coder2 = getCoder({ type: 'uint' });
+  // const hex3 = format.hex(coder2.encode(2333));
+  // console.log(hex3, 'hex2')
+
+  // const coder3 = getCoder({ type: 'string' });
+  // const hex4 = format.hex(coder3.encode('param2-pparam2-param2'));
+  // console.log(hex4, 'hex3')
+
+  // const coder4 = getCoder({ type: 'string' });
+  // const hex5 = format.hex(coder4.encode('param1-param1-param1-param1-param199'));
+  // console.log(hex5, 'hex4')
+
+  const result = contract2.abi.decodeData(data1.data);
+  expect(result).toEqual({
+    name: 'constructor',
+    fullName: 'constructor(string param1, string param2, uint256 param3, address param4, bool param5)',
+    type: 'constructor(string,string,uint256,address,bool)',
+    signature: null,
+    array: [
+      'param1-param1-param1-param1-param199-param199-param199-param199',
+      'param2-param2-param2',
+      JSBI.BigInt(2333),
+      '0xa000000000000000000000000000000000000001',
+      false,
+    ],
+    object: {
+      param1: 'param1-param1-param1-param1-param199-param199-param199-param199',
+      param2: 'param2-param2-param2',
+      param3: JSBI.BigInt(2333),
+      param4: '0xa000000000000000000000000000000000000001',
+      param5: false,
+    },
+  });
+});
+
+
+test.only('decodeData.constructor2', () => {
+  const contract1 = cfx.Contract({
+    abi: require('../contract/testConstructor2.json').abi,
+    bytecode: require('../contract/testConstructor2.json').bytecode,
+  });
+
+  const params = [
+    [
+      'param1-param1-param1-param1-param299',
+      'param1-param1-param1-param1-param299-param1-param1-param1-param1-param299-param1-param1-param1-param1-param299',
+      'param1-param1-param1-param1-param299',
+      'param1-param1-param1-param1-param299',
+      'param1-param1-param1-param1-param299中文汉字测试123123123测试中文汉字测试123123123测试中文汉字测试123123123测试',
+      'param1-param1-param1-param1-param299',
+      'param1-param1-param1-param1-param299',
+      'param1-param1-param1-param1-param299',
+    ],
+    [
+      'param2-param2-param2',
+    ],
+    2333,
+    [
+      '0xa000000000000000000000000000000000000001',
+      '0xa000000000000000000000000000000000000002',
+    ],
+    false,
+  ];
+
+  const data1 = contract1.constructor(...params);
+  const contract2 = cfx.Contract({
+    abi: require('../contract/testConstructor2.json').abi,
+  });
+  const result = contract2.abi.decodeData(data1.data, true);
+  expect(result).toMatchObject({
+    name: 'constructor',
+    signature: null,
+    array: [
+      params[0],
+      params[1],
+      JSBI.BigInt(params[2]),
+      params[3],
+      params[4],
+    ],
+    object: {
+      param1: params[0],
+      param2: params[1],
+      param3: JSBI.BigInt(params[2]),
+      param4: params[3],
+      param5: params[4],
+    },
+  });
+});
+
+
+test('decodeData.constructor3', () => {
+  const contract1 = cfx.Contract({
+    abi: require('../contract/testConstructor3.json').abi,
+    bytecode: require('../contract/testConstructor3.json').bytecode,
+  });
+  const params = [
+    [
+      'param1-param1-param1-param1-param299',
+    ],
+    [
+      'param2-param2-param2',
+      'param1-param1-param1-param1-param299-param1-param1-param1-param1-param299-param1-param1-param1-param1-param299',
+    ],
+    2333,
+    [
+      '0xa000000000000000000000000000000000000001',
+      '0xa000000000000000000000000000000000000002',
+    ],
+    false,
+  ];
+  const data1 = contract1.constructor(...params);
+  const contract2 = cfx.Contract({
+    abi: require('../contract/testConstructor3.json').abi,
+  });
+
+  const result = contract2.abi.decodeData(data1.data, true);
+  console.log(result, 'result');
+  expect(result).toMatchObject({
+    name: 'constructor',
+    signature: null,
+    array: [
+      params[0],
+      params[1],
+      JSBI.BigInt(params[2]),
+      params[3],
+      params[4],
+    ],
+    object: {
+      param1: params[0],
+      param2: params[1],
+      param3: JSBI.BigInt(params[2]),
+      param4: params[3],
+      param5: params[4],
+    },
+  });
+});
+
+
+test('decodeData.constructor4', () => {
+  const contract1 = cfx.Contract({
+    abi: require('../contract/testConstructor4.json').abi,
+    bytecode: require('../contract/testConstructor4.json').bytecode,
+  });
+  const params = [
+    [
+      'param1-param1-param1-param1-param299',
+    ],
+    [
+      'param2-param2-param2',
+      'param1-param1-param1-param1-param299-param1-param1-param1-param1-param299-param1-param1-param1-param1-param299',
+    ],
+    2333,
+    [
+      '0xa000000000000000000000000000000000000001',
+      '0xa000000000000000000000000000000000000002',
+    ],
+    false,
+
+  ];
+  const data1 = contract1.constructor(...params);
+  const contract2 = cfx.Contract({
+    abi: require('../contract/testConstructor4.json').abi,
+  });
+  const result = contract2.abi.decodeData(data1.data, true);
+  expect(result).toMatchObject({
+    name: 'constructor',
+    signature: null,
+    array: [
+      params[0],
+      params[1],
+      JSBI.BigInt(params[2]),
+      params[3],
+      params[4],
+    ],
+    object: {
+      param1: params[0],
+      param2: params[1],
+      param3: JSBI.BigInt(params[2]),
+      param4: params[3],
+      param5: params[4],
+    },
+  });
+});
+
+
+test('decodeData.constructor5', () => {
+  const contract1 = cfx.Contract({
+    abi: require('../contract/testConstructor5.json').abi,
+    bytecode: require('../contract/testConstructor5.json').bytecode,
+  });
+  const params = [
+    [
+      'param1-param1-param1-param1-param299',
+    ],
+    [
+      'param2-param2-param2',
+      'param1-param1-param1-param1-param299-param1-param1-param1-param1-param299-param1-param1-param1-param1-param299',
+    ],
+    2333,
+    [
+      '0xa000000000000000000000000000000000000001',
+      '0xa000000000000000000000000000000000000002',
+    ],
+    false,
+  ];
+  const data1 = contract1.constructor(...params);
+  const contract2 = cfx.Contract({
+    abi: require('../contract/testConstructor5.json').abi,
+  });
+  const result = contract2.abi.decodeData(data1.data, true);
+  expect(result).toMatchObject({
+    name: 'constructor',
+    signature: null,
+    array: [
+      params[0],
+      params[1],
+      JSBI.BigInt(params[2]),
+      params[3],
+      params[4],
+    ],
+    object: {
+      param1: params[0],
+      param2: params[1],
+      param3: JSBI.BigInt(params[2]),
+      param4: params[3],
+      param5: params[4],
+    },
+  });
 });
 
 test('decodeLog', () => {
