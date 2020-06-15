@@ -19,6 +19,7 @@ function formatFullName({ name, inputs }) {
   return `${name}(${inputs.map(param => `${getCoder(param).type} ${param.indexed ? 'indexed ' : ''}${param.name}`).join(', ')})`;
 }
 
+// ----------------------------------------------------------------------------
 class FunctionCoder {
   /**
    * Function coder
@@ -143,16 +144,6 @@ class FunctionCoder {
   }
 }
 
-class ConstructorCoder extends FunctionCoder {
-  constructor({ inputs = [] } = {}) {
-    super({ name: 'constructor', inputs });
-  }
-
-  decodeOutputs(hex) {
-    return hex;
-  }
-}
-
 class EventCoder {
   /**
    * Event coder
@@ -191,7 +182,7 @@ class EventCoder {
       NamedTuple: [Function: NamedTuple(account,number)]
     }
    */
-  constructor({ anonymous, name, inputs }) {
+  constructor({ anonymous, name, inputs = [] } = {}) {
     this.anonymous = anonymous;
     this.name = name;
     this.fullName = formatFullName({ name, inputs });
@@ -301,33 +292,37 @@ class EventCoder {
   }
 }
 
-// ----------------------------------------------------------------------------
 class ErrorCoder {
   constructor(fragment = { name: 'Error', inputs: [{ type: 'string', name: 'message' }] }) {
     this.coder = new FunctionCoder(fragment);
-    this.signature = this.coder.signature();
+    this.signature = this.coder.signature(); // 0x08c379a0
   }
 
-  decodeError(hex) {
-    const signature = hex.slice(0, 10); // '0x' + 8 hex
+  decodeError(error) {
+    try {
+      return new Error(this.decodeMessage(error.data));
+    } catch (e) {
+      return error;
+    }
+  }
+
+  decodeMessage(hex) {
+    const signature = hex.slice(0, this.signature.length);
     const data = hex.slice(10);
 
     if (signature !== this.signature) {
       return undefined;
     }
 
-    const params = this.coder.decodeInputs(data);
-    return Error(params.message);
+    const [message] = this.coder.decodeInputs(data);
+    return message;
   }
 }
 
-const errorCoder = new ErrorCoder();
-
 module.exports = {
   formatSignature,
-  errorCoder,
   formatFullName,
   FunctionCoder,
-  ConstructorCoder,
   EventCoder,
+  errorCoder: new ErrorCoder(),
 };

@@ -21,7 +21,7 @@ const contract = cfx.Contract({ abi, bytecode, address });
 
 test('without code', async () => {
   const contractWithoutCode = cfx.Contract({ abi, address });
-  expect(() => contractWithoutCode.constructor(100)).toThrow('contract.constructor.bytecode is empty');
+  expect(() => contractWithoutCode.constructor(100)).toThrow('bytecode is empty');
 });
 
 test('with empty abi', () => {
@@ -73,10 +73,12 @@ test('contract.call', async () => {
     data: '0x06661abd',
   }, 'latest_state');
 
-  call.mockReturnValueOnce('0x08c379a0' +
+  const error = new Error();
+  error.data = '0x08c379a0' +
     '0000000000000000000000000000000000000000000000000000000000000020' +
     '0000000000000000000000000000000000000000000000000000000000000005' +
-    '4552524f52000000000000000000000000000000000000000000000000000000');
+    '4552524f52000000000000000000000000000000000000000000000000000000';
+  call.mockRejectedValueOnce(error);
   await expect(contract.count()).rejects.toThrow('ERROR');
 
   call.mockReturnValueOnce('0x0');
@@ -88,11 +90,11 @@ test('contract.call', async () => {
 test('contract.override', () => {
   expect(contract.override('str').coder.type).toEqual('override(string)');
   expect(contract.override(Buffer.from('bytes')).coder.type).toEqual('override(bytes)');
-  expect(() => contract.override(100)).toThrow('can not match "override(bytes),override(string),override(uint256,string)"');
+  expect(() => contract.override(100)).toThrow('can not match override "override(bytes)|override(string)|override(uint256,string)" with args (100)');
 
   let event;
 
-  expect(() => contract.OverrideEvent()).toThrow('can not match "OverrideEvent(bytes),OverrideEvent(string),OverrideEvent(uint256,string)" with args ()');
+  expect(() => contract.OverrideEvent()).toThrow('can not match override "OverrideEvent(bytes),OverrideEvent(string),OverrideEvent(uint256,string)" with args ()');
 
   event = contract.OverrideEvent('str');
   expect(event.topics).toEqual([
@@ -112,7 +114,7 @@ test('contract.override', () => {
     ['0x0000000000000000000000000000000000000000000000000000000000000064'],
   ]);
 
-  expect(() => contract.OverrideEvent(100)).toThrow('can not match "OverrideEvent(bytes),OverrideEvent(string),OverrideEvent(uint256,string)" with args (100)');
+  expect(() => contract.OverrideEvent(100)).toThrow('can not match override "OverrideEvent(bytes),OverrideEvent(string),OverrideEvent(uint256,string)" with args (100)');
 
   event = contract.OverrideEvent(null);
   expect(event.topics).toEqual([
@@ -130,11 +132,11 @@ test('contract.override', () => {
 test('contract.StringEvent', () => {
   const { topics } = contract.StringEvent('string');
   expect(topics).toEqual([
-    [sha3('StringEvent(string)')],
-    [sha3('string')],
+    sha3('StringEvent(string)'),
+    sha3('string'),
   ]);
 
-  const result = contract.StringEvent.decodeLog({ data: '0x', topics: [topics[0][0], topics[1][0]] });
+  const result = contract.StringEvent.decodeLog({ data: '0x', topics: [topics[0], topics[1]] });
   expect(result).toEqual({
     name: 'StringEvent',
     fullName: 'StringEvent(string indexed _string)',
@@ -150,13 +152,13 @@ test('contract.StringEvent', () => {
 test('contract.ArrayEvent', () => {
   const { topics } = contract.ArrayEvent(HEX_64);
   expect(topics).toEqual([
-    [sha3('ArrayEvent(string[3])')],
-    [HEX_64],
+    sha3('ArrayEvent(string[3])'),
+    HEX_64,
   ]);
 
-  expect(() => contract.ArrayEvent(['a', 'b', 'c'])).toThrow('can not match "ArrayEvent(string[3])" with args (a,b,c)');
+  expect(() => contract.ArrayEvent(['a', 'b', 'c'])).toThrow('not supported encode array to index');
 
-  const result = contract.ArrayEvent.decodeLog({ data: '0x', topics: [topics[0][0], topics[1][0]] });
+  const result = contract.ArrayEvent.decodeLog({ data: '0x', topics: [topics[0], topics[1]] });
   expect(result).toEqual({
     name: 'ArrayEvent',
     fullName: 'ArrayEvent(string[3] indexed _array)',
@@ -172,13 +174,13 @@ test('contract.ArrayEvent', () => {
 test('contract.StructEvent', () => {
   const { topics } = contract.StructEvent(HEX_64);
   expect(topics).toEqual([
-    [sha3('StructEvent((string,int32))')],
-    [HEX_64],
+    sha3('StructEvent((string,int32))'),
+    HEX_64,
   ]);
 
-  expect(() => contract.StructEvent(['Tom', 18])).toThrow('can not match "StructEvent((string,int32))" with args (Tom,18)');
+  expect(() => contract.StructEvent(['Tom', 18])).toThrow('not supported encode tuple to index');
 
-  const result = contract.StructEvent.decodeLog({ data: '0x', topics: [topics[0][0], topics[1][0]] });
+  const result = contract.StructEvent.decodeLog({ data: '0x', topics: [topics[0], topics[1]] });
   expect(result).toEqual({
     name: 'StructEvent',
     fullName: 'StructEvent((string,int32) indexed _struct)',
@@ -199,7 +201,7 @@ test('decodeData.constructor', () => {
     name: 'constructor',
     fullName: 'constructor(uint256 num)',
     type: 'constructor(uint256)',
-    signature: null,
+    signature: '0x767b6190',
     array: [JSBI.BigInt(50)],
     object: { num: JSBI.BigInt(50) },
   });

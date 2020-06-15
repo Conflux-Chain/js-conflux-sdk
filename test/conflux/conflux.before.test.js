@@ -19,7 +19,6 @@ cfx.provider = new MockProvider();
 
 beforeAll(() => {
   expect(cfx.defaultEpoch).toEqual('latest_state');
-  expect(cfx.defaultChainId).toEqual(0);
 });
 
 test('getLogs', async () => {
@@ -233,7 +232,7 @@ test('call', async () => {
     to: ADDRESS,
     value: undefined,
     data: undefined,
-    chainId: format.uInt(0),
+    chainId: cfx.defaultChainId,
     epochHeight: undefined,
   }, cfx.defaultEpoch);
 
@@ -292,7 +291,7 @@ test('estimateGasAndCollateral', async () => {
     to: ADDRESS,
     value: undefined,
     data: undefined,
-    chainId: format.uInt(0),
+    chainId: cfx.defaultChainId,
     epochHeight: undefined,
   });
 
@@ -317,7 +316,7 @@ test('estimateGasAndCollateral', async () => {
     to: ADDRESS,
     value: '0x64',
     data: '0x',
-    chainId: format.uInt(0),
+    chainId: cfx.defaultChainId,
     epochHeight: undefined,
   });
 
@@ -422,6 +421,7 @@ test('sendTransaction by account', async () => {
   const call = jest.spyOn(cfx.provider, 'call');
   await cfx.sendTransaction({
     from: account,
+    chainId: 0,
     epochHeight: 200,
     nonce: 100,
     gas: 100,

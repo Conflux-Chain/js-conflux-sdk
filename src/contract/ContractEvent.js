@@ -3,7 +3,10 @@ const { assert, decorate } = require('../util');
 const { EventCoder } = require('../abi');
 const callable = require('../lib/callable');
 
-class Event {
+/**
+ * @memberOf ContractEvent
+ */
+class EventLog {
   constructor(cfx, eventLog, { address, topics }) {
     this.cfx = cfx;
     this.eventLog = eventLog;
@@ -39,71 +42,90 @@ class Event {
 }
 
 class ContractEvent {
-  constructor(cfx, contract, name) {
+  constructor(cfx, contract, fragment) {
     this.cfx = cfx;
     this.contract = contract;
-    this.name = name;
-    this.signatureToCoder = {};
+
+    this.coder = new EventCoder(fragment);
+    this.name = fragment.name; // example: "Event"
+    this.type = this.coder.type; // example: "Event(address)"
+    this.signature = this.coder.signature(); // example: "0x50d7c806d0f7913f321946784dee176a42aa55b5dd83371fc57dcedf659085e0"
 
     return callable(this, this.call.bind(this));
   }
 
-  add(fragment) {
-    const coder = new EventCoder(fragment);
-    this.signatureToCoder[coder.signature()] = coder;
-  }
-
   call(...args) {
-    const matrix = [];
-    const types = [];
+    const topics = [this.signature, ...this.coder.encodeTopics(args)];
 
-    for (const [signature, coder] of Object.entries(this.signatureToCoder)) {
-      if (!coder.anonymous) {
-        try {
-          matrix.push([signature, ...coder.encodeTopics(args)]);
-        } catch (e) {
-          types.push(coder.type);
-        }
-      }
-    }
-
-    if (!matrix.length) {
-      throw new Error(`can not match "${types.join(',')}" with args (${args.join(',')})`);
-    }
-
-    // transpose matrix
-    const topics = lodash.zip(...matrix).map(array => {
-      array = array.filter(Boolean);
-      return array.length ? array : null;
-    });
-
-    const address = this.contract.address;
-    return new Event(this.cfx, this, { address, topics });
+    return new EventLog(this.cfx, this, { address: this.contract.address, topics });
   }
 
   decodeLog(log) {
     const topic = log.topics[0];
-    const coder = this.signatureToCoder[topic];
 
-    assert(coder, {
-      message: 'ContractEvent.decodeLog topic missing',
-      expect: topic,
-      got: Object.keys(this.signatureToCoder),
-      coder: this,
+    assert(topic === this.signature, {
+      message: 'decodeLog unexpected topic',
+      expect: this.signature,
+      got: topic,
+      coder: this.coder,
     });
 
-    const namedTuple = coder.decodeLog(log);
+    const namedTuple = this.coder.decodeLog(log);
     return {
       name: this.name,
-      fullName: coder.fullName,
-      type: coder.type,
-      signature: topic,
+      fullName: this.coder.fullName,
+      type: this.coder.type,
+      signature: this.signature,
       array: [...namedTuple],
       object: namedTuple.toObject(),
     };
   }
 }
 
-ContractEvent.Event = Event;
+/**
+ * @memberOf ContractEvent
+ */
+class ContractEventOverride {
+  constructor(cfx, contract, events) {
+    this.cfx = cfx;
+    this.contract = contract;
+
+    this.signatureToEvent = lodash.keyBy(events, 'signature');
+
+    return callable(this, this.call.bind(this));
+  }
+
+  call(...args) {
+    const acceptArray = [];
+    const rejectArray = [];
+    for (const event of Object.values(this.signatureToEvent)) {
+      try {
+        acceptArray.push(event(...args).topics);
+      } catch (e) {
+        rejectArray.push(event.type);
+      }
+    }
+
+    if (!acceptArray.length) {
+      throw new Error(`can not match override "${rejectArray.join(',')}" with args (${args.join(',')})`);
+    }
+
+    // transpose acceptArray
+    const topics = lodash.zip(...acceptArray).map(array => {
+      array = array.filter(Boolean);
+      return array.length ? array : null;
+    });
+
+    return new EventLog(this.cfx, this, { address: this.contract.address, topics });
+  }
+
+  decodeLog(log) {
+    const topic = log.topics[0];
+    const event = this.signatureToEvent[topic];
+    return event.decodeLog(log);
+  }
+}
 
 module.exports = ContractEvent;
+module.exports.ContractEventOverride = ContractEventOverride;
+module.exports.EventLog = EventLog;

@@ -47,6 +47,7 @@
     "exorcist": "^1.0.1",
     "fs-extra": "^8.1.0",
     "jest": "^24.9.0",
+    "solc": "^0.6.10",
     "tinyify": "^2.5.2"
   },
   "resolutions": {

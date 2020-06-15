@@ -1,3 +1,4 @@
+const lodash = require('lodash');
 const ContractABICoder = require('./ContractABICoder');
 const ContractConstructor = require('./ContractConstructor');
 const ContractMethod = require('./ContractMethod');
@@ -99,37 +100,42 @@ class Contract {
     }
    */
   constructor(cfx, { abi, address, bytecode }) {
-    this.constructor = new ContractConstructor(cfx, this); // cover this.constructor
-    this.constructor.bytecode = bytecode;
+    const abiTable = lodash.groupBy(abi, 'type');
 
-    abi.forEach(fragment => {
-      switch (fragment.type) {
-        case 'constructor':
-          this.constructor.add(fragment);
-          break;
-
-        case 'function':
-          if (!(this[fragment.name] instanceof ContractMethod)) {
-            this[fragment.name] = new ContractMethod(cfx, this, fragment.name);
-          }
-          this[fragment.name].add(fragment);
-          break;
-
-        case 'event':
-          if (!(this[fragment.name] instanceof ContractEvent)) {
-            this[fragment.name] = new ContractEvent(cfx, this, fragment.name);
-          }
-          this[fragment.name].add(fragment);
-          break;
-
-        default:
-          // see https://solidity.readthedocs.io/en/v0.5.13/contracts.html#fallback-function
-          break;
-      }
-    });
-
+    this.constructor = new ContractConstructor(cfx, this, lodash.first(abiTable.constructor), bytecode);
     this.abi = new ContractABICoder(this); // XXX: Create a method named `abi` in solidity is a `Warning`.
     this.address = address; // XXX: Create a method named `address` in solidity is a `ParserError`
+
+    const methodArray = lodash.map(abiTable.function, fragment => new ContractMethod(cfx, this, fragment));
+    const eventArray = lodash.map(abiTable.event, fragment => new ContractEvent(cfx, this, fragment));
+
+    // name to instance
+    lodash.forEach(lodash.groupBy(methodArray, 'name'), (array, name) => {
+      this[name] = array.length === 1
+        ? lodash.first(array) // no override
+        : new ContractMethod.ContractMethodOverride(cfx, this, array);
+    });
+    lodash.forEach(lodash.groupBy(eventArray, 'name'), (array, name) => {
+      this[name] = array.length === 1
+        ? lodash.first(array) // no override
+        : new ContractEvent.ContractEventOverride(cfx, this, array);
+    });
+
+    // type to instance
+    methodArray.forEach(method => {
+      this[method.type] = method;
+    });
+    eventArray.forEach(event => {
+      this[event.type] = event;
+    });
+
+    // signature to instance, for contract abi decoder to decode
+    methodArray.forEach(method => {
+      this[method.signature] = method;
+    });
+    eventArray.forEach(event => {
+      this[event.signature] = event;
+    });
   }
 }
 

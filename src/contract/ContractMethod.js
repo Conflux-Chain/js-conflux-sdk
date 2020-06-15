@@ -1,9 +1,10 @@
+const lodash = require('lodash');
 const { assert } = require('../util');
 const { FunctionCoder, errorCoder } = require('../abi');
 const callable = require('../lib/callable');
 
 /**
- * @memberOf Contract
+ * @memberOf ContractMethod
  */
 class Called {
   constructor(cfx, coder, { to, data }) {
@@ -39,12 +40,12 @@ class Called {
    * @param options {object} - See `format.estimateTx`
    * @return {Promise<object>} The gas used and storage occupied for the simulated call/transaction.
    */
-  estimateGasAndCollateral(options) {
-    return this.cfx.estimateGasAndCollateral({
-      to: this.to,
-      data: this.data,
-      ...options,
-    });
+  async estimateGasAndCollateral(options) {
+    try {
+      return await this.cfx.estimateGasAndCollateral({ to: this.to, data: this.data, ...options });
+    } catch (e) {
+      throw errorCoder.decodeError(e);
+    }
   }
 
   /**
@@ -59,20 +60,12 @@ class Called {
    * @return {Promise<*>} Decoded contact call return.
    */
   async call(options, epochNumber) {
-    const hex = await this.cfx.call(
-      {
-        to: this.to,
-        data: this.data,
-        ...options,
-      },
-      epochNumber,
-    );
-
     try {
+      const hex = await this.cfx.call({ to: this.to, data: this.data, ...options }, epochNumber);
       const namedTuple = this.coder.decodeOutputs(hex);
       return namedTuple.length <= 1 ? namedTuple[0] : namedTuple;
     } catch (e) {
-      throw errorCoder.decodeError(hex) || e;
+      throw errorCoder.decodeError(e);
     }
   }
 
@@ -87,61 +80,95 @@ class Called {
 }
 
 class ContractMethod {
-  constructor(cfx, contract, name) {
+  constructor(cfx, contract, fragment) {
     this.cfx = cfx;
     this.contract = contract;
-    this.name = name;
-    this.signatureToCoder = {};
+
+    this.coder = new FunctionCoder(fragment);
+    this.name = fragment.name; // example: "add"
+    this.type = this.coder.type; // example: "add(uint,uint)"
+    this.signature = this.coder.signature(); // example: "0xb8966352"
+    this.bytecode = this.signature; // example: "0xb8966352"
 
     return callable(this, this.call.bind(this));
   }
 
-  add(fragment) {
-    const coder = new FunctionCoder(fragment);
-    this.signatureToCoder[coder.signature()] = coder;
-  }
-
   call(...args) {
-    const types = [];
-
-    for (const [signature, coder] of Object.entries(this.signatureToCoder)) {
-      try {
-        const to = this.contract.address;
-        const data = `${signature}${coder.encodeInputs(args).substring(2)}`;
-
-        return new Called(this.cfx, coder, { to, data });
-      } catch (e) {
-        types.push(coder.type);
-      }
+    if (!this.bytecode) {
+      throw new Error('bytecode is empty');
     }
 
-    throw new Error(`can not match "${types.join(',')}" with args (${args.join(',')})`);
+    const to = this.contract.address;
+    const data = `${this.bytecode}${this.coder.encodeInputs(args).substring(2)}`;
+    return new Called(this.cfx, this.coder, { to, data });
   }
 
   decodeData(hex) {
-    const signature = hex.slice(0, 10); // '0x' + 8 hex
-    const data = hex.slice(10);
-    const coder = this.signatureToCoder[signature];
+    const prefix = hex.slice(0, this.bytecode.length);
+    const data = hex.slice(this.bytecode.length);
 
-    assert(coder, {
-      message: 'ContractMethod.decodeData signature missing',
-      expect: signature,
-      got: coder,
-      coder: this,
+    assert(prefix === this.bytecode, {
+      message: 'decodeData unexpected bytecode',
+      expect: this.bytecode,
+      got: prefix,
+      coder: this.coder,
     });
 
-    const namedTuple = coder.decodeInputs(data);
+    const namedTuple = this.coder.decodeInputs(data);
     return {
       name: this.name,
-      fullName: coder.fullName,
-      type: coder.type,
-      signature,
+      fullName: this.coder.fullName,
+      type: this.coder.type,
+      signature: this.signature,
       array: [...namedTuple],
       object: namedTuple.toObject(),
     };
   }
 }
 
-ContractMethod.Called = Called;
+/**
+ * @memberOf ContractMethod
+ */
+class ContractMethodOverride {
+  constructor(cfx, contract, methods) {
+    this.cfx = cfx;
+    this.contract = contract;
+    this.signatureToMethod = lodash.keyBy(methods, 'signature');
+
+    return callable(this, this.call.bind(this));
+  }
+
+  call(...args) {
+    const acceptArray = [];
+    const rejectArray = [];
+
+    let called;
+    for (const method of Object.values(this.signatureToMethod)) {
+      try {
+        called = method(...args);
+        acceptArray.push(method.type);
+      } catch (e) {
+        rejectArray.push(method.type);
+      }
+    }
+
+    if (!acceptArray.length) {
+      throw new Error(`can not match override "${rejectArray.join('|')}" with args (${args.join(',')})`);
+    }
+    if (acceptArray.length > 1) {
+      throw new Error(`can not determine override "${acceptArray.join('|')}" with args (${args.join(',')})`);
+    }
+
+    return called;
+  }
+
+  decodeData(hex) {
+    const signature = hex.slice(0, 10); // '0x' + 8 hex
+    const method = this.signatureToMethod[signature];
+    return method.decodeData(hex);
+  }
+}
 
 module.exports = ContractMethod;
+module.exports.ContractMethodOverride = ContractMethodOverride;
+module.exports.Called = Called;
