@@ -1,46 +1,34 @@
 {
   "name": "js-conflux-sdk",
   "description": "JavaScript Conflux Software Development Kit",
-  "version": "0.9.2",
+  "version": "0.10.0-alpha",
   "license": "LGPL-3.0",
   "author": "Haizhou@conflux-chain.org",
-  "homepage": "https://github.com/Conflux-Chain/js-conflux-sdk#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Conflux-Chain/js-conflux-sdk.git"
-  },
-  "bugs": {
-    "url": "https://github.com/Conflux-Chain/js-conflux-sdk/issues"
-  },
+  "repository": "https://github.com/Conflux-Chain/js-conflux-sdk.git",
   "keywords": [
     "conflux",
     "sdk"
   ],
-  "main": "lib/main.js",
-  "module": "esm/index.js",
+  "main": "src/index.js",
   "browser": {
     "secp256k1": "secp256k1/elliptic",
-    "lib/main.js": "esm/main.js"
+    "./src/index.js": "./dist/js-conflux-sdk.umd.min.js"
+  },
+  "browserify-browser": {
+    "secp256k1": "secp256k1/elliptic"
   },
   "files": [
-    "mock",
-    "lib",
-    "esm",
+    "src",
     "dist"
   ],
   "browserslit": "cover 99.5%",
-  "esm": {
-    "cjs": {
-      "dedefault": true
-    }
-  },
   "dependencies": {
     "@babel/runtime": "^7.8.4",
     "big.js": "^5.2.2",
-    "esm": "^3.2.25",
     "jsbi": "^3.1.1",
     "keccak": "^2.0.0",
     "lodash": "^4.17.15",
+    "scrypt-js": "^3.0.1",
     "secp256k1": "^3.7.1",
     "superagent": "^5.1.0"
   },
@@ -59,9 +47,7 @@
     "exorcist": "^1.0.1",
     "fs-extra": "^8.1.0",
     "jest": "^24.9.0",
-    "prepend-file": "^1.3.1",
-    "tinyify": "^2.5.2",
-    "walker": "^1.0.7"
+    "tinyify": "^2.5.2"
   },
   "resolutions": {
     "tinyify/acorn-node/acorn": "7.1.1",
@@ -73,9 +59,7 @@
   },
   "scripts": {
     "eslint:fix": "eslint --fix ./src ./test ./mock",
-    "build": "npm run build:backend & npm run build:frontend",
-    "build:frontend": "node development/build-frontend.js",
-    "build:backend": "node development/build-backend.js",
+    "build": "node development/build-frontend.js",
     "prepublishOnly": "npm run build",
     "test": "jest"
   }

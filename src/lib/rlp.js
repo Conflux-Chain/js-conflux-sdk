@@ -1,5 +1,3 @@
-/* eslint-disable import/prefer-default-export */
-
 /*
   prefix    | delta | note          | code
   ----------|-------|---------------|--------------------------------------------------------------
@@ -34,7 +32,7 @@ function concat(...args) {
  * @param value {Array|Buffer}
  * @return {Buffer}
  */
-export function encode(value) {
+function encode(value) {
   if (Buffer.isBuffer(value)) {
     return encodeBuffer(value);
   }
@@ -82,3 +80,5 @@ function encodeArray(array) {
   const buffer = concat(...array.map(encode));
   return concat(encodeLength(buffer.length, ARRAY_OFFSET), buffer);
 }
+
+module.exports = { encode };

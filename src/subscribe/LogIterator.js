@@ -1,6 +1,6 @@
-import lodash from 'lodash';
-import { loop } from '../util';
-import LazyPromise from './LazyPromise';
+const lodash = require('lodash');
+const { loop } = require('../util');
+const LazyPromise = require('./LazyPromise');
 
 class LogIterator extends LazyPromise {
   constructor(cfx, func, [filter]) {
@@ -19,7 +19,8 @@ class LogIterator extends LazyPromise {
       return false;
     }
 
-    const risk = await this.cfx.getRiskCoefficient(epochNumber);
+    const blockHashArray = await this.cfx.getBlocksByEpochNumber(epochNumber);
+    const risk = await this.cfx.getConfirmationRiskByHash(lodash.last(blockHashArray));
     return risk < threshold;
   }
 
@@ -86,4 +87,4 @@ class LogIterator extends LazyPromise {
   }
 }
 
-export default LogIterator;
+module.exports = LogIterator;

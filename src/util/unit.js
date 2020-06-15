@@ -65,4 +65,4 @@ unit.fromGDripToDrip = unit('GDrip', 'Drip');
 unit.fromDripToCFX = unit('Drip', 'CFX');
 unit.fromDripToGDrip = unit('Drip', 'GDrip');
 
-export default unit;
+module.exports = unit;

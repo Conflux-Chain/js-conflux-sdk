@@ -109,6 +109,13 @@ test('hexUInt', () => {
   expect(() => format.hexUInt(null)).toThrow('Cannot');
 });
 
+test('riskNumber', () => {
+  expect(() => format.riskNumber(undefined)).toThrow('convert undefined to');
+  expect(format.riskNumber(null)).toEqual(null);
+  expect(format.riskNumber('0xe666666666666666666666666666666666666666666666666666666666666665')).toEqual(0.9);
+  expect(format.riskNumber('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')).toEqual(1);
+});
+
 test('epochNumber', () => {
   expect(() => format.epochNumber(-1)).toThrow('match bigUInt');
   expect(format.epochNumber(0)).toEqual('0x0');

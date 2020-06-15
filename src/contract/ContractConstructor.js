@@ -1,5 +1,5 @@
-import ContractMethod from './ContractMethod';
-import { ConstructorCoder } from '../abi';
+const ContractMethod = require('./ContractMethod');
+const { ConstructorCoder } = require('../abi');
 
 class ContractConstructor extends ContractMethod {
   constructor(cfx, contract) {
@@ -39,4 +39,4 @@ class ContractConstructor extends ContractMethod {
   }
 }
 
-export default ContractConstructor;
+module.exports = ContractConstructor;

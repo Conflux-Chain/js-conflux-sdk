@@ -4,7 +4,7 @@ const JSBI = require('jsbi');
 const lodash = require('lodash');
 const format = require('../../src/util/format');
 const HexStream = require('../../src/abi/HexStream');
-const { getCoder } = require('../../src/abi/coder');
+const getCoder = require('../../src/abi/coder');
 
 const MAX_UINT = JSBI.leftShift(JSBI.BigInt(1), JSBI.BigInt(32 * 8));
 

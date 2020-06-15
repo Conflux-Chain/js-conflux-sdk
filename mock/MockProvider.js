@@ -130,6 +130,16 @@ class MockProvider {
   close() {}
 
   // --------------------------------------------------------------------------
+  cfx_getStatus() {
+    return {
+      chainId: toHex(1),
+      epochNumber: randomHex(4),
+      blockNumber: randomHex(4),
+      pendingTxNumber: lodash.random(100, 999),
+      bestHash: randomHex(64),
+    };
+  }
+
   cfx_gasPrice() {
     return randomHex(2);
   }
@@ -285,6 +295,10 @@ class MockProvider {
       gasUsed: randomHex(4),
       storageCollateralized: randomHex(4),
     };
+  }
+
+  cfx_getConfirmationRiskByHash() {
+    return randomHex(64);
   }
 }
 

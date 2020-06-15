@@ -21,8 +21,8 @@ test('PendingTransaction', async () => {
     .mockResolvedValueOnce(null)
     .mockResolvedValue({ outcomeStatus: 0, contractCreated: 'address' });
 
-  cfx.getRiskCoefficient = jest.fn();
-  cfx.getRiskCoefficient
+  cfx.getConfirmationRiskByHash = jest.fn();
+  cfx.getConfirmationRiskByHash
     .mockResolvedValueOnce(1)
     .mockResolvedValue(0);
 
@@ -51,18 +51,19 @@ test('PendingTransaction failed', async () => {
 });
 
 test('LogIterator wait epochNumber confirmed', async () => {
-  cfx.getRiskCoefficient = jest.fn();
-  cfx.getRiskCoefficient.mockResolvedValueOnce(1).mockResolvedValue(0);
+  cfx.getConfirmationRiskByHash = jest.fn();
+  cfx.getConfirmationRiskByHash.mockResolvedValueOnce(1).mockResolvedValue(0);
 
   const iter = cfx.getLogs({ limit: 2 });
   expect(Boolean(await iter.next({ delta: 0 }))).toEqual(true);
   expect(Boolean(await iter.next({ delta: 0 }))).toEqual(true);
   expect(await iter.next()).toEqual(undefined);
-  expect(cfx.getRiskCoefficient).toBeCalledTimes(2);
+  expect(cfx.getConfirmationRiskByHash).toBeCalledTimes(2);
 });
 
 test('LogIterator toEpoch confirmed', async () => {
-  cfx.getRiskCoefficient = () => 0;
+  cfx.getConfirmationRiskByHash = jest.fn();
+  cfx.getConfirmationRiskByHash.mockResolvedValue(0);
 
   const iter = cfx.getLogs({ toEpoch: '0x00' });
   for await (const log of iter) {

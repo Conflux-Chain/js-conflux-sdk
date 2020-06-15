@@ -1,5 +1,5 @@
-import { sha3, ecdsaSign, ecdsaRecover, publicKeyToAddress } from './util/sign';
-import format from './util/format';
+const { sha3, ecdsaSign, ecdsaRecover, publicKeyToAddress } = require('./util/sign');
+const format = require('./util/format');
 
 class Message {
   /**
@@ -139,4 +139,4 @@ class Message {
   }
 }
 
-export default Message;
+module.exports = Message;

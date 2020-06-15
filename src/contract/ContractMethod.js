@@ -1,6 +1,6 @@
-import { assert } from '../util';
-import { FunctionCoder, errorCoder } from '../abi';
-import callable from '../lib/callable';
+const { assert } = require('../util');
+const { FunctionCoder, errorCoder } = require('../abi');
+const callable = require('../lib/callable');
 
 /**
  * @memberOf Contract
@@ -144,4 +144,4 @@ class ContractMethod {
 
 ContractMethod.Called = Called;
 
-export default ContractMethod;
+module.exports = ContractMethod;

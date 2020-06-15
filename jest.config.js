@@ -5,5 +5,4 @@ module.exports = {
 
   testEnvironment: 'node',
   testMatch: ['./**/**.test.js'],
-  transform: { '\\.js$': './development/esm-jest-transformer.js' },
 };

@@ -1,6 +1,9 @@
-import JSBI from 'jsbi';
-import lodash from 'lodash';
-import Parser from '../lib/parser';
+const JSBI = require('jsbi');
+const Big = require('big.js');
+const lodash = require('lodash');
+const Parser = require('../lib/parser');
+
+const MAX_UINT_256 = JSBI.BigInt('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
 
 // https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/BigInt
 JSBI.prototype.toJSON = function () {
@@ -170,6 +173,18 @@ format.hexUInt = format.bigUInt
   .validate(v => /^0x[0-9a-f]+$/.test(v), 'hexUInt');
 
 /**
+ * @param hex {string}
+ * @return {number}
+ *
+ * @example
+ * > format.riskNumber('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')
+ 1
+ * > format.riskNumber('0xe666666666666666666666666666666666666666666666666666666666666665')
+ 0.9
+ */
+format.riskNumber = format.bigUInt.parse(v => Number(Big(v).div(MAX_UINT_256))).or(null);
+
+/**
  * @param arg {number|string} - number or string in ['latest_state', 'latest_mined']
  * @return {string}
  *
@@ -281,7 +296,30 @@ format.buffer = Parser(v => (Buffer.isBuffer(v) ? v : Buffer.from(format.hex(v).
  */
 format.boolean = format.any.validate(lodash.isBoolean, 'boolean');
 
+// ----------------------------- encrypt & decrypt ---------------------------
+format.encrypt = Parser({
+  version: () => 4,
+  salt: format.hex,
+  iv: format.hex,
+  cipher: format.hex,
+  mac: format.hex,
+});
+
+format.decrypt = Parser({
+  version: 4,
+  salt: format.buffer,
+  iv: format.buffer,
+  cipher: format.buffer,
+  mac: format.buffer,
+});
+
 // ----------------------------- parse rpc returned ---------------------------
+format.status = Parser({
+  chainId: format.uInt,
+  epochNumber: format.uInt,
+  blockNumber: format.uInt,
+});
+
 format.transaction = Parser({
   nonce: format.uInt,
   value: format.bigUInt,
@@ -391,4 +429,4 @@ format.estimateTx = Parser({
   data: format.hex.or(undefined),
 });
 
-export default format;
+module.exports = format;

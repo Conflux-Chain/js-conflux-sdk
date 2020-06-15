@@ -1,5 +1,5 @@
-import { sha3, ecdsaSign, ecdsaRecover, publicKeyToAddress, rlpEncode } from './util/sign';
-import format from './util/format';
+const { sha3, ecdsaSign, ecdsaRecover, publicKeyToAddress, rlpEncode } = require('./util/sign');
+const format = require('./util/format');
 
 class Transaction {
   /**
@@ -106,4 +106,4 @@ class Transaction {
   }
 }
 
-export default Transaction;
+module.exports = Transaction;

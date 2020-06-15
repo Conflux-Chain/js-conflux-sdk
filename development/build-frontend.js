@@ -1,12 +1,12 @@
 /* eslint-disable import/no-extraneous-dependencies */
-const { mkdirpSync, copySync, emptyDirSync, removeSync } = require('fs-extra');
+const { mkdirpSync } = require('fs-extra');
 const browserify = require('browserify');
 const babelify = require('babelify');
 const fs = require('fs');
 const exorcist = require('exorcist');
 
-
 const browserifyOptions = {
+  browserField: 'browserify-browser',
   entries: ['./src/index.js'],
   debug: true, // gen inline sourcemap to extract with exorcist
   standalone: 'Conflux', // generate a umd file to load directly into browser
@@ -16,21 +16,20 @@ const browserifyOptions = {
 const OUTPUT_FILE_NAME = 'js-conflux-sdk';
 
 mkdirpSync('dist');
-emptyDirSync('dist');
-mkdirpSync('esm');
-emptyDirSync('esm');
-copySync('src', 'esm');
-removeSync('esm/main.js');
 
 // use babel to remove unused lodash code
 // https://www.blazemeter.com/blog/the-correct-way-to-import-lodash-libraries-a-benchmark/
 const babelTransform = babelify.configure({
   presets: ['@babel/preset-env'],
-  plugins: ['lodash', ['@babel/plugin-transform-runtime',
-    {
-      regenerator: true,
-    },
-  ]],
+  plugins: [
+    'lodash',
+    [
+      '@babel/plugin-transform-runtime',
+      {
+        regenerator: true,
+      },
+    ],
+  ],
 });
 
 browserify(browserifyOptions)

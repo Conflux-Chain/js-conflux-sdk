@@ -11,6 +11,16 @@ const TX_HASH = '0xb0a0000000000000000000000000000000000000000000000000000000000
 const cfx = new Conflux();
 cfx.provider = new MockProvider();
 
+test('getStatus', async () => {
+  const status = await cfx.getStatus();
+
+  expect(Number.isInteger(status.chainId)).toEqual(true);
+  expect(Number.isInteger(status.epochNumber)).toEqual(true);
+  expect(Number.isInteger(status.blockNumber)).toEqual(true);
+  expect(Number.isInteger(status.pendingTxNumber)).toEqual(true);
+  expect(status.bestHash.startsWith('0x')).toEqual(true);
+});
+
 test('getGasPrice', async () => {
   const gasPrice = await cfx.getGasPrice();
 
@@ -53,6 +63,12 @@ test('getNextNonce', async () => {
   const txCount = await cfx.getNextNonce(ADDRESS);
 
   expect(txCount.constructor).toEqual(JSBI);
+});
+
+test('getConfirmationRiskByHash', async () => {
+  const risk = await cfx.getConfirmationRiskByHash(BLOCK_HASH);
+
+  expect(Number.isFinite(risk)).toEqual(true);
 });
 
 test('getBestBlockHash', async () => {
@@ -179,7 +195,7 @@ test('sendTransaction by address', async () => {
   const receiptExecute = await promise.executed();
   expect(receiptExecute.outcomeStatus).toEqual(0);
 
-  const receiptConfirmed = await promise.confirmed({ bar: 0.01 });
+  const receiptConfirmed = await promise.confirmed({ threshold: 1 });
   expect(receiptConfirmed.outcomeStatus).toEqual(0);
 
   await expect(promise.confirmed({ timeout: 0 })).rejects.toThrow('Timeout');

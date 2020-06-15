@@ -39,6 +39,5 @@ class BaseProvider {
   close() {}
 }
 
-BaseProvider.RPCError = RPCError;
-
-export default BaseProvider;
+module.exports = BaseProvider;
+module.exports.RPCError = RPCError;

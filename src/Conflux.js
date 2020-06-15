@@ -1,10 +1,9 @@
-import { decorate } from './util';
-import format from './util/format';
-
-import providerFactory from './provider';
-import Contract from './contract';
-import Account from './Account';
-import { PendingTransaction, LogIterator } from './subscribe';
+const { decorate } = require('./util');
+const format = require('./util/format');
+const providerFactory = require('./provider');
+const Contract = require('./contract');
+const Account = require('./Account');
+const { PendingTransaction, LogIterator } = require('./subscribe');
 
 /**
  * A sdk of conflux.
@@ -183,6 +182,29 @@ class Conflux {
 
   // --------------------------------------------------------------------------
   /**
+   * Get status
+   * @return {Promise<object>} Status information object
+   * - `number` chainId: Chain id
+   * - `number` epochNumber: Epoch number
+   * - `number` blockNumber: Block number
+   * - `number` pendingTxNumber: Pending transaction number
+   * - `string` bestHash: The block hash of best pivot block
+   */
+  async getStatus() {
+    try {
+      const result = await this.provider.call('cfx_getStatus');
+
+      return format.status(result);
+    } catch (e) {
+      if (/Method not found/.test(e.message)) {
+        return { chainId: 0 };
+      } else {
+        throw e;
+      }
+    }
+  }
+
+  /**
    * Returns the current gas price oracle. The gas price is determined by the last few blocks median gas price.
    *
    * @return {Promise<JSBI>} Gas price in drip.
@@ -310,6 +332,7 @@ class Conflux {
   }
 
   // ------------------------------- address ----------------------------------
+
   /**
    * Get the balance of an address at a given epochNumber.
    *
@@ -355,12 +378,17 @@ class Conflux {
   }
 
   // -------------------------------- epoch -----------------------------------
+  /**
+   * Get the risk of the block could be reverted.
+   * All block in one same epoch returned same risk number
+   *
+   * @param blockHash {string}
+   * @return {Promise<number|null>}
+   */
+  async getConfirmationRiskByHash(blockHash) {
+    const result = await this.provider.call('cfx_getConfirmationRiskByHash', format.blockHash(blockHash));
 
-  // eslint-disable-next-line no-unused-vars
-  async getRiskCoefficient(epochNumber) {
-    // FIXME rpc not implement yet.
-    // const result = await this.provider.call('cfx_getRiskCoefficient', format.epochNumber(epochNumber));
-    return 0;
+    return format.riskNumber(result);
   }
 
   /**
@@ -749,6 +777,10 @@ class Conflux {
     if (options.chainId === undefined) {
       options.chainId = this.defaultChainId;
     }
+    if (options.chainId === undefined) {
+      const status = await this.getStatus();
+      options.chainId = status.chainId;
+    }
 
     if (options.from instanceof Account) {
       // sign by local
@@ -814,6 +846,10 @@ class Conflux {
     if (options.chainId === undefined) {
       options.chainId = this.defaultChainId;
     }
+    if (options.chainId === undefined) {
+      const status = await this.getStatus();
+      options.chainId = status.chainId;
+    }
 
     if (options.from && options.nonce === undefined) {
       options.nonce = await this.getNextNonce(options.from);
@@ -850,10 +886,14 @@ class Conflux {
     if (options.chainId === undefined) {
       options.chainId = this.defaultChainId;
     }
+    if (options.chainId === undefined) {
+      const status = await this.getStatus();
+      options.chainId = status.chainId;
+    }
 
     const result = await this.provider.call('cfx_estimateGasAndCollateral', format.estimateTx(options));
     return format.estimate(result);
   }
 }
 
-export default Conflux;
+module.exports = Conflux;

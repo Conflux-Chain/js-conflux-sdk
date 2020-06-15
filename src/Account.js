@@ -1,7 +1,8 @@
-import format from './util/format';
-import { randomPrivateKey, privateKeyToAddress, privateKeyToPublicKey } from './util/sign'; // and decrypt, encrypt
-import Transaction from './Transaction';
-import Message from './Message';
+const lodash = require('lodash');
+const format = require('./util/format');
+const { randomPrivateKey, privateKeyToAddress, privateKeyToPublicKey, decrypt, encrypt } = require('./util/sign');
+const Transaction = require('./Transaction');
+const Message = require('./Message');
 
 class Account {
   /**
@@ -54,28 +55,30 @@ class Account {
     this.address = format.address(privateKeyToAddress(format.buffer(privateKey)));
   }
 
-  // /**
-  //  * Decrypt account encrypt info.
-  //  *
-  //  * @param info {object}
-  //  * @param password {string}
-  //  * @return {Account}
-  //  */
-  // static decrypt(info, password) {
-  //   const privateKeyBuffer = decrypt(lodash.mapValues(info, format.buffer), Buffer.from(password));
-  //   return new this(privateKeyBuffer);
-  // }
-  //
-  // /**
-  //  * Encrypt account privateKey to object.
-  //  *
-  //  * @param password {string}
-  //  * @return {object}
-  //  */
-  // encrypt(password) {
-  //   const info = encrypt(format.buffer(this.privateKey), Buffer.from(password));
-  //   return lodash.mapValues(info, format.hex);
-  // }
+  /**
+   * Decrypt account encrypt info.
+   *
+   * @param password {string}
+   * @param info {object}
+   * @return {Account}
+   */
+  static decrypt(password, info) {
+    const privateKeyBuffer = decrypt(Buffer.from(password), format.decrypt(info));
+    return new this(privateKeyBuffer);
+  }
+
+  /**
+   * Encrypt account privateKey to object.
+   *
+   * @param password {string}
+   * @return {object}
+   */
+  encrypt(password) {
+    const info = encrypt(format.buffer(this.privateKey), Buffer.from(password));
+    info.id = `${Date.now()}-${lodash.random(100000, 999999)}`;
+    info.address = this.address;
+    return format.encrypt(info);
+  }
 
   /**
    * Sign a transaction.
@@ -124,4 +127,4 @@ class Account {
   }
 }
 
-export default Account;
+module.exports = Account;
