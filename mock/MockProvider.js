@@ -286,6 +286,10 @@ class MockProvider {
     return randomHex(64);
   }
 
+  cfx_getCode() {
+    return randomHex(100);
+  }
+
   cfx_call() {
     return padHex(100, 64);
   }
