@@ -8,7 +8,7 @@ function callable(object, func) {
   return new Proxy(func, {
     getPrototypeOf: () => Object.getPrototypeOf(object),
     getOwnPropertyDescriptor: (_, key) => Object.getOwnPropertyDescriptor(object, key),
-    ownKeys: () => Reflect.ownKeys(object),
+    ownKeys: () => Reflect.ownKeys(object).push('arguments'),
     has: (_, key) => Reflect.has(object, key),
     get: (_, key) => Reflect.get(object, key),
     set: (_, key, value) => Reflect.set(object, key, value),
