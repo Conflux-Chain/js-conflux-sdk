@@ -1,138 +1,129 @@
+import { EpochNumber } from "rpc";
 
-// import BN = require('bn.js');
-// import BigNumber from 'bignumber.js';
-// import Big from 'big.mjs';
-type Big = number;
+type str0num = string | number;  // string or number
+type str0buf = string | Buffer;
 
-export type CFXTAG = 'earliest' | 'latest_mined' | 'latest_state';
-export type Address = string;
-export type Quantity = string | number | Big;  // 0x0 | normal number | big number
-export type EpochNumber = string | number | CFXTAG;
-// export type Hash = string;
-
-export interface BlockHeader {
-    adaptive: boolean;
-    blame: number;
-    deferredLogsBloomHash: string;
-    deferredReceiptsRoot: string;
-    deferredStateRoot: string;
-    difficulty: number;
-    epochNumber: EpochNumber | null;
-    gasLimit: number;
-    hash: string | null;
-    height: number | null;
-    miner: Address;
-    nonce: string | null;
-    parentHash: string;
-    powQuality: string | null;
-    refereeHashes: string[];
-    size: number;
-    timestamp: number;
-    transactionsRoot: string
+export interface ConfluxOption {
+    url: string,
+    defaultEpoch: string|number,  // default 'latest_state'
+    defaultGasPrice: string|number,
+    defaultGas: string|number,
+    defaultStorageLimit: string|number,
+    defaultChainId: number,
 }
 
-export interface Block extends BlockHeader {
-    transactions: string[] | Transaction[];
+type Provider = any;
+
+export class Conflux {
+    constructor(options: ConfluxOption);
+    provider: Provider;
+    defaultEpoch: str0num;
+    defaultGasPrice: str0num;
+    defaultGas: str0num;
+    defaultStorageLimit: str0num;
+    defaultChainId: number;
+
+    setProvider(provider: Provider): Provider;
+    Account(privateKey: string): any;
+    Contract(options: any): any;
+    close():any;
+
+    getStatus(): Promise<any>;
+    getGasPrice(): string;
+    getEpochNumber(epochNumber: EpochNumber): EpochNumber;
+    getLogs(options: any): any;
+    getBalance(address: string, epochNumber: EpochNumber): string;
+    getNextNonce(): Promise<number>;
+    getConfirmationRiskByHash():Promise<number|null>;
+    getBlockByEpochNumber(): Promise<object|null>;
+    getBlocksByEpochNumber(): Promise<string[]>;
+    getBestBlockHash(): string;
+    getBlockByHash(): Promise<object|null>;
+    getBlockByHashWithPivotAssumption(): any;
+    getTransactionByHash(): Promise<object|null>;
+    getTransactionReceipt(): Promise<object|null>;
+    sendTransaction(): any;
+    sendRawTransaction(): any;
+    getCode(): Promise<string>;
+    call(): Promise<string>;
+    estimateGasAndCollateral(options: any): Promise<object>;
 }
 
-// transaction config
-export interface TransactionConfig {
-    from: Address;
-    to: Address;
-    value: Quantity;
-    nonce?: number;
-    gasPrice?: number;
-    gas?: number;
-    storageLimit?: number;
-    epochHeight?: number;
-    data?: string;
-    chainId?: number;
+export class Account {
+    constructor(privateKey: string);
+
+    privateKey: any;
+    publicKey: any;
+    address: any;
+
+    static random: (entropy: any) => Account;
+    static decrypt: (password: string, info: any) => Account;
+
+    encrypt(password: string): any;
+    signTransaction(options: any): any;
+    signMessage(message: string): any;
+    toString(): string;
 }
 
-export interface Transaction {
-    blockHash: string | null;
-    contractCreated: string | null;
-    data: string;
-    from: Address;
-    gas: number;
-    gasPrice: number;
-    hash: string;
-    nonce: number;
-    r: string;
-    s: string;
-    status: number | null;
-    to: Address | null;
-    transactionIndex: number | null;
+export class Message {
+    constructor(message: string);
+
+    static sign: (privateKey: any, messageHash: any) => string;
+    static recover: (signature: any, messageHash: any) => any;
+
+    sign(privateKey: any): Message;
+    // get: from, r, s, v, hash
+}
+
+export interface TransactionOption {
+    nonce: str0num;
+    gasPrice: str0num;
+    gas: str0num;
+    to: string;
+    value: str0num;
+    storageLimit: str0num;
+    epochHeight: str0num;
+    chainId: str0num;
+    data: str0buf;
+    r: str0buf;
+    s: str0buf;
     v: number;
-    value: Quantity;
 }
 
-export interface StorageRoot {
-    delta: string;
-    intermediate: string;
-    snapshot: string;
+export class Transaction {
+    constructor(options: any);
+
+    // get: hash, from
+    sign(privateKey: string): Transaction;
+    recover(): string;
+    encode(includeSignature: boolean): Buffer;
+    serialize(): string;
 }
 
-export interface SponsorInfo {
-    sponsorBalanceForCollateral: number;
-    sponsorBalanceForGas: number;
-    sponsorGasBound: number;
-    sponsorForCollateral: string;
-    sponsorForGas: string;
+export class BaseProvider {
+    constructor(url: string, options: any);
+    url: string;
+    timeout: number;
+    logger: any;
+
+    requestId(): string;
+    call(): any;
+    close(): any;
 }
 
-export interface CfxCallConfig {
-    from: Address;
-    to: Address;
-    gasPrice: number;
-    gas: number;
-    value: Quantity;
-    data: string;
-    nonce: number;
+export class HttpProvider {
+    constructor(url: string, options: any);
+    call(method: string, params: any): any;    // params 是多个参数
 }
 
-export interface CfxLogConfig{
-    fromEpoch: EpochNumber;
-    toEpoch: EpochNumber;
-    blockHashes: string[];
-    address: string[];
-    topics: string[];
-    limit: number;
+export interface ContractOption {
+    abi: [];
+    address: string;
+    bytecode: string;
 }
 
-export interface CfxLog {
-    address: Address;
-    topics: string[];
-    data: string;
-    blockHash: string;
-    epochNumber: EpochNumber;
-    transactionHash: string;
-    transactionIndex: number;
-    logIndex: number;
-    transactionLogIndex: number;
-}
-
-export interface TransactionReceipt {
-    transactionHash: string;
-    index: number;
-    blockHash: string;
-    epochNumber: EpochNumber;
-    from: Address;
-    to: Address | null;
-    gasUsed: string;
-    contractCreated: string | null;
-    stateRoot: string;
-    outcomeStatus: number;
-    logsBloom: string;
-    logs: CfxLog[];
-}
-
-export interface Account {
-    balance: Quantity;
-    nonce: number;
-    codeHash: number;
-    stakingBalance: Quantity;
-    collateralForStorage: number;
-    accumulatedInterestReturn: number;
-    admin: Address;
+export class Contract {
+    constructor(cfx: Conflux, options: ContractOption);
+    abi: any;
+    address: string;
 }
