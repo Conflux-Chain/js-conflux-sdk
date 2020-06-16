@@ -1,7 +1,8 @@
 
 // import BN = require('bn.js');
 // import BigNumber from 'bignumber.js';
-import Big from 'big.mjs';
+// import Big from 'big.mjs';
+type Big = number;
 
 export type CFXTAG = 'earliest' | 'latest_mined' | 'latest_state';
 export type Address = string;
