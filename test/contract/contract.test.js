@@ -88,8 +88,12 @@ test('contract.call', async () => {
 });
 
 test('contract.override', () => {
-  expect(contract.override('str').coder.type).toEqual('override(string)');
   expect(contract.override(Buffer.from('bytes')).coder.type).toEqual('override(bytes)');
+
+  expect(() => contract.override('str')).toThrow('can not determine override "override(bytes)|override(string)" with args (str)');
+  expect(contract['override(string)']('str').coder.type).toEqual('override(string)');
+  expect(contract['0x227ffd52']('str').coder.type).toEqual('override(string)');
+
   expect(() => contract.override(100)).toThrow('can not match override "override(bytes)|override(string)|override(uint256,string)" with args (100)');
 
   let event;

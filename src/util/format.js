@@ -285,6 +285,20 @@ format.txHash = format.hex64; // alias
 format.buffer = Parser(v => (Buffer.isBuffer(v) ? v : Buffer.from(format.hex(v).substring(2), 'hex')));
 
 /**
+ * @param arg {string|Buffer|array}
+ * @return {Buffer}
+ *
+ * @example
+ * > format.bytes('abcd')
+ <Buffer 61 62 63 64>
+ * > format.bytes(Buffer.from([0, 1]))
+ <Buffer 00 01>
+ * > format.bytes([0, 1])
+ <Buffer 00 01>
+ */
+format.bytes = Parser(v => (Buffer.isBuffer(v) ? v : Buffer.from(v)));
+
+/**
  * @param arg {boolean}
  * @return {boolean}
  *

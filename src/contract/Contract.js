@@ -122,19 +122,14 @@ class Contract {
     });
 
     // type to instance
+    // signature for contract abi decoder to decode
     methodArray.forEach(method => {
       this[method.type] = method;
+      this[method.signature] = method; // signature for contract abi decoder to decode
     });
     eventArray.forEach(event => {
       this[event.type] = event;
-    });
-
-    // signature to instance, for contract abi decoder to decode
-    methodArray.forEach(method => {
-      this[method.signature] = method;
-    });
-    eventArray.forEach(event => {
-      this[event.signature] = event;
+      this[event.signature] = event; // signature for contract abi decoder to decode
     });
   }
 }

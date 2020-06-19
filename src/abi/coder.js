@@ -13,7 +13,6 @@ const namedTuple = require('../lib/namedTuple');
 const HexStream = require('./HexStream');
 
 const WORD_BYTES = 32; // byte number pre abi word
-const ZERO_BUFFER = format.buffer('0x0000000000000000000000000000000000000000000000000000000000000000');
 const MAX_UINT = JSBI.leftShift(JSBI.BigInt(1), JSBI.BigInt(WORD_BYTES * 8));
 
 function padBuffer(buffer, alignLeft = false) {
@@ -22,8 +21,8 @@ function padBuffer(buffer, alignLeft = false) {
   const count = WORD_BYTES - (buffer.length % WORD_BYTES);
   if (0 < count && count < WORD_BYTES) {
     buffer = alignLeft
-      ? Buffer.concat([buffer, ZERO_BUFFER.slice(0, count)])
-      : Buffer.concat([ZERO_BUFFER.slice(0, count), buffer]);
+      ? Buffer.concat([buffer, Buffer.alloc(count)])
+      : Buffer.concat([Buffer.alloc(count), buffer]);
   }
 
   return buffer;
@@ -327,12 +326,7 @@ class BytesCoder extends Coder {
    * @return {Buffer}
    */
   encode(value) {
-    assert(Buffer.isBuffer(value), {
-      message: 'value type error',
-      expect: Buffer.name,
-      got: value.constructor.name,
-      coder: this,
-    });
+    value = format.bytes(value);
 
     if (this.size !== undefined) {
       assert(value.length === this.size, {
