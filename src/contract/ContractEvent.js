@@ -1,5 +1,5 @@
 const lodash = require('lodash');
-const { assert, decorate } = require('../util');
+const { decorate } = require('../util');
 const { EventCoder } = require('../abi');
 const callable = require('../lib/callable');
 
@@ -7,9 +7,9 @@ const callable = require('../lib/callable');
  * @memberOf ContractEvent
  */
 class EventLog {
-  constructor(cfx, eventLog, { address, topics }) {
+  constructor(cfx, event, { address, topics }) {
     this.cfx = cfx;
-    this.eventLog = eventLog;
+    this.event = event;
     this.address = address;
     this.topics = topics;
   }
@@ -17,7 +17,7 @@ class EventLog {
   getLogs(options = {}) {
     const _decodeLog = log => {
       if (log !== undefined) {
-        log.params = this.eventLog.decodeLog(log);
+        log.params = this.event.decodeLog(log);
       }
       return log;
     };
@@ -41,40 +41,27 @@ class EventLog {
   }
 }
 
-class ContractEvent {
+class ContractEvent extends EventCoder {
   constructor(cfx, contract, fragment) {
+    super(fragment);
     this.cfx = cfx;
     this.contract = contract;
-
-    this.coder = new EventCoder(fragment);
-    this.name = fragment.name; // example: "Event"
-    this.type = this.coder.type; // example: "Event(address)"
-    this.signature = this.coder.signature(); // example: "0x50d7c806d0f7913f321946784dee176a42aa55b5dd83371fc57dcedf659085e0"
 
     return callable(this, this.call.bind(this));
   }
 
   call(...args) {
-    const topics = [this.signature, ...this.coder.encodeTopics(args)];
-
-    return new EventLog(this.cfx, this, { address: this.contract.address, topics });
+    const address = this.contract.address;
+    const topics = [this.signature, ...this.encodeTopics(args)];
+    return new EventLog(this.cfx, this, { address, topics });
   }
 
   decodeLog(log) {
-    const topic = log.topics[0];
-
-    assert(topic === this.signature, {
-      message: 'decodeLog unexpected topic',
-      expect: this.signature,
-      got: topic,
-      coder: this.coder,
-    });
-
-    const namedTuple = this.coder.decodeLog(log);
+    const namedTuple = super.decodeLog(log);
     return {
       name: this.name,
-      fullName: this.coder.fullName,
-      type: this.coder.type,
+      fullName: this.fullName,
+      type: this.type,
       signature: this.signature,
       array: [...namedTuple],
       object: namedTuple.toObject(),

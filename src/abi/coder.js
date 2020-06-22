@@ -128,7 +128,8 @@ class Coder {
   }
 
   decodeIndex(hex) {
-    return this.decode(HexStream(hex));
+    const stream = new HexStream(hex);
+    return this.decode(stream);
   }
 }
 

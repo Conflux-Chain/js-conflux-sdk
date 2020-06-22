@@ -1,5 +1,4 @@
 const lodash = require('lodash');
-const { assert } = require('../util');
 const { FunctionCoder, errorCoder } = require('../abi');
 const callable = require('../lib/callable');
 
@@ -7,9 +6,9 @@ const callable = require('../lib/callable');
  * @memberOf ContractMethod
  */
 class Called {
-  constructor(cfx, coder, { to, data }) {
+  constructor(cfx, method, { to, data }) {
     this.cfx = cfx;
-    this.coder = coder;
+    this.method = method;
     this.to = to;
     this.data = data;
   }
@@ -62,8 +61,7 @@ class Called {
   async call(options, epochNumber) {
     try {
       const hex = await this.cfx.call({ to: this.to, data: this.data, ...options }, epochNumber);
-      const namedTuple = this.coder.decodeOutputs(hex);
-      return namedTuple.length <= 1 ? namedTuple[0] : namedTuple;
+      return this.method.decodeOutputs(hex);
     } catch (e) {
       throw errorCoder.decodeError(e);
     }
@@ -79,46 +77,27 @@ class Called {
   }
 }
 
-class ContractMethod {
+class ContractMethod extends FunctionCoder {
   constructor(cfx, contract, fragment) {
+    super(fragment);
     this.cfx = cfx;
     this.contract = contract;
-
-    this.coder = new FunctionCoder(fragment);
-    this.name = fragment.name; // example: "add"
-    this.type = this.coder.type; // example: "add(uint,uint)"
-    this.signature = this.coder.signature(); // example: "0xb8966352"
-    this.bytecode = this.signature; // example: "0xb8966352"
 
     return callable(this, this.call.bind(this));
   }
 
   call(...args) {
-    if (!this.bytecode) {
-      throw new Error('bytecode is empty');
-    }
-
     const to = this.contract.address;
-    const data = `${this.bytecode}${this.coder.encodeInputs(args).substring(2)}`;
-    return new Called(this.cfx, this.coder, { to, data });
+    const data = this.encodeData(args);
+    return new Called(this.cfx, this, { to, data });
   }
 
   decodeData(hex) {
-    const prefix = hex.slice(0, this.bytecode.length);
-    const data = hex.slice(this.bytecode.length);
-
-    assert(prefix === this.bytecode, {
-      message: 'decodeData unexpected bytecode',
-      expect: this.bytecode,
-      got: prefix,
-      coder: this.coder,
-    });
-
-    const namedTuple = this.coder.decodeInputs(data);
+    const namedTuple = super.decodeData(hex);
     return {
       name: this.name,
-      fullName: this.coder.fullName,
-      type: this.coder.type,
+      fullName: this.fullName,
+      type: this.type,
       signature: this.signature,
       array: [...namedTuple],
       object: namedTuple.toObject(),

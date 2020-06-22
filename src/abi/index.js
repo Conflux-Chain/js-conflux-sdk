@@ -11,6 +11,10 @@ const namedTuple = require('../lib/namedTuple');
 const HexStream = require('./HexStream');
 
 // ============================================================================
+function signature(type) {
+  return format.hex(sha3(Buffer.from(type)));
+}
+
 function formatSignature({ name, inputs }) {
   return `${name}(${inputs.map(param => getCoder(param).type).join(',')})`;
 }
@@ -40,29 +44,13 @@ class FunctionCoder {
     }
    */
   constructor({ name, inputs = [], outputs = [] }) {
-    this.name = name;
-    this.fullName = formatFullName({ name, inputs });
-    this.type = formatSignature({ name, inputs });
+    this.name = name; // example: "add"
+    this.fullName = formatFullName({ name, inputs }); // example: "add(uint,uint)"
+    this.type = formatSignature({ name, inputs }); // example: "add(uint number, uint count)"
+    this.signature = signature(this.type).slice(0, 10); // example: "0xb8966352"
 
-    // this.inputs = inputs;
     this.inputCoder = getCoder({ type: 'tuple', components: inputs });
-
-    // this.outputs = outputs;
     this.outputCoder = getCoder({ type: 'tuple', components: outputs });
-  }
-
-  /**
-   * Get function signature by abi (json interface)
-   * @return {string}
-   *
-   * @example
-   * > abi = { name: 'func', inputs: [{ type: 'int' }, { type: 'bool' }], outputs: [{ type: 'int' }] }
-   * > coder = new FunctionCoder(abi)
-   * > coder.signature()
-   "0x360ff942"
-   */
-  signature() {
-    return format.hex(sha3(Buffer.from(this.type)).slice(0, 4));
   }
 
   /**
@@ -74,15 +62,16 @@ class FunctionCoder {
    * @example
    * > abi = { name: 'func', inputs: [{ type: 'int' }, { type: 'bool' }], outputs: [{ type: 'int' }] }
    * > coder = new FunctionCoder(abi)
-   * > coder.encodeInputs([100, true])
-   "0x00000000000000000000000000000000000000000000000000000000000000640000000000000000000000000000000000000000000000000000000000000001"
+   * > coder.encodeData([100, true])
+   "0x1eee72c100000000000000000000000000000000000000000000000000000000000000640000000000000000000000000000000000000000000000000000000000000001"
    */
-  encodeInputs(array) {
-    return format.hex(this.inputCoder.encode(array));
+  encodeData(array) {
+    const hex = format.hex(this.inputCoder.encode(array));
+    return `${this.signature}${hex.substring(2)}`;
   }
 
   /**
-   * Decode hex with inputs by abi (json interface)
+   * Decode data hex with inputs by abi (json interface)
    *
    * @param hex {string} - Hex string
    * @return {array} NamedTuple
@@ -90,7 +79,7 @@ class FunctionCoder {
    * @example
    * > abi = { name: 'func', inputs: [{ type: 'int' }, { type: 'bool' }], outputs: [{ type: 'int' }] }
    * > coder = new FunctionCoder(abi)
-   * > result = coder.decodeInputs('0x00000000000000000000000000000000000000000000000000000000000000640000000000000000000000000000000000000000000000000000000000000001')
+   * > result = coder.decodeData('0x15fb272000000000000000000000000000000000000000000000000000000000000000640000000000000000000000000000000000000000000000000000000000000001')
    NamedTuple(0,1) [ 100n, true ]
    * > console.log([...result])
    [ 100n, true ]
@@ -99,10 +88,19 @@ class FunctionCoder {
    * > console.log(result[1])
    true
    */
-  decodeInputs(hex) {
-    const stream = HexStream(hex);
-    const result = this.inputCoder.decode(stream);
+  decodeData(hex) {
+    const prefix = hex.slice(0, this.signature.length);
+    const data = hex.slice(this.signature.length);
+    const stream = new HexStream(data);
 
+    assert(prefix === this.signature, {
+      message: 'decodeData unexpected signature',
+      expect: this.signature,
+      got: prefix,
+      coder: this,
+    });
+
+    const result = this.inputCoder.decode(stream);
     assert(stream.eof(), {
       message: 'hex length to large',
       expect: `${stream.string.length}`,
@@ -130,7 +128,7 @@ class FunctionCoder {
    -1n
    */
   decodeOutputs(hex) {
-    const stream = HexStream(hex);
+    const stream = new HexStream(hex);
     const result = this.outputCoder.decode(stream);
 
     assert(stream.eof(), {
@@ -140,7 +138,22 @@ class FunctionCoder {
       coder: this,
     });
 
-    return result;
+    return result.length <= 1 ? result[0] : result;
+  }
+}
+
+class ErrorCoder extends FunctionCoder {
+  constructor() {
+    super({ name: 'Error', inputs: [{ type: 'string', name: 'message' }] });
+  }
+
+  decodeError(error) {
+    try {
+      const { message } = this.decodeData(error.data);
+      return new Error(message);
+    } catch (e) {
+      return error;
+    }
   }
 }
 
@@ -184,30 +197,15 @@ class EventCoder {
    */
   constructor({ anonymous, name, inputs = [] } = {}) {
     this.anonymous = anonymous;
-    this.name = name;
-    this.fullName = formatFullName({ name, inputs });
-
-    this.type = formatSignature({ name, inputs });
+    this.name = name; // example: "Event"
+    this.fullName = formatFullName({ name, inputs }); // example: "Event(address)"
+    this.type = formatSignature({ name, inputs }); // example: "Event(address indexed account)"
+    this.signature = signature(this.type); // example: "0x50d7c806d0f7913f321946784dee176a42aa55b5dd83371fc57dcedf659085e0"
 
     this.inputs = inputs;
-    this.topicCoders = inputs.map(getCoder);
-
-    this.notIndexedCoder = getCoder({ type: 'tuple', components: inputs.filter(component => !component.indexed) });
+    this.dataCoder = getCoder({ type: 'tuple', components: inputs.filter(component => !component.indexed) });
 
     this.NamedTuple = namedTuple(...inputs.map((input, index) => input.name || `${index}`));
-  }
-
-  /**
-   * Get function signature by abi (json interface)
-   * @return {string}
-   *
-   * @example
-   * > coder = new EventCoder(abi)
-   * > coder.signature()
-   "0xb0333e0e3a6b99318e4e2e0d7e5e5f93646f9cbf62da1587955a4092bf7df6e7"
-   */
-  signature() {
-    return format.hex(sha3(Buffer.from(this.type)));
   }
 
   /**
@@ -221,21 +219,22 @@ class EventCoder {
    ['0x0000000000000000000000000123456789012345678901234567890123456789']
    */
   encodeTopics(array) {
-    assert(array.length === this.topicCoders.length, {
+    assert(array.length === this.inputs.length, {
       message: 'length not match',
-      expect: this.topicCoders.length,
+      expect: this.inputs.length,
       got: array.length,
       coder: this,
     });
 
     const topics = [];
-    this.topicCoders.forEach((coder, index) => {
-      const value = array[index];
+    this.inputs.forEach((component, index) => {
+      if (component.indexed) {
+        const value = array[index];
 
-      if (this.inputs[index].indexed) {
-        topics.push(value === null ? null : format.hex(coder.encodeIndex(value)));
+        topics.push(value === null ? null : format.hex(getCoder(component).encodeIndex(value)));
       }
     });
+
     return topics;
   }
 
@@ -264,10 +263,15 @@ class EventCoder {
    10n
    */
   decodeLog({ topics, data }) {
-    // XXX: for !this.anonymous, assert(topics[0] === this.signature())
+    assert(this.anonymous || topics[0] === this.signature, {
+      message: 'decodeLog unexpected topic',
+      expect: this.signature,
+      got: topics[0],
+      coder: this,
+    });
 
-    const stream = HexStream(data);
-    const notIndexedNamedTuple = this.notIndexedCoder.decode(stream);
+    const stream = new HexStream(data);
+    const notIndexedNamedTuple = this.dataCoder.decode(stream);
 
     assert(stream.eof(), {
       message: 'hex length to large',
@@ -277,45 +281,15 @@ class EventCoder {
     });
 
     let offset = this.anonymous ? 0 : 1;
-
-    const array = this.topicCoders.map((coder, index) => {
-      if (this.inputs[index].indexed) {
-        const result = coder.decodeIndex(topics[offset]);
-        offset += 1;
-        return result;
+    const array = this.inputs.map(component => {
+      if (component.indexed) {
+        return getCoder(component).decodeIndex(topics[offset++]); // eslint-disable-line no-plusplus
       } else {
-        return notIndexedNamedTuple[this.inputs[index].name];
+        return notIndexedNamedTuple[component.name];
       }
     });
 
     return new this.NamedTuple(...array);
-  }
-}
-
-class ErrorCoder {
-  constructor(fragment = { name: 'Error', inputs: [{ type: 'string', name: 'message' }] }) {
-    this.coder = new FunctionCoder(fragment);
-    this.signature = this.coder.signature(); // 0x08c379a0
-  }
-
-  decodeError(error) {
-    try {
-      return new Error(this.decodeMessage(error.data));
-    } catch (e) {
-      return error;
-    }
-  }
-
-  decodeMessage(hex) {
-    const signature = hex.slice(0, this.signature.length);
-    const data = hex.slice(10);
-
-    if (signature !== this.signature) {
-      return undefined;
-    }
-
-    const [message] = this.coder.decodeInputs(data);
-    return message;
   }
 }
 
