@@ -351,7 +351,7 @@ test('sendTransaction by address', async () => {
   await expect(cfx.sendTransaction({ nonce: 0 })).rejects.toThrow('not match hex');
 
   cfx.provider.call = async (method, options) => {
-    expect(method).toEqual('cfx_sendTransaction');
+    expect(method).toEqual('send_transaction');
     expect(options.from).toEqual(ADDRESS);
     expect(options.nonce).toEqual('0x0');
     expect(options.gasPrice).toEqual(format.hexUInt(cfx.defaultGasPrice));
@@ -365,7 +365,7 @@ test('sendTransaction by address', async () => {
   await cfx.sendTransaction({ nonce: 0, from: ADDRESS });
 
   cfx.provider.call = async (method, options) => {
-    expect(method).toEqual('cfx_sendTransaction');
+    expect(method).toEqual('send_transaction');
     expect(options.from).toEqual(ADDRESS);
     expect(options.nonce).toEqual('0x64');
     expect(options.gasPrice).toEqual(format.hexUInt(cfx.defaultGasPrice));
