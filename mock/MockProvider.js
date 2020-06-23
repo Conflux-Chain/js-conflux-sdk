@@ -282,6 +282,10 @@ class MockProvider {
     return randomHex(64);
   }
 
+  send_transaction() {
+    return randomHex(64);
+  }
+
   cfx_sendRawTransaction() {
     return randomHex(64);
   }
