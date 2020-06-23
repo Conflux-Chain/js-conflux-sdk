@@ -1,6 +1,6 @@
 const lodash = require('lodash');
 const format = require('./util/format');
-const { randomPrivateKey, privateKeyToAddress, privateKeyToPublicKey, decrypt, encrypt } = require('./util/sign');
+const { randomPrivateKey, privateKeyToPublicKey, publicKeyToAddress, decrypt, encrypt } = require('./util/sign');
 const Transaction = require('./Transaction');
 const Message = require('./Message');
 
@@ -44,15 +44,33 @@ class Account {
   }
 
   /**
-   * Create a account by privateKey.
+   * Create a account.
    *
-   * @param privateKey {string|Buffer}
+   * @param string {string|Buffer} - Account privateKey or publicKey or address
    * @return {Account}
    */
-  constructor(privateKey) {
-    this.privateKey = format.privateKey(privateKey);
-    this.publicKey = format.publicKey(privateKeyToPublicKey(format.buffer(privateKey)));
-    this.address = format.address(privateKeyToAddress(format.buffer(privateKey)));
+  constructor(string) {
+    const hex = format.hex(string);
+
+    switch (hex.length) {
+      case 2 + 40: // address
+        this.address = format.address(hex);
+        break;
+
+      case 2 + 64: // privateKey
+        this.privateKey = format.privateKey(hex);
+        this.publicKey = format.publicKey(privateKeyToPublicKey(format.buffer(this.privateKey)));
+        this.address = format.address(publicKeyToAddress(format.buffer(this.publicKey)));
+        break;
+
+      case 2 + 128: // publicKey
+        this.publicKey = format.publicKey(hex);
+        this.address = format.address(publicKeyToAddress(format.buffer(this.publicKey)));
+        break;
+
+      default:
+        throw new Error(`unexpected hex length when create Account with "${hex}"`);
+    }
   }
 
   /**
@@ -74,7 +92,7 @@ class Account {
    * @return {object}
    */
   encrypt(password) {
-    const info = encrypt(format.buffer(this.privateKey), Buffer.from(password));
+    const info = encrypt(format.buffer(format.privateKey(this.privateKey)), Buffer.from(password));
     info.id = `${Date.now()}-${lodash.random(100000, 999999)}`;
     info.address = this.address;
     return format.encrypt(info);
@@ -88,7 +106,7 @@ class Account {
    */
   signTransaction(options) {
     const tx = new Transaction(options);
-    tx.sign(this.privateKey); // sign will cover r,s,v fields
+    tx.sign(format.privateKey(this.privateKey)); // sign will cover r,s,v fields
     if (tx.from !== this.address) {
       throw new Error(`Invalid signature, transaction.from !== ${this.address}`);
     }
@@ -112,7 +130,7 @@ class Account {
    */
   signMessage(message) {
     const msg = new Message(message);
-    msg.sign(this.privateKey); // sign will cover r,s,v fields
+    msg.sign(format.privateKey(this.privateKey)); // sign will cover r,s,v fields
     if (msg.from !== this.address) {
       throw new Error(`Invalid signature, message.from !== ${this.address}`);
     }

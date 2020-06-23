@@ -30,7 +30,7 @@ export class Conflux {
     defaultChainId: number;
 
     setProvider(provider: Provider): Provider;
-    Account(privateKey: string): any;
+    Account(string: string): any;
     Contract(options: any): any;
     close():any;
 
