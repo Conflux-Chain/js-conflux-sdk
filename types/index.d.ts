@@ -1,7 +1,17 @@
-import { EpochNumber } from "rpc";
+// import BN = require('bn.js');
+// import BigNumber from 'bignumber.js';
+// import Big from 'big.mjs';
+// export type Hash = string;
 
+type Big = number;
+type Provider = any;
 type str0num = string | number;  // string or number
 type str0buf = string | Buffer;
+
+export type CFXTAG = 'earliest' | 'latest_mined' | 'latest_state' | 'latest_checkpoint';
+export type Address = string;
+export type Quantity = string | number | Big;  // 0x0 | normal number | big number
+export type EpochNumber = string | number | CFXTAG;
 
 export interface ConfluxOption {
     url: string,
@@ -11,8 +21,6 @@ export interface ConfluxOption {
     defaultStorageLimit: string|number,
     defaultChainId: number,
 }
-
-type Provider = any;
 
 export class Conflux {
     constructor(options: ConfluxOption);
@@ -51,7 +59,6 @@ export class Conflux {
 
 export class Account {
     constructor(privateKey: string);
-
     privateKey: any;
     publicKey: any;
     address: any;
@@ -72,7 +79,7 @@ export class Message {
     static recover: (signature: any, messageHash: any) => any;
 
     sign(privateKey: any): Message;
-    // get: from, r, s, v, hash
+    // TODO get: from, r, s, v, hash
 }
 
 export interface TransactionOption {
@@ -93,11 +100,11 @@ export interface TransactionOption {
 export class Transaction {
     constructor(options: any);
 
-    // get: hash, from
     sign(privateKey: string): Transaction;
     recover(): string;
     encode(includeSignature: boolean): Buffer;
     serialize(): string;
+    // TODO get: hash, from
 }
 
 export class BaseProvider {
@@ -113,7 +120,7 @@ export class BaseProvider {
 
 export class HttpProvider {
     constructor(url: string, options: any);
-    call(method: string, params: any): any;    // params 是多个参数
+    call(method: string, ...params: any[]): any; // params can be multiple
 }
 
 export interface ContractOption {

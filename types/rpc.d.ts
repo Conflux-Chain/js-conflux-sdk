@@ -1,14 +1,4 @@
-
-// import BN = require('bn.js');
-// import BigNumber from 'bignumber.js';
-// import Big from 'big.mjs';
-type Big = number;
-
-export type CFXTAG = 'earliest' | 'latest_mined' | 'latest_state';
-export type Address = string;
-export type Quantity = string | number | Big;  // 0x0 | normal number | big number
-export type EpochNumber = string | number | CFXTAG;
-// export type Hash = string;
+import {EpochNumber, Address, Quantity} from "./index";
 
 export interface BlockHeader {
     adaptive: boolean;
