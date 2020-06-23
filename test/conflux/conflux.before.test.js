@@ -221,11 +221,14 @@ test('call', async () => {
   await expect(cfx.call()).rejects.toThrow('Cannot read property');
   await expect(cfx.call({ nonce: 0 })).rejects.toThrow('not match hex'); // miss to
 
+  const getNextNonce = jest.spyOn(cfx, 'getNextNonce');
+  getNextNonce.mockReturnValue(100);
+
   const call = jest.spyOn(cfx.provider, 'call');
-  await cfx.call({ to: ADDRESS });
+  await cfx.call({ from: KEY, to: ADDRESS });
   expect(call).toHaveBeenLastCalledWith('cfx_call', {
-    from: undefined,
-    nonce: undefined,
+    from: ADDRESS,
+    nonce: '0x64',
     gasPrice: format.hexUInt(cfx.defaultGasPrice),
     gas: format.hexUInt(cfx.defaultGas),
     storageLimit: format.hexUInt(cfx.defaultStorageLimit),
@@ -236,6 +239,7 @@ test('call', async () => {
     epochHeight: undefined,
   }, cfx.defaultEpoch);
 
+  getNextNonce.mockRestore();
   call.mockRestore();
 });
 

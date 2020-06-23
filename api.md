@@ -107,13 +107,13 @@ info     | `object` | true     |         |
 
 ## Account.prototype.constructor <a id="Account.js/constructor"></a>
 
-Create a account by privateKey.
+Create a account.
 
 * **Parameters**
 
-Name       | Type            | Required | Default | Description
------------|-----------------|----------|---------|------------
-privateKey | `string,Buffer` | true     |         |
+Name   | Type            | Required | Default | Description
+-------|-----------------|----------|---------|-------------------------------------------
+string | `string,Buffer` | true     |         | Account privateKey or publicKey or address
 
 * **Returns**
 

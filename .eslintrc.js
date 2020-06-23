@@ -20,7 +20,6 @@ module.exports = {
     'class-methods-use-this': 0,
     'func-names': 0, // for function without name
     'function-paren-newline': 0, // for readable arguments
-    'linebreak-style': 0, // for windows and mac
     'max-classes-per-file': 0,
     'max-len': 0, // for jsdoc
     'no-await-in-loop': 0, // for loop request

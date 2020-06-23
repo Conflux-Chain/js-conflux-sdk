@@ -739,6 +739,10 @@ class Conflux {
    }
    */
   async sendTransaction(options) {
+    if (!(options.from instanceof Account)) {
+      options.from = new Account(options.from);
+    }
+
     if (options.nonce === undefined) {
       options.nonce = await this.getNextNonce(options.from);
     }
@@ -782,7 +786,7 @@ class Conflux {
       options.chainId = status.chainId;
     }
 
-    if (options.from instanceof Account) {
+    if (options.from.privateKey) {
       // sign by local
       const tx = options.from.signTransaction(options);
       return this.sendRawTransaction(tx.serialize());
@@ -852,6 +856,7 @@ class Conflux {
     }
 
     if (options.from && options.nonce === undefined) {
+      options.from = new Account(options.from);
       options.nonce = await this.getNextNonce(options.from);
     }
 
@@ -868,6 +873,7 @@ class Conflux {
    */
   async estimateGasAndCollateral(options) {
     if (options.from && options.nonce === undefined) {
+      options.from = new Account(options.from);
       options.nonce = await this.getNextNonce(options.from);
     }
 
