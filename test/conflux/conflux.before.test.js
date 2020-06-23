@@ -216,9 +216,9 @@ test('call', async () => {
   await expect(cfx.call({ nonce: 0 })).rejects.toThrow('not match hex'); // miss to
 
   const call = jest.spyOn(cfx.provider, 'call');
-  await cfx.call({ to: ADDRESS });
+  await cfx.call({ from: KEY, to: ADDRESS });
   expect(call).toHaveBeenLastCalledWith('cfx_call', {
-    from: undefined,
+    from: ADDRESS,
     nonce: undefined,
     gasPrice: undefined,
     gas: undefined,
@@ -312,32 +312,6 @@ test('estimateGasAndCollateral', async () => {
     epochHeight: undefined,
   });
 
-  call.mockRestore();
-});
-
-test('sendTransaction by DEFAULT', async () => {
-  await expect(cfx.sendTransaction()).rejects.toThrow('Cannot read property');
-  await expect(cfx.sendTransaction({ nonce: 0 })).rejects.toThrow('not match hex');
-
-  const getStatus = jest.spyOn(cfx, 'getStatus');
-  getStatus.mockReturnValue({ chainId: format.uInt(2) });
-
-  const call = jest.spyOn(cfx.provider, 'call');
-  await cfx.sendTransaction({ from: ADDRESS, epochHeight: 200, nonce: 100 }, SEND_TX_PWD);
-  expect(call).toHaveBeenLastCalledWith('send_transaction', {
-    from: ADDRESS,
-    nonce: '0x64',
-    gasPrice: format.hexUInt(cfx.defaultGasPrice),
-    gas: format.hexUInt(cfx.defaultGas),
-    to: undefined,
-    value: undefined,
-    data: undefined,
-    chainId: format.hexUInt(cfx.defaultChainId),
-    epochHeight: format.hex(200),
-    storageLimit: format.hexUInt(cfx.defaultStorageLimit),
-  }, SEND_TX_PWD);
-
-  getStatus.mockRestore();
   call.mockRestore();
 });
 

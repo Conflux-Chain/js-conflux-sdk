@@ -688,6 +688,10 @@ class Conflux {
    }
    */
   async sendTransaction(options, password) {
+    if (!(options.from instanceof Account)) {
+      options.from = new Account(options.from);
+    }
+
     if (options.nonce === undefined) {
       options.nonce = await this.getNextNonce(options.from);
     }
@@ -720,7 +724,7 @@ class Conflux {
       options.chainId = status.chainId;
     }
 
-    if (options.from instanceof Account) {
+    if (options.from.privateKey) {
       // sign by local
       const tx = options.from.signTransaction(options);
       return this.sendRawTransaction(tx.serialize());
@@ -772,6 +776,10 @@ class Conflux {
    * @return {Promise<string>} Hex bytes the contract method return.
    */
   async call(options, epochNumber) {
+    if (options && options.from !== undefined) {
+      options.from = new Account(options.from);
+    }
+
     return this.provider.call('cfx_call',
       format.callTx(options),
       format.epochNumber.or(undefined)(epochNumber),
@@ -787,7 +795,13 @@ class Conflux {
    * - `BigInt` storageCollateralized: The storage collateralized in Byte.
    */
   async estimateGasAndCollateral(options) {
-    const result = await this.provider.call('cfx_estimateGasAndCollateral', format.estimateTx(options));
+    if (options && options.from !== undefined) {
+      options.from = new Account(options.from);
+    }
+
+    const result = await this.provider.call('cfx_estimateGasAndCollateral',
+      format.estimateTx(options),
+    );
     return format.estimate(result);
   }
 }

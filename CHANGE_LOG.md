@@ -1,5 +1,25 @@
 # change log
 
+## v
+
+* sendTransaction accept privateKey as `from`
+
+```
+cfx.sendTransaction({
+  from: PRIVATE_KEY, // accept Account instance or privateKey
+  to: ADDRESS, // accept Account instance or address
+  ...,
+})
+```
+
+* create Account accept address
+
+```
+new Account(PRIVATE_KEY); // {privateKey:'0x...', publicKey: '0x...', address: '0x...'}
+new Account(PUBLIC_KEY); // {publicKey: '0x...', address: '0x...'}
+new Account(ADDRESS); // {address: '0x...'}
+```
+
 ## v0.11.0
 
 * defaultGasPrice, only use for sendTransaction
