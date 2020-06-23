@@ -789,8 +789,8 @@ class Conflux {
     } else {
       // sign by remote
       const tx = format.sendTx(options);
-      tx.epochHeight = format.toHex(tx.epochHeight);
-      tx.chainId = format.toHex(tx.chainId);
+      tx.epochHeight = format.hex(tx.epochHeight);
+      tx.chainId = format.hex(tx.chainId);
       return this.provider.call('send_transaction', tx, pwd);
     }
   }
