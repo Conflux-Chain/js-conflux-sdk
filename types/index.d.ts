@@ -1,12 +1,10 @@
-// import BN = require('bn.js');
-// import BigNumber from 'bignumber.js';
 // import Big from 'big.mjs';
 // export type Hash = string;
 
 type Big = number;
 type Provider = any;
-type str0num = string | number;  // string or number
-type str0buf = string | Buffer;
+type stringOrNumber = string | number;
+type stringOrBuffer = string | Buffer;
 
 export type CFXTAG = 'earliest' | 'latest_mined' | 'latest_state' | 'latest_checkpoint';
 export type Address = string;
@@ -15,20 +13,20 @@ export type EpochNumber = string | number | CFXTAG;
 
 export interface ConfluxOption {
     url: string,
-    defaultEpoch: string|number,  // default 'latest_state'
-    defaultGasPrice: string|number,
-    defaultGas: string|number,
-    defaultStorageLimit: string|number,
+    defaultEpoch: stringOrNumber,  // default 'latest_state'
+    defaultGasPrice: stringOrNumber,
+    defaultGas: stringOrNumber,
+    defaultStorageLimit: stringOrNumber,
     defaultChainId: number,
 }
 
 export class Conflux {
     constructor(options: ConfluxOption);
     provider: Provider;
-    defaultEpoch: str0num;
-    defaultGasPrice: str0num;
-    defaultGas: str0num;
-    defaultStorageLimit: str0num;
+    defaultEpoch: stringOrNumber;
+    defaultGasPrice: stringOrNumber;
+    defaultGas: stringOrNumber;
+    defaultStorageLimit: stringOrNumber;
     defaultChainId: number;
 
     setProvider(provider: Provider): Provider;
@@ -83,17 +81,17 @@ export class Message {
 }
 
 export interface TransactionOption {
-    nonce: str0num;
-    gasPrice: str0num;
-    gas: str0num;
+    nonce: stringOrNumber;
+    gasPrice: stringOrNumber;
+    gas: stringOrNumber;
     to: string;
-    value: str0num;
-    storageLimit: str0num;
-    epochHeight: str0num;
-    chainId: str0num;
-    data: str0buf;
-    r: str0buf;
-    s: str0buf;
+    value: stringOrNumber;
+    storageLimit: stringOrNumber;
+    epochHeight: stringOrNumber;
+    chainId: stringOrNumber;
+    data: stringOrBuffer;
+    r: stringOrBuffer;
+    s: stringOrBuffer;
     v: number;
 }
 

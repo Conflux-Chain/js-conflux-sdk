@@ -398,8 +398,8 @@ format.sendTx = Parser({
   to: format.address.or(null).or(undefined),
   value: format.hexUInt.or(undefined),
   storageLimit: format.hexUInt,
-  epochHeight: format.uInt,
-  chainId: format.uInt,
+  epochHeight: format.hexUInt,
+  chainId: format.hexUInt,
   data: format.hex.or(undefined),
 });
 

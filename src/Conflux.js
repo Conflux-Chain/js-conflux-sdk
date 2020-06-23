@@ -738,7 +738,7 @@ class Conflux {
     ...
    }
    */
-  async sendTransaction(options, pwd) {
+  async sendTransaction(options, password) {
     if (options.nonce === undefined) {
       options.nonce = await this.getNextNonce(options.from);
     }
@@ -789,9 +789,7 @@ class Conflux {
     } else {
       // sign by remote
       const tx = format.sendTx(options);
-      tx.epochHeight = format.hex(tx.epochHeight);
-      tx.chainId = format.hex(tx.chainId);
-      return this.provider.call('send_transaction', tx, pwd);
+      return this.provider.call('send_transaction', tx, password);
     }
   }
 
