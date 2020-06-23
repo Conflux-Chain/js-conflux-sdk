@@ -738,7 +738,7 @@ class Conflux {
     ...
    }
    */
-  async sendTransaction(options) {
+  async sendTransaction(options, pwd) {
     if (options.nonce === undefined) {
       options.nonce = await this.getNextNonce(options.from);
     }
@@ -788,7 +788,10 @@ class Conflux {
       return this.sendRawTransaction(tx.serialize());
     } else {
       // sign by remote
-      return this.provider.call('cfx_sendTransaction', format.sendTx(options));
+      const tx = format.sendTx(options);
+      tx.epochHeight = format.toHex(tx.epochHeight);
+      tx.chainId = format.toHex(tx.chainId);
+      return this.provider.call('send_transaction', tx, pwd);
     }
   }
 
