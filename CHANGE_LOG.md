@@ -1,6 +1,6 @@
 # change log
 
-## v
+## v0.10.1
 
 * add format.bytes
 

@@ -1,7 +1,7 @@
 {
   "name": "js-conflux-sdk",
   "description": "JavaScript Conflux Software Development Kit",
-  "version": "0.10.0-alpha",
+  "version": "0.10.1",
   "license": "LGPL-3.0",
   "author": "Haizhou@conflux-chain.org",
   "repository": "https://github.com/Conflux-Chain/js-conflux-sdk.git",
@@ -62,6 +62,7 @@
   "scripts": {
     "eslint:fix": "eslint --fix ./src ./test ./mock",
     "build": "node development/build-frontend.js",
+    "document": "node document.js",
     "prepublishOnly": "npm run build",
     "test": "jest"
   }
