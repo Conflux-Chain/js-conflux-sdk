@@ -788,7 +788,10 @@ class Conflux {
       return this.sendRawTransaction(tx.serialize());
     } else {
       // sign by remote
-      return this.provider.call('cfx_sendTransaction', format.sendTx(options));
+      const fmtOption = format.sendTx(options)
+      fmtOption.epochHeight = "0x" + fmtOption.epochHeight.toString(16)
+      fmtOption.chainId = "0x" + fmtOption.chainId.toString(16)
+      return this.provider.call('send_transaction', fmtOption, password);
     }
   }
 
