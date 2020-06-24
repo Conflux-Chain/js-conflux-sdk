@@ -788,8 +788,7 @@ class Conflux {
       return this.sendRawTransaction(tx.serialize());
     } else {
       // sign by remote
-      const tx = format.sendTx(options);
-      return this.provider.call('send_transaction', tx, password);
+      this.provider.call('send_transaction', format.sendTx(options), password);
     }
   }
 
