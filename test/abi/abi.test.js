@@ -40,7 +40,7 @@ test('function', () => {
     [[JSBI.BigInt(0xab), JSBI.BigInt(0xcd)], true],
   ];
 
-  const hex = '0x' +
+  const hex = '0x664b7e11' +
     'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff' +
     '00000000000000000000000000000000000000000000000000000000000000a0' +
     '00000000000000000000000000000000000000000000000000000000000000ab' +
@@ -58,11 +58,10 @@ test('function', () => {
 
   const coder = new FunctionCoder(abi);
   expect(formatSignature(abi)).toEqual('func(int256,(address,string[]),((int256,int256),bool))');
-  expect(coder.signature()).toEqual('0x664b7e11');
-  expect(coder.encodeInputs(params)).toEqual(hex);
-  expect(coder.decodeInputs(hex)).toEqual(params);
-  expect(coder.decodeOutputs('0x0000000000000000000000000000000000000000000000000000000000000001'))
-    .toEqual([JSBI.BigInt(1)]);
+  expect(coder.signature).toEqual('0x664b7e11');
+  expect(coder.encodeData(params)).toEqual(hex);
+  expect(coder.decodeData(hex)).toEqual(params);
+  expect(coder.decodeOutputs('0x0000000000000000000000000000000000000000000000000000000000000001')).toEqual(JSBI.BigInt(1));
 });
 
 test('event', () => {
@@ -92,7 +91,7 @@ test('event', () => {
   };
 
   const coder = new EventCoder(abi);
-  expect(coder.signature()).toEqual('0xb0333e0e3a6b99318e4e2e0d7e5e5f93646f9cbf62da1587955a4092bf7df6e7');
+  expect(coder.signature).toEqual('0xb0333e0e3a6b99318e4e2e0d7e5e5f93646f9cbf62da1587955a4092bf7df6e7');
 
   expect(coder.encodeTopics(['0x0123456789012345678901234567890123456789', null]))
     .toEqual(['0x0000000000000000000000000123456789012345678901234567890123456789']);

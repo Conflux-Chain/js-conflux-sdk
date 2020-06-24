@@ -1,3 +1,4 @@
+const lodash = require('lodash');
 const { Conflux } = require('../../src');
 const { MockProvider } = require('../../mock');
 const format = require('../../src/util/format');
@@ -6,111 +7,98 @@ const KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'
 const ADDRESS = '0x1cad0b19bb29d4674531d6f115237e16afce377c';
 const BLOCK_HASH = '0xe0b0000000000000000000000000000000000000000000000000000000000000';
 const TX_HASH = '0xb0a0000000000000000000000000000000000000000000000000000000000000';
-const DEFAULT_GAS = 100;
-const DEFAULT_GAS_PRICE = 1000000;
-const DEFAULT_STORAGE_LIMIT = 1000000;
 
 // ----------------------------------------------------------------------------
 const cfx = new Conflux({
-  defaultGas: DEFAULT_GAS,
-  defaultGasPrice: DEFAULT_GAS_PRICE,
-  defaultStorageLimit: DEFAULT_STORAGE_LIMIT,
-  defaultChainId: 0,
+  defaultChainId: lodash.random(0, 10),
+  defaultGas: lodash.random(0, 100),
+  defaultGasPrice: lodash.random(0, 1000),
+  defaultStorageLimit: lodash.random(0, 10000),
 });
 cfx.provider = new MockProvider();
 
 beforeAll(() => {
   expect(cfx.defaultEpoch).toEqual('latest_state');
-  expect(cfx.defaultGas).toEqual(DEFAULT_GAS);
-  expect(cfx.defaultGasPrice).toEqual(DEFAULT_GAS_PRICE);
 });
 
 test('getLogs', async () => {
   await expect(cfx.getLogs()).rejects.toThrow('Cannot read property');
+  await expect(cfx.getLogs({ blockHashes: [], fromEpoch: 0 })).rejects.toThrow('OverrideError');
+  await expect(cfx.getLogs({ topics: [[null]] })).rejects.toThrow('not match hex');
 
-  cfx.provider.call = async (method, options) => {
-    expect(method).toEqual('cfx_getLogs');
-    expect(options.fromEpoch).toEqual(undefined);
-    expect(options.toEpoch).toEqual(undefined);
-    expect(options.blockHashes).toEqual(undefined);
-    expect(options.address).toEqual(undefined);
-    expect(options.topics).toEqual(undefined);
-    expect(options.limit).toEqual(undefined);
-    return [];
-  };
+  const call = jest.spyOn(cfx.provider, 'call');
+
   await cfx.getLogs({});
+  expect(call).toHaveBeenLastCalledWith('cfx_getLogs', {
+    fromEpoch: undefined,
+    toEpoch: undefined,
+    address: undefined,
+    blockHashes: undefined,
+    topics: undefined,
+    limit: undefined,
+  });
 
-  cfx.provider.call = async (method, options) => {
-    expect(method).toEqual('cfx_getLogs');
-    expect(options.fromEpoch).toEqual(undefined);
-    expect(options.toEpoch).toEqual(undefined);
-    expect(options.blockHashes).toEqual(BLOCK_HASH);
-    expect(options.address).toEqual(ADDRESS);
-    expect(options.topics).toEqual([TX_HASH, null]);
-    expect(options.limit).toEqual('0x64');
-    return [];
-  };
   await cfx.getLogs({
     blockHashes: [BLOCK_HASH],
     address: ADDRESS,
     topics: [[TX_HASH], null],
     limit: 100,
   });
+  expect(call).toHaveBeenLastCalledWith('cfx_getLogs', {
+    fromEpoch: undefined,
+    toEpoch: undefined,
+    address: ADDRESS,
+    blockHashes: BLOCK_HASH,
+    topics: [TX_HASH, null],
+    limit: '0x64',
+  });
 
-  await expect(cfx.getLogs({ blockHashes: [], fromEpoch: 0 })).rejects.toThrow('OverrideError');
-  await expect(cfx.getLogs({ topics: [[null]] })).rejects.toThrow('not match hex');
+  call.mockRestore();
 });
 
 test('getBalance', async () => {
   await expect(cfx.getBalance()).rejects.toThrow('not match hex');
 
-  cfx.provider.call = async (method, address, epochNumber) => {
-    expect(method).toEqual('cfx_getBalance');
-    expect(address).toEqual(ADDRESS);
-    expect(epochNumber).toEqual(cfx.defaultEpoch);
-    return '0x0';
-  };
-  await cfx.getBalance(ADDRESS);
-  await cfx.getBalance(ADDRESS, 'latest_state');
+  const call = jest.spyOn(cfx.provider, 'call');
 
-  cfx.provider.call = async (method, address, epochNumber) => {
-    expect(method).toEqual('cfx_getBalance');
-    expect(address).toEqual(ADDRESS);
-    expect(epochNumber).toEqual('0x0');
-    return '0x0';
-  };
+  await cfx.getBalance(ADDRESS);
+  expect(call).toHaveBeenLastCalledWith('cfx_getBalance', ADDRESS, cfx.defaultEpoch);
+
+  await cfx.getBalance(ADDRESS, 'latest_state');
+  expect(call).toHaveBeenLastCalledWith('cfx_getBalance', ADDRESS, 'latest_state');
+
   await cfx.getBalance(ADDRESS, 0);
+  expect(call).toHaveBeenLastCalledWith('cfx_getBalance', ADDRESS, '0x0');
+
+  call.mockRestore();
 });
 
 test('getNextNonce', async () => {
   await expect(cfx.getNextNonce()).rejects.toThrow('not match hex');
 
-  cfx.provider.call = async (method, address, epochNumber) => {
-    expect(method).toEqual('cfx_getNextNonce');
-    expect(address).toEqual(ADDRESS);
-    expect(epochNumber).toEqual(cfx.defaultEpoch);
-    return '0x0';
-  };
-  await cfx.getNextNonce(ADDRESS);
-  await cfx.getNextNonce(ADDRESS, 'latest_state');
+  const call = jest.spyOn(cfx.provider, 'call');
 
-  cfx.provider.call = async (method, address, epochNumber) => {
-    expect(method).toEqual('cfx_getNextNonce');
-    expect(address).toEqual(ADDRESS);
-    expect(epochNumber).toEqual('0x0');
-    return '0x0';
-  };
+  await cfx.getNextNonce(ADDRESS);
+  expect(call).toHaveBeenLastCalledWith('cfx_getNextNonce', ADDRESS, cfx.defaultEpoch);
+
+  await cfx.getNextNonce(ADDRESS, 'latest_state');
+  expect(call).toHaveBeenLastCalledWith('cfx_getNextNonce', ADDRESS, 'latest_state');
+
   await cfx.getNextNonce(ADDRESS, 0);
+  expect(call).toHaveBeenLastCalledWith('cfx_getNextNonce', ADDRESS, '0x0');
+
+  call.mockRestore();
 });
 
 test('getBlocksByEpochNumber', async () => {
   await expect(cfx.getBlocksByEpochNumber()).rejects.toThrow('Cannot convert undefined to a BigInt');
 
-  cfx.provider.call = async (method, epochNumber) => {
-    expect(method).toEqual('cfx_getBlocksByEpoch');
-    expect(epochNumber).toEqual('0x0');
-  };
+  const call = jest.spyOn(cfx.provider, 'call');
+
   await cfx.getBlocksByEpochNumber(0);
+  expect(call).toHaveBeenLastCalledWith('cfx_getBlocksByEpoch', '0x0');
+
+  call.mockRestore();
 });
 
 test('getBlockByHash', async () => {
@@ -118,296 +106,329 @@ test('getBlockByHash', async () => {
   await expect(cfx.getBlockByHash(ADDRESS)).rejects.toThrow('not match hex');
   await expect(cfx.getBlockByHash(BLOCK_HASH, 0)).rejects.toThrow('not match boolean');
 
-  cfx.provider.call = async (method, blockHash, detail) => {
-    expect(method).toEqual('cfx_getBlockByHash');
-    expect(blockHash).toEqual(BLOCK_HASH);
-    expect(detail).toEqual(false);
-    return null;
-  };
-  await cfx.getBlockByHash(BLOCK_HASH);
-  await cfx.getBlockByHash(BLOCK_HASH, false);
+  const call = jest.spyOn(cfx.provider, 'call');
 
-  cfx.provider.call = async (method, blockHash, detail) => {
-    expect(method).toEqual('cfx_getBlockByHash');
-    expect(blockHash).toEqual(BLOCK_HASH);
-    expect(detail).toEqual(true);
-    return null;
-  };
+  await cfx.getBlockByHash(BLOCK_HASH);
+  expect(call).toHaveBeenLastCalledWith('cfx_getBlockByHash', BLOCK_HASH, false);
+
+  await cfx.getBlockByHash(BLOCK_HASH, false);
+  expect(call).toHaveBeenLastCalledWith('cfx_getBlockByHash', BLOCK_HASH, false);
+
   await cfx.getBlockByHash(BLOCK_HASH, true);
+  expect(call).toHaveBeenLastCalledWith('cfx_getBlockByHash', BLOCK_HASH, true);
+
+  call.mockRestore();
 });
 
 test('getBlockByEpochNumber', async () => {
   await expect(cfx.getBlockByEpochNumber()).rejects.toThrow('Cannot convert undefined to a BigInt');
   await expect(cfx.getBlockByEpochNumber(0, 1)).rejects.toThrow('not match boolean');
 
-  cfx.provider.call = async (method, epochNumber, detail) => {
-    expect(method).toEqual('cfx_getBlockByEpochNumber');
-    expect(epochNumber).toEqual(cfx.defaultEpoch);
-    expect(detail).toEqual(false);
-    return null;
-  };
-  await cfx.getBlockByEpochNumber('latest_state');
-  await cfx.getBlockByEpochNumber('latest_state', false);
+  const call = jest.spyOn(cfx.provider, 'call');
+  call.mockReturnValue(null);
 
-  cfx.provider.call = async (method, epochNumber, detail) => {
-    expect(method).toEqual('cfx_getBlockByEpochNumber');
-    expect(epochNumber).toEqual('0x0');
-    expect(detail).toEqual(true);
-    return null;
-  };
+  await cfx.getBlockByEpochNumber('latest_state', false);
+  expect(call).toHaveBeenLastCalledWith('cfx_getBlockByEpochNumber', 'latest_state', false);
+
   await cfx.getBlockByEpochNumber(0, true);
+  expect(call).toHaveBeenLastCalledWith('cfx_getBlockByEpochNumber', '0x0', true);
+
+  call.mockRestore();
 });
 
 test('getBlockByHashWithPivotAssumption', async () => {
-  // TODO
+  await expect(cfx.getBlockByHashWithPivotAssumption()).rejects.toThrow('undefined not match hex');
+  await expect(cfx.getBlockByHashWithPivotAssumption(BLOCK_HASH)).rejects.toThrow('undefined not match hex');
+  await expect(cfx.getBlockByHashWithPivotAssumption(BLOCK_HASH, BLOCK_HASH)).rejects.toThrow('Cannot convert undefined to a BigInt');
+
+  const epochNumber = 100;
+  const blockHashArray = await cfx.getBlocksByEpochNumber(epochNumber);
+  const blockHash = lodash.first(blockHashArray);
+  const pivotHash = lodash.last(blockHashArray);
+
+  const call = jest.spyOn(cfx.provider, 'call');
+
+  await cfx.getBlockByHashWithPivotAssumption(blockHash, pivotHash, epochNumber);
+  expect(call).toHaveBeenLastCalledWith('cfx_getBlockByHashWithPivotAssumption', blockHash, pivotHash, '0x64');
+
+  call.mockRestore();
 });
 
 test('getConfirmationRiskByHash', async () => {
   await expect(cfx.getConfirmationRiskByHash()).rejects.toThrow('not match hex');
 
-  cfx.provider.call = async (method, blockHash) => {
-    expect(method).toEqual('cfx_getConfirmationRiskByHash');
-    expect(blockHash).toEqual(BLOCK_HASH);
-    return null;
-  };
+  const call = jest.spyOn(cfx.provider, 'call');
+
   await cfx.getConfirmationRiskByHash(BLOCK_HASH);
+  expect(call).toHaveBeenLastCalledWith('cfx_getConfirmationRiskByHash', BLOCK_HASH);
+
+  call.mockRestore();
 });
 
 test('getTransactionByHash', async () => {
   await expect(cfx.getTransactionByHash()).rejects.toThrow('not match hex');
   await expect(cfx.getTransactionByHash(ADDRESS)).rejects.toThrow('not match hex');
 
-  cfx.provider.call = async (method, txHash) => {
-    expect(method).toEqual('cfx_getTransactionByHash');
-    expect(txHash).toEqual(TX_HASH);
-    return null;
-  };
+  const call = jest.spyOn(cfx.provider, 'call');
+
   await cfx.getTransactionByHash(TX_HASH);
+  expect(call).toHaveBeenLastCalledWith('cfx_getTransactionByHash', TX_HASH);
+
+  call.mockRestore();
 });
 
 test('getTransactionReceipt', async () => {
   await expect(cfx.getTransactionReceipt()).rejects.toThrow('not match hex');
   await expect(cfx.getTransactionReceipt(ADDRESS)).rejects.toThrow('not match hex');
 
-  cfx.provider.call = async (method, txHash) => {
-    expect(method).toEqual('cfx_getTransactionReceipt');
-    expect(txHash).toEqual(TX_HASH);
-    return null;
-  };
+  const call = jest.spyOn(cfx.provider, 'call');
+
   await cfx.getTransactionReceipt(TX_HASH);
+  expect(call).toHaveBeenLastCalledWith('cfx_getTransactionReceipt', TX_HASH);
+
+  call.mockRestore();
 });
 
 test('sendRawTransaction', async () => {
   await expect(cfx.sendRawTransaction()).rejects.toThrow('not match hex');
 
-  cfx.provider.call = async (method, txHash) => {
-    expect(method).toEqual('cfx_sendRawTransaction');
-    expect(txHash).toEqual('0x01ff');
-    return TX_HASH;
-  };
-  await cfx.sendRawTransaction('0x01ff');
+  const call = jest.spyOn(cfx.provider, 'call');
+
+  await cfx.sendRawTransaction('0x1ff');
+  expect(call).toHaveBeenLastCalledWith('cfx_sendRawTransaction', '0x01ff');
+
   await cfx.sendRawTransaction(Buffer.from([1, 255]));
+  expect(call).toHaveBeenLastCalledWith('cfx_sendRawTransaction', '0x01ff');
+
+  call.mockRestore();
 });
 
 test('getCode', async () => {
   await expect(cfx.getCode()).rejects.toThrow('not match hex');
 
-  cfx.provider.call = async (method, address, epochNumber) => {
-    expect(method).toEqual('cfx_getCode');
-    expect(address).toEqual(ADDRESS);
-    expect(epochNumber).toEqual(cfx.defaultEpoch);
-  };
-  await cfx.getCode(ADDRESS);
-  await cfx.getCode(ADDRESS, cfx.defaultEpoch);
+  const call = jest.spyOn(cfx.provider, 'call');
 
-  cfx.provider.call = async (method, address, epochNumber) => {
-    expect(method).toEqual('cfx_getCode');
-    expect(address).toEqual(ADDRESS);
-    expect(epochNumber).toEqual('0x0');
-  };
+  await cfx.getCode(ADDRESS);
+  expect(call).toHaveBeenLastCalledWith('cfx_getCode', ADDRESS, cfx.defaultEpoch);
+
   await cfx.getCode(ADDRESS, 0);
+  expect(call).toHaveBeenLastCalledWith('cfx_getCode', ADDRESS, '0x0');
+
+  call.mockRestore();
 });
 
 test('call', async () => {
-  cfx.getNextNonce = async address => {
-    expect(format.hex(address)).toEqual(ADDRESS);
-    return 100;
-  };
-
   await expect(cfx.call()).rejects.toThrow('Cannot read property');
-  await expect(cfx.call({ nonce: 0 })).rejects.toThrow('not match hex');
+  await expect(cfx.call({ nonce: 0 })).rejects.toThrow('not match hex'); // miss to
 
-  cfx.provider.call = async (method, options, epochNumber) => {
-    expect(method).toEqual('cfx_call');
-
-    expect(options.from).toEqual(undefined);
-    expect(options.nonce).toEqual(undefined);
-    expect(options.gasPrice).toEqual(format.hexUInt(cfx.defaultGasPrice));
-    expect(options.gas).toEqual(format.hexUInt(cfx.defaultGas));
-    expect(options.storageLimit).toEqual(format.hexUInt(cfx.defaultStorageLimit));
-    expect(options.to).toEqual(ADDRESS);
-    expect(options.value).toEqual(undefined);
-    expect(options.data).toEqual(undefined);
-    expect(options.chainId).toEqual(format.uInt(0));
-
-    expect(epochNumber).toEqual(cfx.defaultEpoch);
-  };
+  const call = jest.spyOn(cfx.provider, 'call');
   await cfx.call({ to: ADDRESS });
+  expect(call).toHaveBeenLastCalledWith('cfx_call', {
+    from: undefined,
+    nonce: undefined,
+    gasPrice: format.hexUInt(cfx.defaultGasPrice),
+    gas: format.hexUInt(cfx.defaultGas),
+    storageLimit: format.hexUInt(cfx.defaultStorageLimit),
+    to: ADDRESS,
+    value: undefined,
+    data: undefined,
+    chainId: cfx.defaultChainId,
+    epochHeight: undefined,
+  }, cfx.defaultEpoch);
 
-  cfx.provider.call = async (method, options, epochNumber) => {
-    expect(method).toEqual('cfx_call');
+  call.mockRestore();
+});
 
-    expect(options.from).toEqual(ADDRESS);
-    expect(options.nonce).toEqual('0x64');
-    expect(options.gasPrice).toEqual(format.hexUInt(cfx.defaultGasPrice));
-    expect(options.gas).toEqual('0x1');
-    expect(options.to).toEqual(ADDRESS);
-    expect(options.value).toEqual('0x64');
-    expect(options.data).toEqual('0x');
+test('call by AUTO', async () => {
+  const call = jest.spyOn(cfx.provider, 'call');
 
-    expect(epochNumber).toEqual('latest_mined');
-  };
+  const getNextNonce = jest.spyOn(cfx, 'getNextNonce');
+  getNextNonce.mockReturnValue(100);
+
   await cfx.call(
     {
       from: format.buffer(ADDRESS),
       to: format.buffer(ADDRESS),
-      gas: '1',
+      nonce: 0,
+      // chainId: 1,
+      gas: '2',
+      gasPrice: 3,
+      storageLimit: 4,
+      epochHeight: 5,
       value: 100,
       data: '0x',
     },
     'latest_mined',
   );
+  expect(call).toHaveBeenLastCalledWith('cfx_call', {
+    from: ADDRESS,
+    nonce: '0x0',
+    chainId: cfx.defaultChainId,
+    gas: '0x2',
+    gasPrice: '0x3',
+    storageLimit: '0x4',
+    epochHeight: 5,
+    to: ADDRESS,
+    value: '0x64',
+    data: '0x',
+  }, 'latest_mined');
+
+  getNextNonce.mockRestore();
+  call.mockRestore();
 });
 
 test('estimateGasAndCollateral', async () => {
-  cfx.getNextNonce = async address => {
-    expect(format.hex(address)).toEqual(ADDRESS);
-    return 100;
-  };
-
   await expect(cfx.estimateGasAndCollateral()).rejects.toThrow('Cannot read property');
 
-  cfx.provider.call = async (method, options) => {
-    expect(method).toEqual('cfx_estimateGasAndCollateral');
-
-    expect(options.from).toEqual(undefined);
-    expect(options.nonce).toEqual(undefined);
-    expect(options.gasPrice).toEqual(format.hexUInt(cfx.defaultGasPrice));
-    expect(options.gas).toEqual(format.hexUInt(cfx.defaultGas));
-    expect(options.to).toEqual(ADDRESS);
-    expect(options.value).toEqual(undefined);
-    expect(options.data).toEqual(undefined);
-    return {
-      gasUsed: '0x0',
-      storageCollateralized: '0x0',
-    };
-  };
+  const call = jest.spyOn(cfx.provider, 'call');
   await cfx.estimateGasAndCollateral({ to: ADDRESS });
+  expect(call).toHaveBeenLastCalledWith('cfx_estimateGasAndCollateral', {
+    from: undefined,
+    nonce: undefined,
+    gasPrice: format.hexUInt(cfx.defaultGasPrice),
+    gas: format.hexUInt(cfx.defaultGas),
+    storageLimit: format.hexUInt(cfx.defaultStorageLimit),
+    to: ADDRESS,
+    value: undefined,
+    data: undefined,
+    chainId: cfx.defaultChainId,
+    epochHeight: undefined,
+  });
 
-  cfx.provider.call = async (method, options) => {
-    expect(method).toEqual('cfx_estimateGasAndCollateral');
+  const getNextNonce = jest.spyOn(cfx, 'getNextNonce');
+  getNextNonce.mockReturnValue(100);
 
-    expect(options.from).toEqual(ADDRESS);
-    expect(options.nonce).toEqual('0x64');
-    expect(options.gasPrice).toEqual(format.hexUInt(cfx.defaultGasPrice));
-    expect(options.gas).toEqual('0x1');
-    expect(options.to).toEqual(ADDRESS);
-    expect(options.value).toEqual('0x64');
-    expect(options.data).toEqual('0x');
-    return {
-      gasUsed: '0x1',
-      storageCollateralized: '0x0',
-    };
-  };
   await cfx.estimateGasAndCollateral(
     {
-      from: format.buffer(ADDRESS),
+      from: ADDRESS,
       to: format.buffer(ADDRESS),
       gas: '0x01',
       value: 100,
       data: '0x',
     },
   );
+  expect(call).toHaveBeenLastCalledWith('cfx_estimateGasAndCollateral', {
+    from: ADDRESS,
+    nonce: '0x64',
+    gasPrice: format.hexUInt(cfx.defaultGasPrice),
+    gas: '0x1',
+    storageLimit: format.hexUInt(cfx.defaultStorageLimit),
+    to: ADDRESS,
+    value: '0x64',
+    data: '0x',
+    chainId: cfx.defaultChainId,
+    epochHeight: undefined,
+  });
+
+  getNextNonce.mockRestore();
+  call.mockRestore();
 });
 
-test('sendTransaction by address', async () => {
-  cfx.getNextNonce = async address => {
-    expect(address).toEqual(ADDRESS);
-    return 0;
-  };
-
-  cfx.estimateGasAndCollateral = async () => {
-    return {
-      gasUsed: format.bigUInt(1024),
-      storageCollateralized: format.bigUInt(2048),
-    };
-  };
-
-  cfx.getEpochNumber = async () => {
-    return 1000;
-  };
-
+test('sendTransaction by DEFAULT', async () => {
   await expect(cfx.sendTransaction()).rejects.toThrow('Cannot read property');
   await expect(cfx.sendTransaction({ nonce: 0 })).rejects.toThrow('not match hex');
 
-  cfx.provider.call = async (method, options) => {
-    expect(method).toEqual('cfx_sendTransaction');
-    expect(options.from).toEqual(ADDRESS);
-    expect(options.nonce).toEqual('0x0');
-    expect(options.gasPrice).toEqual(format.hexUInt(cfx.defaultGasPrice));
-    expect(options.gas).toEqual(format.hexUInt(cfx.defaultGas));
-    expect(options.to).toEqual(undefined);
-    expect(options.value).toEqual(undefined);
-    expect(options.data).toEqual(undefined);
-    return TX_HASH;
-  };
-  await cfx.sendTransaction({ from: ADDRESS });
-  await cfx.sendTransaction({ nonce: 0, from: ADDRESS });
+  const call = jest.spyOn(cfx.provider, 'call');
+  await cfx.sendTransaction({ from: ADDRESS, epochHeight: 200, nonce: 100 });
+  expect(call).toHaveBeenLastCalledWith('cfx_sendTransaction', {
+    from: ADDRESS,
+    nonce: '0x64',
+    gasPrice: format.hexUInt(cfx.defaultGasPrice),
+    gas: format.hexUInt(cfx.defaultGas),
+    to: undefined,
+    value: undefined,
+    data: undefined,
+    chainId: cfx.defaultChainId,
+    epochHeight: 200,
+    storageLimit: format.hexUInt(cfx.defaultStorageLimit),
+  });
 
-  cfx.provider.call = async (method, options) => {
-    expect(method).toEqual('cfx_sendTransaction');
-    expect(options.from).toEqual(ADDRESS);
-    expect(options.nonce).toEqual('0x64');
-    expect(options.gasPrice).toEqual(format.hexUInt(cfx.defaultGasPrice));
-    expect(options.gas).toEqual('0x1');
-    expect(options.to).toEqual(ADDRESS);
-    expect(options.value).toEqual('0x0');
-    expect(options.data).toEqual('0x');
-    return TX_HASH;
-  };
+  call.mockRestore();
+});
+
+test('sendTransaction by AUTO', async () => {
+  const call = jest.spyOn(cfx.provider, 'call');
+
+  const defaultStorageLimit = cfx.defaultStorageLimit;
+  cfx.defaultStorageLimit = undefined;
+
+  const defaultGasPrice = cfx.defaultGasPrice;
+  cfx.defaultGasPrice = undefined;
+
+  const defaultGas = cfx.defaultGas;
+  cfx.defaultGas = undefined;
+
+  const defaultChainId = cfx.defaultChainId;
+  cfx.defaultChainId = undefined;
+
+  const getEpochNumber = jest.spyOn(cfx, 'getEpochNumber');
+  getEpochNumber.mockReturnValue(1000);
+
+  const getGasPrice = jest.spyOn(cfx, 'getGasPrice');
+  getGasPrice.mockReturnValue(0);
+
+  const getStatus = jest.spyOn(cfx, 'getStatus');
+  getStatus.mockReturnValue({ chainId: format.uInt(1) });
+
+  const getNextNonce = jest.spyOn(cfx, 'getNextNonce');
+  getNextNonce.mockReturnValue(100);
+
+  const estimateGasAndCollateral = jest.spyOn(cfx, 'estimateGasAndCollateral');
+  estimateGasAndCollateral.mockReturnValue({
+    gasUsed: format.bigUInt(1024),
+    storageCollateralized: format.bigUInt(2048),
+  });
+
   await cfx.sendTransaction({
-    nonce: 100,
     from: ADDRESS,
     to: format.buffer(ADDRESS),
-    gas: 1,
     value: 0,
     data: '0x',
   });
+  expect(call).toHaveBeenLastCalledWith('cfx_sendTransaction', {
+    from: ADDRESS,
+    nonce: '0x64',
+    gasPrice: '0x1',
+    gas: '0x400',
+    to: ADDRESS,
+    value: '0x0',
+    data: '0x',
+    chainId: 1,
+    epochHeight: 1000,
+    storageLimit: format.hexUInt(2048),
+  });
+
+  expect(getEpochNumber).toHaveBeenCalledTimes(1);
+  expect(getNextNonce).toHaveBeenCalledTimes(1);
+  expect(getStatus).toHaveBeenCalledTimes(1);
+  expect(getGasPrice).toHaveBeenCalledTimes(1);
+  expect(estimateGasAndCollateral).toHaveBeenCalledTimes(1);
+
+  cfx.defaultStorageLimit = defaultStorageLimit;
+  cfx.defaultGasPrice = defaultGasPrice;
+  cfx.defaultGas = defaultGas;
+  cfx.defaultChainId = defaultChainId;
+  getEpochNumber.mockRestore();
+  getStatus.mockRestore();
+  getNextNonce.mockRestore();
+  estimateGasAndCollateral.mockRestore();
+  call.mockRestore();
 });
 
 test('sendTransaction by account', async () => {
   const account = cfx.Account(KEY);
 
-  cfx.getNextNonce = async address => {
-    expect(format.hex(address)).toEqual(ADDRESS);
-    return 0;
-  };
+  const call = jest.spyOn(cfx.provider, 'call');
+  await cfx.sendTransaction({
+    from: account,
+    chainId: 0,
+    epochHeight: 200,
+    nonce: 100,
+    gas: 100,
+    gasPrice: 1000000,
+    storageLimit: 1000000,
+  });
+  expect(call).toHaveBeenLastCalledWith('cfx_sendRawTransaction', '0xf854d064830f4240648080830f424081c8808001a04687443e9d1886f1c5d0ab48c6fc5d254eaea7d8ab9839be1143cf1645d0d6a7a0272248475dbf1b624dbe9758afe2ec1cfd82a194ce170b9362f95d5b4a07f48e');
 
-  cfx.estimateGasAndCollateral = async () => {
-    return {
-      gasUsed: format.bigUInt(0),
-      storageCollateralized: format.bigUInt(2048),
-    };
-  };
-
-  cfx.getEpochNumber = async () => {
-    return 1000;
-  };
-
-  cfx.provider.call = async (method, hex) => {
-    expect(method).toEqual('cfx_sendRawTransaction');
-    expect(hex.startsWith('0x')).toEqual(true);
-    return TX_HASH;
-  };
-  await cfx.sendTransaction({ from: account });
+  call.mockRestore();
 });

@@ -1,12 +1,15 @@
 const lodash = require('lodash');
-const { assert, decorate } = require('../util');
+const { decorate } = require('../util');
 const { EventCoder } = require('../abi');
 const callable = require('../lib/callable');
 
-class Event {
-  constructor(cfx, eventLog, { address, topics }) {
+/**
+ * @memberOf ContractEvent
+ */
+class EventLog {
+  constructor(cfx, event, { address, topics }) {
     this.cfx = cfx;
-    this.eventLog = eventLog;
+    this.event = event;
     this.address = address;
     this.topics = topics;
   }
@@ -14,7 +17,7 @@ class Event {
   getLogs(options = {}) {
     const _decodeLog = log => {
       if (log !== undefined) {
-        log.params = this.eventLog.decodeLog(log);
+        log.params = this.event.decodeLog(log);
       }
       return log;
     };
@@ -38,72 +41,78 @@ class Event {
   }
 }
 
-class ContractEvent {
-  constructor(cfx, contract, name) {
+class ContractEvent extends EventCoder {
+  constructor(cfx, contract, fragment) {
+    super(fragment);
     this.cfx = cfx;
     this.contract = contract;
-    this.name = name;
-    this.signatureToCoder = {};
 
     return callable(this, this.call.bind(this));
   }
 
-  add(fragment) {
-    const coder = new EventCoder(fragment);
-    this.signatureToCoder[coder.signature()] = coder;
-  }
-
   call(...args) {
-    const matrix = [];
-    const types = [];
-
-    for (const [signature, coder] of Object.entries(this.signatureToCoder)) {
-      if (!coder.anonymous) {
-        try {
-          matrix.push([signature, ...coder.encodeTopics(args)]);
-        } catch (e) {
-          types.push(coder.type);
-        }
-      }
-    }
-
-    if (!matrix.length) {
-      throw new Error(`can not match "${types.join(',')}" with args (${args.join(',')})`);
-    }
-
-    // transpose matrix
-    const topics = lodash.zip(...matrix).map(array => {
-      array = array.filter(Boolean);
-      return array.length ? array : null;
-    });
-
     const address = this.contract.address;
-    return new Event(this.cfx, this, { address, topics });
+    const topics = [this.signature, ...this.encodeTopics(args)];
+    return new EventLog(this.cfx, this, { address, topics });
   }
 
   decodeLog(log) {
-    const topic = log.topics[0];
-    const coder = this.signatureToCoder[topic];
-
-    assert(coder, {
-      message: 'ContractEvent.decodeLog topic missing',
-      expect: topic,
-      got: Object.keys(this.signatureToCoder),
-      coder: this,
-    });
-
-    const namedTuple = coder.decodeLog(log);
+    const namedTuple = super.decodeLog(log);
     return {
       name: this.name,
-      fullName: coder.fullName,
-      type: coder.type,
-      signature: topic,
+      fullName: this.fullName,
+      type: this.type,
+      signature: this.signature,
       array: [...namedTuple],
       object: namedTuple.toObject(),
     };
   }
 }
 
-ContractEvent.Event = Event;
+/**
+ * @memberOf ContractEvent
+ */
+class ContractEventOverride {
+  constructor(cfx, contract, events) {
+    this.cfx = cfx;
+    this.contract = contract;
+
+    this.signatureToEvent = lodash.keyBy(events, 'signature');
+
+    return callable(this, this.call.bind(this));
+  }
+
+  call(...args) {
+    const acceptArray = [];
+    const rejectArray = [];
+    for (const event of Object.values(this.signatureToEvent)) {
+      try {
+        acceptArray.push(event(...args).topics);
+      } catch (e) {
+        rejectArray.push(event.type);
+      }
+    }
+
+    if (!acceptArray.length) {
+      throw new Error(`can not match override "${rejectArray.join(',')}" with args (${args.join(',')})`);
+    }
+
+    // transpose acceptArray
+    const topics = lodash.zip(...acceptArray).map(array => {
+      array = array.filter(Boolean);
+      return array.length ? array : null;
+    });
+
+    return new EventLog(this.cfx, this, { address: this.contract.address, topics });
+  }
+
+  decodeLog(log) {
+    const topic = log.topics[0];
+    const event = this.signatureToEvent[topic];
+    return event.decodeLog(log);
+  }
+}
 
 module.exports = ContractEvent;
+module.exports.ContractEventOverride = ContractEventOverride;
+module.exports.EventLog = EventLog;

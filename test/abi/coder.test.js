@@ -15,7 +15,7 @@ function testEncode(coder, value, string) {
 }
 
 function testDecode(coder, value, hex) {
-  const stream = HexStream(hex);
+  const stream = new HexStream(hex);
   const decoded = coder.decode(stream);
   expect(decoded).toEqual(value);
   return decoded;
@@ -300,7 +300,7 @@ describe('tuple', () => {
     expect(() => coder.encode('string')).toThrow('unexpected type');
     expect(() => coder.encode([])).toThrow('length not match');
 
-    const value = coder.decode(HexStream(
+    const value = coder.decode(new HexStream(
       '000000000000000000000000000000000000000000000000000000000000000f' +
       '0000000000000000000000000000000000000000000000000000000000000000',
     ));
@@ -344,7 +344,7 @@ describe('tuple', () => {
       'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff' +
       '0000000000000000000000000000000000000000000000000000000000000003' +
       '6162630000000000000000000000000000000000000000000000000000000000';
-    expect(() => coder.decode(HexStream(hex))).toThrow('stream.index error');
+    expect(() => coder.decode(new HexStream(hex))).toThrow('stream.index error');
   });
 
   test('tuple(tuple)', () => {
@@ -379,7 +379,7 @@ describe('tuple', () => {
       '0000000000000000000000000000000000000000000000000000000000000384',
     );
 
-    const value = coder.decode(HexStream(
+    const value = coder.decode(new HexStream(
       '000000000000000000000000000000000000000000000000000000000000000f' +
       'fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffa24' +
       '0000000000000000000000000000000000000000000000000000000000000384',

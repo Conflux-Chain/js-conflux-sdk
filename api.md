@@ -1810,6 +1810,31 @@ arg  | `number,JSBI,string,Buffer,boolean,null` | true     |         |
  Error("not match hex")
 ```
 
+## format.bytes (setter) <a id="util/format.js/bytes (setter)"></a>
+
+*no description*
+
+* **Parameters**
+
+Name | Type                  | Required | Default | Description
+-----|-----------------------|----------|---------|------------
+arg  | `string,Buffer,array` | true     |         |
+
+* **Returns**
+
+`Buffer` 
+
+* **Examples**
+
+```
+> format.bytes('abcd')
+ <Buffer 61 62 63 64>
+> format.bytes(Buffer.from([0, 1]))
+ <Buffer 00 01>
+> format.bytes([0, 1])
+ <Buffer 00 01>
+```
+
 ## format.boolean (setter) <a id="util/format.js/boolean (setter)"></a>
 
 *no description*

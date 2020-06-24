@@ -1,5 +1,30 @@
 # change log
 
+## v
+
+* add format.bytes
+
+```
+format.bytes('abcd'); // <Buffer 61 62 63 64>
+format.bytes([0, 1, 2, 3]); // <Buffer 00 01 02 03>
+```
+
+* add contract method & event type or signature indexes
+
+```
+// solidity
+function override(bytes memory str) public
+function override(string memory str) public
+```
+
+```
+contract.override('str'); // Error: can not determine override
+
+contract['override(string)']('str'); // specify override method by type
+contract['0x227ffd52']('str'); // specify override method by signature
+```
+
+
 ## v0.10.0-alpha
 
 * add `getStatus`
