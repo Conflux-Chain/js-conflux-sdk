@@ -193,7 +193,9 @@ class Conflux {
   async getStatus() {
     try {
       const result = await this.provider.call('cfx_getStatus');
-
+      if (!result.chainId) {
+        result.chainId = '0x0';
+      }
       return format.status(result);
     } catch (e) {
       if (/Method not found/.test(e.message)) {
@@ -788,7 +790,7 @@ class Conflux {
       return this.sendRawTransaction(tx.serialize());
     } else {
       // sign by remote
-      this.provider.call('send_transaction', format.sendTx(options), password);
+      return this.provider.call('send_transaction', format.sendTx(options), password);
     }
   }
 
