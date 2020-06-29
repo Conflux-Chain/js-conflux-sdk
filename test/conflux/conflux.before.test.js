@@ -350,31 +350,6 @@ test('sendTransaction by address', async () => {
   await expect(cfx.sendTransaction()).rejects.toThrow('Cannot read property');
   await expect(cfx.sendTransaction({ nonce: 0 })).rejects.toThrow('not match hex');
 
-  cfx.provider.call = async (method, options) => {
-    expect(method).toEqual('send_transaction');
-    expect(options.from).toEqual(ADDRESS);
-    expect(options.nonce).toEqual('0x0');
-    expect(options.gasPrice).toEqual(format.hexUInt(cfx.defaultGasPrice));
-    expect(options.gas).toEqual(format.hexUInt(cfx.defaultGas));
-    expect(options.to).toEqual(undefined);
-    expect(options.value).toEqual(undefined);
-    expect(options.data).toEqual(undefined);
-    return TX_HASH;
-  };
-  await cfx.sendTransaction({ from: ADDRESS });
-  await cfx.sendTransaction({ nonce: 0, from: ADDRESS });
-
-  cfx.provider.call = async (method, options) => {
-    expect(method).toEqual('send_transaction');
-    expect(options.from).toEqual(ADDRESS);
-    expect(options.nonce).toEqual('0x64');
-    expect(options.gasPrice).toEqual(format.hexUInt(cfx.defaultGasPrice));
-    expect(options.gas).toEqual('0x1');
-    expect(options.to).toEqual(ADDRESS);
-    expect(options.value).toEqual('0x0');
-    expect(options.data).toEqual('0x');
-    return TX_HASH;
-  };
   await cfx.sendTransaction({
     nonce: 100,
     from: ADDRESS,
