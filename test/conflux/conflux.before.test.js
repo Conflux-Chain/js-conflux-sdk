@@ -350,6 +350,11 @@ test('sendTransaction by address', async () => {
   await expect(cfx.sendTransaction()).rejects.toThrow('Cannot read property');
   await expect(cfx.sendTransaction({ nonce: 0 })).rejects.toThrow('not match hex');
 
+  cfx.provider.call = async (method, options) => {
+    expect(method).toEqual('send_transaction');
+    return TX_HASH;
+  };
+
   await cfx.sendTransaction({
     nonce: 100,
     from: ADDRESS,
