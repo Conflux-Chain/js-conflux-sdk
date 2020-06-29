@@ -33,7 +33,6 @@ const babelTransform = babelify.configure({
 });
 
 browserify(browserifyOptions)
-  .ignore('crypto')
   .transform(babelTransform)
   .plugin('tinyify')
   .bundle()
