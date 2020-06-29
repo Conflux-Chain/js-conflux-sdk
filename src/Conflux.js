@@ -784,7 +784,7 @@ class Conflux {
 
     if (options.from instanceof Account) {
       // sign by local
-      const tx = options.from.signTransaction(options);
+      const tx = await options.from.signTransaction(options);
       return this.sendRawTransaction(tx.serialize());
     } else {
       // sign by remote
