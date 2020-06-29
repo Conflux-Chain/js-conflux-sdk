@@ -379,6 +379,11 @@ test('sendTransaction by AUTO', async () => {
     storageCollateralized: format.bigUInt(2048),
   });
 
+  cfx.provider.call = async (method, options) => {
+    expect(method).toEqual('send_transaction');
+    return TX_HASH;
+  };
+
   await cfx.sendTransaction({
     from: ADDRESS,
     to: format.buffer(ADDRESS),
