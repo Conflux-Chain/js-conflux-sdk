@@ -1,9 +1,11 @@
 /* eslint-disable import/no-extraneous-dependencies */
+const path = require('path');
 const { mkdirpSync } = require('fs-extra');
 const browserify = require('browserify');
 const babelify = require('babelify');
 const fs = require('fs');
 const exorcist = require('exorcist');
+const mold = require('mold-source-map');
 
 const browserifyOptions = {
   browserField: 'browserify-browser',
@@ -36,5 +38,6 @@ browserify(browserifyOptions)
   .transform(babelTransform)
   .plugin('tinyify')
   .bundle()
+  .pipe(mold.transformSourcesRelativeTo(path.resolve(__dirname, '../')))
   .pipe(exorcist(`./dist/${OUTPUT_FILE_NAME}.umd.min.js.map`))
   .pipe(fs.createWriteStream(`./dist/${OUTPUT_FILE_NAME}.umd.min.js`));

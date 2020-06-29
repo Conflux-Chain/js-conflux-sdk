@@ -4596,7 +4596,7 @@ module-deps@^6.0.0:
     through2 "^2.0.0"
     xtend "^4.0.0"
 
-mold-source-map@~0.4.0:
+mold-source-map@^0.4.0, mold-source-map@~0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/mold-source-map/-/mold-source-map-0.4.0.tgz#cf67e0b31c47ab9badb5c9c25651862127bb8317"
   integrity sha1-z2fgsxxHq5uttcnCVlGGISe7gxc=

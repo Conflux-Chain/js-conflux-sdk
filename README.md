@@ -41,6 +41,12 @@ const util = require('js-conflux-sdk/src/util');
 import { Conflux } from 'js-conflux-sdk/dist/js-conflux-sdk.umd.min.js';
 ```
 
+or if your bundler supports the [`browser` field](https://docs.npmjs.com/files/package.json#browser) in `package.json`  
+
+``` javascript
+import { Conflux } from 'js-conflux-sdk';
+```
+
 or  
 
 ``` html
