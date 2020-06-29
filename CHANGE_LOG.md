@@ -1,5 +1,15 @@
 # change log
 
+## v0.10.2
+
+* fix: include crypto into browserify build
+
+```
+// old
+ConfluxJSSDK.util.sign.randomPrivateKey() // TypeError randomBytes is not a function
+
+```
+
 ## v0.10.1
 
 * add format.bytes
