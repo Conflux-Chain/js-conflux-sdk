@@ -1,5 +1,9 @@
 # change log
 
+## v0.10.3
+
+* fix broken sourcemap
+
 ## v0.10.2
 
 * fix: include crypto into browserify build
