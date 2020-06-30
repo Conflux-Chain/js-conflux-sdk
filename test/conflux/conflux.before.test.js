@@ -7,6 +7,7 @@ const KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'
 const ADDRESS = '0x1cad0b19bb29d4674531d6f115237e16afce377c';
 const BLOCK_HASH = '0xe0b0000000000000000000000000000000000000000000000000000000000000';
 const TX_HASH = '0xb0a0000000000000000000000000000000000000000000000000000000000000';
+const SEND_TX_PWD = '123456';
 
 // ----------------------------------------------------------------------------
 const cfx = new Conflux({
@@ -329,8 +330,8 @@ test('sendTransaction by DEFAULT', async () => {
   await expect(cfx.sendTransaction({ nonce: 0 })).rejects.toThrow('not match hex');
 
   const call = jest.spyOn(cfx.provider, 'call');
-  await cfx.sendTransaction({ from: ADDRESS, epochHeight: 200, nonce: 100 });
-  expect(call).toHaveBeenLastCalledWith('cfx_sendTransaction', {
+  await cfx.sendTransaction({ from: ADDRESS, epochHeight: 200, nonce: 100 }, SEND_TX_PWD);
+  expect(call).toHaveBeenLastCalledWith('send_transaction', {
     from: ADDRESS,
     nonce: '0x64',
     gasPrice: format.hexUInt(cfx.defaultGasPrice),
@@ -338,10 +339,10 @@ test('sendTransaction by DEFAULT', async () => {
     to: undefined,
     value: undefined,
     data: undefined,
-    chainId: cfx.defaultChainId,
-    epochHeight: 200,
+    chainId: format.hexUInt(cfx.defaultChainId),
+    epochHeight: format.hex(200),
     storageLimit: format.hexUInt(cfx.defaultStorageLimit),
-  });
+  }, SEND_TX_PWD);
 
   call.mockRestore();
 });
@@ -384,8 +385,8 @@ test('sendTransaction by AUTO', async () => {
     to: format.buffer(ADDRESS),
     value: 0,
     data: '0x',
-  });
-  expect(call).toHaveBeenLastCalledWith('cfx_sendTransaction', {
+  }, SEND_TX_PWD);
+  expect(call).toHaveBeenLastCalledWith('send_transaction', {
     from: ADDRESS,
     nonce: '0x64',
     gasPrice: '0x1',
@@ -393,10 +394,10 @@ test('sendTransaction by AUTO', async () => {
     to: ADDRESS,
     value: '0x0',
     data: '0x',
-    chainId: 1,
-    epochHeight: 1000,
+    chainId: format.hexUInt(1),
+    epochHeight: format.hexUInt(1000),
     storageLimit: format.hexUInt(2048),
-  });
+  }, SEND_TX_PWD);
 
   expect(getEpochNumber).toHaveBeenCalledTimes(1);
   expect(getNextNonce).toHaveBeenCalledTimes(1);
