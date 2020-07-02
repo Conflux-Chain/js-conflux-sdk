@@ -12,11 +12,9 @@ class Conflux {
   /**
    * @param [options] {object} - Conflux and Provider constructor options.
    * @param [options.url=''] {string} - Url of provider to create.
-   * @param [options.defaultEpoch="latest_state"] {string|number} - Default epochNumber.
    * @param [options.defaultGasPrice] {string|number} - The default gas price in drip to use for transactions.
    * @param [options.defaultGas] {string|number} - The default maximum gas provided for a transaction.
    * @param [options.defaultStorageLimit] {string|number} - The default maximum storage limit bytes for a transaction.
-   * @param [options.defaultChainId] {number} - The default chain ID of the connected network
    * @example
    * > const { Conflux } = require('js-conflux-sdk');
    * > const cfx = new Conflux({url:'http://testnet-jsonrpc.conflux-chain.org:12537'});
@@ -27,38 +25,21 @@ class Conflux {
      defaultGasPrice: 100,
      defaultGas: 100000,
      defaultStorageLimit: 4096,
-     defaultChainId: 0,
      logger: console,
    });
    */
   constructor({
     url = '',
-    defaultEpoch = 'latest_state',
     defaultGasPrice,
     defaultGas,
     defaultStorageLimit,
-    defaultChainId,
     ...rest
   } = {}) {
     this.provider = this.setProvider(url, rest);
 
     /**
-     * Default epoch number for following methods:
-     * - `Conflux.getBalance`
-     * - `Conflux.getNextNonce`
-     * - `Conflux.getCode`
-     * - `Conflux.call`
-     *
-     * @deprecated
-     * @type {number|string}
-     */
-    this.defaultEpoch = defaultEpoch;
-
-    /**
      * Default gas price for following methods:
      * - `Conflux.sendTransaction`
-     * - `Conflux.call`
-     * - `Conflux.estimateGas`
      *
      * @deprecated
      * @type {number|string}
@@ -68,8 +49,6 @@ class Conflux {
     /**
      * Default gas limit for following methods:
      * - `Conflux.sendTransaction`
-     * - `Conflux.call`
-     * - `Conflux.estimateGas`
      *
      * @deprecated
      * @type {number|string}
@@ -79,24 +58,11 @@ class Conflux {
     /**
      * Default storage limit for following methods:
      * - `Conflux.sendTransaction`
-     * - `Conflux.call`
-     * - `Conflux.estimateGas`
      *
      * @deprecated
      * @type {number|string}
      */
     this.defaultStorageLimit = defaultStorageLimit;
-
-    /**
-     * Default chain id for following methods:
-     * - `Conflux.sendTransaction`
-     * - `Conflux.call`
-     * - `Conflux.estimateGas`
-     *
-     * @deprecated
-     * @type {number}
-     */
-    this.defaultChainId = defaultChainId;
 
     decorate(this, 'sendTransaction', (func, params) => {
       return new PendingTransaction(this, func, params);
@@ -191,17 +157,8 @@ class Conflux {
    * - `string` bestHash: The block hash of best pivot block
    */
   async getStatus() {
-    try {
-      const result = await this.provider.call('cfx_getStatus');
-
-      return format.status(result);
-    } catch (e) {
-      if (/Method not found/.test(e.message)) {
-        return { chainId: 0 };
-      } else {
-        throw e;
-      }
-    }
+    const result = await this.provider.call('cfx_getStatus');
+    return format.status(result);
   }
 
   /**
@@ -228,8 +185,10 @@ class Conflux {
    * > await cfx.getEpochNumber();
    200109
    */
-  async getEpochNumber(epochNumber = 'latest_mined') {
-    const result = await this.provider.call('cfx_epochNumber', format.epochNumber(epochNumber));
+  async getEpochNumber(epochNumber) {
+    const result = await this.provider.call('cfx_epochNumber',
+      format.epochNumber.or(undefined)(epochNumber),
+    );
     return format.uInt(result);
   }
 
@@ -337,7 +296,7 @@ class Conflux {
    * Get the balance of an address at a given epochNumber.
    *
    * @param address {string} - The address to get the balance of.
-   * @param [epochNumber=this.defaultEpoch] {string|number} - The end epochNumber to count balance of.
+   * @param [epochNumber] {string|number} - The end epochNumber to count balance of.
    * @return {Promise<JSBI>} Address balance number in drip.
    *
    * @example
@@ -349,9 +308,10 @@ class Conflux {
    * > balance.toString(10);
    "0"
    */
-  async getBalance(address, epochNumber = this.defaultEpoch) {
+  async getBalance(address, epochNumber) {
     const result = await this.provider.call('cfx_getBalance',
-      format.address(address), format.epochNumber(epochNumber),
+      format.address(address),
+      format.epochNumber.or(undefined)(epochNumber),
     );
     return format.bigUInt(result);
   }
@@ -360,7 +320,7 @@ class Conflux {
    * Get the address next transaction nonce.
    *
    * @param address {string} - The address to get the numbers of transactions from.
-   * @param [epochNumber=this.defaultEpoch] {string|number} - The end epochNumber to count transaction of.
+   * @param [epochNumber] {string|number} - The end epochNumber to count transaction of.
    * @return {Promise<number>}
    *
    * @example
@@ -370,9 +330,10 @@ class Conflux {
    * > await cfx.getNextNonce("0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b", 0);
    0
    */
-  async getNextNonce(address, epochNumber = this.defaultEpoch) {
+  async getNextNonce(address, epochNumber) {
     const result = await this.provider.call('cfx_getNextNonce',
-      format.address(address), format.epochNumber(epochNumber),
+      format.address(address),
+      format.epochNumber.or(undefined)(epochNumber),
     );
     return format.bigUInt(result);
   }
@@ -386,7 +347,9 @@ class Conflux {
    * @return {Promise<number|null>}
    */
   async getConfirmationRiskByHash(blockHash) {
-    const result = await this.provider.call('cfx_getConfirmationRiskByHash', format.blockHash(blockHash));
+    const result = await this.provider.call('cfx_getConfirmationRiskByHash',
+      format.blockHash(blockHash),
+    );
 
     return format.riskNumber(result);
   }
@@ -407,7 +370,8 @@ class Conflux {
    */
   async getBlockByEpochNumber(epochNumber, detail = false) {
     const result = await this.provider.call('cfx_getBlockByEpochNumber',
-      format.epochNumber(epochNumber), format.boolean(detail),
+      format.epochNumber(epochNumber),
+      format.boolean(detail),
     );
     return format.block.or(null)(result);
   }
@@ -429,7 +393,9 @@ class Conflux {
    ]
    */
   async getBlocksByEpochNumber(epochNumber) {
-    return this.provider.call('cfx_getBlocksByEpoch', format.epochNumber(epochNumber));
+    return this.provider.call('cfx_getBlocksByEpoch',
+      format.epochNumber(epochNumber),
+    );
   }
 
   // -------------------------------- block -----------------------------------
@@ -529,7 +495,8 @@ class Conflux {
    */
   async getBlockByHash(blockHash, detail = false) {
     const result = await this.provider.call('cfx_getBlockByHash',
-      format.blockHash(blockHash), format.boolean(detail),
+      format.blockHash(blockHash),
+      format.boolean(detail),
     );
     return format.block.or(null)(result);
   }
@@ -555,7 +522,9 @@ class Conflux {
    */
   async getBlockByHashWithPivotAssumption(blockHash, pivotBlockHash, epochNumber) {
     const result = await this.provider.call('cfx_getBlockByHashWithPivotAssumption',
-      format.blockHash(blockHash), format.blockHash(pivotBlockHash), format.epochNumber(epochNumber),
+      format.blockHash(blockHash),
+      format.blockHash(pivotBlockHash),
+      format.epochNumber(epochNumber),
     );
     return format.block(result);
   }
@@ -603,7 +572,10 @@ class Conflux {
     }
    */
   async getTransactionByHash(txHash) {
-    const result = await this.provider.call('cfx_getTransactionByHash', format.txHash(txHash));
+    const result = await this.provider.call('cfx_getTransactionByHash',
+      format.txHash(txHash),
+    );
+
     return format.transaction.or(null)(result);
   }
 
@@ -648,7 +620,10 @@ class Conflux {
    }
    */
   async getTransactionReceipt(txHash) {
-    const result = await this.provider.call('cfx_getTransactionReceipt', format.txHash(txHash));
+    const result = await this.provider.call('cfx_getTransactionReceipt',
+      format.txHash(txHash),
+    );
+
     return format.receipt.or(null)(result);
   }
 
@@ -775,9 +750,6 @@ class Conflux {
     }
 
     if (options.chainId === undefined) {
-      options.chainId = this.defaultChainId;
-    }
-    if (options.chainId === undefined) {
       const status = await this.getStatus();
       options.chainId = status.chainId;
     }
@@ -811,15 +783,18 @@ class Conflux {
    * Get the code at a specific address.
    *
    * @param address {string} - The contract address to get the code from.
-   * @param [epochNumber=this.defaultEpoch] {string|number} - EpochNumber or string in ["latest_state", "latest_mined"]
+   * @param [epochNumber] {string|number} - EpochNumber or string in ["latest_state", "latest_mined"]
    * @return {Promise<string>} Code hex string
    *
    * @example
    * > await cfx.getCode('0xb385b84f08161f92a195953b980c8939679e906a');
    "0x6080604052348015600f57600080fd5b506004361060325760003560e01c806306661abd1460375780638..."
    */
-  async getCode(address, epochNumber = this.defaultEpoch) {
-    return this.provider.call('cfx_getCode', format.address(address), format.epochNumber(epochNumber));
+  async getCode(address, epochNumber) {
+    return this.provider.call('cfx_getCode',
+      format.address(address),
+      format.epochNumber.or(undefined)(epochNumber),
+    );
   }
 
   /**
@@ -827,35 +802,14 @@ class Conflux {
    * but never mined into the block chain.
    *
    * @param options {object} - See `format.sendTx`
-   * @param [epochNumber=this.defaultEpoch] {string|number} - The end epochNumber to execute call of.
+   * @param [epochNumber] {string|number} - The end epochNumber to execute call of.
    * @return {Promise<string>} Hex bytes the contract method return.
    */
-  async call(options, epochNumber = this.defaultEpoch) {
-    if (options.gasPrice === undefined) {
-      options.gasPrice = this.defaultGasPrice;
-    }
-
-    if (options.gas === undefined) {
-      options.gas = this.defaultGas;
-    }
-
-    if (options.storageLimit === undefined) {
-      options.storageLimit = this.defaultStorageLimit;
-    }
-
-    if (options.chainId === undefined) {
-      options.chainId = this.defaultChainId;
-    }
-    if (options.chainId === undefined) {
-      const status = await this.getStatus();
-      options.chainId = status.chainId;
-    }
-
-    if (options.from && options.nonce === undefined) {
-      options.nonce = await this.getNextNonce(options.from);
-    }
-
-    return this.provider.call('cfx_call', format.callTx(options), format.epochNumber(epochNumber));
+  async call(options, epochNumber) {
+    return this.provider.call('cfx_call',
+      format.callTx(options),
+      format.epochNumber.or(undefined)(epochNumber),
+    );
   }
 
   /**
@@ -867,30 +821,6 @@ class Conflux {
    * - `BigInt` storageCollateralized: The storage collateralized in Byte.
    */
   async estimateGasAndCollateral(options) {
-    if (options.from && options.nonce === undefined) {
-      options.nonce = await this.getNextNonce(options.from);
-    }
-
-    if (options.gasPrice === undefined) {
-      options.gasPrice = this.defaultGasPrice;
-    }
-
-    if (options.gas === undefined) {
-      options.gas = this.defaultGas;
-    }
-
-    if (options.storageLimit === undefined) {
-      options.storageLimit = this.defaultStorageLimit;
-    }
-
-    if (options.chainId === undefined) {
-      options.chainId = this.defaultChainId;
-    }
-    if (options.chainId === undefined) {
-      const status = await this.getStatus();
-      options.chainId = status.chainId;
-    }
-
     const result = await this.provider.call('cfx_estimateGasAndCollateral', format.estimateTx(options));
     return format.estimate(result);
   }

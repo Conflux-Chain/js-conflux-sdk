@@ -1,5 +1,48 @@
 # change log
 
+## v0.11.0
+
+* defaultGasPrice, defaultGas, defaultStorageLimit only use for sendTransaction
+
+```
+// old
+cfx = new Conflux({
+  url: 'http://testnet-jsonrpc.conflux-chain.org:12537',
+  defaultGasPrice: 100,
+  defaultGas: 10,
+  defaultStorageLimit: 1,
+})
+
+cfx.call({
+  address: '0x...',
+  data: '0x...',
+}); // => cfx_call{defaultGasPrice:'0x64', defaultGas:'0xa',defaultStorageLimit:'0x1',address:'0x...',data:'0x...'}
+
+
+// new
+cfx = new Conflux({
+  url: 'http://testnet-jsonrpc.conflux-chain.org:12537',
+})
+
+cfx.call({
+  address: '0x...',
+  data: '0x...',
+}); // => cfx_call{address:'0x...',data:'0x...'}
+```
+
+* remove defaultEpoch, defaultChainId
+
+```
+// old
+cfx = new Conflux({
+  defaultEpoch: 'latest_state',
+  defaultChainId: 1,
+})
+
+// new
+// user could `epochNumber` and `chainId` manual on each method.
+```
+
 ## v0.10.3
 
 * fix broken sourcemap
