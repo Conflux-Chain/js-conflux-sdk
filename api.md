@@ -44,7 +44,7 @@ keywords:
 
 ## Account <a id="Account.js/Account"></a>
 
-*no description*
+
 
 ## Account.random <a id="Account.js/random"></a>
 
@@ -175,8 +175,6 @@ message | `string` | true     |         |
 
 ## Account.prototype.toString <a id="Account.js/toString"></a>
 
-*no description*
-
 * **Returns**
 
 `string` Account address as string.
@@ -189,19 +187,15 @@ A sdk of conflux.
 
 ## Conflux.prototype.constructor <a id="Conflux.js/constructor"></a>
 
-*no description*
-
 * **Parameters**
 
-Name                        | Type            | Required | Default        | Description
-----------------------------|-----------------|----------|----------------|-----------------------------------------------------------
-options                     | `object`        | false    |                | Conflux and Provider constructor options.
-options.url                 | `string`        | false    | ''             | Url of provider to create.
-options.defaultEpoch        | `string,number` | false    | "latest_state" | Default epochNumber.
-options.defaultGasPrice     | `string,number` | false    |                | The default gas price in drip to use for transactions.
-options.defaultGas          | `string,number` | false    |                | The default maximum gas provided for a transaction.
-options.defaultStorageLimit | `string,number` | false    |                | The default maximum storage limit bytes for a transaction.
-options.defaultChainId      | `number`        | false    |                | The default chain ID of the connected network
+Name                        | Type            | Required | Default | Description
+----------------------------|-----------------|----------|---------|-----------------------------------------------------------
+options                     | `object`        | false    |         | Conflux and Provider constructor options.
+options.url                 | `string`        | false    | ''      | Url of provider to create.
+options.defaultGasPrice     | `string,number` | false    |         | The default gas price in drip to use for transactions.
+options.defaultGas          | `string,number` | false    |         | The default maximum gas provided for a transaction.
+options.defaultStorageLimit | `string,number` | false    |         | The default maximum storage limit bytes for a transaction.
 
 * **Examples**
 
@@ -216,20 +210,9 @@ options.defaultChainId      | `number`        | false    |                | The 
      defaultGasPrice: 100,
      defaultGas: 100000,
      defaultStorageLimit: 4096,
-     defaultChainId: 0,
      logger: console,
    });
 ```
-
-## ~~Conflux.prototype.defaultEpoch~~ <a id="Conflux.js/defaultEpoch"></a>
-
-`number,string`
-
-Default epoch number for following methods:
-- `Conflux.getBalance`
-- `Conflux.getNextNonce`
-- `Conflux.getCode`
-- `Conflux.call`
 
 ## ~~Conflux.prototype.defaultGasPrice~~ <a id="Conflux.js/defaultGasPrice"></a>
 
@@ -254,15 +237,6 @@ Default gas limit for following methods:
 `number,string`
 
 Default storage limit for following methods:
-- `Conflux.sendTransaction`
-- `Conflux.call`
-- `Conflux.estimateGas`
-
-## ~~Conflux.prototype.defaultChainId~~ <a id="Conflux.js/defaultChainId"></a>
-
-`number`
-
-Default chain id for following methods:
 - `Conflux.sendTransaction`
 - `Conflux.call`
 - `Conflux.estimateGas`
@@ -372,9 +346,9 @@ Returns the current epochNumber the client is on.
 
 * **Parameters**
 
-Name        | Type            | Required | Default      | Description
-------------|-----------------|----------|--------------|-----------------------------------------
-epochNumber | `string,number` | false    | latest_mined | The end epochNumber to count balance of.
+Name        | Type            | Required | Default | Description
+------------|-----------------|----------|---------|-----------------------------------------
+epochNumber | `string,number` | false    |         | The end epochNumber to count balance of.
 
 * **Returns**
 
@@ -494,10 +468,10 @@ Get the balance of an address at a given epochNumber.
 
 * **Parameters**
 
-Name        | Type            | Required | Default           | Description
-------------|-----------------|----------|-------------------|-----------------------------------------
-address     | `string`        | true     |                   | The address to get the balance of.
-epochNumber | `string,number` | false    | this.defaultEpoch | The end epochNumber to count balance of.
+Name        | Type            | Required | Default | Description
+------------|-----------------|----------|---------|-----------------------------------------
+address     | `string`        | true     |         | The address to get the balance of.
+epochNumber | `string,number` | false    |         | The end epochNumber to count balance of.
 
 * **Returns**
 
@@ -520,10 +494,10 @@ Get the address next transaction nonce.
 
 * **Parameters**
 
-Name        | Type            | Required | Default           | Description
-------------|-----------------|----------|-------------------|-----------------------------------------------------
-address     | `string`        | true     |                   | The address to get the numbers of transactions from.
-epochNumber | `string,number` | false    | this.defaultEpoch | The end epochNumber to count transaction of.
+Name        | Type            | Required | Default | Description
+------------|-----------------|----------|---------|-----------------------------------------------------
+address     | `string`        | true     |         | The address to get the numbers of transactions from.
+epochNumber | `string,number` | false    |         | The end epochNumber to count transaction of.
 
 * **Returns**
 
@@ -966,10 +940,10 @@ Get the code at a specific address.
 
 * **Parameters**
 
-Name        | Type            | Required | Default           | Description
-------------|-----------------|----------|-------------------|----------------------------------------------------------
-address     | `string`        | true     |                   | The contract address to get the code from.
-epochNumber | `string,number` | false    | this.defaultEpoch | EpochNumber or string in ["latest_state", "latest_mined"]
+Name        | Type            | Required | Default | Description
+------------|-----------------|----------|---------|----------------------------------------------------------
+address     | `string`        | true     |         | The contract address to get the code from.
+epochNumber | `string,number` | false    |         | EpochNumber or string in ["latest_state", "latest_mined"]
 
 * **Returns**
 
@@ -989,10 +963,10 @@ but never mined into the block chain.
 
 * **Parameters**
 
-Name        | Type            | Required | Default           | Description
-------------|-----------------|----------|-------------------|----------------------------------------
-options     | `object`        | true     |                   | See `format.sendTx`
-epochNumber | `string,number` | false    | this.defaultEpoch | The end epochNumber to execute call of.
+Name        | Type            | Required | Default | Description
+------------|-----------------|----------|---------|----------------------------------------
+options     | `object`        | true     |         | See `format.sendTx`
+epochNumber | `string,number` | false    |         | The end epochNumber to execute call of.
 
 * **Returns**
 
@@ -1021,8 +995,6 @@ options | `object` | true     |         | See `format.estimateTx`
 Contract with all its methods and events defined in its abi.
 
 ## Contract.prototype.constructor <a id="contract/Contract.js/constructor"></a>
-
-*no description*
 
 * **Parameters**
 
@@ -1121,7 +1093,7 @@ options.bytecode | `string`  | false    |         | The byte code of the contrac
 
 ## Message <a id="Message.js/Message"></a>
 
-*no description*
+
 
 ## Message.sign <a id="Message.js/sign"></a>
 
@@ -1174,8 +1146,6 @@ messageHash | `string,Buffer` | true     |         |
 ```
 
 ## Message.prototype.constructor <a id="Message.js/constructor"></a>
-
-*no description*
 
 * **Parameters**
 
@@ -1251,11 +1221,9 @@ privateKey | `string` | true     |         | Private key hex string.
 
 ## BaseProvider <a id="provider/BaseProvider.js/BaseProvider"></a>
 
-*no description*
+
 
 ## BaseProvider.prototype.constructor <a id="provider/BaseProvider.js/constructor"></a>
-
-*no description*
 
 * **Parameters**
 
@@ -1286,8 +1254,6 @@ It is used in `call` method, overwrite it to gen your own id.
 Http protocol json rpc provider.
 
 ## HttpProvider.prototype.constructor <a id="provider/HttpProvider.js/constructor"></a>
-
-*no description*
 
 * **Parameters**
 
@@ -1332,7 +1298,7 @@ method    | `string` | true     |         | Json rpc method name.
 
 ## Transaction <a id="Transaction.js/Transaction"></a>
 
-*no description*
+
 
 ## Transaction.prototype.constructor <a id="Transaction.js/constructor"></a>
 
@@ -1426,9 +1392,7 @@ Get the raw tx hex string.
 
 ----------------------------------------
 
-## format.any (setter) <a id="util/format.js/any (setter)"></a>
-
-*no description*
+## format.any <a id="util/format.js/any"></a>
 
 * **Parameters**
 
@@ -1447,7 +1411,7 @@ arg  | `any` | true     |         |
  1
 ```
 
-## format.hex (setter) <a id="util/format.js/hex (setter)"></a>
+## format.hex <a id="util/format.js/hex"></a>
 
 When encoding UNFORMATTED DATA (byte arrays, account addresses, hashes, bytecode arrays): encode as hex, prefix with "0x", two hex digits per byte.
 
@@ -1478,9 +1442,7 @@ arg  | `number,JSBI,string,Buffer,boolean,null` | true     |         |
  "0x0a"
 ```
 
-## format.uInt (setter) <a id="util/format.js/uInt (setter)"></a>
-
-*no description*
+## format.uInt <a id="util/format.js/uInt"></a>
 
 * **Parameters**
 
@@ -1517,9 +1479,7 @@ arg  | `number,JSBI,string,boolean` | true     |         |
  Error("not match uint")
 ```
 
-## format.bigInt (setter) <a id="util/format.js/bigInt (setter)"></a>
-
-*no description*
+## format.bigInt <a id="util/format.js/bigInt"></a>
 
 * **Parameters**
 
@@ -1550,9 +1510,7 @@ arg  | `number,JSBI,string,boolean` | true     |         |
  Error("not match uint")
 ```
 
-## format.bigUInt (setter) <a id="util/format.js/bigUInt (setter)"></a>
-
-*no description*
+## format.bigUInt <a id="util/format.js/bigUInt"></a>
 
 * **Parameters**
 
@@ -1573,7 +1531,7 @@ arg  | `number,JSBI,string,boolean` | true     |         |
  Error("not match bigUInt")
 ```
 
-## format.hexUInt (setter) <a id="util/format.js/hexUInt (setter)"></a>
+## format.hexUInt <a id="util/format.js/hexUInt"></a>
 
 When encoding QUANTITIES (integers, numbers): encode as hex, prefix with "0x", the most compact representation (slight exception: zero should be represented as "0x0")
 
@@ -1602,9 +1560,7 @@ arg  | `number,string,boolean` | true     |         |
  Error("not match uintHex")
 ```
 
-## format.riskNumber (setter) <a id="util/format.js/riskNumber (setter)"></a>
-
-*no description*
+## format.riskNumber <a id="util/format.js/riskNumber"></a>
 
 * **Parameters**
 
@@ -1625,9 +1581,7 @@ hex  | `string` | true     |         |
  0.9
 ```
 
-## format.epochNumber (setter) <a id="util/format.js/epochNumber (setter)"></a>
-
-*no description*
+## format.epochNumber <a id="util/format.js/epochNumber"></a>
 
 * **Parameters**
 
@@ -1650,9 +1604,7 @@ arg  | `number,string` | true     |         | number or string in ['latest_state
  "latest_state"
 ```
 
-## format.address (setter) <a id="util/format.js/address (setter)"></a>
-
-*no description*
+## format.address <a id="util/format.js/address"></a>
 
 * **Parameters**
 
@@ -1673,9 +1625,7 @@ arg  | `string,Buffer` | true     |         |
  Error("not match address")
 ```
 
-## format.publicKey (setter) <a id="util/format.js/publicKey (setter)"></a>
-
-*no description*
+## format.publicKey <a id="util/format.js/publicKey"></a>
 
 * **Parameters**
 
@@ -1696,9 +1646,7 @@ arg  | `string,Buffer` | true     |         |
  Error("not match publicKey")
 ```
 
-## format.privateKey (setter) <a id="util/format.js/privateKey (setter)"></a>
-
-*no description*
+## format.privateKey <a id="util/format.js/privateKey"></a>
 
 * **Parameters**
 
@@ -1719,9 +1667,7 @@ arg  | `string,Buffer` | true     |         |
  Error("not match hex64")
 ```
 
-## format.signature (setter) <a id="util/format.js/signature (setter)"></a>
-
-*no description*
+## format.signature <a id="util/format.js/signature"></a>
 
 * **Parameters**
 
@@ -1733,32 +1679,7 @@ arg  | `string,Buffer` | true     |         |
 
 `string` Hex string
 
-## format.blockHash (setter) <a id="util/format.js/blockHash (setter)"></a>
-
-*no description*
-
-* **Parameters**
-
-Name | Type            | Required | Default | Description
------|-----------------|----------|---------|------------
-arg  | `string,Buffer` | true     |         |
-
-* **Returns**
-
-`string` Hex string
-
-* **Examples**
-
-```
-> format.privateKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
- "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-> format.privateKey('0x0123456789012345678901234567890123456789')
- Error("not match hex64")
-```
-
-## format.txHash (setter) <a id="util/format.js/txHash (setter)"></a>
-
-*no description*
+## format.blockHash <a id="util/format.js/blockHash"></a>
 
 * **Parameters**
 
@@ -1779,9 +1700,28 @@ arg  | `string,Buffer` | true     |         |
  Error("not match hex64")
 ```
 
-## format.buffer (setter) <a id="util/format.js/buffer (setter)"></a>
+## format.txHash <a id="util/format.js/txHash"></a>
 
-*no description*
+* **Parameters**
+
+Name | Type            | Required | Default | Description
+-----|-----------------|----------|---------|------------
+arg  | `string,Buffer` | true     |         |
+
+* **Returns**
+
+`string` Hex string
+
+* **Examples**
+
+```
+> format.privateKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
+ "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+> format.privateKey('0x0123456789012345678901234567890123456789')
+ Error("not match hex64")
+```
+
+## format.buffer <a id="util/format.js/buffer"></a>
 
 * **Parameters**
 
@@ -1810,9 +1750,7 @@ arg  | `number,JSBI,string,Buffer,boolean,null` | true     |         |
  Error("not match hex")
 ```
 
-## format.bytes (setter) <a id="util/format.js/bytes (setter)"></a>
-
-*no description*
+## format.bytes <a id="util/format.js/bytes"></a>
 
 * **Parameters**
 
@@ -1835,9 +1773,7 @@ arg  | `string,Buffer,array` | true     |         |
  <Buffer 00 01>
 ```
 
-## format.boolean (setter) <a id="util/format.js/boolean (setter)"></a>
-
-*no description*
+## format.boolean <a id="util/format.js/boolean"></a>
 
 * **Parameters**
 
@@ -1970,8 +1906,6 @@ entropy | `Buffer` | true     |         |
 
 ## privateKeyToPublicKey <a id="util/sign.js/privateKeyToPublicKey"></a>
 
-*no description*
-
 * **Parameters**
 
 Name       | Type     | Required | Default | Description
@@ -2098,8 +2032,6 @@ options.v | `number` | true     |         |
 
 ## encrypt <a id="util/sign.js/encrypt"></a>
 
-*no description*
-
 * **Parameters**
 
 Name     | Type     | Required | Default | Description
@@ -2124,8 +2056,6 @@ options  | `object` | true     |         |
 ----------------------------------------
 
 ## decrypt <a id="util/sign.js/decrypt"></a>
-
-*no description*
 
 * **Parameters**
 

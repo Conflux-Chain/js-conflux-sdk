@@ -866,10 +866,10 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@geekberry/jsdoc-to-md@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@geekberry/jsdoc-to-md/-/jsdoc-to-md-0.0.3.tgz#c87f550ee8181b3baf4914d5ab42eeadfce750d7"
-  integrity sha512-DPctx0ju18roKfKe+NzW3FRtd7aE9XKs/D7HBUaGgdKIAYym7EV5JkS8988txADbKP6VkQtK7ep4f/q9HvARCA==
+"@geekberry/jsdoc-to-md@^0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@geekberry/jsdoc-to-md/-/jsdoc-to-md-0.0.5.tgz#dc6c06d0e5d1f70fd5a160c85004ccbb5ecbb0bc"
+  integrity sha512-jnYa1Rvkcg2Q/vRZLa3BAffeDQE+v3swa8EVd0dNHBulOLATawFzpOge47LKD88ISrI/Lp854AJj9NG0DjIauQ==
   dependencies:
     jsdoc-api "^5.0.4"
     jsdoc-parse "^4.0.1"
