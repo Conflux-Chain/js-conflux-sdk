@@ -7,7 +7,6 @@ test('constructor()', async () => {
   const cfx = new Conflux();
 
   expect(cfx.defaultGasPrice).toEqual(undefined);
-  expect(cfx.defaultGas).toEqual(undefined);
   expect(cfx.provider.constructor.name).toEqual('BaseProvider');
 
   await expect(cfx.provider.call()).rejects.toThrow('call not implement');
@@ -17,11 +16,9 @@ test('constructor({...})', () => {
   const cfx = new Conflux({
     url: 'http://localhost:12537',
     defaultGasPrice: 100,
-    defaultGas: 1000000,
   });
 
   expect(cfx.defaultGasPrice).toEqual(100);
-  expect(cfx.defaultGas).toEqual(1000000);
   expect(cfx.provider.constructor.name).toEqual('HttpProvider');
 });
 

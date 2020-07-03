@@ -2,7 +2,6 @@ const { Conflux } = require('../src');
 const MockProvider = require('../mock/MockProvider');
 
 const cfx = new Conflux({
-  defaultGas: 100,
   defaultGasPrice: 1000000,
 });
 cfx.provider = new MockProvider();
