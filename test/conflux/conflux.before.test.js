@@ -10,9 +10,7 @@ const TX_HASH = '0xb0a0000000000000000000000000000000000000000000000000000000000
 
 // ----------------------------------------------------------------------------
 const cfx = new Conflux({
-  defaultGas: lodash.random(0, 100),
   defaultGasPrice: lodash.random(0, 1000),
-  defaultStorageLimit: lodash.random(0, 10000),
 });
 cfx.provider = new MockProvider();
 
@@ -316,43 +314,8 @@ test('estimateGasAndCollateral', async () => {
   call.mockRestore();
 });
 
-test('sendTransaction by DEFAULT', async () => {
-  await expect(cfx.sendTransaction()).rejects.toThrow('Cannot read property');
-  await expect(cfx.sendTransaction({ nonce: 0 })).rejects.toThrow('not match hex');
-
-  const getStatus = jest.spyOn(cfx, 'getStatus');
-  getStatus.mockReturnValue({ chainId: format.uInt(2) });
-
-  const call = jest.spyOn(cfx.provider, 'call');
-  await cfx.sendTransaction({ from: ADDRESS, epochHeight: 200, nonce: 100 });
-  expect(call).toHaveBeenLastCalledWith('cfx_sendTransaction', {
-    from: ADDRESS,
-    nonce: '0x64',
-    gasPrice: format.hexUInt(cfx.defaultGasPrice),
-    gas: format.hexUInt(cfx.defaultGas),
-    to: undefined,
-    value: undefined,
-    data: undefined,
-    chainId: 2,
-    epochHeight: 200,
-    storageLimit: format.hexUInt(cfx.defaultStorageLimit),
-  });
-
-  getStatus.mockRestore();
-  call.mockRestore();
-});
-
 test('sendTransaction by AUTO', async () => {
   const call = jest.spyOn(cfx.provider, 'call');
-
-  const defaultStorageLimit = cfx.defaultStorageLimit;
-  cfx.defaultStorageLimit = undefined;
-
-  const defaultGasPrice = cfx.defaultGasPrice;
-  cfx.defaultGasPrice = undefined;
-
-  const defaultGas = cfx.defaultGas;
-  cfx.defaultGas = undefined;
 
   const getEpochNumber = jest.spyOn(cfx, 'getEpochNumber');
   getEpochNumber.mockReturnValue(1000);
@@ -381,7 +344,7 @@ test('sendTransaction by AUTO', async () => {
   expect(call).toHaveBeenLastCalledWith('cfx_sendTransaction', {
     from: ADDRESS,
     nonce: '0x64',
-    gasPrice: '0x1',
+    gasPrice: format.hexUInt(cfx.defaultGasPrice),
     gas: '0x400',
     to: ADDRESS,
     value: '0x0',
@@ -394,12 +357,9 @@ test('sendTransaction by AUTO', async () => {
   expect(getEpochNumber).toHaveBeenCalledTimes(1);
   expect(getNextNonce).toHaveBeenCalledTimes(1);
   expect(getStatus).toHaveBeenCalledTimes(1);
-  expect(getGasPrice).toHaveBeenCalledTimes(1);
+  expect(getGasPrice).toHaveBeenCalledTimes(0);
   expect(estimateGasAndCollateral).toHaveBeenCalledTimes(1);
 
-  cfx.defaultStorageLimit = defaultStorageLimit;
-  cfx.defaultGasPrice = defaultGasPrice;
-  cfx.defaultGas = defaultGas;
   getEpochNumber.mockRestore();
   getStatus.mockRestore();
   getNextNonce.mockRestore();
