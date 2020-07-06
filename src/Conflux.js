@@ -1,3 +1,4 @@
+const Big = require('big.js');
 const { decorate } = require('./util');
 const format = require('./util/format');
 const providerFactory = require('./provider');
@@ -746,11 +747,11 @@ class Conflux {
       const { gasUsed, storageCollateralized } = await this.estimateGasAndCollateral(options);
 
       if (options.gas === undefined) {
-        options.gas = gasUsed;
+        options.gas = Big(gasUsed).times(11 / 10).toFixed(0);
       }
 
       if (options.storageLimit === undefined) {
-        options.storageLimit = storageCollateralized;
+        options.storageLimit = Big(storageCollateralized).times(11 / 10).toFixed(0);
       }
     }
 

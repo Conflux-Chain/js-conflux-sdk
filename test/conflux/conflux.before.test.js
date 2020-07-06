@@ -346,13 +346,13 @@ test('sendTransaction by AUTO', async () => {
     from: ADDRESS,
     nonce: '0x64',
     gasPrice: format.hexUInt(cfx.defaultGasPrice),
-    gas: '0x400',
+    gas: format.hexUInt(Math.round(1024 * (11 / 10))),
     to: ADDRESS,
     value: '0x0',
     data: '0x',
     chainId: format.hexUInt(1),
     epochHeight: format.hexUInt(1000),
-    storageLimit: format.hexUInt(2048),
+    storageLimit: format.hexUInt(Math.round(2048 * (11 / 10))),
   }, SEND_TX_PWD);
 
   expect(getEpochNumber).toHaveBeenCalledTimes(1);
