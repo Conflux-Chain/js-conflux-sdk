@@ -12,7 +12,7 @@ class PendingTransaction extends LazyPromise {
    *
    * @param [options] {object}
    * @param [options.delay=0] {number} - Defer execute after `delay` ms.
-   * @return {Promise<Object|null>} See `Conflux.getTransactionByHash`
+   * @return {Promise<Object|null>} See [Conflux.getTransactionByHash](#Conflux.js/getTransactionByHash)
    */
   async get({ delay = 0 } = {}) {
     await sleep(delay);
@@ -28,7 +28,7 @@ class PendingTransaction extends LazyPromise {
    * @param [options] {object}
    * @param [options.delta=1000] {number} - Loop transaction interval in ms.
    * @param [options.timeout=30*1000] {number} - Loop timeout in ms.
-   * @return {Promise<object>} See `Conflux.getTransactionByHash`
+   * @return {Promise<object>} See [Conflux.getTransactionByHash](#Conflux.js/getTransactionByHash)
    */
   async mined({ delta = 1000, timeout = 60 * 1000 } = {}) {
     return loop({ delta, timeout }, async () => {
@@ -51,7 +51,7 @@ class PendingTransaction extends LazyPromise {
    * @param [options] {object}
    * @param [options.delta=1000] {number} - Loop transaction interval in ms.
    * @param [options.timeout=60*1000] {number} - Loop timeout in ms.
-   * @return {Promise<object>} See `Conflux.getTransactionReceipt`
+   * @return {Promise<object>} See [Conflux.getTransactionReceipt](#Conflux.js/getTransactionReceipt)
    */
   async executed({ delta = 1000, timeout = 5 * 60 * 1000 } = {}) {
     const txHash = await this;
@@ -79,7 +79,7 @@ class PendingTransaction extends LazyPromise {
    * @param [options.delta=1000] {number} - Loop transaction interval in ms.
    * @param [options.timeout=5*60*1000] {number} - Loop timeout in ms.
    * @param [options.threshold=0.01] {number} - Number in range (0,1)
-   * @return {Promise<object>} See `Conflux.getTransactionReceipt`
+   * @return {Promise<object>} See [Conflux.getTransactionReceipt](#Conflux.js/getTransactionReceipt)
    */
   async confirmed({ threshold = 1e-8, delta = 1000, timeout = 30 * 60 * 1000 } = {}) {
     return loop({ delta, timeout }, async () => {

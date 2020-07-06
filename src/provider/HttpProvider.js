@@ -7,7 +7,7 @@ const BaseProvider = require('./BaseProvider');
 class HttpProvider extends BaseProvider {
   /**
    * @param url {string} - Full json rpc http url
-   * @param [options] {object} - See `BaseProvider.constructor`
+   * @param [options] {object} - See [BaseProvider.constructor](#provider/BaseProvider.js/constructor)
    * @return {HttpProvider}
    *
    * @example
