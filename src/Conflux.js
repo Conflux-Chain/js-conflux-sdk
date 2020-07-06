@@ -93,7 +93,7 @@ class Conflux {
   /**
    * A shout cut for `new Account(privateKey);`
    *
-   * @param privateKey {string|Buffer} - See `Account.constructor`
+   * @param privateKey {string|Buffer} - See [Account.constructor](#Account.js/constructor)
    * @return {Account}
    */
   Account(privateKey) {
@@ -103,7 +103,7 @@ class Conflux {
   /**
    * A shout cut for `new Contract(cfx, options);`
    *
-   * @param options {object} - See `Contract.constructor`
+   * @param options {object} - See [Contract.constructor](#Contract.js/constructor)
    * @return {Contract}
    */
   Contract(options) {
@@ -267,7 +267,6 @@ class Conflux {
   }
 
   // ------------------------------- address ----------------------------------
-
   /**
    * Get the balance of an address at a given epochNumber.
    *
@@ -277,8 +276,8 @@ class Conflux {
    *
    * @example
    * > let balance = await cfx.getBalance("0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b");
-   * > balance;
-   1793636034970586632n
+   * > balance.toString();
+   "1793636034970586632"
 
    * > balance = await cfx.getBalance("0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b", 0);
    * > balance.toString(10);
@@ -314,6 +313,47 @@ class Conflux {
     return format.bigUInt(result);
   }
 
+  /**
+   * Returns the admin of given contract.
+   *
+   * @param address {string} - Address to contract.
+   * @param [epochNumber] {string|number} - Integer epoch number, or the string.
+   * @return {Promise<string>} Admin address
+   *
+   * @example
+   * > cfx.getAdmin('0x89996a8aefb2228593aae723d47f9517eef1341d')
+   "0x1be45681ac6c53d5a40475f7526bac1fe7590fb8"
+
+   > cfx.getAdmin('0x89996a8aefb2228593aae723d47f9517eef1341d', 0)
+   RPCError: State for epoch (number=0 hash=0x972b57382a823b5266d41a8bee9c39d12471293a9bb6472f6df75a99ce2df468) does not exist
+   */
+  async getAdmin(address, epochNumber) {
+    return this.provider.call('cfx_getAdmin',
+      format.address(address),
+      format.epochNumber.or(undefined)(epochNumber),
+    );
+  }
+
+  /**
+   * Returns the size of the collateral storage of given address, in Byte.
+   *
+   * @param address {string} - Address to check for collateral storage.
+   * @param epochNumber - Integer epoch number, or the string.
+   * @return {Promise<JSBI>} - Integer of the collateral storage in Byte.
+   *
+   * @example
+   * > storage = await cfx.getCollateralForStorage(address)
+   * > storage.toString()
+   "0"
+   */
+  async getCollateralForStorage(address, epochNumber) {
+    const result = await this.provider.call('cfx_getCollateralForStorage',
+      format.address(address),
+      format.epochNumber.or(undefined)(epochNumber),
+    );
+    return format.bigUInt(result);
+  }
+
   // -------------------------------- epoch -----------------------------------
   /**
    * Get the risk of the block could be reverted.
@@ -326,7 +366,6 @@ class Conflux {
     const result = await this.provider.call('cfx_getConfirmationRiskByHash',
       format.blockHash(blockHash),
     );
-
     return format.riskNumber(result);
   }
 
@@ -608,7 +647,7 @@ class Conflux {
    *
    * > NOTE: if `from` options is a instance of `Account`, this methods will sign by account local and send by `cfx_sendRawTransaction`, else send by `cfx_sendTransaction`
    *
-   * @param options {object} - See `format.sendTx`
+   * @param options {object} - See [format.sendTx](#util/format.js/sendTx)
    * @return {Promise<PendingTransaction>} The PendingTransaction object.
    *
    * @example
@@ -738,7 +777,7 @@ class Conflux {
    * Signs a transaction. This account needs to be unlocked.
    *
    * @param hex {string|Buffer} - Raw transaction string.
-   * @return {Promise<PendingTransaction>} The PendingTransaction object. See `sendTransaction`
+   * @return {Promise<PendingTransaction>} The PendingTransaction object. See [sendTransaction](#Conflux.js/sendTransaction)
    *
    * @example
    * > await cfx.sendRawTransaction('0xf85f800382520894bbd9e9b...');
@@ -771,7 +810,7 @@ class Conflux {
    * Executes a message call transaction, which is directly executed in the VM of the node,
    * but never mined into the block chain.
    *
-   * @param options {object} - See `format.sendTx`
+   * @param options {object} - See [format.sendTx](#util/format.js/sendTx)
    * @param [epochNumber] {string|number} - The end epochNumber to execute call of.
    * @return {Promise<string>} Hex bytes the contract method return.
    */
@@ -789,7 +828,7 @@ class Conflux {
   /**
    * Executes a message call or transaction and returns the amount of the gas used.
    *
-   * @param options {object} - See `format.estimateTx`
+   * @param options {object} - See [format.estimateTx](#util/format.js/estimateTx)
    * @return {Promise<object>} The gas used and storage occupied for the simulated call/transaction.
    * - `BigInt` gasUsed: The gas used.
    * - `BigInt` storageCollateralized: The storage collateralized in Byte.

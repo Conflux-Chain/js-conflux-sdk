@@ -20,7 +20,7 @@ class Called {
    *
    * > Note: This can alter the smart contract state.
    *
-   * @param options {object} - See `format.sendTx`
+   * @param options {object} - See [format.sendTx](#util/format.js/sendTx)
    * @return {Promise<PendingTransaction>} The PendingTransaction object.
    */
   sendTransaction(options) {
@@ -36,7 +36,7 @@ class Called {
    * set contract.address as `to`,
    * set contract method encode as `data`.
    *
-   * @param options {object} - See `format.estimateTx`
+   * @param options {object} - See [format.estimateTx](#util/format.js/estimateTx)
    * @return {Promise<object>} The gas used and storage occupied for the simulated call/transaction.
    */
   async estimateGasAndCollateral(options) {
@@ -54,8 +54,8 @@ class Called {
    *
    * > Note: Can not alter the smart contract state.
    *
-   * @param options {object} - See `format.callTx`.
-   * @param epochNumber {string|number} - See `Conflux.call`.
+   * @param options {object} - See [format.callTx](#util/format.js/callTx)
+   * @param epochNumber {string|number} - See [Conflux.call](#Conflux.js/call)
    * @return {Promise<*>} Decoded contact call return.
    */
   async call(options, epochNumber) {

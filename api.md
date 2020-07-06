@@ -140,8 +140,8 @@ Sign a transaction.
 * **Parameters**
 
 Name    | Type     | Required | Default | Description
---------|----------|----------|---------|------------------
-options | `object` | true     |         | See 'Transaction'
+--------|----------|----------|---------|----------------------------------------------
+options | `object` | true     |         | See [Transaction](Transaction.js/constructor)
 
 * **Returns**
 
@@ -257,8 +257,8 @@ A shout cut for `new Account(privateKey);`
 * **Parameters**
 
 Name       | Type            | Required | Default | Description
------------|-----------------|----------|---------|--------------------------
-privateKey | `string,Buffer` | true     |         | See `Account.constructor`
+-----------|-----------------|----------|---------|---------------------------------------------------
+privateKey | `string,Buffer` | true     |         | See [Account.constructor](#Account.js/constructor)
 
 * **Returns**
 
@@ -271,8 +271,8 @@ A shout cut for `new Contract(cfx, options);`
 * **Parameters**
 
 Name    | Type     | Required | Default | Description
---------|----------|----------|---------|---------------------------
-options | `object` | true     |         | See `Contract.constructor`
+--------|----------|----------|---------|-----------------------------------------------------
+options | `object` | true     |         | See [Contract.constructor](#Contract.js/constructor)
 
 * **Returns**
 
@@ -457,8 +457,8 @@ epochNumber | `string,number` | false    |         | The end epochNumber to coun
 
 ```
 > let balance = await cfx.getBalance("0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b");
-> balance;
-   1793636034970586632n
+> balance.toString();
+   "1793636034970586632"
 > balance = await cfx.getBalance("0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b", 0);
 > balance.toString(10);
    "0"
@@ -486,6 +486,54 @@ epochNumber | `string,number` | false    |         | The end epochNumber to coun
    61
 > await cfx.getNextNonce("0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b", 0);
    0
+```
+
+## Conflux.prototype.getAdmin <a id="Conflux.js/getAdmin"></a>
+
+Returns the admin of given contract.
+
+* **Parameters**
+
+Name        | Type            | Required | Default | Description
+------------|-----------------|----------|---------|-------------------------------------
+address     | `string`        | true     |         | Address to contract.
+epochNumber | `string,number` | false    |         | Integer epoch number, or the string.
+
+* **Returns**
+
+`Promise.<string>` Admin address
+
+* **Examples**
+
+```
+> cfx.getAdmin('0x89996a8aefb2228593aae723d47f9517eef1341d')
+   "0x1be45681ac6c53d5a40475f7526bac1fe7590fb8"
+
+   > cfx.getAdmin('0x89996a8aefb2228593aae723d47f9517eef1341d', 0)
+   RPCError: State for epoch (number=0 hash=0x972b57382a823b5266d41a8bee9c39d12471293a9bb6472f6df75a99ce2df468) does not exist
+```
+
+## Conflux.prototype.getCollateralForStorage <a id="Conflux.js/getCollateralForStorage"></a>
+
+Returns the size of the collateral storage of given address, in Byte.
+
+* **Parameters**
+
+Name        | Type     | Required | Default | Description
+------------|----------|----------|---------|-----------------------------------------
+address     | `string` | true     |         | Address to check for collateral storage.
+epochNumber |          | true     |         | Integer epoch number, or the string.
+
+* **Returns**
+
+`Promise.<JSBI>` - Integer of the collateral storage in Byte.
+
+* **Examples**
+
+```
+> storage = await cfx.getCollateralForStorage(address)
+> storage.toString()
+   "0"
 ```
 
 ## Conflux.prototype.getConfirmationRiskByHash <a id="Conflux.js/getConfirmationRiskByHash"></a>
@@ -805,8 +853,8 @@ Creates new message call transaction or a contract creation, if the data field c
 * **Parameters**
 
 Name    | Type     | Required | Default | Description
---------|----------|----------|---------|--------------------
-options | `object` | true     |         | See `format.sendTx`
+--------|----------|----------|---------|--------------------------------------------
+options | `object` | true     |         | See [format.sendTx](#util/format.js/sendTx)
 
 * **Returns**
 
@@ -901,7 +949,7 @@ hex  | `string,Buffer` | true     |         | Raw transaction string.
 
 * **Returns**
 
-`Promise.<PendingTransaction>` The PendingTransaction object. See `sendTransaction`
+`Promise.<PendingTransaction>` The PendingTransaction object. See [sendTransaction](#Conflux.js/sendTransaction)
 
 * **Examples**
 
@@ -940,8 +988,8 @@ but never mined into the block chain.
 * **Parameters**
 
 Name        | Type            | Required | Default | Description
-------------|-----------------|----------|---------|----------------------------------------
-options     | `object`        | true     |         | See `format.sendTx`
+------------|-----------------|----------|---------|--------------------------------------------
+options     | `object`        | true     |         | See [format.sendTx](#util/format.js/sendTx)
 epochNumber | `string,number` | false    |         | The end epochNumber to execute call of.
 
 * **Returns**
@@ -955,8 +1003,8 @@ Executes a message call or transaction and returns the amount of the gas used.
 * **Parameters**
 
 Name    | Type     | Required | Default | Description
---------|----------|----------|---------|------------------------
-options | `object` | true     |         | See `format.estimateTx`
+--------|----------|----------|---------|----------------------------------------------------
+options | `object` | true     |         | See [format.estimateTx](#util/format.js/estimateTx)
 
 * **Returns**
 
@@ -1234,9 +1282,9 @@ Http protocol json rpc provider.
 * **Parameters**
 
 Name    | Type     | Required | Default | Description
---------|----------|----------|---------|-------------------------------
+--------|----------|----------|---------|----------------------------------------------------------------------
 url     | `string` | true     |         | Full json rpc http url
-options | `object` | false    |         | See `BaseProvider.constructor`
+options | `object` | false    |         | See [BaseProvider.constructor](#provider/BaseProvider.js/constructor)
 
 * **Returns**
 

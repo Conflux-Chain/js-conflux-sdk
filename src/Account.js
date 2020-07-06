@@ -101,7 +101,7 @@ class Account {
   /**
    * Sign a transaction.
    *
-   * @param options {object} - See 'Transaction'
+   * @param options {object} - See [Transaction](Transaction.js/constructor)
    * @return {Transaction}
    */
   signTransaction(options) {
