@@ -1,6 +1,13 @@
 # change log
 
-## v
+## v0.12.0
+
+* add `getAdmin`
+
+```
+await cfx.getAdmin('0x89996a8aefb2228593aae723d47f9517eef1341d')
+// "0x1be45681ac6c53d5a40475f7526bac1fe7590fb8"
+```
 
 * sendTransaction accept privateKey as `from`
 
