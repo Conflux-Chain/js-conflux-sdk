@@ -1,4 +1,4 @@
-const lodash = require('lodash');
+const { assert, uuidV4 } = require('./util');
 const format = require('./util/format');
 const { randomPrivateKey, privateKeyToPublicKey, publicKeyToAddress, decrypt, encrypt } = require('./util/sign');
 const Transaction = require('./Transaction');
@@ -76,12 +76,32 @@ class Account {
   /**
    * Decrypt account encrypt info.
    *
+   * @param keystoreV3 {object}
    * @param password {string}
-   * @param info {object}
    * @return {Account}
    */
-  static decrypt(password, info) {
-    const privateKeyBuffer = decrypt(Buffer.from(password), format.decrypt(info));
+  static decrypt({
+    version,
+    crypto: {
+      ciphertext,
+      cipherparams: { iv },
+      cipher: algorithm,
+      kdf,
+      kdfparams: { dklen: dkLen, salt, n: N, r, p },
+      mac,
+    },
+  }, password) {
+    assert(version === 3, 'Not a valid V3 wallet');
+    assert(kdf === 'scrypt', `Unsupported kdf "${kdf}", only support "scrypt"`);
+
+    const privateKeyBuffer = decrypt({
+      algorithm, N, r, p, dkLen,
+      salt: Buffer.from(salt, 'hex'),
+      iv: Buffer.from(iv, 'hex'),
+      cipher: Buffer.from(ciphertext, 'hex'),
+      mac: Buffer.from(mac, 'hex'),
+    }, Buffer.from(password));
+
     return new this(privateKeyBuffer);
   }
 
@@ -89,13 +109,48 @@ class Account {
    * Encrypt account privateKey to object.
    *
    * @param password {string}
-   * @return {object}
+   * @return {object} - keystoreV3 object
+   *
+   * @example
+   * > account = new Account('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
+   * > account.encrypt('password')
+   {
+      version: 3,
+      id: '0bb47ee0-aac3-a006-2717-03877afa15f0',
+      address: '0x1cad0b19bb29d4674531d6f115237e16afce377c',
+      crypto: {
+        ciphertext: 'a8ec41d2440311ce897bacb6f7942f3235113fa17c4ae6732e032336038a8f73',
+        cipherparams: { iv: '85b5e092c1c32129e3d27df8c581514d' },
+        cipher: 'aes-128-ctr',
+        kdf: 'scrypt',
+        kdfparams: {
+          dklen: 32,
+          salt: 'b662f09bdf6751ac599219732609dceac430bc0629a7906eaa1451555f051ebc',
+          n: 8192,
+          r: 8,
+          p: 1
+        },
+        mac: 'cc89df7ef6c27d284526a65cabf8e5042cdf1ec1aa4ee36dcf65b965fa34843d'
+      }
+    }
    */
   encrypt(password) {
-    const info = encrypt(format.buffer(format.privateKey(this.privateKey)), Buffer.from(password));
-    info.id = `${Date.now()}-${lodash.random(100000, 999999)}`;
-    info.address = this.address;
-    return format.encrypt(info);
+    const key = format.buffer(format.privateKey(this.privateKey));
+    const { algorithm, N, r, p, dkLen, salt, iv, cipher, mac } = encrypt(key, Buffer.from(password));
+
+    return {
+      version: 3,
+      id: uuidV4(),
+      address: this.address,
+      crypto: {
+        ciphertext: cipher.toString('hex'),
+        cipherparams: { iv: iv.toString('hex') },
+        cipher: algorithm,
+        kdf: 'scrypt',
+        kdfparams: { dklen: dkLen, salt: salt.toString('hex'), n: N, r, p },
+        mac: mac.toString('hex'),
+      },
+    };
   }
 
   /**
