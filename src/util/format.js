@@ -196,7 +196,12 @@ format.riskNumber = format.bigUInt.parse(v => Number(Big(v).div(MAX_UINT_256))).
  * > format.epochNumber('latest_mined')
  "latest_state"
  */
-format.epochNumber = format.hexUInt.or('latest_state').or('latest_mined');
+format.epochNumber = format.hexUInt
+  .or('earliest')
+  .or('latest_checkpoint')
+  .or('latest_confirmed')
+  .or('latest_state')
+  .or('latest_mined');
 
 /**
  * @param arg {string|Buffer}
@@ -309,23 +314,6 @@ format.bytes = Parser(v => (Buffer.isBuffer(v) ? v : Buffer.from(v)));
  false
  */
 format.boolean = format.any.validate(lodash.isBoolean, 'boolean');
-
-// ----------------------------- encrypt & decrypt ---------------------------
-format.encrypt = Parser({
-  version: () => 4,
-  salt: format.hex,
-  iv: format.hex,
-  cipher: format.hex,
-  mac: format.hex,
-});
-
-format.decrypt = Parser({
-  version: 4,
-  salt: format.buffer,
-  iv: format.buffer,
-  cipher: format.buffer,
-  mac: format.buffer,
-});
 
 // ----------------------------- parse rpc returned ---------------------------
 format.status = Parser({
