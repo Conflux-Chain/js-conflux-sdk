@@ -320,6 +320,7 @@ format.status = Parser({
   chainId: format.uInt,
   epochNumber: format.uInt,
   blockNumber: format.uInt,
+  pendingTxNumber: format.uInt,
 });
 
 format.transaction = Parser({
@@ -342,6 +343,7 @@ format.estimate = Parser({
 
 format.block = Parser({
   epochNumber: format.uInt.or(null), // FIXME null for getBlockByEpochNumber(0)
+  blame: format.uInt,
   height: format.uInt,
   size: format.uInt,
   timestamp: format.uInt,
@@ -351,10 +353,11 @@ format.block = Parser({
 });
 
 format.receipt = Parser({
-  index: format.uInt, // XXX: number already in rpc return
-  epochNumber: format.uInt, // XXX: number already in rpc return
-  outcomeStatus: format.uInt.or(null), // XXX: number already in rpc return
+  index: format.uInt,
+  epochNumber: format.uInt,
+  outcomeStatus: format.uInt.or(null),
   gasUsed: format.bigUInt,
+  gasFee: format.bigUInt,
 });
 
 format.logs = Parser([

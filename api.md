@@ -878,9 +878,10 @@ Creates new message call transaction or a contract creation, if the data field c
 
 * **Parameters**
 
-Name    | Type     | Required | Default | Description
---------|----------|----------|---------|--------------------------------------------
-options | `object` | true     |         | See [format.sendTx](#util/format.js/sendTx)
+Name     | Type     | Required | Default | Description
+---------|----------|----------|---------|--------------------------------------------
+options  | `object` | true     |         | See [format.sendTx](#util/format.js/sendTx)
+password | `string` | true     |         | Password for remote node.
 
 * **Returns**
 

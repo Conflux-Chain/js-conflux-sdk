@@ -135,7 +135,7 @@ class MockProvider {
       chainId: toHex(1),
       epochNumber: randomHex(4),
       blockNumber: randomHex(4),
-      pendingTxNumber: lodash.random(100, 999),
+      pendingTxNumber: randomHex(4),
       bestHash: randomHex(64),
     };
   }
@@ -197,7 +197,7 @@ class MockProvider {
 
     return {
       adaptive: randomPick(true, false),
-      blame: 0,
+      blame: randomHex(1),
       deferredLogsBloomHash: randomHex(64),
       deferredReceiptsRoot: randomHex(64),
       deferredStateRoot: randomHex(64),
@@ -265,13 +265,14 @@ class MockProvider {
     return {
       blockHash,
       contractCreated: randomPick(null, randomHex(40)),
-      epochNumber: Number(epochNumber),
+      epochNumber: toHex(epochNumber),
       from,
-      gasUsed: randomHex(5), // gasLimit
-      index: Number(transactionIndex),
+      gasUsed: randomHex(5),
+      gasFee: randomHex(5),
+      index: toHex(transactionIndex),
       logs: [],
       logsBloom: randomHex(512),
-      outcomeStatus: status === null ? null : Number(status),
+      outcomeStatus: status === null ? null : toHex(status),
       stateRoot: randomHex(64),
       to,
       transactionHash: txHash,
