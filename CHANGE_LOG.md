@@ -1,5 +1,11 @@
 # change log
 
+## v0.13.1
+
+* RPC returned all number as hex
+
+* fix `sendTransaction`, `call`, `estimateGasAndCollateral` shallow copy `options`
+
 ## v0.13.0
 
 * `Account.decrypt` required keystoreV3 object as input, and put `password` as second parameter

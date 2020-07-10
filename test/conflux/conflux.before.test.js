@@ -212,7 +212,7 @@ test('getCode', async () => {
 });
 
 test('call', async () => {
-  await expect(cfx.call()).rejects.toThrow('got undefined');
+  await expect(cfx.call()).rejects.toThrow('undefined');
   await expect(cfx.call({ nonce: 0 })).rejects.toThrow('not match hex'); // miss to
 
   const call = jest.spyOn(cfx.provider, 'call');
@@ -272,7 +272,7 @@ test('call by AUTO', async () => {
 });
 
 test('estimateGasAndCollateral', async () => {
-  await expect(cfx.estimateGasAndCollateral()).rejects.toThrow('got undefined');
+  await expect(cfx.estimateGasAndCollateral()).rejects.toThrow('undefined');
 
   const call = jest.spyOn(cfx.provider, 'call');
   await cfx.estimateGasAndCollateral({ to: ADDRESS });
