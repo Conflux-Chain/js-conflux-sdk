@@ -196,7 +196,12 @@ format.riskNumber = format.bigUInt.parse(v => Number(Big(v).div(MAX_UINT_256))).
  * > format.epochNumber('latest_mined')
  "latest_state"
  */
-format.epochNumber = format.hexUInt.or('latest_state').or('latest_mined');
+format.epochNumber = format.hexUInt
+  .or('earliest')
+  .or('latest_checkpoint')
+  .or('latest_confirmed')
+  .or('latest_state')
+  .or('latest_mined');
 
 /**
  * @param arg {string|Buffer}
@@ -310,28 +315,12 @@ format.bytes = Parser(v => (Buffer.isBuffer(v) ? v : Buffer.from(v)));
  */
 format.boolean = format.any.validate(lodash.isBoolean, 'boolean');
 
-// ----------------------------- encrypt & decrypt ---------------------------
-format.encrypt = Parser({
-  version: () => 4,
-  salt: format.hex,
-  iv: format.hex,
-  cipher: format.hex,
-  mac: format.hex,
-});
-
-format.decrypt = Parser({
-  version: 4,
-  salt: format.buffer,
-  iv: format.buffer,
-  cipher: format.buffer,
-  mac: format.buffer,
-});
-
 // ----------------------------- parse rpc returned ---------------------------
 format.status = Parser({
   chainId: format.uInt,
   epochNumber: format.uInt,
   blockNumber: format.uInt,
+  pendingTxNumber: format.uInt,
 });
 
 format.transaction = Parser({
@@ -354,6 +343,7 @@ format.estimate = Parser({
 
 format.block = Parser({
   epochNumber: format.uInt.or(null), // FIXME null for getBlockByEpochNumber(0)
+  blame: format.uInt,
   height: format.uInt,
   size: format.uInt,
   timestamp: format.uInt,
@@ -363,10 +353,11 @@ format.block = Parser({
 });
 
 format.receipt = Parser({
-  index: format.uInt, // XXX: number already in rpc return
-  epochNumber: format.uInt, // XXX: number already in rpc return
-  outcomeStatus: format.uInt.or(null), // XXX: number already in rpc return
+  index: format.uInt,
+  epochNumber: format.uInt,
+  outcomeStatus: format.uInt.or(null),
   gasUsed: format.bigUInt,
+  gasFee: format.bigUInt,
 });
 
 format.logs = Parser([

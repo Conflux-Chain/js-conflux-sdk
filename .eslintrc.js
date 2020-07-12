@@ -31,6 +31,7 @@ module.exports = {
     'no-underscore-dangle': 0, // for private attribute
     'no-use-before-define': 0, // for recursive parse
     'object-curly-newline': 0, // for object in one line
+    'object-property-newline': 0, // for long object keys
     'operator-linebreak': 0, // for `'string' +\n`
     'prefer-destructuring': 0,
     'yoda': 0, // for `min < number && number < max`

@@ -1,5 +1,89 @@
 # change log
 
+## v0.13.1
+
+* RPC returned all number as hex
+
+* fix `sendTransaction`, `call`, `estimateGasAndCollateral` shallow copy `options`
+
+## v0.13.0
+
+* `Account.decrypt` required keystoreV3 object as input, and put `password` as second parameter
+
+```
+// old
+Account.decrypt('password', {salt:..., iv:..., cipher:..., mac:...})
+
+// new
+Account.decrypt({
+  version: 3,
+  id: '0bb47ee0-aac3-a006-2717-03877afa15f0',
+  address: '0x1cad0b19bb29d4674531d6f115237e16afce377c',
+  crypto: {
+    ciphertext: 'a8ec41d2440311ce897bacb6f7942f3235113fa17c4ae6732e032336038a8f73',
+    cipherparams: { iv: '85b5e092c1c32129e3d27df8c581514d' },
+    cipher: 'aes-128-ctr',
+    kdf: 'scrypt',
+    kdfparams: {
+      dklen: 32,
+      salt: 'b662f09bdf6751ac599219732609dceac430bc0629a7906eaa1451555f051ebc',
+      n: 8192,
+      r: 8,
+      p: 1
+    },
+    mac: 'cc89df7ef6c27d284526a65cabf8e5042cdf1ec1aa4ee36dcf65b965fa34843d'
+  }
+}, 'password')
+
+```
+
+* `Account.prototype.encrypt` returned keystoreV3 format object
+```
+const account = new Account('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef');
+
+// old
+account.encrypt('password')
+/*
+{
+  algorithm: 'aes-128-ctr', 
+  N: 8192, 
+  r: 8, 
+  p: 1, 
+  dkLen: 32, 
+  salt: '0xb662f09bdf6751ac599219732609dceac430bc0629a7906eaa1451555f051ebc', 
+  iv: '0x85b5e092c1c32129e3d27df8c581514d',
+  cipher: '0xa8ec41d2440311ce897bacb6f7942f3235113fa17c4ae6732e032336038a8f73',
+  mac: '0xcc89df7ef6c27d284526a65cabf8e5042cdf1ec1aa4ee36dcf65b965fa34843d'
+}
+*/
+
+// new
+account.encrypt('password')
+/*
+{
+  version: 3,
+  id: '0bb47ee0-aac3-a006-2717-03877afa15f0',
+  address: '0x1cad0b19bb29d4674531d6f115237e16afce377c',
+  crypto: {
+    ciphertext: 'a8ec41d2440311ce897bacb6f7942f3235113fa17c4ae6732e032336038a8f73',
+    cipherparams: { iv: '85b5e092c1c32129e3d27df8c581514d' },
+    cipher: 'aes-128-ctr',
+    kdf: 'scrypt',
+    kdfparams: {
+      dklen: 32,
+      salt: 'b662f09bdf6751ac599219732609dceac430bc0629a7906eaa1451555f051ebc',
+      n: 8192,
+      r: 8,
+      p: 1
+    },
+    mac: 'cc89df7ef6c27d284526a65cabf8e5042cdf1ec1aa4ee36dcf65b965fa34843d'
+  }
+}
+*/
+```
+
+* epochNumber accept `earliest`, `latest_checkpoint`, `latest_confirmed` label
+
 ## v0.12.0
 
 * add `getAdmin`

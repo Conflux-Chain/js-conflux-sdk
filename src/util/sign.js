@@ -1,7 +1,6 @@
 const crypto = require('crypto');
 const keccak = require('keccak');
 const secp256k1 = require('secp256k1');
-const { syncScrypt: scrypt } = require('scrypt-js');
 const { encode: rlpEncode } = require('../lib/rlp');
 
 // ----------------------------------------------------------------------------
@@ -200,14 +199,13 @@ function ecdsaRecover(hash, { r, s, v }) {
 function encrypt(key, password, { algorithm = 'aes-128-ctr', N = 8192, r = 8, p = 1, dkLen = 32 } = {}) {
   const salt = randomBuffer(32);
   const iv = randomBuffer(16);
-  const derived = scrypt(password, salt, N, r, p, dkLen);
+  const derived = crypto.scryptSync(password, salt, dkLen, { N, r, p });
   const cipher = crypto.createCipheriv(algorithm, derived.slice(0, 16), iv).update(key);
   const mac = sha3(Buffer.concat([derived.slice(16, 32), cipher]));
   return { algorithm, N, r, p, dkLen, salt, iv, cipher, mac };
 }
 
 /**
- * @param password {Buffer}
  * @param options {object}
  * @param [options.algorithm='aes-128-ctr'] {string}
  * @param [options.N=8192] {number}
@@ -218,10 +216,11 @@ function encrypt(key, password, { algorithm = 'aes-128-ctr', N = 8192, r = 8, p 
  * @param options.iv {Buffer}
  * @param options.cipher {Buffer}
  * @param options.mac {Buffer}
+ * @param password {Buffer}
  * @return {Buffer}
  */
-function decrypt(password, { algorithm = 'aes-128-ctr', N = 8192, r = 8, p = 1, dkLen = 32, salt, iv, cipher, mac }) {
-  const derived = scrypt(password, salt, N, r, p, dkLen);
+function decrypt({ algorithm = 'aes-128-ctr', N = 8192, r = 8, p = 1, dkLen = 32, salt, iv, cipher, mac }, password) {
+  const derived = crypto.scryptSync(password, salt, dkLen, { N, r, p });
   if (!sha3(Buffer.concat([derived.slice(16, 32), cipher])).equals(mac)) {
     throw new Error('Key derivation failed, possibly wrong password!');
   }

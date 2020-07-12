@@ -648,6 +648,7 @@ class Conflux {
    * > NOTE: if `from` options is a instance of `Account`, this methods will sign by account local and send by `cfx_sendRawTransaction`, else send by `cfx_sendTransaction`
    *
    * @param options {object} - See [format.sendTx](#util/format.js/sendTx)
+   * @param password {string} - Password for remote node.
    * @return {Promise<PendingTransaction>} The PendingTransaction object.
    *
    * @example
@@ -726,7 +727,7 @@ class Conflux {
     ...
    }
    */
-  async sendTransaction(options, password) {
+  async sendTransaction({ ...options }, password) { // shallow copy `options`
     if (!(options.from instanceof Account)) {
       options.from = new Account(options.from);
     }
@@ -814,7 +815,7 @@ class Conflux {
    * @param [epochNumber] {string|number} - The end epochNumber to execute call of.
    * @return {Promise<string>} Hex bytes the contract method return.
    */
-  async call(options, epochNumber) {
+  async call({ ...options }, epochNumber) { // shallow copy `options`
     if (options && options.from !== undefined) {
       options.from = new Account(options.from);
     }
@@ -833,7 +834,7 @@ class Conflux {
    * - `BigInt` gasUsed: The gas used.
    * - `BigInt` storageCollateralized: The storage collateralized in Byte.
    */
-  async estimateGasAndCollateral(options) {
+  async estimateGasAndCollateral({ ...options }) { // shallow copy `options`
     if (options && options.from !== undefined) {
       options.from = new Account(options.from);
     }

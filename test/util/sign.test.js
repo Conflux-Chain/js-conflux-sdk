@@ -12,8 +12,8 @@ const {
 
   ecdsaSign,
   ecdsaRecover,
-  // encrypt,
-  // decrypt,
+  encrypt,
+  decrypt,
 } = sign;
 
 const KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
@@ -66,17 +66,17 @@ test('privateKeyToAddress', () => {
   expect(address).toEqual(ADDRESS);
 });
 
-// test('encrypt and decrypt', () => {
-//   const { salt, iv, cipher, mac } = encrypt(format.buffer(KEY), Buffer.from('password'));
-//
-//   expect(salt.length).toEqual(32);
-//   expect(iv.length).toEqual(16);
-//   expect(cipher.length).toEqual(32);
-//   expect(mac.length).toEqual(32);
-//
-//   const key = format.hex(decrypt({ salt, iv, cipher, mac }, Buffer.from('password')));
-//   expect(key).toEqual(KEY);
-// });
+test('encrypt and decrypt', () => {
+  const { salt, iv, cipher, mac } = encrypt(format.buffer(KEY), Buffer.from('password'));
+
+  expect(salt.length).toEqual(32);
+  expect(iv.length).toEqual(16);
+  expect(cipher.length).toEqual(32);
+  expect(mac.length).toEqual(32);
+
+  const key = format.hex(decrypt({ salt, iv, cipher, mac }, Buffer.from('password')));
+  expect(key).toEqual(KEY);
+});
 
 test('ecdsaSign and ecdsaRecover', () => {
   const hash = randomBuffer(32);

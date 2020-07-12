@@ -53,4 +53,14 @@ function decorate(instance, name, func) {
   instance[name] = (...params) => func(method.bind(instance), params);
 }
 
-module.exports = { sign, unit, format, assert, sleep, loop, decorate };
+function uuidV4() {
+  return [
+    sign.randomBuffer(4),
+    sign.randomBuffer(2),
+    sign.randomBuffer(2),
+    sign.randomBuffer(2),
+    sign.randomBuffer(6),
+  ].map(buffer => buffer.toString('hex')).join('-');
+}
+
+module.exports = { sign, unit, format, assert, sleep, loop, decorate, uuidV4 };

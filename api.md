@@ -96,10 +96,10 @@ Decrypt account encrypt info.
 
 * **Parameters**
 
-Name     | Type     | Required | Default | Description
----------|----------|----------|---------|------------
-password | `string` | true     |         |
-info     | `object` | true     |         |
+Name       | Type     | Required | Default | Description
+-----------|----------|----------|---------|------------
+keystoreV3 | `object` | true     |         |
+password   | `string` | true     |         |
 
 * **Returns**
 
@@ -131,7 +131,33 @@ password | `string` | true     |         |
 
 * **Returns**
 
-`object` 
+`object` - keystoreV3 object
+
+* **Examples**
+
+```
+> account = new Account('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
+> account.encrypt('password')
+   {
+      version: 3,
+      id: '0bb47ee0-aac3-a006-2717-03877afa15f0',
+      address: '0x1cad0b19bb29d4674531d6f115237e16afce377c',
+      crypto: {
+        ciphertext: 'a8ec41d2440311ce897bacb6f7942f3235113fa17c4ae6732e032336038a8f73',
+        cipherparams: { iv: '85b5e092c1c32129e3d27df8c581514d' },
+        cipher: 'aes-128-ctr',
+        kdf: 'scrypt',
+        kdfparams: {
+          dklen: 32,
+          salt: 'b662f09bdf6751ac599219732609dceac430bc0629a7906eaa1451555f051ebc',
+          n: 8192,
+          r: 8,
+          p: 1
+        },
+        mac: 'cc89df7ef6c27d284526a65cabf8e5042cdf1ec1aa4ee36dcf65b965fa34843d'
+      }
+    }
+```
 
 ## Account.prototype.signTransaction <a id="Account.js/signTransaction"></a>
 
@@ -852,9 +878,10 @@ Creates new message call transaction or a contract creation, if the data field c
 
 * **Parameters**
 
-Name    | Type     | Required | Default | Description
---------|----------|----------|---------|--------------------------------------------
-options | `object` | true     |         | See [format.sendTx](#util/format.js/sendTx)
+Name     | Type     | Required | Default | Description
+---------|----------|----------|---------|--------------------------------------------
+options  | `object` | true     |         | See [format.sendTx](#util/format.js/sendTx)
+password | `string` | true     |         | Password for remote node.
 
 * **Returns**
 
@@ -2085,7 +2112,6 @@ options  | `object` | true     |         |
 
 Name              | Type     | Required | Default       | Description
 ------------------|----------|----------|---------------|------------
-password          | `Buffer` | true     |               |
 options           | `object` | true     |               |
 options.algorithm | `string` | false    | 'aes-128-ctr' |
 options.N         | `number` | false    | 8192          |
@@ -2096,6 +2122,7 @@ options.salt      | `Buffer` | true     |               |
 options.iv        | `Buffer` | true     |               |
 options.cipher    | `Buffer` | true     |               |
 options.mac       | `Buffer` | true     |               |
+password          | `Buffer` | true     |               |
 
 * **Returns**
 

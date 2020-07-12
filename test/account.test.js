@@ -1,5 +1,7 @@
+const lodash = require('lodash');
 const { Account, AccountWithSigProvider } = require('../src');
 const { randomPrivateKey } = require('../src/util/sign');
+const format = require('../src/util/format');
 
 const KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 const PUBLIC = '0x4646ae5047316b4230d0086c8acec687f00b1cd9d1dc634f6cb358ac0a9a8ffffe77b4dd0a4bfb95851f3b7355c781dd60f8418fc8a65d14907aff47c903a559';
@@ -105,12 +107,65 @@ test('Account.random', () => {
 
 test('encrypt and decrypt', () => {
   const account = new Account(KEY);
+  const keystoreV3 = account.encrypt('password');
 
-  expect(account.encrypt('password').salt).not.toEqual(account.encrypt('password').salt);
+  expect(keystoreV3.crypto).toEqual(keystoreV3.crypto);
+  expect(keystoreV3.crypto).not.toEqual(account.encrypt('password').crypto);
 
-  const info = account.encrypt('password');
-  const loadAccount = Account.decrypt('password', info);
+  const loadAccount = Account.decrypt(keystoreV3, 'password');
 
   expect(loadAccount.privateKey).toEqual(account.privateKey);
   expect(loadAccount.address).toEqual(account.address);
+});
+
+test('encrypt', () => {
+  const account = new Account(KEY);
+
+  const keystoreV3 = account.encrypt('password');
+
+  expect(keystoreV3.version).toEqual(3);
+  expect(lodash.isString(keystoreV3.id)).toEqual(true);
+  expect(format.address(keystoreV3.address)).toEqual(keystoreV3.address);
+  expect(lodash.isPlainObject(keystoreV3.crypto)).toEqual(true);
+  expect(/^[0-9a-f]{64}$/.test(keystoreV3.crypto.ciphertext)).toEqual(true);
+
+  expect(lodash.isPlainObject(keystoreV3.crypto.cipherparams)).toEqual(true);
+  expect(/^[0-9a-f]{32}$/.test(keystoreV3.crypto.cipherparams.iv)).toEqual(true);
+  expect(keystoreV3.crypto.cipher).toEqual('aes-128-ctr');
+  expect(keystoreV3.crypto.kdf).toEqual('scrypt');
+  expect(lodash.isPlainObject(keystoreV3.crypto.kdfparams)).toEqual(true);
+  expect(keystoreV3.crypto.kdfparams.dklen).toEqual(32);
+  expect(/^[0-9a-f]{64}$/.test(keystoreV3.crypto.kdfparams.salt)).toEqual(true);
+  expect(keystoreV3.crypto.kdfparams.n).toEqual(8192);
+  expect(keystoreV3.crypto.kdfparams.r).toEqual(8);
+  expect(keystoreV3.crypto.kdfparams.p).toEqual(1);
+  expect(/^[0-9a-f]{64}$/.test(keystoreV3.crypto.mac)).toEqual(true);
+});
+
+test('decrypt', () => {
+  const keystoreV3 = {
+    version: 3,
+    id: 'db029583-f1bd-41cc-aeb5-b2ed5b33227b',
+    address: '0x1cad0b19bb29d4674531d6f115237e16afce377c',
+    crypto: {
+      ciphertext: '3198706577b0880234ecbb5233012a8ca0495bf2cfa2e45121b4f09434187aba',
+      cipherparams: { iv: 'a9a1f9565fd9831e669e8a9a0ec68818' },
+      cipher: 'aes-128-ctr',
+      kdf: 'scrypt',
+      kdfparams: {
+        dklen: 32,
+        salt: '3ce2d51bed702f2f31545be66fa73d1467d24686059776430df9508407b74231',
+        n: 8192,
+        r: 8,
+        p: 1,
+      },
+      mac: 'cf73832f328f3d5d1e0ec7b0f9c220facf951e8bba86c9f26e706d2df1e34890',
+    },
+  };
+
+  const account = Account.decrypt(keystoreV3, 'password');
+  expect(account.privateKey).toEqual(KEY);
+  expect(account.address).toEqual(keystoreV3.address);
+
+  expect(() => Account.decrypt({ ...keystoreV3, version: 0 }, 'password')).toThrow('Not a valid V3 wallet');
 });
