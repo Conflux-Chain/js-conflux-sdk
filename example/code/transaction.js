@@ -28,7 +28,7 @@ const cfx = new Conflux({
 });
 
 // const account = cfx.Account(PRIVATE_KEY); // create account instance from PRIVATE_KEY
-const account = cfx.Account(ADDRESS, signerCollection); // create account instance from PRIVATE_KEY
+const account = cfx.Account(ADDRESS, signerCollection); // create account instance from ADDRESS & signerCollection
 
 async function main() {
   console.log(account.address); // 0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b
