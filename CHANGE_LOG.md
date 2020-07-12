@@ -1,5 +1,78 @@
 # change log
 
+## v0.12.0
+
+* add `getAdmin`
+
+```
+await cfx.getAdmin('0x89996a8aefb2228593aae723d47f9517eef1341d')
+// "0x1be45681ac6c53d5a40475f7526bac1fe7590fb8"
+```
+
+* sendTransaction accept privateKey as `from`
+
+```
+cfx.sendTransaction({
+  from: PRIVATE_KEY, // accept Account instance or privateKey
+  to: ADDRESS, // accept Account instance or address
+  ...,
+})
+```
+
+* create Account accept address
+
+```
+new Account(PRIVATE_KEY); // {privateKey:'0x...', publicKey: '0x...', address: '0x...'}
+new Account(PUBLIC_KEY); // {publicKey: '0x...', address: '0x...'}
+new Account(ADDRESS); // {address: '0x...'}
+```
+
+## v0.11.0
+
+* defaultGasPrice, only use for sendTransaction
+
+```
+cfx = new Conflux({
+  url: 'http://testnet-jsonrpc.conflux-chain.org:12537',
+  defaultGasPrice: 100,
+})
+
+// old
+cfx.call({
+  address: '0x...',
+  data: '0x...',
+}); // => cfx_call{defaultGasPrice:'0x64',address:'0x...',data:'0x...'}
+
+
+// new
+cfx.call({
+  address: '0x...',
+  data: '0x...',
+}); // => cfx_call{address:'0x...',data:'0x...'}
+```
+
+* remove defaultEpoch, defaultChainId, defaultGas, defaultStorageLimit
+
+```
+// old
+cfx = new Conflux({
+  url: 'http://testnet-jsonrpc.conflux-chain.org:12537',
+  defaultEpoch: 'latest_state',
+  defaultChainId: 1,
+  defaultGasPrice: 100,
+  defaultGas: 10,
+  defaultStorageLimit: 1,
+})
+
+// new
+cfx = new Conflux({
+  url: 'http://testnet-jsonrpc.conflux-chain.org:12537',
+  defaultGasPrice: 100,
+})
+
+// user could `epochNumber` and `chainId` manual on each method.
+```
+
 ## v0.10.3
 
 * fix broken sourcemap

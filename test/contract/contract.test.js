@@ -14,7 +14,7 @@ function sha3(string) {
 }
 
 // ----------------------------------------------------------------------------
-const cfx = new Conflux({ defaultChainId: 1 });
+const cfx = new Conflux();
 cfx.provider = new MockProvider();
 
 const contract = cfx.Contract({ abi, bytecode, address });
@@ -68,10 +68,9 @@ test('contract.call', async () => {
   expect(value.toString()).toEqual('255');
 
   expect(call).toHaveBeenLastCalledWith('cfx_call', {
-    chainId: cfx.defaultChainId,
     to: address,
     data: '0x06661abd',
-  }, 'latest_state');
+  }, undefined);
 
   const error = new Error();
   error.data = '0x08c379a0' +

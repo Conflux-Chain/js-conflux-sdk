@@ -164,7 +164,7 @@ class MockProvider {
   }
 
   cfx_getNextNonce(address, epochNumber) {
-    if (['latest_state', 'latest_mined'].includes(epochNumber)) {
+    if ([undefined, 'latest_state', 'latest_mined'].includes(epochNumber)) {
       return toHex(Number.MAX_SAFE_INTEGER);
     }
 
@@ -279,6 +279,10 @@ class MockProvider {
   }
 
   cfx_sendTransaction() {
+    return randomHex(64);
+  }
+
+  send_transaction() {
     return randomHex(64);
   }
 

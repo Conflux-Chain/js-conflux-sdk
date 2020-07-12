@@ -16,11 +16,29 @@ const sigProvider = address => {
   };
 };
 
-test('Account', () => {
+test('Account(privateKey)', () => {
   const account = new Account(KEY);
   expect(account.privateKey).toEqual(KEY);
   expect(account.publicKey).toEqual(PUBLIC);
   expect(account.address).toEqual(ADDRESS);
+});
+
+test('Account(publicKey)', () => {
+  const account = new Account(PUBLIC);
+  expect(account.privateKey).toEqual(undefined);
+  expect(account.publicKey).toEqual(PUBLIC);
+  expect(account.address).toEqual(ADDRESS);
+});
+
+test('Account(address)', () => {
+  const account = new Account(ADDRESS);
+  expect(account.privateKey).toEqual(undefined);
+  expect(account.publicKey).toEqual(undefined);
+  expect(account.address).toEqual(ADDRESS);
+});
+
+test('Account(0x)', () => {
+  expect(() => new Account('0x')).toThrow('unexpected hex length');
 });
 
 test('Account.signTransaction', () => {

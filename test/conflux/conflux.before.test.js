@@ -7,19 +7,13 @@ const KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'
 const ADDRESS = '0x1cad0b19bb29d4674531d6f115237e16afce377c';
 const BLOCK_HASH = '0xe0b0000000000000000000000000000000000000000000000000000000000000';
 const TX_HASH = '0xb0a0000000000000000000000000000000000000000000000000000000000000';
+const SEND_TX_PWD = '123456';
 
 // ----------------------------------------------------------------------------
 const cfx = new Conflux({
-  defaultChainId: lodash.random(0, 10),
-  defaultGas: lodash.random(0, 100),
   defaultGasPrice: lodash.random(0, 1000),
-  defaultStorageLimit: lodash.random(0, 10000),
 });
 cfx.provider = new MockProvider();
-
-beforeAll(() => {
-  expect(cfx.defaultEpoch).toEqual('latest_state');
-});
 
 test('getLogs', async () => {
   await expect(cfx.getLogs()).rejects.toThrow('Cannot read property');
@@ -62,7 +56,7 @@ test('getBalance', async () => {
   const call = jest.spyOn(cfx.provider, 'call');
 
   await cfx.getBalance(ADDRESS);
-  expect(call).toHaveBeenLastCalledWith('cfx_getBalance', ADDRESS, cfx.defaultEpoch);
+  expect(call).toHaveBeenLastCalledWith('cfx_getBalance', ADDRESS, undefined);
 
   await cfx.getBalance(ADDRESS, 'latest_state');
   expect(call).toHaveBeenLastCalledWith('cfx_getBalance', ADDRESS, 'latest_state');
@@ -79,7 +73,7 @@ test('getNextNonce', async () => {
   const call = jest.spyOn(cfx.provider, 'call');
 
   await cfx.getNextNonce(ADDRESS);
-  expect(call).toHaveBeenLastCalledWith('cfx_getNextNonce', ADDRESS, cfx.defaultEpoch);
+  expect(call).toHaveBeenLastCalledWith('cfx_getNextNonce', ADDRESS, undefined);
 
   await cfx.getNextNonce(ADDRESS, 'latest_state');
   expect(call).toHaveBeenLastCalledWith('cfx_getNextNonce', ADDRESS, 'latest_state');
@@ -209,7 +203,7 @@ test('getCode', async () => {
   const call = jest.spyOn(cfx.provider, 'call');
 
   await cfx.getCode(ADDRESS);
-  expect(call).toHaveBeenLastCalledWith('cfx_getCode', ADDRESS, cfx.defaultEpoch);
+  expect(call).toHaveBeenLastCalledWith('cfx_getCode', ADDRESS, undefined);
 
   await cfx.getCode(ADDRESS, 0);
   expect(call).toHaveBeenLastCalledWith('cfx_getCode', ADDRESS, '0x0');
@@ -218,23 +212,23 @@ test('getCode', async () => {
 });
 
 test('call', async () => {
-  await expect(cfx.call()).rejects.toThrow('Cannot read property');
+  await expect(cfx.call()).rejects.toThrow('got undefined');
   await expect(cfx.call({ nonce: 0 })).rejects.toThrow('not match hex'); // miss to
 
   const call = jest.spyOn(cfx.provider, 'call');
-  await cfx.call({ to: ADDRESS });
+  await cfx.call({ from: KEY, to: ADDRESS });
   expect(call).toHaveBeenLastCalledWith('cfx_call', {
-    from: undefined,
+    from: ADDRESS,
     nonce: undefined,
-    gasPrice: format.hexUInt(cfx.defaultGasPrice),
-    gas: format.hexUInt(cfx.defaultGas),
-    storageLimit: format.hexUInt(cfx.defaultStorageLimit),
+    gasPrice: undefined,
+    gas: undefined,
+    storageLimit: undefined,
     to: ADDRESS,
     value: undefined,
     data: undefined,
-    chainId: cfx.defaultChainId,
+    chainId: undefined,
     epochHeight: undefined,
-  }, cfx.defaultEpoch);
+  }, undefined);
 
   call.mockRestore();
 });
@@ -250,7 +244,7 @@ test('call by AUTO', async () => {
       from: format.buffer(ADDRESS),
       to: format.buffer(ADDRESS),
       nonce: 0,
-      // chainId: 1,
+      chainId: 1,
       gas: '2',
       gasPrice: 3,
       storageLimit: 4,
@@ -263,7 +257,7 @@ test('call by AUTO', async () => {
   expect(call).toHaveBeenLastCalledWith('cfx_call', {
     from: ADDRESS,
     nonce: '0x0',
-    chainId: cfx.defaultChainId,
+    chainId: 1,
     gas: '0x2',
     gasPrice: '0x3',
     storageLimit: '0x4',
@@ -278,69 +272,44 @@ test('call by AUTO', async () => {
 });
 
 test('estimateGasAndCollateral', async () => {
-  await expect(cfx.estimateGasAndCollateral()).rejects.toThrow('Cannot read property');
+  await expect(cfx.estimateGasAndCollateral()).rejects.toThrow('got undefined');
 
   const call = jest.spyOn(cfx.provider, 'call');
   await cfx.estimateGasAndCollateral({ to: ADDRESS });
   expect(call).toHaveBeenLastCalledWith('cfx_estimateGasAndCollateral', {
     from: undefined,
     nonce: undefined,
-    gasPrice: format.hexUInt(cfx.defaultGasPrice),
-    gas: format.hexUInt(cfx.defaultGas),
-    storageLimit: format.hexUInt(cfx.defaultStorageLimit),
+    gasPrice: undefined,
+    gas: undefined,
+    storageLimit: undefined,
     to: ADDRESS,
     value: undefined,
     data: undefined,
-    chainId: cfx.defaultChainId,
+    chainId: undefined,
     epochHeight: undefined,
   });
-
-  const getNextNonce = jest.spyOn(cfx, 'getNextNonce');
-  getNextNonce.mockReturnValue(100);
 
   await cfx.estimateGasAndCollateral(
     {
       from: ADDRESS,
       to: format.buffer(ADDRESS),
       gas: '0x01',
+      chainId: '0x01',
       value: 100,
       data: '0x',
     },
   );
   expect(call).toHaveBeenLastCalledWith('cfx_estimateGasAndCollateral', {
     from: ADDRESS,
-    nonce: '0x64',
-    gasPrice: format.hexUInt(cfx.defaultGasPrice),
+    nonce: undefined,
+    gasPrice: undefined,
     gas: '0x1',
-    storageLimit: format.hexUInt(cfx.defaultStorageLimit),
+    storageLimit: undefined,
     to: ADDRESS,
     value: '0x64',
     data: '0x',
-    chainId: cfx.defaultChainId,
+    chainId: 1,
     epochHeight: undefined,
-  });
-
-  getNextNonce.mockRestore();
-  call.mockRestore();
-});
-
-test('sendTransaction by DEFAULT', async () => {
-  await expect(cfx.sendTransaction()).rejects.toThrow('Cannot read property');
-  await expect(cfx.sendTransaction({ nonce: 0 })).rejects.toThrow('not match hex');
-
-  const call = jest.spyOn(cfx.provider, 'call');
-  await cfx.sendTransaction({ from: ADDRESS, epochHeight: 200, nonce: 100 });
-  expect(call).toHaveBeenLastCalledWith('cfx_sendTransaction', {
-    from: ADDRESS,
-    nonce: '0x64',
-    gasPrice: format.hexUInt(cfx.defaultGasPrice),
-    gas: format.hexUInt(cfx.defaultGas),
-    to: undefined,
-    value: undefined,
-    data: undefined,
-    chainId: cfx.defaultChainId,
-    epochHeight: 200,
-    storageLimit: format.hexUInt(cfx.defaultStorageLimit),
   });
 
   call.mockRestore();
@@ -348,18 +317,6 @@ test('sendTransaction by DEFAULT', async () => {
 
 test('sendTransaction by AUTO', async () => {
   const call = jest.spyOn(cfx.provider, 'call');
-
-  const defaultStorageLimit = cfx.defaultStorageLimit;
-  cfx.defaultStorageLimit = undefined;
-
-  const defaultGasPrice = cfx.defaultGasPrice;
-  cfx.defaultGasPrice = undefined;
-
-  const defaultGas = cfx.defaultGas;
-  cfx.defaultGas = undefined;
-
-  const defaultChainId = cfx.defaultChainId;
-  cfx.defaultChainId = undefined;
 
   const getEpochNumber = jest.spyOn(cfx, 'getEpochNumber');
   getEpochNumber.mockReturnValue(1000);
@@ -384,30 +341,26 @@ test('sendTransaction by AUTO', async () => {
     to: format.buffer(ADDRESS),
     value: 0,
     data: '0x',
-  });
-  expect(call).toHaveBeenLastCalledWith('cfx_sendTransaction', {
+  }, SEND_TX_PWD);
+  expect(call).toHaveBeenLastCalledWith('send_transaction', {
     from: ADDRESS,
     nonce: '0x64',
-    gasPrice: '0x1',
+    gasPrice: format.hexUInt(cfx.defaultGasPrice),
     gas: '0x400',
     to: ADDRESS,
     value: '0x0',
     data: '0x',
-    chainId: 1,
-    epochHeight: 1000,
+    chainId: format.hexUInt(1),
+    epochHeight: format.hexUInt(1000),
     storageLimit: format.hexUInt(2048),
-  });
+  }, SEND_TX_PWD);
 
   expect(getEpochNumber).toHaveBeenCalledTimes(1);
   expect(getNextNonce).toHaveBeenCalledTimes(1);
   expect(getStatus).toHaveBeenCalledTimes(1);
-  expect(getGasPrice).toHaveBeenCalledTimes(1);
+  expect(getGasPrice).toHaveBeenCalledTimes(0);
   expect(estimateGasAndCollateral).toHaveBeenCalledTimes(1);
 
-  cfx.defaultStorageLimit = defaultStorageLimit;
-  cfx.defaultGasPrice = defaultGasPrice;
-  cfx.defaultGas = defaultGas;
-  cfx.defaultChainId = defaultChainId;
   getEpochNumber.mockRestore();
   getStatus.mockRestore();
   getNextNonce.mockRestore();
