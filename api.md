@@ -111,9 +111,10 @@ Create a account.
 
 * **Parameters**
 
-Name   | Type            | Required | Default | Description
--------|-----------------|----------|---------|-------------------------------------------
-string | `string,Buffer` | true     |         | Account privateKey or publicKey or address
+Name             | Type            | Required | Default | Description
+-----------------|-----------------|----------|---------|----------------------------------------------------
+string           | `string,Buffer` | true     |         | Account privateKey or publicKey or address
+signerCollection | `function`      | true     |         | Take an address and return the corresponding signer
 
 * **Returns**
 
