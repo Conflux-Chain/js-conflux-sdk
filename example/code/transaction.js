@@ -3,6 +3,22 @@
 const { Conflux, util } = require('js-conflux-sdk');
 
 const PRIVATE_KEY = 'Your Private Key';
+const ADDRESS = util.sign.privateKeyToAddress(PRIVATE_KEY);
+
+// The signerCollection usually come from a 3rd-party key storage, such as MetaMask-like
+// brower extension, app wallet, or cold wallet. 
+const signerCollection = address => {
+  if (address !== ADDRESS) {
+    // return the trivial function if signer for the given address does not exist
+    return () => {}
+  }
+  return async tx => {
+    // Should notify the user what transaction is requesting for signature, and ask the user
+    // whether they agree to sign. When agreed, fetch the private key, sign the transaction, 
+    // and only return the signature. Therefore, the private key is never exposed.
+    return util.sign.ecdsaSign(util.sign.sha3(tx.encode(false)), util.format.buffer(PRIVATE_KEY));
+  };
+};
 
 const cfx = new Conflux({
   url: 'http://testnet-jsonrpc.conflux-chain.org:12537',
@@ -11,7 +27,8 @@ const cfx = new Conflux({
   logger: console,
 });
 
-const account = cfx.Account(PRIVATE_KEY); // create account instance
+// const account = cfx.Account(PRIVATE_KEY); // create account instance from PRIVATE_KEY
+const account = cfx.Account(ADDRESS, signerCollection); // create account instance from PRIVATE_KEY
 
 async function main() {
   console.log(account.address); // 0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b
@@ -156,7 +173,7 @@ async function case3() {
     value: util.unit.fromGDripToDrip(789),
   });
 
-  const tx = account.signTransaction({
+  const tx = await account.signTransaction({
     nonce,
     gasPrice: Number(gasPrice) > 0 ? gasPrice : 1, // at lest 1 Drip
     gas: estimate.gasUsed,
