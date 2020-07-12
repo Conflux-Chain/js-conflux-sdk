@@ -1,20 +1,19 @@
 const lodash = require('lodash');
-const { Account, AccountWithSigProvider } = require('../src');
-const { randomPrivateKey } = require('../src/util/sign');
+const { Account } = require('../src');
+const { randomPrivateKey, sha3, ecdsaSign } = require('../src/util/sign');
 const format = require('../src/util/format');
 
 const KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 const PUBLIC = '0x4646ae5047316b4230d0086c8acec687f00b1cd9d1dc634f6cb358ac0a9a8ffffe77b4dd0a4bfb95851f3b7355c781dd60f8418fc8a65d14907aff47c903a559';
 const ADDRESS = '0x1cad0b19bb29d4674531d6f115237e16afce377c';
 
-const sigProvider = address => {
+const signerCollection = address => {
+  if (address !== ADDRESS) {
+    return () => {};
+  }
   return async tx => {
-    if (address !== ADDRESS) {
-      throw new Error(`Fail to sign for address ${address}`);
-    }
     await new Promise(resolve => setTimeout(resolve, 100));
-    tx.sign(KEY);
-    return tx;
+    return ecdsaSign(sha3(tx.encode(false)), format.buffer(KEY));
   };
 };
 
@@ -23,6 +22,7 @@ test('Account(privateKey)', () => {
   expect(account.privateKey).toEqual(KEY);
   expect(account.publicKey).toEqual(PUBLIC);
   expect(account.address).toEqual(ADDRESS);
+  expect(account.signer).toEqual(undefined);
 });
 
 test('Account(publicKey)', () => {
@@ -30,10 +30,19 @@ test('Account(publicKey)', () => {
   expect(account.privateKey).toEqual(undefined);
   expect(account.publicKey).toEqual(PUBLIC);
   expect(account.address).toEqual(ADDRESS);
+  expect(account.signer).toEqual(undefined);
 });
 
 test('Account(address)', () => {
   const account = new Account(ADDRESS);
+  expect(account.privateKey).toEqual(undefined);
+  expect(account.publicKey).toEqual(undefined);
+  expect(account.address).toEqual(ADDRESS);
+  expect(account.signer).toEqual(undefined);
+});
+
+test('Account(address with signerCollection)', () => {
+  const account = new Account(ADDRESS, signerCollection);
   expect(account.privateKey).toEqual(undefined);
   expect(account.publicKey).toEqual(undefined);
   expect(account.address).toEqual(ADDRESS);
@@ -43,53 +52,47 @@ test('Account(0x)', () => {
   expect(() => new Account('0x')).toThrow('unexpected hex length');
 });
 
-test('Account.signTransaction', () => {
+test('Account.signTransaction', async () => {
   const account = new Account(KEY);
 
-  const tx = account.signTransaction({ nonce: 0, gasPrice: 100, gas: 10000, storageLimit: 10000, epochHeight: 100, chainId: 0 });
+  const tx = await account.signTransaction({ nonce: 0, gasPrice: 100, gas: 10000, storageLimit: 10000, epochHeight: 100, chainId: 0 });
   expect(tx.from).toEqual(ADDRESS);
 
   account.privateKey = randomPrivateKey();
-  expect(() => account.signTransaction({ nonce: 0, gasPrice: 100, gas: 10000, storageLimit: 10000, epochHeight: 100, chainId: 0 }))
+  await expect(account.signTransaction({ nonce: 0, gasPrice: 100, gas: 10000, storageLimit: 10000, epochHeight: 100, chainId: 0 }))
+    .rejects
     .toThrow('transaction.from !==');
 });
 
-test('Account.signMessage', () => {
+test('Account.signMessage', async () => {
   const account = new Account(KEY);
 
-  const message = account.signMessage('Hello World');
+  const message = await account.signMessage('Hello World');
   expect(message.from).toEqual(ADDRESS);
   expect(message.signature).toEqual('0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01');
 
   account.privateKey = randomPrivateKey();
-  expect(() => account.signMessage('Hello World')).toThrow('message.from !==');
+  await expect(account.signMessage('Hello World'))
+    .rejects
+    .toThrow('message.from !==');
 });
 
-test('AccountWithSigProvider.signTransaction', async () => {
-  const accountWithSigProvider = new AccountWithSigProvider(ADDRESS, sigProvider);
+test('Account.signTransaction using signerCollection', async () => {
+  const account = new Account(ADDRESS, signerCollection);
 
-  const tx = await accountWithSigProvider.signTransaction({ nonce: 0, gasPrice: 100, gas: 10000, storageLimit: 10000, epochHeight: 100, chainId: 0 });
+  const tx = await account.signTransaction({ nonce: 0, gasPrice: 100, gas: 10000, storageLimit: 10000, epochHeight: 100, chainId: 0 });
   expect(tx.from).toEqual(ADDRESS);
 
   const randomAddress = Account.random().address;
-  accountWithSigProvider.address = randomAddress;
-  await expect(accountWithSigProvider.signTransaction({ nonce: 0, gasPrice: 100, gas: 10000, storageLimit: 10000, epochHeight: 100, chainId: 0 }))
+  account.address = randomAddress;
+  await expect(account.signTransaction({ nonce: 0, gasPrice: 100, gas: 10000, storageLimit: 10000, epochHeight: 100, chainId: 0 }))
     .rejects
-    .toThrow(`Fail to sign for address ${randomAddress}`);
-});
+    .toThrow('transaction.from !==');
 
-test('AccountWithSigProvider.signMessage', async () => {
-  const accountWithSigProvider = new AccountWithSigProvider(ADDRESS, sigProvider);
-
-  const message = await accountWithSigProvider.signMessage('Hello World');
-  expect(message.from).toEqual(ADDRESS);
-  expect(message.signature).toEqual('0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01');
-
-  const randomAddress = Account.random().address;
-  accountWithSigProvider.address = randomAddress;
-  await expect(accountWithSigProvider.signMessage('Hello World'))
+  const randomAccount = new Account(randomAddress, signerCollection);
+  await expect(randomAccount.signTransaction({ nonce: 0, gasPrice: 100, gas: 10000, storageLimit: 10000, epochHeight: 100, chainId: 0 }))
     .rejects
-    .toThrow(`Fail to sign for address ${randomAddress}`);
+    .toThrow('No signature is returned from the signer.');
 });
 
 test('Account.random', () => {
