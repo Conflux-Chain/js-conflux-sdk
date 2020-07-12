@@ -47,9 +47,10 @@ class Account {
    * Create a account.
    *
    * @param string {string|Buffer} - Account privateKey or publicKey or address
+   * @param signerCollection {function} - Take an address and return the corresponding signer
    * @return {Account}
    */
-  constructor(string) {
+  constructor(string, signerCollection) {
     const hex = format.hex(string);
 
     switch (hex.length) {
@@ -70,6 +71,17 @@ class Account {
 
       default:
         throw new Error(`unexpected hex length when create Account with "${hex}"`);
+    }
+
+    if (!this.privateKey && signerCollection) {
+      if (typeof signerCollection !== 'function') {
+        throw new Error('signerCollection must be a function.');
+      }
+      const signer = signerCollection(this.address);
+      if (!signer || typeof signer !== 'function') {
+        throw new Error('signerCollection(address) must return a function.');
+      }
+      this.signer = signer;
     }
   }
 
@@ -159,9 +171,17 @@ class Account {
    * @param options {object} - See [Transaction](Transaction.js/constructor)
    * @return {Transaction}
    */
-  signTransaction(options) {
+  async signTransaction(options) {
     const tx = new Transaction(options);
-    tx.sign(format.privateKey(this.privateKey)); // sign will cover r,s,v fields
+    if (this.signer) {
+      const signature = await this.signer(tx);
+      if (!signature) {
+        throw new Error('No signature is returned from the signer.');
+      }
+      Object.assign(tx, { r: format.hex(signature.r), s: format.hex(signature.s), v: signature.v });
+    } else {
+      tx.sign(format.privateKey(this.privateKey)); // sign will cover r,s,v fields
+    }
     if (tx.from !== this.address) {
       throw new Error(`Invalid signature, transaction.from !== ${this.address}`);
     }
@@ -176,16 +196,24 @@ class Account {
    *
    * @example
    * > const account = new Account('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
-   * > const msg = account.signMessage('Hello World!')
+   * > const msg = await account.signMessage('Hello World!')
    * > console.log(msg);
    Message {
       message: 'Hello World',
       signature: '0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01'
     }
    */
-  signMessage(message) {
+  async signMessage(message) {
     const msg = new Message(message);
-    msg.sign(format.privateKey(this.privateKey)); // sign will cover r,s,v fields
+    if (this.signer) {
+      const signature = await this.signer(msg);
+      if (!signature) {
+        throw new Error('No signature is returned from the signer.');
+      }
+      Object.assign(msg, { r: format.hex(signature.r), s: format.hex(signature.s), v: signature.v });
+    } else {
+      msg.sign(format.privateKey(this.privateKey)); // sign will cover r,s,v fields
+    }
     if (msg.from !== this.address) {
       throw new Error(`Invalid signature, message.from !== ${this.address}`);
     }
