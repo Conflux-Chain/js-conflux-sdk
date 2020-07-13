@@ -1,5 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const path = require('path');
+const minify = require('minify-stream');
 const { mkdirpSync } = require('fs-extra');
 const browserify = require('browserify');
 const babelify = require('babelify');
@@ -12,7 +13,6 @@ const browserifyOptions = {
   entries: ['./src/index.js'],
   debug: true, // gen inline sourcemap to extract with exorcist
   standalone: 'Conflux', // generate a umd file to load directly into browser
-  detectGlobals: true, // detect __diranme process global __filename
 };
 
 const OUTPUT_FILE_NAME = 'js-conflux-sdk';
@@ -36,8 +36,8 @@ const babelTransform = babelify.configure({
 
 browserify(browserifyOptions)
   .transform(babelTransform)
-  .plugin('tinyify')
   .bundle()
+  .pipe(minify())
   .pipe(mold.transformSourcesRelativeTo(path.resolve(__dirname, '../')))
   .pipe(exorcist(`./dist/${OUTPUT_FILE_NAME}.umd.min.js.map`))
   .pipe(fs.createWriteStream(`./dist/${OUTPUT_FILE_NAME}.umd.min.js`));
