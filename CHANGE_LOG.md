@@ -1,5 +1,9 @@
 # change log
 
+## v0.13.2
+
+* use scrypt-js
+
 ## v0.13.1
 
 * RPC returned all number as hex
