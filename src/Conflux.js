@@ -764,7 +764,7 @@ class Conflux {
       options.chainId = status.chainId;
     }
 
-    if (options.from.privateKey) {
+    if (options.from.privateKey || options.from.signer) {
       // sign by local
       const tx = await options.from.signTransaction(options);
       return this.sendRawTransaction(tx.serialize());
