@@ -15,9 +15,10 @@
     "secp256k1": "secp256k1/elliptic"
   },
   "files": [
+    "dist",
     "mock",
     "src",
-    "dist"
+    "types"
   ],
   "browserslit": "cover 99.5%",
   "dependencies": {
