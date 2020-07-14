@@ -770,7 +770,7 @@ class Conflux {
       return this.sendRawTransaction(tx.serialize());
     } else {
       // sign by remote
-      return this.provider.call('send_transaction', format.sendTx(options), password);
+      return this.provider.call('cfx_sendTransaction', format.sendTx(options), password);
     }
   }
 
