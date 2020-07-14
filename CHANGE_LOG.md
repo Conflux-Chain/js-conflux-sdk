@@ -1,5 +1,9 @@
 # change log
 
+## v0.13.3
+
+* Account.encrypt returned address drop '0x' prefix
+
 ## v0.13.2
 
 * use scrypt-js

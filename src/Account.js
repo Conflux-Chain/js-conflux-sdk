@@ -141,7 +141,7 @@ class Account {
     return {
       version: 3,
       id: uuidV4(),
-      address: this.address,
+      address: this.address.replace(/^0x/, ''),
       crypto: {
         ciphertext: cipher.toString('hex'),
         cipherparams: { iv: iv.toString('hex') },

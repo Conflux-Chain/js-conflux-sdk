@@ -87,7 +87,7 @@ test('encrypt', () => {
 
   expect(keystoreV3.version).toEqual(3);
   expect(lodash.isString(keystoreV3.id)).toEqual(true);
-  expect(format.address(keystoreV3.address)).toEqual(keystoreV3.address);
+  expect(format.address(`0x${keystoreV3.address}`)).toEqual(account.address);
   expect(lodash.isPlainObject(keystoreV3.crypto)).toEqual(true);
   expect(/^[0-9a-f]{64}$/.test(keystoreV3.crypto.ciphertext)).toEqual(true);
 
@@ -108,7 +108,7 @@ test('decrypt', () => {
   const keystoreV3 = {
     version: 3,
     id: 'db029583-f1bd-41cc-aeb5-b2ed5b33227b',
-    address: '0x1cad0b19bb29d4674531d6f115237e16afce377c',
+    address: '1cad0b19bb29d4674531d6f115237e16afce377c',
     crypto: {
       ciphertext: '3198706577b0880234ecbb5233012a8ca0495bf2cfa2e45121b4f09434187aba',
       cipherparams: { iv: 'a9a1f9565fd9831e669e8a9a0ec68818' },
@@ -127,7 +127,7 @@ test('decrypt', () => {
 
   const account = Account.decrypt(keystoreV3, 'password');
   expect(account.privateKey).toEqual(KEY);
-  expect(account.address).toEqual(keystoreV3.address);
+  expect(account.address).toEqual(`0x${keystoreV3.address}`);
 
   expect(() => Account.decrypt({ ...keystoreV3, version: 0 }, 'password')).toThrow('Not a valid V3 wallet');
 });
