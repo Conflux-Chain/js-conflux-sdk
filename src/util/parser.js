@@ -64,7 +64,7 @@ function arrayParser(parser) {
   };
 }
 
-function objectParser(keyToParser) {
+function objectParser(keyToParser, pick = false) {
   return object => {
     if (!lodash.isObject(object)) {
       throw new Error(`expected plain object, got ${typeof object}`);
@@ -79,19 +79,19 @@ function objectParser(keyToParser) {
       }
     });
 
-    return lodash.defaults(picked, object);
+    return pick ? picked : lodash.defaults(picked, object);
   };
 }
 
 // ----------------------------------------------------------------------------
 class Parser {
-  constructor(arg) {
+  constructor(arg, options) {
     if (Array.isArray(arg)) {
       const parser = arg.length ? new this.constructor(arg[0]) : v => v;
       arg = arrayParser(parser);
     } else if (lodash.isPlainObject(arg)) {
       const keyToParser = lodash.mapValues(arg, v => new this.constructor(v));
-      arg = objectParser(keyToParser);
+      arg = objectParser(keyToParser, options);
     } else if (!lodash.isFunction(arg)) {
       arg = valueParser(arg);
     }

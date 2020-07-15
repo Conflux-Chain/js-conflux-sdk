@@ -1,4 +1,4 @@
-const { sha3, ecdsaSign, ecdsaRecover, publicKeyToAddress, rlpEncode } = require('./util/sign');
+const { sha3, ecdsaSign, ecdsaRecover, privateKeyToAddress, rlpEncode } = require('./util/sign');
 const format = require('./util/format');
 
 class Transaction {
@@ -6,6 +6,7 @@ class Transaction {
    * Create a transaction.
    *
    * @param options {object}
+   * @param options.from {string} - The sender address.
    * @param options.nonce {string|number} - This allows to overwrite your own pending transactions that use the same nonce.
    * @param options.gasPrice {string|number} - The price of gas for this transaction in drip.
    * @param options.gas {string|number} - The amount of gas to use for the transaction (unused gas is refunded).
@@ -20,8 +21,20 @@ class Transaction {
    * @param [options.v] {number} - ECDSA recovery id
    * @return {Transaction}
    */
-  constructor({ nonce, gasPrice, gas, to, value, storageLimit, epochHeight, chainId, data, v, r, s }) {
-    Object.assign(this, { nonce, gasPrice, gas, to, value, storageLimit, epochHeight, chainId, data, v, r, s });
+  constructor({ from, nonce, gasPrice, gas, to, value, storageLimit, epochHeight, chainId, data, v, r, s }) {
+    this.from = from;
+    this.nonce = nonce;
+    this.gasPrice = gasPrice;
+    this.gas = gas;
+    this.to = to;
+    this.value = value;
+    this.storageLimit = storageLimit;
+    this.epochHeight = epochHeight;
+    this.chainId = chainId;
+    this.data = data;
+    this.v = v;
+    this.r = r;
+    this.s = s;
   }
 
   /**
@@ -40,29 +53,21 @@ class Transaction {
   }
 
   /**
-   * Getter of sender address.
-   *
-   * > Note: calculate every time.
-   *
-   * @return {string|undefined} If ECDSA recover success return address, else return undefined.
-   */
-  get from() {
-    try {
-      return format.hex(publicKeyToAddress(format.buffer(this.recover())));
-    } catch (e) {
-      return undefined;
-    }
-  }
-
-  /**
    * Sign transaction and set 'r','s','v'.
    *
    * @param privateKey {string} - Private key hex string.
    * @return {Transaction}
    */
   sign(privateKey) {
-    const { r, s, v } = ecdsaSign(sha3(this.encode(false)), format.buffer(privateKey));
-    Object.assign(this, { r: format.hex(r), s: format.hex(s), v });
+    const privateKeyBuffer = format.buffer(privateKey);
+    const addressBuffer = privateKeyToAddress(privateKeyBuffer);
+    const { r, s, v } = ecdsaSign(sha3(this.encode(false)), privateKeyBuffer);
+
+    this.from = format.address(addressBuffer);
+    this.r = format.hex(r);
+    this.s = format.hex(s);
+    this.v = v;
+
     return this;
   }
 
@@ -97,7 +102,7 @@ class Transaction {
   }
 
   /**
-   * Get the raw tx hex string.
+   * Get the raw transaction hex string.
    *
    * @return {string} Hex string
    */

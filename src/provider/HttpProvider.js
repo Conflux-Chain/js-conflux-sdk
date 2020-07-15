@@ -6,19 +6,6 @@ const BaseProvider = require('./BaseProvider');
  */
 class HttpProvider extends BaseProvider {
   /**
-   * @param url {string} - Full json rpc http url
-   * @param [options] {object} - See [BaseProvider.constructor](#provider/BaseProvider.js/constructor)
-   * @return {HttpProvider}
-   *
-   * @example
-   * > const provider = new HttpProvider('http://testnet-jsonrpc.conflux-chain.org:12537', {logger: console});
-   */
-  // eslint-disable-next-line no-useless-constructor
-  constructor(url, options) {
-    super(url, options);
-  }
-
-  /**
    * Call a json rpc method with params
    *
    * @param method {string} - Json rpc method name.

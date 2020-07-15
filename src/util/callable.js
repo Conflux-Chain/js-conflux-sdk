@@ -15,7 +15,7 @@ function callable(object, func) {
     get: (_, key) => Reflect.get(object, key),
     set: (_, key, value) => Reflect.set(object, key, value),
     deleteProperty: (_, key) => Reflect.deleteProperty(object, key),
-    // defineProperty
+    defineProperty: (_, key, attributes) => Reflect.defineProperty(object, key, attributes),
     enumerate: () => Reflect.enumerate(object),
     ownKeys: () => Reflect.ownKeys(object),
     // apply

@@ -1,4 +1,4 @@
-const unit = require('../../src/util/unit');
+const { unit } = require('../../src/util');
 
 test('unit', () => {
   expect(unit('CFX', 'CFX')(1)).toEqual('1');
@@ -14,7 +14,7 @@ test('unit', () => {
   expect(unit('Drip', 'Drip')(1)).toEqual('1');
 
   expect(() => unit('CFX', 'drip')).toThrow('"to" must in ["CFX","GDrip","Drip"], got "drip"');
-  expect(() => unit('cfx', 'Drip')).toThrow('"from" must in ["CFX","GDrip","Drip"], got "cfx"');
+  expect(() => unit('conflux', 'Drip')).toThrow('"from" must in ["CFX","GDrip","Drip"], got "conflux"');
 });
 
 test('fromCFXToGDrip', () => {

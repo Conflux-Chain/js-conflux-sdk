@@ -1,5 +1,96 @@
 # change log
 
+## v1.0.0
+
+* friendly example code
+
+example will guide user to use SDK step by step
+
+* add `BaseAccount`
+
+Account include `async signTransaction`, `async signMessage` and `async sendTransaction` method.
+
+`sendTransaction` method could fill default transaction fields
+
+* add `accountFactory` to gen account and bind conflux instance in it.
+
+so user could extend different account class.
+
+```
+// old
+account = conflux.Account(PRIVATE_KEY);
+
+// new
+account = conflux.Account({ privateKey: PRIVATE_KEY });
+```
+
+* `providerFactory` only accept first argument as override options
+
+```
+// old
+provider = providerFactory('http://localhost:12537')
+
+// new
+provider = providerFactory({url: 'http://localhost:12537'})
+```
+
+* contract method not support `sendTransaction` any more
+
+all transaction send show call by a account instance
+
+```
+// old
+receipt = await contract.method(...args).sendTransaction({from: account}).executed();
+
+// new
+receipt = await account.sendTransaction(contract.method(...args)).executed();
+```
+
+* contract method not support `estimateGasAndCollateral` any more
+
+```
+// old
+estimate = await contract.method(...args).estimateGasAndCollateral();
+
+// new
+estimate = await conflux.estimateGasAndCollateral(contract.method(...args));
+```
+
+* contract method not support `call` any more
+```
+// old
+result = await contract.method(...args);
+result = await contract.method(...args).call({from: account, gas: 1000});
+
+// new
+result = await contract.method(...args);
+result = await contract.method(...args).options({from: account, gas: 1000});
+```
+
+* clear `conflux.sendTransaction` method
+
+conflux.sendTransaction is a internal RPC method for local debug, should not override it as a public method.
+
+use should sign or send transaction by account instance
+
+```
+// old
+txHash = await conflux.sendTransaction({ from: account, to: address, value: number });
+
+// new
+txHash = await account.sendTransaction({ to: address, value:number });
+```
+
+* include all method from conflux JSON_RPC document
+
+[JSON_RPC](https://developer.conflux-chain.org/docs/conflux-doc/docs/json_rpc) 
+
+* charming code organization
+
+split abi coder with types
+
+split contract method, event and override
+
 ## v0.13.4
 
 * rename `send_transaction` to `cfx_sendTransaction`
