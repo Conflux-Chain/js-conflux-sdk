@@ -2,9 +2,9 @@ const { sleep, loop } = require('../util');
 const LazyPromise = require('./LazyPromise');
 
 class PendingTransaction extends LazyPromise {
-  constructor(cfx, func, params) {
+  constructor(func, params, conflux) {
     super(func, params);
-    this.cfx = cfx;
+    this.conflux = conflux;
   }
 
   /**
@@ -16,8 +16,8 @@ class PendingTransaction extends LazyPromise {
    */
   async get({ delay = 0 } = {}) {
     await sleep(delay);
-    const txHash = await this;
-    return this.cfx.getTransactionByHash(txHash);
+    const transactionHash = await this;
+    return this.conflux.getTransactionByHash(transactionHash);
   }
 
   /**
@@ -27,14 +27,14 @@ class PendingTransaction extends LazyPromise {
    *
    * @param [options] {object}
    * @param [options.delta=1000] {number} - Loop transaction interval in ms.
-   * @param [options.timeout=30*1000] {number} - Loop timeout in ms.
+   * @param [options.timeout=60*1000] {number} - Loop timeout in ms.
    * @return {Promise<object>} See [Conflux.getTransactionByHash](#Conflux.js/getTransactionByHash)
    */
   async mined({ delta = 1000, timeout = 60 * 1000 } = {}) {
     return loop({ delta, timeout }, async () => {
-      const tx = await this.get();
-      if (tx && tx.blockHash) {
-        return tx;
+      const transaction = await this.get();
+      if (transaction && transaction.blockHash) {
+        return transaction;
       }
 
       return undefined;
@@ -50,16 +50,16 @@ class PendingTransaction extends LazyPromise {
    *
    * @param [options] {object}
    * @param [options.delta=1000] {number} - Loop transaction interval in ms.
-   * @param [options.timeout=60*1000] {number} - Loop timeout in ms.
+   * @param [options.timeout=5*60*1000] {number} - Loop timeout in ms.
    * @return {Promise<object>} See [Conflux.getTransactionReceipt](#Conflux.js/getTransactionReceipt)
    */
   async executed({ delta = 1000, timeout = 5 * 60 * 1000 } = {}) {
-    const txHash = await this;
+    const transactionHash = await this;
     return loop({ delta, timeout }, async () => {
-      const receipt = await this.cfx.getTransactionReceipt(txHash);
+      const receipt = await this.conflux.getTransactionReceipt(transactionHash);
       if (receipt) {
         if (receipt.outcomeStatus !== 0) {
-          throw new Error(`transaction "${txHash}" executed failed, outcomeStatus ${receipt.outcomeStatus}`);
+          throw new Error(`transaction "${transactionHash}" executed failed, outcomeStatus ${receipt.outcomeStatus}`);
         }
 
         return receipt;
@@ -77,14 +77,14 @@ class PendingTransaction extends LazyPromise {
    *
    * @param [options] {object}
    * @param [options.delta=1000] {number} - Loop transaction interval in ms.
-   * @param [options.timeout=5*60*1000] {number} - Loop timeout in ms.
-   * @param [options.threshold=0.01] {number} - Number in range (0,1)
+   * @param [options.timeout=30*60*1000] {number} - Loop timeout in ms.
+   * @param [options.threshold=1e-8] {number} - Number in range (0,1)
    * @return {Promise<object>} See [Conflux.getTransactionReceipt](#Conflux.js/getTransactionReceipt)
    */
-  async confirmed({ threshold = 1e-8, delta = 1000, timeout = 30 * 60 * 1000 } = {}) {
+  async confirmed({ delta = 1000, timeout = 30 * 60 * 1000, threshold = 1e-8 } = {}) {
     return loop({ delta, timeout }, async () => {
       const receipt = await this.executed({ delta, timeout });
-      const risk = await this.cfx.getConfirmationRiskByHash(receipt.blockHash);
+      const risk = await this.conflux.getConfirmationRiskByHash(receipt.blockHash);
       if (risk <= threshold) {
         return receipt;
       }

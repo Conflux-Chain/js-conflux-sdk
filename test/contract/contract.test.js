@@ -1,7 +1,6 @@
 const JSBI = require('jsbi');
 const { Conflux } = require('../../src');
-const sign = require('../../src/util/sign');
-const format = require('../../src/util/format');
+const { format, sign } = require('../../src/util');
 const { MockProvider } = require('../../mock');
 const { abi, bytecode, address } = require('./contract.json');
 const ContractConstructor = require('../../src/contract/ContractConstructor');
@@ -14,18 +13,18 @@ function sha3(string) {
 }
 
 // ----------------------------------------------------------------------------
-const cfx = new Conflux();
-cfx.provider = new MockProvider();
+const conflux = new Conflux();
+conflux.provider = new MockProvider();
 
-const contract = cfx.Contract({ abi, bytecode, address });
+const contract = conflux.Contract({ abi, bytecode, address });
 
 test('without code', async () => {
-  const contractWithoutCode = cfx.Contract({ abi, address });
+  const contractWithoutCode = conflux.Contract({ abi, address });
   expect(() => contractWithoutCode.constructor(100)).toThrow('bytecode is empty');
 });
 
 test('with empty abi', () => {
-  const contractWithEmptyABI = cfx.Contract({ abi: [], address });
+  const contractWithEmptyABI = conflux.Contract({ abi: [], address });
   expect(contractWithEmptyABI.constructor instanceof ContractConstructor).toEqual(true);
 });
 
@@ -35,33 +34,21 @@ test('Contract', async () => {
   expect(contract.address).toEqual(address);
   expect(contract.constructor.bytecode).toEqual(bytecode);
 
-  const { contractCreated } = await contract.constructor(100).sendTransaction({ from: ADDRESS, nonce: 0 }).executed();
-  expect(contractCreated === null || contractCreated.startsWith('0x')).toEqual(true);
-
   value = await contract.constructor(100);
   expect(value.startsWith('0x')).toEqual(true);
 
   value = await contract.count();
   expect(value.toString()).toEqual('100');
 
-  value = await contract.inc(0).call({ from: ADDRESS, nonce: 0 });
+  value = await contract.inc(0).options({ from: ADDRESS, nonce: 0 });
   expect(value.toString()).toEqual('100');
-
-  value = await contract.count().estimateGasAndCollateral({ gasPrice: 101 });
-  expect(value.gasUsed.constructor).toEqual(JSBI);
-  expect(value.storageCollateralized.constructor).toEqual(JSBI);
 
   const logs = await contract.SelfEvent(ADDRESS, null).getLogs({ fromEpoch: 0 }); // `fromEpoch` for mock parse
   expect(logs.length).toEqual(2);
-
-  const iter = contract.SelfEvent(null, null).getLogs({ toEpoch: 0x00 });
-  expect(Boolean(await iter.next({ threshold: 1 }))).toEqual(true);
-  expect(Boolean(await iter.next({ threshold: 1 }))).toEqual(true);
-  expect(Boolean(await iter.next({ threshold: 1 }))).toEqual(false);
 });
 
 test('contract.call', async () => {
-  const call = jest.spyOn(cfx.provider, 'call');
+  const call = jest.spyOn(conflux.provider, 'call');
   call.mockReturnValueOnce('0x00000000000000000000000000000000000000000000000000000000000000ff');
 
   const value = await contract.count();
@@ -73,10 +60,10 @@ test('contract.call', async () => {
   }, undefined);
 
   const error = new Error();
-  error.data = '0x08c379a0' +
+  error.data = JSON.stringify('0x08c379a0' +
     '0000000000000000000000000000000000000000000000000000000000000020' +
     '0000000000000000000000000000000000000000000000000000000000000005' +
-    '4552524f52000000000000000000000000000000000000000000000000000000';
+    '4552524f52000000000000000000000000000000000000000000000000000000');
   call.mockRejectedValueOnce(error);
   await expect(contract.count()).rejects.toThrow('ERROR');
 
@@ -100,34 +87,30 @@ test('contract.override', () => {
   expect(() => contract.OverrideEvent()).toThrow('can not match override "OverrideEvent(bytes),OverrideEvent(string),OverrideEvent(uint256,string)" with args ()');
 
   event = contract.OverrideEvent('str');
+  console.log(event.topics);
   expect(event.topics).toEqual([
-    [sha3('OverrideEvent(string)')],
-    [sha3('str')],
+    sha3('OverrideEvent(string)'),
+    sha3('str'),
   ]);
 
   event = contract.OverrideEvent(Buffer.from('bytes'));
   expect(event.topics).toEqual([
-    [sha3('OverrideEvent(bytes)')],
-    [sha3('bytes')],
+    sha3('OverrideEvent(bytes)'),
+    sha3('bytes'),
   ]);
 
   event = contract.OverrideEvent(100, null);
   expect(event.topics).toEqual([
-    [sha3('OverrideEvent(uint256,string)')],
-    ['0x0000000000000000000000000000000000000000000000000000000000000064'],
+    sha3('OverrideEvent(uint256,string)'),
+    '0x0000000000000000000000000000000000000000000000000000000000000064',
   ]);
 
   expect(() => contract.OverrideEvent(100)).toThrow('can not match override "OverrideEvent(bytes),OverrideEvent(string),OverrideEvent(uint256,string)" with args (100)');
-
-  event = contract.OverrideEvent(null);
-  expect(event.topics).toEqual([
-    [sha3('OverrideEvent(bytes)'), sha3('OverrideEvent(string)')],
-    null,
-  ]);
+  expect(() => contract.OverrideEvent(null)).toThrow('can not determine override "OverrideEvent(bytes)|OverrideEvent(string)" with args ()');
 
   event = contract.OverrideEvent(null, null);
   expect(event.topics).toEqual([
-    [sha3('OverrideEvent(uint256,string)')],
+    sha3('OverrideEvent(uint256,string)'),
     null,
   ]);
 });

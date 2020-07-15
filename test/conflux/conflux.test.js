@@ -1,52 +1,40 @@
-// eslint-disable-next-line import/order
-const { Conflux } = require('../../src');
+const { Conflux, providerFactory } = require('../../src');
 
 // ----------------------------------------------------------------------------
+test('constructor({...})', () => {
+  const conflux = new Conflux({
+    url: 'http://localhost:12537',
+    logger: console,
+  });
 
-test('constructor()', async () => {
-  const cfx = new Conflux();
+  expect(conflux.provider.constructor.name).toEqual('HttpProvider');
 
-  expect(cfx.defaultGasPrice).toEqual(undefined);
-  expect(cfx.provider.constructor.name).toEqual('BaseProvider');
+  const providerClose = jest.spyOn(conflux.provider, 'close');
+  conflux.close();
+  expect(providerClose).toHaveBeenCalledTimes(1);
+  providerClose.mockRestore();
 
-  await expect(cfx.provider.call()).rejects.toThrow('call not implement');
+  expect(conflux.provider.constructor.name).toEqual('BaseProvider');
 });
 
-test('constructor({...})', () => {
-  const cfx = new Conflux({
-    url: 'http://localhost:12537',
+test('constructor({defaultGasPrice})', async () => {
+  const conflux = new Conflux({
     defaultGasPrice: 100,
   });
 
-  expect(cfx.defaultGasPrice).toEqual(100);
-  expect(cfx.provider.constructor.name).toEqual('HttpProvider');
+  expect(conflux.defaultGasPrice).toEqual(100);
+
+  await expect(conflux.provider.call()).rejects.toThrow('call not implement');
 });
 
-test('cfx.setProvider', () => {
-  const cfx = new Conflux();
+test('change provider', async () => {
+  const conflux = new Conflux();
 
-  expect(cfx.provider.constructor.name).toEqual('BaseProvider');
-  expect(cfx.provider.timeout).toEqual(5 * 60 * 1000);
+  expect(conflux.provider.constructor.name).toEqual('BaseProvider');
+  await expect(conflux.provider.call()).rejects.toThrow('call not implement');
 
-  cfx.setProvider('http://localhost:80', { timeout: 30 * 1000 });
-  expect(cfx.provider.constructor.name).toEqual('HttpProvider');
-  expect(cfx.provider.timeout).toEqual(30 * 1000);
-
-  cfx.setProvider('http://localhost:80', { timeout: 60 * 1000 });
-  expect(cfx.provider.constructor.name).toEqual('HttpProvider');
-  expect(cfx.provider.timeout).toEqual(60 * 1000);
-
-  cfx.setProvider('');
-  expect(cfx.provider.constructor.name).toEqual('BaseProvider');
-  expect(cfx.provider.timeout).toEqual(60 * 1000);
-
-  expect(() => cfx.setProvider()).toThrow('url must be string');
-});
-
-test('cfx.close', () => {
-  const cfx = new Conflux();
-  cfx.close();
-
-  cfx.provider = undefined;
-  cfx.close();
+  conflux.provider = providerFactory({ url: 'http://localhost:12537', timeout: 30 * 1000 });
+  expect(conflux.provider.constructor.name).toEqual('HttpProvider');
+  expect(conflux.provider.url).toEqual('http://localhost:12537');
+  expect(conflux.provider.timeout).toEqual(30 * 1000);
 });

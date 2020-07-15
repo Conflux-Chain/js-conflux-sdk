@@ -2,7 +2,7 @@ const crypto = require('crypto');
 const keccak = require('keccak');
 const secp256k1 = require('secp256k1');
 const { syncScrypt: scrypt } = require('scrypt-js');
-const { encode: rlpEncode } = require('../lib/rlp');
+const { encode: rlpEncode } = require('./rlp');
 
 // ----------------------------------------------------------------------------
 /**
@@ -182,53 +182,131 @@ function ecdsaRecover(hash, { r, s, v }) {
 }
 
 // ----------------------------------------------------------------------------
-/**
- * @param key {Buffer}
- * @param password {Buffer}
- * @param options {object}
- * @return {object} Encrypt info
- * - salt {Buffer}
- * - iv {Buffer}
- * - cipher {Buffer}
- * - mac {Buffer}
- * - algorithm {string}
- * - N {number}
- * - r {number}
- * - p {number}
- * - dkLen {number}
- */
-function encrypt(key, password, { algorithm = 'aes-128-ctr', N = 8192, r = 8, p = 1, dkLen = 32 } = {}) {
-  const salt = randomBuffer(32);
-  const iv = randomBuffer(16);
-  const derived = scrypt(password, salt, N, r, p, dkLen);
-  const cipher = crypto.createCipheriv(algorithm, derived.slice(0, 16), iv).update(key);
-  const mac = sha3(Buffer.concat([derived.slice(16, 32), cipher]));
-  return { algorithm, N, r, p, dkLen, salt, iv, cipher, mac };
+function uuidV4() {
+  return [4, 2, 2, 2, 6].map(randomBuffer).map(v => v.toString('hex')).join('-');
 }
 
 /**
- * @param options {object}
- * @param [options.algorithm='aes-128-ctr'] {string}
- * @param [options.N=8192] {number}
- * @param [options.r=8] {number}
- * @param [options.p=1] {number}
- * @param [options.dkLen=32] {number}
- * @param options.salt {Buffer}
- * @param options.iv {Buffer}
- * @param options.cipher {Buffer}
- * @param options.mac {Buffer}
- * @param password {Buffer}
- * @return {Buffer}
+ *
+ * @param privateKey {Buffer}
+ * @param password {string|Buffer}
+ * @return {object} - keystoreV3 object
+ *
+ * @example
+ * > encrypt(Buffer.from('0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef', 'hex'), 'password')
+ {
+    version: 3,
+    id: '0bb47ee0-aac3-a006-2717-03877afa15f0',
+    address: '1cad0b19bb29d4674531d6f115237e16afce377c',
+    crypto: {
+      ciphertext: 'a8ec41d2440311ce897bacb6f7942f3235113fa17c4ae6732e032336038a8f73',
+      cipherparams: { iv: '85b5e092c1c32129e3d27df8c581514d' },
+      cipher: 'aes-128-ctr',
+      kdf: 'scrypt',
+      kdfparams: {
+        dklen: 32,
+        salt: 'b662f09bdf6751ac599219732609dceac430bc0629a7906eaa1451555f051ebc',
+        n: 8192,
+        r: 8,
+        p: 1
+      },
+      mac: 'cc89df7ef6c27d284526a65cabf8e5042cdf1ec1aa4ee36dcf65b965fa34843d'
+    }
+  }
  */
-function decrypt({ algorithm = 'aes-128-ctr', N = 8192, r = 8, p = 1, dkLen = 32, salt, iv, cipher, mac }, password) {
-  const derived = scrypt(password, salt, N, r, p, dkLen);
-  if (!sha3(Buffer.concat([derived.slice(16, 32), cipher])).equals(mac)) {
+function encrypt(privateKey, password) {
+  const cipher = 'aes-128-ctr';
+  const n = 8192;
+  const r = 8;
+  const p = 1;
+  const dklen = 32;
+  const salt = randomBuffer(32);
+  const iv = randomBuffer(16);
+
+  password = Buffer.from(password);
+  const derived = scrypt(password, salt, n, r, p, dklen);
+  const ciphertext = crypto.createCipheriv(cipher, derived.slice(0, 16), iv).update(privateKey);
+  const mac = sha3(Buffer.concat([derived.slice(16, 32), ciphertext]));
+  const address = privateKeyToAddress(privateKey);
+
+  return {
+    version: 3,
+    id: uuidV4(),
+    address: address.toString('hex'),
+    crypto: {
+      ciphertext: ciphertext.toString('hex'),
+      cipherparams: { iv: iv.toString('hex') },
+      cipher,
+      kdf: 'scrypt',
+      kdfparams: { dklen, salt: salt.toString('hex'), n, r, p },
+      mac: mac.toString('hex'),
+    },
+  };
+}
+
+/**
+ * Decrypt account encrypt info.
+ *
+ * @param keystoreV3 {object}
+ * @param password {string|Buffer}
+ * @return {Buffer} Buffer of private key
+ *
+ * @example
+ * > decrypt({
+    version: 3,
+    id: '0bb47ee0-aac3-a006-2717-03877afa15f0',
+    address: '1cad0b19bb29d4674531d6f115237e16afce377c',
+    crypto: {
+      ciphertext: 'a8ec41d2440311ce897bacb6f7942f3235113fa17c4ae6732e032336038a8f73',
+      cipherparams: { iv: '85b5e092c1c32129e3d27df8c581514d' },
+      cipher: 'aes-128-ctr',
+      kdf: 'scrypt',
+      kdfparams: {
+        dklen: 32,
+        salt: 'b662f09bdf6751ac599219732609dceac430bc0629a7906eaa1451555f051ebc',
+        n: 8192,
+        r: 8,
+        p: 1
+      },
+      mac: 'cc89df7ef6c27d284526a65cabf8e5042cdf1ec1aa4ee36dcf65b965fa34843d'
+    }
+  }, 'password')
+ <Buffer 01 23 45 67 89 ab cd ef 01 23 45 67 89 ab cd ef 01 23 45 67 89 ab cd ef 01 23 45 67 89 ab cd ef>
+ */
+function decrypt({
+  version,
+  crypto: {
+    ciphertext,
+    cipherparams: { iv },
+    cipher,
+    kdf,
+    kdfparams: { dklen, salt, n, r, p },
+    mac,
+  },
+}, password) {
+  if (version !== 3) {
+    throw new Error('Not a valid V3 wallet');
+  }
+  if (kdf !== 'scrypt') {
+    throw new Error(`Unsupported kdf "${kdf}", only support "scrypt"`);
+  }
+
+  password = Buffer.from(password);
+  ciphertext = Buffer.from(ciphertext, 'hex');
+  iv = Buffer.from(iv, 'hex');
+  salt = Buffer.from(salt, 'hex');
+  mac = Buffer.from(mac, 'hex');
+
+  const derived = scrypt(password, salt, n, r, p, dklen);
+  if (!sha3(Buffer.concat([derived.slice(16, 32), ciphertext])).equals(mac)) {
     throw new Error('Key derivation failed, possibly wrong password!');
   }
-  return crypto.createDecipheriv(algorithm, derived.slice(0, 16), iv).update(cipher);
+  return crypto.createDecipheriv(cipher, derived.slice(0, 16), iv).update(ciphertext);
 }
 
 module.exports = {
+  rlpEncode,
+
   sha3,
   checksumAddress,
 
@@ -242,5 +320,4 @@ module.exports = {
 
   encrypt,
   decrypt,
-  rlpEncode,
 };

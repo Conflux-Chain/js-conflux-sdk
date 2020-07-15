@@ -27,7 +27,7 @@
     "big.js": "^5.2.2",
     "jsbi": "^3.1.1",
     "keccak": "^2.0.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "scrypt-js": "^3.0.1",
     "secp256k1": "^3.7.1",
     "superagent": "^5.1.0"
@@ -37,6 +37,7 @@
     "@babel/plugin-transform-runtime": "^7.8.3",
     "@babel/preset-env": "^7.8.4",
     "@geekberry/jsdoc-to-md": "^0.0.5",
+    "@types/node": "^14.0.23",
     "babel-plugin-lodash": "^3.3.4",
     "babelify": "^10.0.0",
     "browserify": "^16.5.1",
@@ -60,7 +61,7 @@
     "jest/jest-cli/jest-config/jest-environment-jsdom/jsdom/acorn-globals/acorn": "6.4.1"
   },
   "scripts": {
-    "eslint:fix": "eslint --fix ./src ./test ./mock",
+    "eslint": "eslint ./src ./test ./mock",
     "build": "node development/build-frontend.js",
     "document": "node document.js",
     "prepublishOnly": "npm run build",

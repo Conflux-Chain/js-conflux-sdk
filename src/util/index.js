@@ -48,19 +48,10 @@ async function loop({ delta = 1000, timeout = 30 * 1000 }, func) {
   throw new Error(`Timeout after ${Date.now() - startTime} ms`);
 }
 
-function decorate(instance, name, func) {
-  const method = instance[name];
-  instance[name] = (...params) => func(method.bind(instance), params);
+function decorate(func, callback) {
+  return function (...args) {
+    return callback(func.bind(this), ...args);
+  };
 }
 
-function uuidV4() {
-  return [
-    sign.randomBuffer(4),
-    sign.randomBuffer(2),
-    sign.randomBuffer(2),
-    sign.randomBuffer(2),
-    sign.randomBuffer(6),
-  ].map(buffer => buffer.toString('hex')).join('-');
-}
-
-module.exports = { sign, unit, format, assert, sleep, loop, decorate, uuidV4 };
+module.exports = { sign, unit, format, assert, sleep, loop, decorate };

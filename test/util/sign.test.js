@@ -1,5 +1,5 @@
-const format = require('../../src/util/format');
-const { util: { sign } } = require('../../src');
+const lodash = require('lodash');
+const { format, sign } = require('../../src/util');
 
 const {
   checksumAddress,
@@ -19,6 +19,7 @@ const {
 const KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 const PUBLIC = '0x4646ae5047316b4230d0086c8acec687f00b1cd9d1dc634f6cb358ac0a9a8ffffe77b4dd0a4bfb95851f3b7355c781dd60f8418fc8a65d14907aff47c903a559';
 const ADDRESS = '0x1cad0b19bb29d4674531d6f115237e16afce377c';
+const PASSWORD = 'password';
 
 test('checksumAddress', () => {
   expect(checksumAddress('0XFB6916095CA1DF60BB79CE92CE3EA74C37C5D359'))
@@ -67,15 +68,30 @@ test('privateKeyToAddress', () => {
 });
 
 test('encrypt and decrypt', () => {
-  const { salt, iv, cipher, mac } = encrypt(format.buffer(KEY), Buffer.from('password'));
+  const keystore = encrypt(format.buffer(KEY), PASSWORD);
 
-  expect(salt.length).toEqual(32);
-  expect(iv.length).toEqual(16);
-  expect(cipher.length).toEqual(32);
-  expect(mac.length).toEqual(32);
+  expect(keystore.version).toEqual(3);
+  expect(lodash.isString(keystore.id)).toEqual(true);
+  expect(/^[0-9a-f]{40}$/.test(keystore.address)).toEqual(true);
+  expect(lodash.isPlainObject(keystore.crypto)).toEqual(true);
+  expect(/^[0-9a-f]{64}$/.test(keystore.crypto.ciphertext)).toEqual(true);
 
-  const key = format.hex(decrypt({ salt, iv, cipher, mac }, Buffer.from('password')));
+  expect(lodash.isPlainObject(keystore.crypto.cipherparams)).toEqual(true);
+  expect(/^[0-9a-f]{32}$/.test(keystore.crypto.cipherparams.iv)).toEqual(true);
+  expect(keystore.crypto.cipher).toEqual('aes-128-ctr');
+  expect(keystore.crypto.kdf).toEqual('scrypt');
+  expect(lodash.isPlainObject(keystore.crypto.kdfparams)).toEqual(true);
+  expect(keystore.crypto.kdfparams.dklen).toEqual(32);
+  expect(/^[0-9a-f]{64}$/.test(keystore.crypto.kdfparams.salt)).toEqual(true);
+  expect(keystore.crypto.kdfparams.n).toEqual(8192);
+  expect(keystore.crypto.kdfparams.r).toEqual(8);
+  expect(keystore.crypto.kdfparams.p).toEqual(1);
+  expect(/^[0-9a-f]{64}$/.test(keystore.crypto.mac)).toEqual(true);
+
+  const key = format.hex(decrypt(keystore, PASSWORD));
   expect(key).toEqual(KEY);
+
+  expect(() => decrypt(keystore, 'WRONG_PASSWORD')).toThrow('Key derivation failed, possibly wrong password!');
 });
 
 test('ecdsaSign and ecdsaRecover', () => {

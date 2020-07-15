@@ -7,13 +7,14 @@ class RPCError extends Error {
 
 class BaseProvider {
   /**
-   * @param url {string} - Full json rpc http url
    * @param [options] {object}
+   * @param options.url {string} - Full json rpc http url
    * @param [options.timeout=60*1000] {number} - Request time out in ms
    * @param [options.logger] {object} - Logger with `info` and `error`
    * @return {BaseProvider}
    */
-  constructor(url, {
+  constructor({
+    url,
     timeout = 5 * 60 * 1000,
     logger = { info: () => undefined, error: () => undefined },
   } = {}) {

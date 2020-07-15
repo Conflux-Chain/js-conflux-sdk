@@ -6,14 +6,18 @@ const markdown = jsdocToMd(`${__dirname}/src`, {
   filter: filename => {
     const suffixArray = [
       'Conflux.js',
-      'Account.js',
-      'Contract.js',
       'Transaction.js',
       'Message.js',
 
+      'provider\\index.js',
       'provider\\BaseProvider.js',
       'provider\\HttpProvider.js',
       'provider\\WebsocketProvider.js',
+
+      'account\\index.js',
+      'account\\PrivateKeyAccount.js',
+
+      'contract\\Contract.js',
 
       'util\\format.js',
       'util\\sign.js',

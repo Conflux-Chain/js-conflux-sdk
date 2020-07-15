@@ -1,5 +1,5 @@
 const JSBI = require('jsbi');
-const format = require('../../src/util/format');
+const { format } = require('../../src/util');
 
 const HEX_64 = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 const HEX_40 = '0x0123456789012345678901234567890123456789';
@@ -75,15 +75,17 @@ test('uint', () => {
 });
 
 test('bigInt', () => {
+  expect(() => format.bigInt(false)).toThrow('false not match BigInt');
+  expect(() => format.bigInt(true)).toThrow('true not match BigInt');
   expect(() => format.bigInt(3.14)).toThrow('cannot be converted to');
   expect(() => format.bigInt('3.14')).toThrow('Cannot convert 3.14 to a BigInt');
+  expect(() => format.bigInt(Buffer.from([0, 1, 2]))).toThrow('not match BigInt');
   expect(format.bigInt('-1')).toEqual(JSBI.BigInt(-1));
   expect(format.bigInt('0')).toEqual(JSBI.BigInt(0));
   expect(format.bigInt(1)).toEqual(JSBI.BigInt(1));
   expect(format.bigInt(3.00)).toEqual(JSBI.BigInt(3));
   expect(format.bigInt('3.00')).toEqual(JSBI.BigInt(3));
   expect(format.bigInt('0x10')).toEqual(JSBI.BigInt(16));
-  expect(format.bigInt(Buffer.from([0, 1, 2]))).toEqual(JSBI.BigInt(0x102));
   expect(format.bigInt(Number.MAX_SAFE_INTEGER + 1)).toEqual(JSBI.BigInt(2 ** 53));
 });
 
@@ -97,12 +99,11 @@ test('bigUInt', () => {
 });
 
 test('hexUInt', () => {
-  expect(format.hexUInt(false)).toEqual('0x0');
-  expect(format.hexUInt(true)).toEqual('0x1');
   expect(format.hexUInt('')).toEqual('0x0');
   expect(format.hexUInt(100)).toEqual('0x64');
   expect(format.hexUInt('10')).toEqual('0xa');
-  expect(format.hexUInt(Buffer.from([0, 1, 2]))).toEqual('0x102');
+  expect(format.hexUInt('0x000a')).toEqual('0xa');
+  expect(() => format.hexUInt(Buffer.from([0, 1, 2]))).toThrow('not match BigInt');
   expect(() => format.hexUInt(3.50)).toThrow('cannot be converted to');
   expect(() => format.hexUInt(-0.5)).toThrow('cannot be converted to');
   expect(() => format.hexUInt(-1)).toThrow('not match bigUInt');
@@ -135,8 +136,8 @@ test('hex64', () => {
   expect(format.blockHash(HEX_64)).toEqual(HEX_64);
   expect(() => format.blockHash(HEX_40)).toThrow('not match hex64');
 
-  expect(format.txHash(HEX_64)).toEqual(HEX_64);
-  expect(() => format.txHash(HEX_40)).toThrow('not match hex64');
+  expect(format.transactionHash(HEX_64)).toEqual(HEX_64);
+  expect(() => format.transactionHash(HEX_40)).toThrow('not match hex64');
 });
 
 test('buffer', () => {

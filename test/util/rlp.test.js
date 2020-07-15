@@ -1,6 +1,6 @@
 const lodash = require('lodash');
-const format = require('../../src/util/format');
-const { encode } = require('../../src/lib/rlp');
+const { format } = require('../../src/util');
+const { encode } = require('../../src/util/rlp');
 
 test('zero', () => {
   const value = format.buffer(0);

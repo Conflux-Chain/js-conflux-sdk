@@ -1,5 +1,5 @@
 const JSBI = require('jsbi');
-const { formatSignature, FunctionCoder, EventCoder } = require('../../src/abi');
+const FunctionCoder = require('../../src/contract/FunctionCoder');
 
 test('function', () => {
   const abi = {
@@ -57,77 +57,9 @@ test('function', () => {
     '576f726c64000000000000000000000000000000000000000000000000000000';
 
   const coder = new FunctionCoder(abi);
-  expect(formatSignature(abi)).toEqual('func(int256,(address,string[]),((int256,int256),bool))');
   expect(coder.signature).toEqual('0x664b7e11');
+  expect(coder.type).toEqual('func(int256,(address,string[]),((int256,int256),bool))');
   expect(coder.encodeData(params)).toEqual(hex);
   expect(coder.decodeData(hex)).toEqual(params);
   expect(coder.decodeOutputs('0x0000000000000000000000000000000000000000000000000000000000000001')).toEqual(JSBI.BigInt(1));
-});
-
-test('event', () => {
-  const abi = {
-    name: 'EventName',
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        name: 'account',
-        type: 'address',
-      },
-      {
-        indexed: false,
-        name: 'number',
-        type: 'uint',
-      },
-    ],
-  };
-
-  const log = {
-    data: '0x000000000000000000000000000000000000000000000000000000000000000a',
-    topics: [
-      '0xb0333e0e3a6b99318e4e2e0d7e5e5f93646f9cbf62da1587955a4092bf7df6e7',
-      '0x0000000000000000000000000123456789012345678901234567890123456789',
-    ],
-  };
-
-  const coder = new EventCoder(abi);
-  expect(coder.signature).toEqual('0xb0333e0e3a6b99318e4e2e0d7e5e5f93646f9cbf62da1587955a4092bf7df6e7');
-
-  expect(coder.encodeTopics(['0x0123456789012345678901234567890123456789', null]))
-    .toEqual(['0x0000000000000000000000000123456789012345678901234567890123456789']);
-
-  expect(() => coder.encodeTopics(['0x0123456789012345678901234567890123456789']))
-    .toThrow('length not match');
-
-  expect([...coder.decodeLog(log)])
-    .toEqual(['0x0123456789012345678901234567890123456789', JSBI.BigInt(10)]);
-});
-
-test('event.anonymous', () => {
-  const abi = {
-    anonymous: true,
-    inputs: [
-      {
-        indexed: true,
-        name: 'account',
-        type: 'address',
-      },
-      {
-        indexed: false,
-        name: 'number',
-        type: 'uint',
-      },
-    ],
-  };
-
-  const log = {
-    data: '0x000000000000000000000000000000000000000000000000000000000000000a',
-    topics: [
-      '0x0000000000000000000000000123456789012345678901234567890123456789',
-    ],
-  };
-
-  const coder = new EventCoder(abi);
-  expect([...coder.decodeLog(log)])
-    .toEqual(['0x0123456789012345678901234567890123456789', JSBI.BigInt(10)]);
 });
