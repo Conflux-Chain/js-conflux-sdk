@@ -3,10 +3,9 @@
 const JSBI = require('jsbi');
 const lodash = require('lodash');
 const format = require('../../src/util/format');
-const HexStream = require('../../src/abi/HexStream');
-const getCoder = require('../../src/abi/coder');
-
-const MAX_UINT = JSBI.leftShift(JSBI.BigInt(1), JSBI.BigInt(32 * 8));
+const HexStream = require('../../src/util/HexStream');
+const abiCoder = require('../../src/abi');
+const { MAX_UINT, UINT_BOUND } = require('../../src/abi/util');
 
 function testEncode(coder, value, string) {
   const hex = format.hex(coder.encode(value));
@@ -28,11 +27,11 @@ function testEncodeAndDecode(coder, value, string) {
 
 // ============================================================================
 test('common', () => {
-  expect(() => getCoder({ type: 'invalidType' })).toThrow('can not found matched coder');
+  expect(() => abiCoder({ type: 'invalidType' })).toThrow('can not found matched coder');
 });
 
 test('null', () => {
-  const coder = getCoder({ type: '' });
+  const coder = abiCoder({ type: '' });
 
   expect(coder.constructor.name).toEqual('NullCoder');
   expect(coder.type).toEqual('null');
@@ -42,7 +41,7 @@ test('null', () => {
 });
 
 test('bool', () => {
-  const coder = getCoder({ type: 'bool' });
+  const coder = abiCoder({ type: 'bool' });
   expect(coder.constructor.name).toEqual('BoolCoder');
   expect(coder.type).toEqual('bool');
 
@@ -55,7 +54,7 @@ test('bool', () => {
 });
 
 test('address', () => {
-  const coder = getCoder({ type: 'address' });
+  const coder = abiCoder({ type: 'address' });
   expect(coder.constructor.name).toEqual('AddressCoder');
   expect(coder.type).toEqual('address');
 
@@ -70,11 +69,11 @@ test('address', () => {
 
 describe('number', () => {
   test('bits error', () => {
-    expect(() => getCoder({ type: 'int100' })).toThrow('invalid bits');
+    expect(() => abiCoder({ type: 'int100' })).toThrow('invalid bits');
   });
 
   test('int8', () => {
-    const coder = getCoder({ type: 'int8' });
+    const coder = abiCoder({ type: 'int8' });
     expect(coder.constructor.name).toEqual('IntegerCoder');
     expect(coder.type).toEqual('int8');
     expect(coder.signed).toEqual(true);
@@ -94,7 +93,7 @@ describe('number', () => {
   });
 
   test('uint8', () => {
-    const coder = getCoder({ type: 'uint8' });
+    const coder = abiCoder({ type: 'uint8' });
     expect(coder.constructor.name).toEqual('IntegerCoder');
     expect(coder.type).toEqual('uint8');
     expect(coder.signed).toEqual(false);
@@ -110,7 +109,7 @@ describe('number', () => {
   });
 
   test('int', () => {
-    const coder = getCoder({ type: 'int' });
+    const coder = abiCoder({ type: 'int' });
     expect(coder.constructor.name).toEqual('IntegerCoder');
     expect(coder.type).toEqual('int256');
     expect(coder.signed).toEqual(true);
@@ -123,26 +122,26 @@ describe('number', () => {
   });
 
   test('uint', () => {
-    const coder = getCoder({ type: 'uint' });
+    const coder = abiCoder({ type: 'uint' });
     expect(coder.constructor.name).toEqual('IntegerCoder');
     expect(coder.type).toEqual('uint256');
     expect(coder.signed).toEqual(false);
     expect(coder.size).toEqual(32);
 
     expect(() => coder.encode(-1)).toThrow();
-    expect(() => coder.encode(MAX_UINT)).toThrow();
+    expect(() => coder.encode(UINT_BOUND)).toThrow();
 
-    testEncodeAndDecode(coder, JSBI.subtract(MAX_UINT, JSBI.BigInt(1)), '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
+    testEncodeAndDecode(coder, MAX_UINT, '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
   });
 });
 
 describe('bytes', () => {
   test('size error', () => {
-    expect(() => getCoder({ type: 'bytes100' })).toThrow('invalid size');
+    expect(() => abiCoder({ type: 'bytes100' })).toThrow('invalid size');
   });
 
   test('bytesN', () => {
-    const coder = getCoder({ type: 'bytes4' });
+    const coder = abiCoder({ type: 'bytes4' });
     expect(coder.constructor.name).toEqual('BytesCoder');
     expect(coder.type).toEqual('bytes4');
     expect(coder.size).toEqual(4);
@@ -156,7 +155,7 @@ describe('bytes', () => {
   });
 
   test('bytes', () => {
-    const coder = getCoder({ type: 'bytes' });
+    const coder = abiCoder({ type: 'bytes' });
     expect(coder.constructor.name).toEqual('BytesCoder');
     expect(coder.type).toEqual('bytes');
     expect(coder.size).toEqual(undefined);
@@ -180,7 +179,7 @@ describe('bytes', () => {
 });
 
 test('string', () => {
-  const coder = getCoder({ type: 'string' });
+  const coder = abiCoder({ type: 'string' });
   expect(coder.constructor.name).toEqual('StringCoder');
   expect(coder.type).toEqual('string');
 
@@ -199,11 +198,11 @@ test('string', () => {
 
 describe('array', () => {
   test('common', () => {
-    expect(() => getCoder({ type: 'uint8[0]' })).toThrow('invalid size');
+    expect(() => abiCoder({ type: 'uint8[0]' })).toThrow('invalid size');
   });
 
   test('static[N]', () => {
-    const coder = getCoder({ type: 'uint8[2]' });
+    const coder = abiCoder({ type: 'uint8[2]' });
     expect(coder.constructor.name).toEqual('ArrayCoder');
     expect(coder.type).toEqual('uint8[2]');
     expect(coder.size).toEqual(2);
@@ -224,7 +223,7 @@ describe('array', () => {
   });
 
   test('static[]', () => {
-    const coder = getCoder({ type: 'uint8[]' });
+    const coder = abiCoder({ type: 'uint8[]' });
     expect(coder.constructor.name).toEqual('ArrayCoder');
     expect(coder.type).toEqual('uint8[]');
     expect(coder.size).toEqual(undefined);
@@ -238,7 +237,7 @@ describe('array', () => {
   });
 
   test('dynamic[N]', () => {
-    const coder = getCoder({ type: 'string[2]' });
+    const coder = abiCoder({ type: 'string[2]' });
     expect(coder.constructor.name).toEqual('ArrayCoder');
     expect(coder.type).toEqual('string[2]');
     expect(coder.size).toEqual(2);
@@ -255,7 +254,7 @@ describe('array', () => {
   });
 
   test('dynamic[]', () => {
-    const coder = getCoder({ type: 'string[]' });
+    const coder = abiCoder({ type: 'string[]' });
     expect(coder.constructor.name).toEqual('ArrayCoder');
     expect(coder.type).toEqual('string[]');
     expect(coder.size).toEqual(undefined);
@@ -275,11 +274,11 @@ describe('array', () => {
 
 describe('tuple', () => {
   test('common', () => {
-    expect(() => getCoder({ type: 'tuple' })).toThrow();
+    expect(() => abiCoder({ type: 'tuple' })).toThrow();
   });
 
   test('tuple(static)', () => {
-    const coder = getCoder({
+    const coder = abiCoder({
       type: 'tuple',
       components: [
         { name: 'age', type: 'uint' },
@@ -310,7 +309,7 @@ describe('tuple', () => {
   });
 
   test('tuple(dynamic)', () => {
-    const coder = getCoder({
+    const coder = abiCoder({
       type: 'tuple',
       components: [
         { name: 'age', type: 'uint' },
@@ -331,7 +330,7 @@ describe('tuple', () => {
   });
 
   test('tuple stream index error', () => {
-    const coder = getCoder({
+    const coder = abiCoder({
       type: 'tuple',
       components: [
         { name: 'age', type: 'uint' },
@@ -348,7 +347,7 @@ describe('tuple', () => {
   });
 
   test('tuple(tuple)', () => {
-    const coder = getCoder({
+    const coder = abiCoder({
       type: 'tuple',
       components: [
         { name: 'age', type: 'uint' },
@@ -391,7 +390,7 @@ describe('tuple', () => {
   });
 
   test('tuple(uint,uint32[],string,bytes10)', () => {
-    const coder = getCoder({
+    const coder = abiCoder({
       type: 'tuple',
       components: [
         { type: 'uint' },
@@ -424,7 +423,7 @@ describe('tuple', () => {
 });
 
 test('array(tuple)', () => {
-  const coder = getCoder({
+  const coder = abiCoder({
     type: 'tuple[]',
     components: [
       { name: 'age', type: 'uint' },

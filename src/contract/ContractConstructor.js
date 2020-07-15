@@ -2,8 +2,8 @@ const lodash = require('lodash');
 const ContractMethod = require('./ContractMethod');
 
 class ContractConstructor extends ContractMethod {
-  constructor(cfx, contract, fragment, bytecode) {
-    super(cfx, contract, lodash.defaults(fragment, { name: 'constructor', inputs: [] }));
+  constructor(fragment, bytecode, contract, conflux) {
+    super(lodash.defaults(fragment, { name: 'constructor', inputs: [] }), contract, conflux);
 
     this.bytecode = bytecode;
     this.decodeOutputs = hex => hex;
@@ -22,7 +22,9 @@ class ContractConstructor extends ContractMethod {
       throw new Error('bytecode is empty');
     }
 
-    return super.call(...args);
+    const called = super.call(...args);
+    called.to = null;
+    return called;
   }
 }
 

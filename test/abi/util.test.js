@@ -1,6 +1,5 @@
 const format = require('../../src/util/format');
-const HexStream = require('../../src/abi/HexStream');
-const { padBuffer } = require('../../src/abi/coder');
+const { padBuffer } = require('../../src/abi/util');
 
 test('padBuffer', () => {
   const buffer0 = padBuffer('0x');
@@ -20,16 +19,4 @@ test('padBuffer', () => {
     '00000000000000000000000000000000000000000000000000000000000000ff' +
     '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef',
   );
-});
-
-test('HexStream', () => {
-  const stream = new HexStream(
-    'a000000000000000000000000000000000000000000000000000000000000001' +
-    'b000000000000000000000000000000000000000000000000000000000000002',
-  );
-
-  expect(stream.read(0)).toEqual('');
-  expect(stream.read(2)).toEqual('01');
-  expect(stream.read(2, true)).toEqual('b0');
-  expect(() => stream.read(2)).toThrow('length not match');
 });

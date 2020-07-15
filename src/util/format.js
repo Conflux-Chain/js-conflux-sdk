@@ -1,9 +1,9 @@
 const JSBI = require('jsbi');
 const Big = require('big.js');
 const lodash = require('lodash');
-const Parser = require('../lib/parser');
+const Parser = require('./parser');
 
-const MAX_UINT_256 = JSBI.BigInt('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
+const MAX_UINT = JSBI.BigInt('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
 
 // https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/BigInt
 JSBI.prototype.toJSON = function () {
@@ -44,10 +44,12 @@ function toNumber(value) {
 }
 
 function toBigInt(value) {
-  if (Buffer.isBuffer(value)) {
-    value = `0x${value.toString('hex')}`;
-  } else if (lodash.isString(value)) {
-    value = value.replace(/^(-?\d+)(.0+)?$/, '$1');
+  if (lodash.isString(value)) {
+    value = value.replace(/^(-?\d+)(.0+)?$/, '$1'); // replace "number.000" to "number"
+  } else if (lodash.isBoolean(value)) {
+    throw new Error(`${value} not match BigInt`);
+  } else if (Buffer.isBuffer(value)) {
+    throw new Error(`${value} not match BigInt`);
   }
   return JSBI.BigInt(value);
 }
@@ -182,7 +184,7 @@ format.hexUInt = format.bigUInt
  * > format.riskNumber('0xe666666666666666666666666666666666666666666666666666666666666665')
  0.9
  */
-format.riskNumber = format.bigUInt.parse(v => Number(Big(v).div(MAX_UINT_256))).or(null);
+format.riskNumber = format.bigUInt.parse(v => Number(Big(v).div(MAX_UINT))).or(null);
 
 /**
  * @param arg {number|string} - number or string in ['latest_state', 'latest_mined']
@@ -267,7 +269,7 @@ format.blockHash = format.hex64; // alias
  * > format.privateKey('0x0123456789012345678901234567890123456789')
  Error("not match hex64")
  */
-format.txHash = format.hex64; // alias
+format.transactionHash = format.hex64; // alias
 
 /**
  * @param arg {number|JSBI|string|Buffer|boolean|null}
@@ -315,6 +317,70 @@ format.bytes = Parser(v => (Buffer.isBuffer(v) ? v : Buffer.from(v)));
  */
 format.boolean = format.any.validate(lodash.isBoolean, 'boolean');
 
+// -------------------------- format method arguments -------------------------
+format.getLogs = Parser({
+  limit: format.hexUInt.or(undefined),
+  fromEpoch: format.epochNumber.or(undefined),
+  toEpoch: format.epochNumber.or(undefined),
+  blockHashes: format.blockHash.or([format.blockHash]).or(undefined),
+  address: format.address.or([format.address]).or(undefined),
+  topics: Parser([format.hex64.or([format.hex64]).or(null)]).or(undefined),
+}, true);
+
+format.signTx = Parser({
+  nonce: format.hexUInt.parse(format.buffer),
+  gasPrice: format.hexUInt.parse(format.buffer),
+  gas: format.hexUInt.parse(format.buffer),
+  to: Parser(format.address.or(null).default(null)).parse(format.buffer),
+  value: format.hexUInt.default(0).parse(format.buffer),
+  storageLimit: format.hexUInt.parse(format.buffer),
+  epochHeight: format.uInt.parse(format.buffer),
+  chainId: format.uInt.default(0).parse(format.buffer),
+  data: format.hex.default('0x').parse(format.buffer),
+  r: format.hexUInt.parse(format.buffer).or(undefined),
+  s: format.hexUInt.parse(format.buffer).or(undefined),
+  v: format.uInt.parse(format.buffer).or(undefined),
+}, true);
+
+format.sendTx = Parser({
+  from: format.address,
+  nonce: format.hexUInt.or(undefined),
+  gasPrice: format.hexUInt,
+  gas: format.hexUInt,
+  to: format.address.or(null).or(undefined),
+  value: format.hexUInt.or(undefined),
+  storageLimit: format.hexUInt,
+  epochHeight: format.hexUInt.or(undefined),
+  chainId: format.hexUInt.or(undefined),
+  data: format.hex.or(undefined),
+}, true);
+
+format.callTx = Parser({
+  from: format.address.or(undefined),
+  nonce: format.hexUInt.or(undefined),
+  gasPrice: format.hexUInt.or(undefined),
+  gas: format.hexUInt.or(undefined),
+  to: format.address.or(null),
+  value: format.hexUInt.or(undefined),
+  storageLimit: format.hexUInt.or(undefined),
+  epochHeight: format.uInt.or(undefined),
+  chainId: format.uInt.or(undefined),
+  data: format.hex.or(undefined),
+}, true);
+
+format.estimateTx = Parser({
+  from: format.address.or(undefined),
+  nonce: format.hexUInt.or(undefined),
+  gasPrice: format.hexUInt.or(undefined),
+  gas: format.hexUInt.or(undefined),
+  to: format.address.or(null).or(undefined),
+  value: format.hexUInt.or(undefined),
+  storageLimit: format.hexUInt.or(undefined),
+  epochHeight: format.uInt.or(undefined),
+  chainId: format.uInt.or(undefined),
+  data: format.hex.or(undefined),
+}, true);
+
 // ----------------------------- parse rpc returned ---------------------------
 format.status = Parser({
   chainId: format.uInt,
@@ -323,8 +389,16 @@ format.status = Parser({
   pendingTxNumber: format.uInt,
 });
 
+format.account = Parser({
+  accumulatedInterestReturn: format.bigUInt,
+  balance: format.bigUInt,
+  collateralForStorage: format.bigUInt,
+  nonce: format.bigUInt,
+  stakingBalance: format.bigUInt,
+});
+
 format.transaction = Parser({
-  nonce: format.uInt,
+  nonce: format.bigUInt,
   value: format.bigUInt,
   gasPrice: format.bigUInt,
   gas: format.bigUInt,
@@ -342,14 +416,14 @@ format.estimate = Parser({
 });
 
 format.block = Parser({
-  epochNumber: format.uInt.or(null), // FIXME null for getBlockByEpochNumber(0)
+  epochNumber: format.uInt,
   blame: format.uInt,
   height: format.uInt,
   size: format.uInt,
   timestamp: format.uInt,
   gasLimit: format.bigUInt,
   difficulty: format.bigUInt,
-  transactions: [(format.transaction).or(format.txHash)],
+  transactions: [(format.transaction).or(format.transactionHash)],
 });
 
 format.receipt = Parser({
@@ -369,69 +443,10 @@ format.logs = Parser([
   },
 ]);
 
-// -------------------------- format method arguments -------------------------
-format.getLogs = Parser({
-  limit: format.hexUInt.or(undefined),
-  fromEpoch: format.epochNumber.or(undefined),
-  toEpoch: format.epochNumber.or(undefined),
-  blockHashes: format.blockHash.or([format.blockHash]).or(undefined),
-  address: format.address.or([format.address]).or(undefined),
-  topics: Parser([format.hex64.or([format.hex64]).or(null)]).or(undefined),
-});
-
-// FIXME: accept null ?
-format.signTx = Parser({
-  nonce: format.hexUInt.parse(format.buffer),
-  gasPrice: format.hexUInt.parse(format.buffer),
-  gas: format.hexUInt.parse(format.buffer),
-  to: Parser(format.address.or(null).default(null)).parse(format.buffer),
-  value: format.hexUInt.default(0).parse(format.buffer),
-  storageLimit: format.hexUInt.parse(format.buffer),
-  epochHeight: format.uInt.parse(format.buffer),
-  chainId: format.uInt.default(0).parse(format.buffer),
-  data: format.hex.default('0x').parse(format.buffer),
-  r: format.hexUInt.parse(format.buffer).or(undefined),
-  s: format.hexUInt.parse(format.buffer).or(undefined),
-  v: format.uInt.parse(format.buffer).or(undefined),
-});
-
-format.sendTx = Parser({
-  from: format.address,
-  nonce: format.hexUInt,
-  gasPrice: format.hexUInt,
-  gas: format.hexUInt,
-  to: format.address.or(null).or(undefined),
-  value: format.hexUInt.or(undefined),
-  storageLimit: format.hexUInt,
-  epochHeight: format.hexUInt,
-  chainId: format.hexUInt,
-  data: format.hex.or(undefined),
-});
-
-format.callTx = Parser({
-  from: format.address.or(undefined),
-  nonce: format.hexUInt.or(undefined),
-  gasPrice: format.hexUInt.or(undefined),
-  gas: format.hexUInt.or(undefined),
-  to: format.address.or(null),
-  value: format.hexUInt.or(undefined),
-  storageLimit: format.hexUInt.or(undefined),
-  epochHeight: format.uInt.or(undefined),
-  chainId: format.uInt.or(undefined),
-  data: format.hex.or(undefined),
-});
-
-format.estimateTx = Parser({
-  from: format.address.or(undefined),
-  nonce: format.hexUInt.or(undefined),
-  gasPrice: format.hexUInt.or(undefined),
-  gas: format.hexUInt.or(undefined),
-  to: format.address.or(null).or(undefined),
-  value: format.hexUInt.or(undefined),
-  storageLimit: format.hexUInt.or(undefined),
-  epochHeight: format.uInt.or(undefined),
-  chainId: format.uInt.or(undefined),
-  data: format.hex.or(undefined),
+format.sponsorInfo = Parser({
+  sponsorBalanceForCollateral: format.bigUInt,
+  sponsorBalanceForGas: format.bigUInt,
+  sponsorGasBound: format.bigUInt,
 });
 
 module.exports = format;

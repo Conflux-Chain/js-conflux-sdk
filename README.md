@@ -18,14 +18,12 @@ const { Conflux } = require('js-conflux-sdk');
 
 async function main() {
   // initalize a Conflux object
-  const cfx = new Conflux({
+  const conflux = new Conflux({
     url: 'http://testnet-jsonrpc.conflux-chain.org:12537',
-    defaultGasPrice: 100,
-    defaultGas: 1000000,
     logger: console,
   });
   // get balance
-  const balance = await cfx.getBalance('0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b');
+  const balance = await conflux.getBalance('0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b');
   console.log(balance); // 937499420597305000n
 }
 
@@ -55,10 +53,8 @@ or
 ``` html
 <script type="text/javascript" src="node_modules/js-conflux-sdk/dist/js-conflux-sdk.umd.min.js"></script>
 <script type="text/javascript">
-  const cfx = new window.Conflux.Conflux({
+  const conflux = new window.Conflux.Conflux({
     url: 'http://testnet-jsonrpc.conflux-chain.org:12537',
-    defaultGasPrice: 100,
-    defaultGas: 1000000,
     logger: console,
   });
 </script>
@@ -70,14 +66,14 @@ or
 If you want send a transaction to conflux network, you can use the SDK's `sendTransaction` method, for example:
 
 ```js
-const account = cfx.Account(PRIVATE_KEY); // create account instance
-const txHash = await cfx.sendTransaction({
+const account = conflux.Account({ privateKey: PRIVATE_KEY }); // create account instance
+const txHash = await conflux.sendTransaction({
     from: account, // from account instance and will by sign by account.privateKey
     to: "0x-another-address", // accept address string or account instance
     value: util.unit.fromCFXToDrip(0.125), // use unit to transfer from CFX to Drip
 });
-const tx = await cfx.getTransactionByHash(txHash);  // status 0x0 means success
-const txReceipt = await cfx.getTransactionReceipt(txHash);  // outcomeStatus 0x0 means success
+const tx = await conflux.getTransactionByHash(txHash);  // status 0x0 means success
+const txReceipt = await conflux.getTransactionReceipt(txHash);  // outcomeStatus 0x0 means success
 ```
 That's it, it's so easy. Besides `from`, `to`, `value` there are other fields you can set and should know:
 
@@ -105,11 +101,11 @@ let txParameters = {
   to: "0x-a-address",
   value: "0x100"
 };
-const txHash = await cfx.sendTransaction(txParameters);  // send the tx and return a hash
-const tx = await cfx.sendTransaction(txParameters).get();  // will also get the tx by hash
-const tx = await cfx.sendTransaction(txParameters).mined();  // wait tx mined and return the tx
-const receipt = await cfx.sendTransaction(txParameters).executed();  // wait tx executed and return receipt
-const receipt = await cfx.sendTransaction(txParameters).confirmed();  // wait tx confirmed and return receipt
+const txHash = await conflux.sendTransaction(txParameters);  // send the tx and return a hash
+const tx = await conflux.sendTransaction(txParameters).get();  // will also get the tx by hash
+const tx = await conflux.sendTransaction(txParameters).mined();  // wait tx mined and return the tx
+const receipt = await conflux.sendTransaction(txParameters).executed();  // wait tx executed and return receipt
+const receipt = await conflux.sendTransaction(txParameters).confirmed();  // wait tx confirmed and return receipt
 ```
 
 ### Deploy or interact with contract
@@ -118,20 +114,22 @@ When deploy a contract you need contract's `bytecode` and `abi`
 
 ```js
 // create contract instance
-const contract = cfx.Contract({
+const contract = conflux.Contract({
   abi: USER_YOUR_CONTRACT_ABI,
   bytecode: USER_YOUR_CONTRACT_BYTECODE,
 });
+
 // deploy the contract, and get `contractCreated`
-const receipt = await contract.constructor()  // fill the parameter to your constructor
-  .sendTransaction({ from: account })  // you can set other tx parameters such as: gas, gasPrice, storageLimit and so on (leave `to` empty)
-  .confirmed();
+const receipt = await account.sendTransaction(
+  contract.constructor(...args) // fill the parameter to your constructor
+    .options({ from: account }) // you can set other tx parameters such as: gas, gasPrice, storageLimit and so on (leave `to` empty)
+).confirmed(); 
 console.log(receipt); // contract address is receipt.contractCreated
 ```
 
 With a deployed contract's address and abi, you can interact with it: query or change contract state.
 ```js
-const contract = cfx.Contract({
+const contract = conflux.Contract({
     abi: YOUR_CONTRACT_ABI,
     address: 'YOUR-CONTRACT-ADDRESS',
 });
@@ -139,9 +137,8 @@ const contract = cfx.Contract({
 let ret = await contract.get(); // `get` is a method of your contract
 console.log(ret.toString()); 
 // change contract state by send a transaction
-const receipt = await contract.inc(1).sendTransaction({  // `inc` is also your contract's method 
-  from: account,  // you can set other tx parameter such as `gas`, `gasPrice`, `storageLimit` and so on
-}).confirmed();
+
+const receipt = await account.sendTransaction(contract.inc(1)).confirmed(); // `inc` is also your contract's method 
 ```
 
 ## Document

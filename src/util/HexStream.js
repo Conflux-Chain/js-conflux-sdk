@@ -1,4 +1,4 @@
-const { assert } = require('../util');
+const { assert } = require('./index');
 
 const WORD_CHARS = 64;
 

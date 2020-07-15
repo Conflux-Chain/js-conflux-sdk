@@ -49,8 +49,8 @@ function mockTxHashArray(self, blockHash) {
   );
 }
 
-function mockTxByHash(self, txHash) {
-  const { epochNumber, blockIndex, transactionIndex } = txHashStruct.decode(txHash);
+function mockTxByHash(self, transactionHash) {
+  const { epochNumber, blockIndex, transactionIndex } = txHashStruct.decode(transactionHash);
 
   const blockCount = epochNumber * self.epochBlockCount + blockIndex;
   const txCount = blockCount * self.blockTxCount + transactionIndex;
@@ -79,8 +79,8 @@ function mockLogsByEpochNumber(self, epochNumber, [topic] = []) {
     return [];
   }
 
-  const [txHash] = mockTxHashArray(self, blockHash);
-  if (!txHash) {
+  const [transactionHash] = mockTxHashArray(self, blockHash);
+  if (!transactionHash) {
     return [];
   }
 
@@ -96,7 +96,7 @@ function mockLogsByEpochNumber(self, epochNumber, [topic] = []) {
         topic || randomHex(64),
         randomHex(64),
       ],
-      transactionHash: txHash,
+      transactionHash,
       transactionIndex: toHex(0),
       transactionLogIndex: toHex(index),
       type: 'mined',
@@ -144,20 +144,6 @@ class MockProvider {
     return randomHex(2);
   }
 
-  cfx_epochNumber() {
-    return toHex(Number.MAX_SAFE_INTEGER);
-  }
-
-  cfx_getLogs({ fromEpoch, topics }) {
-    const epochNumber = Number(fromEpoch); // Number or NaN
-
-    if (Number.isInteger(epochNumber)) {
-      return mockLogsByEpochNumber(this, epochNumber, topics);
-    }
-
-    return [];
-  }
-
   // ------------------------------- address ----------------------------------
   cfx_getBalance(address, epochNumber) {
     return Number(epochNumber) ? randomHex(8) : '0x0';
@@ -172,7 +158,15 @@ class MockProvider {
     return toHex(Math.floor(number));
   }
 
+  cfx_getAdmin(address, epochNumber) {
+    return Number(epochNumber) ? randomHex(40) : null;
+  }
+
   // -------------------------------- epoch -----------------------------------
+  cfx_epochNumber() {
+    return toHex(Number.MAX_SAFE_INTEGER);
+  }
+
   cfx_getBlockByEpochNumber(epochNumber, detail) {
     const blockHashArray = this.cfx_getBlocksByEpoch(epochNumber);
     return this.cfx_getBlockByHash(lodash.last(blockHashArray), detail);
@@ -192,7 +186,7 @@ class MockProvider {
 
     let transactions = mockTxHashArray(this, blockHash);
     if (detail) {
-      transactions = transactions.map(txHash => this.cfx_getTransactionByHash(txHash));
+      transactions = transactions.map(transactionHash => this.cfx_getTransactionByHash(transactionHash));
     }
 
     return {
@@ -226,15 +220,19 @@ class MockProvider {
 
     const block = this.cfx_getBlockByHash(blockHash, true);
     block.stable = randomPick(true, false);
-    block.transactions.forEach(tx => {
-      tx.status = randomPick('0x0', '0x01');
+    block.transactions.forEach(transaction => {
+      transaction.status = randomPick('0x0', '0x01');
     });
     return block;
   }
 
+  cfx_getConfirmationRiskByHash() {
+    return randomHex(64);
+  }
+
   // ----------------------------- transaction --------------------------------
-  cfx_getTransactionByHash(txHash) {
-    const { epochNumber, blockHash, from, nonce, to, transactionIndex, status } = mockTxByHash(this, txHash);
+  cfx_getTransactionByHash(transactionHash) {
+    const { epochNumber, blockHash, from, nonce, to, transactionIndex, status } = mockTxByHash(this, transactionHash);
 
     return {
       blockHash,
@@ -243,7 +241,7 @@ class MockProvider {
       from,
       gas: randomHex(5), // gasLimit
       gasPrice: randomHex(2),
-      hash: txHash,
+      hash: transactionHash,
       nonce,
       r: randomHex(64),
       s: randomHex(64),
@@ -258,9 +256,9 @@ class MockProvider {
     };
   }
 
-  cfx_getTransactionReceipt(txHash) {
-    const { blockHash, from, to, transactionIndex, status } = mockTxByHash(this, txHash);
-    const { epochNumber } = mockBlockByHash(this, txHash);
+  cfx_getTransactionReceipt(transactionHash) {
+    const { blockHash, from, to, transactionIndex, status } = mockTxByHash(this, transactionHash);
+    const { epochNumber } = mockBlockByHash(this, transactionHash);
 
     return {
       blockHash,
@@ -275,20 +273,25 @@ class MockProvider {
       outcomeStatus: status === null ? null : toHex(status),
       stateRoot: randomHex(64),
       to,
-      transactionHash: txHash,
+      transactionHash,
     };
-  }
-
-  cfx_sendTransaction() {
-    return randomHex(64);
   }
 
   cfx_sendRawTransaction() {
     return randomHex(64);
   }
 
+  cfx_sendTransaction() {
+    return randomHex(64);
+  }
+
+  // ------------------------------ contract ----------------------------------
   cfx_getCode() {
     return randomHex(100);
+  }
+
+  cfx_getCollateralForStorage() {
+    return randomHex(10);
   }
 
   cfx_call() {
@@ -302,8 +305,14 @@ class MockProvider {
     };
   }
 
-  cfx_getConfirmationRiskByHash() {
-    return randomHex(64);
+  cfx_getLogs({ fromEpoch, topics }) {
+    const epochNumber = Number(fromEpoch); // Number or NaN
+
+    if (Number.isInteger(epochNumber)) {
+      return mockLogsByEpochNumber(this, epochNumber, topics);
+    }
+
+    return [];
   }
 }
 
