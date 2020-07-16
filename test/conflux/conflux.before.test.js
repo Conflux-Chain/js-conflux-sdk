@@ -342,7 +342,7 @@ test('sendTransaction by AUTO', async () => {
     value: 0,
     data: '0x',
   }, SEND_TX_PWD);
-  expect(call).toHaveBeenLastCalledWith('send_transaction', {
+  expect(call).toHaveBeenLastCalledWith('cfx_sendTransaction', {
     from: ADDRESS,
     nonce: '0x64',
     gasPrice: format.hexUInt(cfx.defaultGasPrice),
