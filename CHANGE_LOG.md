@@ -1,5 +1,9 @@
 # change log
 
+## v0.13.4
+
+* rename `send_transaction` to `cfx_sendTransaction`
+
 ## v0.13.3
 
 * Account.encrypt returned address drop '0x' prefix
