@@ -81,7 +81,7 @@ test('signMessage', async () => {
   expect(message.signature).toEqual('0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01');
 
   account.privateKey = sign.randomPrivateKey();
-  await expect(account.signMessage('Hello World')).rejects.toThrow('Invalid sign message.from');
+  expect(() => account.signMessage('Hello World')).toThrow('Invalid sign message.from');
 });
 
 test('signTransaction', async () => {
@@ -100,31 +100,12 @@ test('signTransaction', async () => {
   expect(transaction.from).toEqual(ADDRESS);
 
   account.privateKey = sign.randomPrivateKey();
-  await expect(account.signTransaction(options)).rejects.toThrow('Invalid sign transaction.from');
+  expect(() => account.signTransaction(options)).toThrow('Invalid sign transaction.from');
 });
 
 // ----------------------------------------------------------------------------
-test('conflux.Account({privateKey})', () => {
-  expect(() => conflux.Account({})).toThrow('Invalid account options');
-
-  const account = conflux.Account({ privateKey: PRIVATE_KEY });
-
-  expect(account.conflux).not.toEqual(undefined);
-  expect(account instanceof PrivateKeyAccount).toEqual(true);
-  expect(account.privateKey).toEqual(PRIVATE_KEY);
-  expect(account.publicKey).toEqual(PUBLIC_KEY);
-  expect(account.address).toEqual(ADDRESS);
-  expect(`${account}`).toEqual(ADDRESS);
-});
-
-test('conflux.Account({keystore,password})', () => {
-  const account = conflux.Account({ keystore: KEYSTORE, password: PASSWORD });
-  expect(account.privateKey).toEqual(PRIVATE_KEY);
-  expect(account.address).toEqual(ADDRESS);
-});
-
 test('sendTransaction', async () => {
-  const account = conflux.Account({ privateKey: PRIVATE_KEY });
+  const account = new PrivateKeyAccount(PRIVATE_KEY, conflux);
 
   const call = jest.spyOn(conflux.provider, 'call');
 
@@ -145,8 +126,8 @@ test('sendTransaction', async () => {
   call.mockRestore();
 });
 
-test('PrivateKeyAccount.sendTransaction AUTO', async () => {
-  const account = conflux.Account({ privateKey: PRIVATE_KEY });
+test('sendTransaction AUTO', async () => {
+  const account = new PrivateKeyAccount(PRIVATE_KEY, conflux);
 
   const getNextNonce = jest.spyOn(conflux, 'getNextNonce');
   getNextNonce.mockReturnValue(100);

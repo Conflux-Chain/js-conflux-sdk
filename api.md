@@ -27,6 +27,9 @@ keywords:
         - [HttpProvider](#provider/HttpProvider.js/HttpProvider)
     - index.js
         - [providerFactory](#provider/index.js/providerFactory)
+- subscribe
+    - PendingTransaction.js
+        - [PendingTransaction](#subscribe/PendingTransaction.js/PendingTransaction)
 - Transaction.js
     - [Transaction](#Transaction.js/Transaction)
 - util
@@ -52,18 +55,18 @@ keywords:
 * **Parameters**
 
 Name               | Type            | Required | Default | Description
--------------------|-----------------|----------|---------|--------------------------------------------
+-------------------|-----------------|----------|---------|----------------------------------------------------------------------
 options            | `object`        | true     |         |
 options.privateKey | `string,Buffer` | false    |         | Private key of account
 options.keystore   | `object`        | false    |         | Keystore version 3 to decode private key
 options.password   | `string,Buffer` | false    |         | Password of keystore
-options.random     | `boolean`       | false    |         | Is gen account private key by random Buffer
+options.random     | `boolean`       | false    |         | `true` to gen account private key by random Buffer, else throw Error.
 options.entropy    | `string,Buffer` | false    |         | Entropy of random account
 conflux            | `Conflux`       | false    |         | Conflux instance to connected with
 
 * **Returns**
 
-`BaseAccount` 
+`BaseAccount` A BaseAccount subclass instance
 
 * **Examples**
 
@@ -83,7 +86,7 @@ conflux            | `Conflux`       | false    |         | Conflux instance to 
     publicKey: '0x9bbf094935f3f6d107496844b71b97435378d1cddeb7213c380a664513c95af50d9cc9e906cde8ea12795cdd74297b62f845bc7e77e8366d8a29fba9d18987c2',
     privateKey: '0xf0456ad16e8689601b0012fe855c293f4e557c62738ff36a66f5ece3d1b851d8'
   }
-> accountFactory({ entropy: randomBuffer(32) })
+> accountFactory({ random: true, entropy: randomBuffer(32) })
  PrivateKeyAccount {
     address: '0x1f2b907176958b2a5a09f40dafee7119bc2e06a8',
     publicKey: '0x0f5e8fd193256f78b512feebfce8b7baca9eea642d7e9df2b68452bf58105a96440c31ef535c6ee4e5d6033b79151c2152fce646b10da51a0392affd29b64eeb',
@@ -113,9 +116,9 @@ Create a new PrivateKeyAccount with random privateKey.
 * **Parameters**
 
 Name    | Type            | Required | Default | Description
---------|-----------------|----------|---------|------------
-entropy | `string,Buffer` | false    |         |
-conflux | `Conflux`       | false    |         |
+--------|-----------------|----------|---------|-----------------------------------
+entropy | `string,Buffer` | false    |         | Entropy of random account
+conflux | `Conflux`       | false    |         | Conflux instance to connected with
 
 * **Returns**
 
@@ -158,14 +161,43 @@ Decrypt account encrypt info.
 * **Parameters**
 
 Name     | Type            | Required | Default | Description
----------|-----------------|----------|---------|------------
-keystore | `object`        | true     |         |
-password | `string,Buffer` | true     |         |
-conflux  | `Conflux`       | false    |         |
+---------|-----------------|----------|---------|---------------------------------------
+keystore | `object`        | true     |         | Keystore version 3 object.
+password | `string,Buffer` | true     |         | Password for keystore to decrypt with.
+conflux  | `Conflux`       | false    |         | Conflux instance to connected with
 
 * **Returns**
 
 `PrivateKeyAccount` 
+
+* **Examples**
+
+```
+> PrivateKeyAccount.decrypt({
+    version: 3,
+    id: '0bb47ee0-aac3-a006-2717-03877afa15f0',
+    address: '1cad0b19bb29d4674531d6f115237e16afce377c',
+    crypto: {
+      ciphertext: 'a8ec41d2440311ce897bacb6f7942f3235113fa17c4ae6732e032336038a8f73',
+      cipherparams: { iv: '85b5e092c1c32129e3d27df8c581514d' },
+      cipher: 'aes-128-ctr',
+      kdf: 'scrypt',
+      kdfparams: {
+        dklen: 32,
+        salt: 'b662f09bdf6751ac599219732609dceac430bc0629a7906eaa1451555f051ebc',
+        n: 8192,
+        r: 8,
+        p: 1
+      },
+      mac: 'cc89df7ef6c27d284526a65cabf8e5042cdf1ec1aa4ee36dcf65b965fa34843d'
+    }
+  }, 'password');
+   PrivateKeyAccount {
+    address: '0x1cad0b19bb29d4674531d6f115237e16afce377c',
+    publicKey: '0x4646ae5047316b4230d0086c8acec687f00b1cd9d1dc634f6cb358ac0a9a8ffffe77b4dd0a4bfb95851f3b7355c781dd60f8418fc8a65d14907aff47c903a559',
+    privateKey: '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'
+  }
+```
 
 ## PrivateKeyAccount.prototype.constructor <a id="account/PrivateKeyAccount.js/constructor"></a>
 
@@ -174,13 +206,24 @@ Create a account by privateKey.
 * **Parameters**
 
 Name       | Type            | Required | Default | Description
------------|-----------------|----------|---------|------------
-privateKey | `string,Buffer` | true     |         |
-conflux    | `Conflux`       | true     |         |
+-----------|-----------------|----------|---------|-----------------------------------
+privateKey | `string,Buffer` | true     |         | Private key of account
+conflux    | `Conflux`       | true     |         | Conflux instance to connected with
 
 * **Returns**
 
 `PrivateKeyAccount` 
+
+* **Examples**
+
+```
+> new PrivateKeyAccount('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
+   PrivateKeyAccount {
+    address: '0x1cad0b19bb29d4674531d6f115237e16afce377c',
+    publicKey: '0x4646ae5047316b4230d0086c8acec687f00b1cd9d1dc634f6cb358ac0a9a8ffffe77b4dd0a4bfb95851f3b7355c781dd60f8418fc8a65d14907aff47c903a559',
+    privateKey: '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'
+  }
+```
 
 ## PrivateKeyAccount.prototype.encrypt <a id="account/PrivateKeyAccount.js/encrypt"></a>
 
@@ -216,7 +259,37 @@ options | `object` | true     |         | See [Transaction](Transaction.js/const
 
 * **Returns**
 
-`Promise.<Transaction>` 
+`Transaction` 
+
+* **Examples**
+
+```
+> account = new PrivateKeyAccount('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
+> transaction = account.signTransaction({
+      nonce: 0,
+      gasPrice: 100,
+      gas: 10000,
+      storageLimit: 10000,
+      epochHeight: 100,
+      chainId: 0,
+    })
+
+   Transaction {
+      from: '0x1cad0b19bb29d4674531d6f115237e16afce377c',
+      nonce: 0,
+      gasPrice: 100,
+      gas: 10000,
+      to: undefined,
+      value: undefined,
+      storageLimit: 10000,
+      epochHeight: 100,
+      chainId: 0,
+      data: undefined,
+      v: 0,
+      r: '0x096f4e00ac15f6bd6e09937e99f0e54aaa2dd0f4c6bd8421e1e81b0e8bd30723',
+      s: '0x41e63a41ede0cbb8ccfaa827423c654dcdc09fb1aa1c3a7233566544aff4cd9a'
+    }
+```
 
 ## PrivateKeyAccount.prototype.signMessage <a id="account/PrivateKeyAccount.js/signMessage"></a>
 
@@ -230,14 +303,13 @@ message | `string` | true     |         |
 
 * **Returns**
 
-`Promise.<Message>` 
+`Message` 
 
 * **Examples**
 
 ```
-> const account = new PrivateKeyAccount(undefined, '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
-> const msg = account.signMessage('Hello World!')
-> console.log(msg);
+> account = new PrivateKeyAccount('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
+> message = account.signMessage('Hello World')
    Message {
       message: 'Hello World',
       signature: '0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01'
@@ -257,7 +329,9 @@ A sdk of conflux.
 Name                    | Type            | Required | Default | Description
 ------------------------|-----------------|----------|---------|-------------------------------------------------------
 options                 | `object`        | false    |         | Conflux and Provider constructor options.
+options.url             | `string`        | false    |         | Url of Conflux node to connect.
 options.defaultGasPrice | `string,number` | false    |         | The default gas price in drip to use for transactions.
+options.logger          | `Object`        | false    |         | Logger object with 'info' and 'error' method.
 
 * **Examples**
 
@@ -293,7 +367,7 @@ options | `object` | true     |         | See [accountFactory](#account/index.js
 
 * **Returns**
 
-`BaseAccount` account instance
+`BaseAccount` A BaseAccount subclass instance
 
 * **Examples**
 
@@ -313,7 +387,7 @@ options | `object` | true     |         | See [Contract.constructor](#Contract.j
 
 * **Returns**
 
-`Contract` 
+`Contract` - A Contract instance
 
 ## Conflux.prototype.close <a id="Conflux.js/close"></a>
 
@@ -337,6 +411,19 @@ Get status
 - `number` blockNumber: Block number
 - `number` pendingTxNumber: Pending transaction number
 - `string` bestHash: The block hash of best pivot block
+
+* **Examples**
+
+```
+> await conflux.getStatus()
+   {
+      "chainId": 2,
+      "epochNumber": 324105,
+      "blockNumber": 426341,
+      "pendingTxNumber": 40,
+      "bestHash": "0xef08f2702335f149afc021607511ffae49df8bb56b2afb7f42de02d9cbbf7ef6"
+   }
+```
 
 ## Conflux.prototype.getGasPrice <a id="Conflux.js/getGasPrice"></a>
 
@@ -367,6 +454,13 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](
 
 `Promise.<JSBI>` The interest rate of given parameter.
 
+* **Examples**
+
+```
+> await conflux.getInterestRate();
+   "2522880000000"
+```
+
 ## Conflux.prototype.getAccumulateInterestRate <a id="Conflux.js/getAccumulateInterestRate"></a>
 
 Returns the accumulate interest rate of given parameter.
@@ -381,6 +475,13 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](
 
 `Promise.<JSBI>` The accumulate interest rate of given parameter.
 
+* **Examples**
+
+```
+> await conflux.getAccumulateInterestRate()
+   "76269979767787603657181926319926"
+```
+
 ## Conflux.prototype.getAccount <a id="Conflux.js/getAccount"></a>
 
 Return account related states of the given account
@@ -394,7 +495,7 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](
 
 * **Returns**
 
-`Promise.<object>` States of the given account:
+`Promise.<object>` Return the states of the given account:
 balance `JSBI`: the balance of the account.
 nonce `JSBI`: the nonce of the account's next transaction.
 codeHash `string`: the code hash of the account.
@@ -402,6 +503,21 @@ stakingBalance `JSBI`: the staking balance of the account.
 collateralForStorage `JSBI`: the collateral storage of the account.
 accumulatedInterestReturn `JSBI`: accumulated unterest return of the account.
 admin `string`: admin of the account.
+
+* **Examples**
+
+```
+> await conflux.getAccount('0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b');
+   {
+    "accumulatedInterestReturn": "0",
+    "balance": "0",
+    "collateralForStorage": "0",
+    "nonce": "0",
+    "stakingBalance": "0",
+    "admin": "0x0000000000000000000000000000000000000000",
+    "codeHash": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"
+   }
+```
 
 ## Conflux.prototype.getBalance <a id="Conflux.js/getBalance"></a>
 
@@ -416,7 +532,7 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](
 
 * **Returns**
 
-`Promise.<JSBI>` The current balance in Drip.
+`Promise.<JSBI>` The balance in Drip.
 
 * **Examples**
 
@@ -438,7 +554,7 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](
 
 * **Returns**
 
-`Promise.<JSBI>` The current staking balance in Drip.
+`Promise.<JSBI>` The staking balance in Drip.
 
 * **Examples**
 
@@ -648,6 +764,13 @@ blockHash | `string` | true     |         | Hash of a block
 
 `Promise.<(number|null)>` Number >0 and <1
 
+* **Examples**
+
+```
+> await conflux.getConfirmationRiskByHash('0x24dcc768132dc7f651d7cb35c52e7bba632eda073d8743f81cfe905ff7e4157a')
+   1e-8
+```
+
 ## Conflux.prototype.getTransactionByHash <a id="Conflux.js/getTransactionByHash"></a>
 
 Returns the information about a transaction requested by transaction hash.
@@ -728,7 +851,7 @@ transactionHash | `string` | true     |         | Hash of a transaction
 - gasUsed `number`: Gas used the transaction.
 - contractCreated `string|null`: Address of created contract. `null` when it's not a contract creating transaction.
 - stateRoot `string`: Hash of the state root.
-- outcomeStatus `number`:  the outcome status code, 0 was successful, 1 EVM reverted the transaction.
+- outcomeStatus `number`:  the outcome status code, 0 was successful, 1 for an error occurred in the execution.
 - logsBloom `string`: Bloom filter for light clients to quickly retrieve related logs.
 - logs `object[]`: Array of log objects, which this transaction generated.
 
@@ -810,7 +933,14 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](
 
 * **Returns**
 
-`Promise.<string>` Storage entry of given query, or null if the it does not exist.
+`Promise.<(string|null)>` Storage entry of given query, or null if the it does not exist.
+
+* **Examples**
+
+```
+> await conflux.getStorageAt('0x866aca87ff33a0ae05d2164b3d999a804f583222', '0x6661e9d6d8b923d5bbaab1b96e1dd51ff6ea2a93520fdc9eb75d059238b8c5e9')
+   "0x000000000000000000000000000000000000000000000000000000000000162e"
+```
 
 ## Conflux.prototype.getStorageRoot <a id="Conflux.js/getStorageRoot"></a>
 
@@ -829,6 +959,17 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](
 - delta `string`: storage root in the delta trie.
 - intermediate `string`: storage root in the intermediate trie.
 - snapshot `string`: storage root in the snapshot.
+
+* **Examples**
+
+```
+> await conflux.getStorageRoot('0x866aca87ff33a0ae05d2164b3d999a804f583222')
+   {
+      "delta": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470",
+      "intermediate": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470",
+      "snapshot": "0x7bb7d43152e56f529fbef709aab7371b0672f2332ae0fb4786da350f664df5b4"
+   }
+```
 
 ## Conflux.prototype.getSponsorInfo <a id="Conflux.js/getSponsorInfo"></a>
 
@@ -849,6 +990,19 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](
 - sponsorGasBound `JSBI`: the max gas could be sponsored for one transaction.
 - sponsorForCollateral `string`: the address of the storage sponsor.
 - sponsorForGas `string`: the address of the gas sponsor.
+
+* **Examples**
+
+```
+> await conflux.getSponsorInfo('0x866aca87ff33a0ae05d2164b3d999a804f583222')
+   {
+      "sponsorBalanceForCollateral": "0",
+      "sponsorBalanceForGas": "0",
+      "sponsorGasBound": "0",
+      "sponsorForCollateral": "0x0000000000000000000000000000000000000000",
+      "sponsorForGas": "0x0000000000000000000000000000000000000000"
+   }
+```
 
 ## Conflux.prototype.getCollateralForStorage <a id="Conflux.js/getCollateralForStorage"></a>
 
@@ -988,6 +1142,17 @@ conflux          | `Conflux` | true     |         | Conflux instance.
 
 ```
 > const contract = conflux.Contract({ abi, bytecode });
+   {
+      constructor: [Function: bound call],
+      abi: ContractABICoder { * },
+      address: undefined,
+      count: [Function: bound call],
+      inc: [Function: bound call],
+      'count()': [Function: bound call],
+      '0x06661abd': [Function: bound call],
+      'inc(uint256)': [Function: bound call],
+      '0x812600df': [Function: bound call],
+   }
 > contract.constructor.bytecode; // input code
    "0x6080604052600080..."
 ```
@@ -1259,6 +1424,85 @@ options.url | `string` | true     |         |
     logger: {...}
   }
 ```
+
+----------------------------------------
+
+## PendingTransaction <a id="subscribe/PendingTransaction.js/PendingTransaction"></a>
+
+Pending transaction subscriber
+
+## PendingTransaction.prototype.get <a id="subscribe/PendingTransaction.js/get"></a>
+
+Get transaction by hash.
+
+* **Parameters**
+
+Name          | Type     | Required | Default | Description
+--------------|----------|----------|---------|--------------------------------
+options       | `object` | false    |         |
+options.delay | `number` | false    | 0       | Defer execute after `delay` ms.
+
+* **Returns**
+
+`Promise.<(Object|null)>` See [Conflux.getTransactionByHash](#Conflux.js/getTransactionByHash)
+
+## PendingTransaction.prototype.mined <a id="subscribe/PendingTransaction.js/mined"></a>
+
+Async wait till transaction been mined.
+
+- blockHash !== null
+
+* **Parameters**
+
+Name            | Type     | Required | Default | Description
+----------------|----------|----------|---------|---------------------------------
+options         | `object` | false    |         |
+options.delta   | `number` | false    | 1000    | Loop transaction interval in ms.
+options.timeout | `number` | false    | 60*1000 | Loop timeout in ms.
+
+* **Returns**
+
+`Promise.<object>` See [Conflux.getTransactionByHash](#Conflux.js/getTransactionByHash)
+
+## PendingTransaction.prototype.executed <a id="subscribe/PendingTransaction.js/executed"></a>
+
+Async wait till transaction been executed.
+
+- mined
+- receipt !== null
+- receipt.outcomeStatus === 0
+
+* **Parameters**
+
+Name            | Type     | Required | Default   | Description
+----------------|----------|----------|-----------|---------------------------------
+options         | `object` | false    |           |
+options.delta   | `number` | false    | 1000      | Loop transaction interval in ms.
+options.timeout | `number` | false    | 5*60*1000 | Loop timeout in ms.
+
+* **Returns**
+
+`Promise.<object>` See [Conflux.getTransactionReceipt](#Conflux.js/getTransactionReceipt)
+
+## PendingTransaction.prototype.confirmed <a id="subscribe/PendingTransaction.js/confirmed"></a>
+
+Async wait till transaction been confirmed.
+
+- executed
+- transaction block risk coefficient < threshold
+
+* **Parameters**
+
+Name              | Type     | Required | Default    | Description
+------------------|----------|----------|------------|---------------------------------
+options           | `object` | false    |            |
+options.delta     | `number` | false    | 1000       | Loop transaction interval in ms.
+options.timeout   | `number` | false    | 30*60*1000 | Loop timeout in ms.
+options.threshold | `number` | false    | 1e-8       | Number in range (0,1)
+
+* **Returns**
+
+`Promise.<object>` See [Conflux.getTransactionReceipt](#Conflux.js/getTransactionReceipt)
 
 ----------------------------------------
 

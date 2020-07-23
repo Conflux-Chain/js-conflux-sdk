@@ -11,7 +11,7 @@ class MethodTransaction extends Transaction {
     Reflect.defineProperty(this, 'method', { value: method }); // avoid for JSON.stringify
   }
 
-  options(options = {}) {
+  options(options) {
     return new this.constructor({ to: this.to, data: this.data, ...options }, this.method);
   }
 

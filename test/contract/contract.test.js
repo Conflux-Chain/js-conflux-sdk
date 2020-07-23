@@ -18,6 +18,8 @@ conflux.provider = new MockProvider();
 
 const contract = conflux.Contract({ abi, bytecode, address });
 
+console.log(contract);
+
 test('without code', async () => {
   const contractWithoutCode = conflux.Contract({ abi, address });
   expect(() => contractWithoutCode.constructor(100)).toThrow('bytecode is empty');

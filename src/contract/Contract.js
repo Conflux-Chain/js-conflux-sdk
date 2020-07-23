@@ -20,6 +20,17 @@ class Contract {
    *
    * @example
    * > const contract = conflux.Contract({ abi, bytecode });
+   {
+      constructor: [Function: bound call],
+      abi: ContractABICoder { * },
+      address: undefined,
+      count: [Function: bound call],
+      inc: [Function: bound call],
+      'count()': [Function: bound call],
+      '0x06661abd': [Function: bound call],
+      'inc(uint256)': [Function: bound call],
+      '0x812600df': [Function: bound call],
+   }
 
    * > contract.constructor.bytecode; // input code
    "0x6080604052600080..."
