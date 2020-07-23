@@ -11,6 +11,12 @@ const TX_HASH = '0xb0a0000000000000000000000000000000000000000000000000000000000
 const conflux = new Conflux();
 conflux.provider = new MockProvider();
 
+test('getClientVersion', async () => {
+  const version = await conflux.getClientVersion();
+
+  expect(lodash.isString(version)).toEqual(true);
+});
+
 test('getStatus', async () => {
   const status = await conflux.getStatus();
 
@@ -27,34 +33,39 @@ test('getGasPrice', async () => {
   expect(gasPrice.constructor).toEqual(JSBI);
 });
 
-test('getEpochNumber', async () => {
-  const epochNumber = await conflux.getEpochNumber();
+test('getInterestRate', async () => {
+  const interestRate = await conflux.getInterestRate();
 
-  expect(Number.isInteger(epochNumber)).toEqual(true);
+  expect(interestRate.constructor).toEqual(JSBI);
 });
 
-test('getLogs', async () => {
-  const eventLogs = await conflux.getLogs({ fromEpoch: 0 }); // `fromEpoch` for mock parse
-  expect(Array.isArray(eventLogs)).toEqual(true);
+test('getAccumulateInterestRate', async () => {
+  const interestRate = await conflux.getAccumulateInterestRate();
 
-  const [eventLog] = eventLogs;
-  expect(eventLog.address.startsWith('0x')).toEqual(true);
-  expect(eventLog.blockHash.startsWith('0x')).toEqual(true);
-  expect(eventLog.transactionHash.startsWith('0x')).toEqual(true);
-  expect(lodash.isString(eventLog.type)).toEqual(true);
-  expect(lodash.isBoolean(eventLog.removed)).toEqual(true);
-  expect(Number.isInteger(eventLog.epochNumber)).toEqual(true);
-  expect(Number.isInteger(eventLog.transactionIndex)).toEqual(true);
-  expect(Number.isInteger(eventLog.logIndex)).toEqual(true);
-  expect(Number.isInteger(eventLog.transactionLogIndex)).toEqual(true);
-  expect(eventLog.data.startsWith('0x')).toEqual(true);
-  eventLog.topics.forEach(topic => {
-    expect(topic.startsWith('0x')).toEqual(true);
-  });
+  expect(interestRate.constructor).toEqual(JSBI);
+});
+
+// ------------------------------- address ----------------------------------
+test('getAccount', async () => {
+  const account = await conflux.getAccount(ADDRESS);
+
+  expect(account.accumulatedInterestReturn.constructor).toEqual(JSBI);
+  expect(account.balance.constructor).toEqual(JSBI);
+  expect(account.collateralForStorage.constructor).toEqual(JSBI);
+  expect(account.nonce.constructor).toEqual(JSBI);
+  expect(account.stakingBalance.constructor).toEqual(JSBI);
+  expect(account.admin.startsWith('0x')).toEqual(true);
+  expect(account.codeHash.startsWith('0x')).toEqual(true);
 });
 
 test('getBalance', async () => {
   const balance = await conflux.getBalance(ADDRESS);
+
+  expect(balance.constructor).toEqual(JSBI);
+});
+
+test('getStakingBalance', async () => {
+  const balance = await conflux.getStakingBalance(ADDRESS);
 
   expect(balance.constructor).toEqual(JSBI);
 });
@@ -65,16 +76,22 @@ test('getNextNonce', async () => {
   expect(txCount.constructor).toEqual(JSBI);
 });
 
-test('getConfirmationRiskByHash', async () => {
-  const risk = await conflux.getConfirmationRiskByHash(BLOCK_HASH);
+test('getAdmin', async () => {
+  const admin = await conflux.getAdmin(ADDRESS);
 
-  expect(Number.isFinite(risk)).toEqual(true);
+  expect(admin.startsWith('0x')).toEqual(true);
 });
 
-test('getBestBlockHash', async () => {
-  const transactionHash = await conflux.getBestBlockHash();
+// -------------------------------- epoch -----------------------------------
+test('getEpochNumber', async () => {
+  const epochNumber = await conflux.getEpochNumber();
 
-  expect(transactionHash.startsWith('0x')).toEqual(true);
+  expect(Number.isInteger(epochNumber)).toEqual(true);
+});
+
+test('getBlockByEpochNumber', async () => {
+  const block = await conflux.getBlockByEpochNumber(1);
+  expect(block.epochNumber).toEqual(1);
 });
 
 test('getBlocksByEpochNumber', async () => {
@@ -84,6 +101,13 @@ test('getBlocksByEpochNumber', async () => {
   blockHashArray.forEach(transactionHash => {
     expect(transactionHash.startsWith('0x')).toEqual(true);
   });
+});
+
+// -------------------------------- block -----------------------------------
+test('getBestBlockHash', async () => {
+  const transactionHash = await conflux.getBestBlockHash();
+
+  expect(transactionHash.startsWith('0x')).toEqual(true);
 });
 
 test('getBlockByHash', async () => {
@@ -119,11 +143,6 @@ test('getBlockByHash', async () => {
   });
 });
 
-test('getBlockByEpochNumber', async () => {
-  const block = await conflux.getBlockByEpochNumber(1);
-  expect(block.epochNumber).toEqual(1);
-});
-
 test('getBlockByHashWithPivotAssumption', async () => {
   const block = await conflux.getBlockByHashWithPivotAssumption(
     '0xb000000104000000000000000000000000000000000000000000000000000000',
@@ -134,6 +153,13 @@ test('getBlockByHashWithPivotAssumption', async () => {
   expect(block.epochNumber).toEqual(1);
 });
 
+test('getConfirmationRiskByHash', async () => {
+  const risk = await conflux.getConfirmationRiskByHash(BLOCK_HASH);
+
+  expect(Number.isFinite(risk)).toEqual(true);
+});
+
+// ----------------------------- transaction --------------------------------
 test('getTransactionByHash', async () => {
   const transaction = await conflux.getTransactionByHash(TX_HASH);
 
@@ -174,7 +200,7 @@ test('getTransactionReceipt', async () => {
   expect(Array.isArray(receipt.logs)).toEqual(true);
 });
 
-test('sendTransaction by address', async () => {
+test('sendTransaction', async () => {
   const promise = conflux.sendTransaction({
     from: ADDRESS,
     gasPrice: 100,
@@ -199,4 +225,74 @@ test('sendTransaction by address', async () => {
   expect(receiptConfirmed.outcomeStatus).toEqual(0);
 
   await expect(promise.confirmed({ timeout: 0 })).rejects.toThrow('Timeout');
+});
+
+// ------------------------------ contract ----------------------------------
+test('getCode', async () => {
+  const code = await conflux.getCode(ADDRESS);
+
+  expect(code.startsWith('0x')).toEqual(true);
+});
+
+test('getStorageAt', async () => {
+  const storage = await conflux.getStorageAt(ADDRESS, '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef');
+
+  expect(storage.startsWith('0x')).toEqual(true);
+});
+
+test('getStorageRoot', async () => {
+  const storageRoot = await conflux.getStorageRoot(ADDRESS);
+
+  expect(storageRoot.delta.startsWith('0x')).toEqual(true);
+  expect(storageRoot.intermediate.startsWith('0x')).toEqual(true);
+  expect(storageRoot.snapshot.startsWith('0x')).toEqual(true);
+});
+
+test('getSponsorInfo', async () => {
+  const info = await conflux.getSponsorInfo(ADDRESS);
+
+  expect(info.sponsorBalanceForCollateral.constructor).toEqual(JSBI);
+  expect(info.sponsorBalanceForGas.constructor).toEqual(JSBI);
+  expect(info.sponsorGasBound.constructor).toEqual(JSBI);
+  expect(info.sponsorForCollateral.startsWith('0x')).toEqual(true);
+  expect(info.sponsorForGas.startsWith('0x')).toEqual(true);
+});
+
+test('getCollateralForStorage', async () => {
+  const collateral = await conflux.getCollateralForStorage(ADDRESS);
+
+  expect(collateral.constructor).toEqual(JSBI);
+});
+
+test('call', async () => {
+  const hex = await conflux.call({ to: ADDRESS });
+
+  expect(hex.startsWith('0x')).toEqual(true);
+});
+
+test('estimateGasAndCollateral', async () => {
+  const estimate = await conflux.estimateGasAndCollateral({});
+
+  expect(estimate.gasUsed.constructor).toEqual(JSBI);
+  expect(estimate.storageCollateralized.constructor).toEqual(JSBI);
+});
+
+test('getLogs', async () => {
+  const eventLogs = await conflux.getLogs({ fromEpoch: 0 }); // `fromEpoch` for mock parse
+  expect(Array.isArray(eventLogs)).toEqual(true);
+
+  const [eventLog] = eventLogs;
+  expect(eventLog.address.startsWith('0x')).toEqual(true);
+  expect(eventLog.blockHash.startsWith('0x')).toEqual(true);
+  expect(eventLog.transactionHash.startsWith('0x')).toEqual(true);
+  expect(lodash.isString(eventLog.type)).toEqual(true);
+  expect(lodash.isBoolean(eventLog.removed)).toEqual(true);
+  expect(Number.isInteger(eventLog.epochNumber)).toEqual(true);
+  expect(Number.isInteger(eventLog.transactionIndex)).toEqual(true);
+  expect(Number.isInteger(eventLog.logIndex)).toEqual(true);
+  expect(Number.isInteger(eventLog.transactionLogIndex)).toEqual(true);
+  expect(eventLog.data.startsWith('0x')).toEqual(true);
+  eventLog.topics.forEach(topic => {
+    expect(topic.startsWith('0x')).toEqual(true);
+  });
 });

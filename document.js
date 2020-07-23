@@ -5,23 +5,20 @@ const jsdocToMd = require('@geekberry/jsdoc-to-md'); // eslint-disable-line impo
 const markdown = jsdocToMd(`${__dirname}/src`, {
   filter: filename => {
     const suffixArray = [
-      'Conflux.js',
-      'Transaction.js',
-      'Message.js',
-
+      'account\\index.js',
+      'account\\PrivateKeyAccount.js',
+      'contract\\Contract.js',
       'provider\\index.js',
       'provider\\BaseProvider.js',
       'provider\\HttpProvider.js',
       'provider\\WebsocketProvider.js',
-
-      'account\\index.js',
-      'account\\PrivateKeyAccount.js',
-
-      'contract\\Contract.js',
-
+      'subscribe\\PendingTransaction.js',
       'util\\format.js',
       'util\\sign.js',
       'util\\unit.js',
+      'Conflux.js',
+      'Message.js',
+      'Transaction.js',
     ];
 
     if (lodash.some(suffixArray, suffix => filename.endsWith(suffix))) {

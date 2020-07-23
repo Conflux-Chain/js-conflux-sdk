@@ -5,10 +5,10 @@ const PrivateKeyAccount = require('./PrivateKeyAccount');
  * @param [options.privateKey] {string|Buffer} - Private key of account
  * @param [options.keystore] {object} - Keystore version 3 to decode private key
  * @param [options.password] {string|Buffer} - Password of keystore
- * @param [options.random] {boolean} - Is gen account private key by random Buffer
+ * @param [options.random] {boolean} - `true` to gen account private key by random Buffer, else throw Error.
  * @param [options.entropy] {string|Buffer} - Entropy of random account
  * @param [conflux] {Conflux} - Conflux instance to connected with
- * @return {BaseAccount}
+ * @return {BaseAccount} A BaseAccount subclass instance
  *
  * @example
  * > accountFactory({ privateKey:'0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef' })
@@ -26,7 +26,7 @@ const PrivateKeyAccount = require('./PrivateKeyAccount');
     privateKey: '0xf0456ad16e8689601b0012fe855c293f4e557c62738ff36a66f5ece3d1b851d8'
   }
 
- * > accountFactory({ entropy: randomBuffer(32) })
+ * > accountFactory({ random: true, entropy: randomBuffer(32) })
  PrivateKeyAccount {
     address: '0x1f2b907176958b2a5a09f40dafee7119bc2e06a8',
     publicKey: '0x0f5e8fd193256f78b512feebfce8b7baca9eea642d7e9df2b68452bf58105a96440c31ef535c6ee4e5d6033b79151c2152fce646b10da51a0392affd29b64eeb',
@@ -50,7 +50,7 @@ function accountFactory(options, conflux) {
     return PrivateKeyAccount.decrypt(options.keystore, options.password, conflux);
   }
 
-  if (options.random === true || Buffer.isBuffer(options.entropy)) {
+  if (options.random === true) {
     return PrivateKeyAccount.random(options.entropy, conflux);
   }
 

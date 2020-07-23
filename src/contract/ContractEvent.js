@@ -11,7 +11,7 @@ class LogFilter {
     Reflect.defineProperty(this, 'event', { value: event }); // avoid for JSON.stringify
   }
 
-  async getLogs(options = {}) {
+  async getLogs(options) {
     const logs = await this.event.conflux.getLogs({ ...options, address: this.address, topics: this.topics });
 
     logs.forEach(log => {

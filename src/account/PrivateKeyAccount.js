@@ -7,8 +7,8 @@ class PrivateKeyAccount extends BaseAccount {
   /**
    * Create a new PrivateKeyAccount with random privateKey.
    *
-   * @param [entropy] {string|Buffer}
-   * @param [conflux] {Conflux}
+   * @param [entropy] {string|Buffer} - Entropy of random account
+   * @param [conflux] {Conflux} - Conflux instance to connected with
    * @return {PrivateKeyAccount}
    *
    * @example
@@ -46,10 +46,36 @@ class PrivateKeyAccount extends BaseAccount {
   /**
    * Decrypt account encrypt info.
    *
-   * @param keystore {object}
-   * @param password {string|Buffer}
-   * @param [conflux] {Conflux}
+   * @param keystore {object} - Keystore version 3 object.
+   * @param password {string|Buffer} - Password for keystore to decrypt with.
+   * @param [conflux] {Conflux} - Conflux instance to connected with
    * @return {PrivateKeyAccount}
+   *
+   * @example
+   * > PrivateKeyAccount.decrypt({
+    version: 3,
+    id: '0bb47ee0-aac3-a006-2717-03877afa15f0',
+    address: '1cad0b19bb29d4674531d6f115237e16afce377c',
+    crypto: {
+      ciphertext: 'a8ec41d2440311ce897bacb6f7942f3235113fa17c4ae6732e032336038a8f73',
+      cipherparams: { iv: '85b5e092c1c32129e3d27df8c581514d' },
+      cipher: 'aes-128-ctr',
+      kdf: 'scrypt',
+      kdfparams: {
+        dklen: 32,
+        salt: 'b662f09bdf6751ac599219732609dceac430bc0629a7906eaa1451555f051ebc',
+        n: 8192,
+        r: 8,
+        p: 1
+      },
+      mac: 'cc89df7ef6c27d284526a65cabf8e5042cdf1ec1aa4ee36dcf65b965fa34843d'
+    }
+  }, 'password');
+   PrivateKeyAccount {
+    address: '0x1cad0b19bb29d4674531d6f115237e16afce377c',
+    publicKey: '0x4646ae5047316b4230d0086c8acec687f00b1cd9d1dc634f6cb358ac0a9a8ffffe77b4dd0a4bfb95851f3b7355c781dd60f8418fc8a65d14907aff47c903a559',
+    privateKey: '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'
+  }
    */
   static decrypt(keystore, password, conflux) {
     const privateKeyBuffer = sign.decrypt(keystore, password);
@@ -59,9 +85,17 @@ class PrivateKeyAccount extends BaseAccount {
   /**
    * Create a account by privateKey.
    *
-   * @param privateKey {string|Buffer}
-   * @param conflux {Conflux}
+   * @param privateKey {string|Buffer} - Private key of account
+   * @param conflux {Conflux} - Conflux instance to connected with
    * @return {PrivateKeyAccount}
+   *
+   * @example
+   * > new PrivateKeyAccount('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
+   PrivateKeyAccount {
+    address: '0x1cad0b19bb29d4674531d6f115237e16afce377c',
+    publicKey: '0x4646ae5047316b4230d0086c8acec687f00b1cd9d1dc634f6cb358ac0a9a8ffffe77b4dd0a4bfb95851f3b7355c781dd60f8418fc8a65d14907aff47c903a559',
+    privateKey: '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'
+  }
    */
   constructor(privateKey, conflux) {
     const privateKeyBuffer = format.buffer(privateKey);
@@ -92,9 +126,36 @@ class PrivateKeyAccount extends BaseAccount {
    * Sign a transaction.
    *
    * @param options {object} - See [Transaction](Transaction.js/constructor)
-   * @return {Promise<Transaction>}
+   * @return {Transaction}
+   *
+   * @example
+   * > account = new PrivateKeyAccount('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
+   * > transaction = account.signTransaction({
+      nonce: 0,
+      gasPrice: 100,
+      gas: 10000,
+      storageLimit: 10000,
+      epochHeight: 100,
+      chainId: 0,
+    })
+
+   Transaction {
+      from: '0x1cad0b19bb29d4674531d6f115237e16afce377c',
+      nonce: 0,
+      gasPrice: 100,
+      gas: 10000,
+      to: undefined,
+      value: undefined,
+      storageLimit: 10000,
+      epochHeight: 100,
+      chainId: 0,
+      data: undefined,
+      v: 0,
+      r: '0x096f4e00ac15f6bd6e09937e99f0e54aaa2dd0f4c6bd8421e1e81b0e8bd30723',
+      s: '0x41e63a41ede0cbb8ccfaa827423c654dcdc09fb1aa1c3a7233566544aff4cd9a'
+    }
    */
-  async signTransaction(options) {
+  signTransaction(options) {
     const transaction = new Transaction(options);
     transaction.sign(this.privateKey); // sign will cover r,s,v fields
 
@@ -111,18 +172,17 @@ class PrivateKeyAccount extends BaseAccount {
    * Sign a string.
    *
    * @param message {string}
-   * @return {Promise<Message>}
+   * @return {Message}
    *
    * @example
-   * > const account = new PrivateKeyAccount(undefined, '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
-   * > const msg = account.signMessage('Hello World!')
-   * > console.log(msg);
+   * > account = new PrivateKeyAccount('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
+   * > message = account.signMessage('Hello World')
    Message {
       message: 'Hello World',
       signature: '0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01'
     }
    */
-  async signMessage(message) {
+  signMessage(message) {
     const msg = new Message(message);
     msg.sign(this.privateKey); // sign will cover r,s,v fields
 
