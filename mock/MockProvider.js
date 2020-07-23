@@ -130,6 +130,10 @@ class MockProvider {
   close() {}
 
   // --------------------------------------------------------------------------
+  cfx_clientVersion() {
+    return 'mock';
+  }
+
   cfx_getStatus() {
     return {
       chainId: toHex(1),
@@ -144,9 +148,33 @@ class MockProvider {
     return randomHex(2);
   }
 
+  cfx_getInterestRate() {
+    return randomHex(10);
+  }
+
+  cfx_getAccumulateInterestRate() {
+    return randomHex(10);
+  }
+
   // ------------------------------- address ----------------------------------
+  cfx_getAccount() {
+    return {
+      accumulatedInterestReturn: randomHex(4),
+      balance: randomHex(8),
+      collateralForStorage: randomHex(4),
+      nonce: randomHex(2),
+      stakingBalance: randomHex(2),
+      admin: '0x0000000000000000000000000000000000000000',
+      codeHash: randomHex(64),
+    };
+  }
+
   cfx_getBalance(address, epochNumber) {
     return Number(epochNumber) ? randomHex(8) : '0x0';
+  }
+
+  cfx_getStakingBalance() {
+    return randomHex(10);
   }
 
   cfx_getNextNonce(address, epochNumber) {
@@ -158,8 +186,8 @@ class MockProvider {
     return toHex(Math.floor(number));
   }
 
-  cfx_getAdmin(address, epochNumber) {
-    return Number(epochNumber) ? randomHex(40) : null;
+  cfx_getAdmin() {
+    return randomHex(40);
   }
 
   // -------------------------------- epoch -----------------------------------
@@ -288,6 +316,28 @@ class MockProvider {
   // ------------------------------ contract ----------------------------------
   cfx_getCode() {
     return randomHex(100);
+  }
+
+  cfx_getStorageAt() {
+    return randomHex(64);
+  }
+
+  cfx_getStorageRoot() {
+    return {
+      delta: randomHex(64),
+      intermediate: randomHex(64),
+      snapshot: randomHex(64),
+    };
+  }
+
+  cfx_getSponsorInfo() {
+    return {
+      sponsorBalanceForCollateral: randomHex(2),
+      sponsorBalanceForGas: randomHex(2),
+      sponsorGasBound: randomHex(2),
+      sponsorForCollateral: '0x0000000000000000000000000000000000000000',
+      sponsorForGas: '0x0000000000000000000000000000000000000000',
+    };
   }
 
   cfx_getCollateralForStorage() {

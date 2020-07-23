@@ -1,6 +1,9 @@
 const { sleep, loop } = require('../util');
 const LazyPromise = require('./LazyPromise');
 
+/**
+ * Pending transaction subscriber
+ */
 class PendingTransaction extends LazyPromise {
   constructor(func, params, conflux) {
     super(func, params);

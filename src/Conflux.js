@@ -11,7 +11,9 @@ const { PendingTransaction } = require('./subscribe');
 class Conflux {
   /**
    * @param [options] {object} - Conflux and Provider constructor options.
+   * @param [options.url] {string} - Url of Conflux node to connect.
    * @param [options.defaultGasPrice] {string|number} - The default gas price in drip to use for transactions.
+   * @param [options.logger] {Object} - Logger object with 'info' and 'error' method.
    * @example
    * > const { Conflux } = require('js-conflux-sdk');
    * > const conflux = new Conflux({url:'http://testnet-jsonrpc.conflux-chain.org:12537'});
@@ -48,7 +50,7 @@ class Conflux {
    * A shout cut for `accountFactory(options, conflux);`
    *
    * @param options {object} - See [accountFactory](#account/index.js/accountFactory)
-   * @return {BaseAccount} account instance
+   * @return {BaseAccount} A BaseAccount subclass instance
    *
    * @example
    * > account = conflux.Account({privateKey: '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'})
@@ -61,7 +63,7 @@ class Conflux {
    * A shout cut for `new Contract(options, conflux);`
    *
    * @param options {object} - See [Contract.constructor](#Contract.js/constructor)
-   * @return {Contract}
+   * @return {Contract} - A Contract instance
    */
   Contract(options) {
     return new Contract(options, this);
@@ -74,10 +76,8 @@ class Conflux {
    * > conflux.close();
    */
   close() {
-    if (this.provider) {
-      this.provider.close();
-      this.provider = providerFactory();
-    }
+    this.provider.close();
+    this.provider = providerFactory();
   }
 
   // --------------------------------------------------------------------------
@@ -99,6 +99,16 @@ class Conflux {
    * - `number` blockNumber: Block number
    * - `number` pendingTxNumber: Pending transaction number
    * - `string` bestHash: The block hash of best pivot block
+   *
+   * @example
+   * > await conflux.getStatus()
+   {
+      "chainId": 2,
+      "epochNumber": 324105,
+      "blockNumber": 426341,
+      "pendingTxNumber": 40,
+      "bestHash": "0xef08f2702335f149afc021607511ffae49df8bb56b2afb7f42de02d9cbbf7ef6"
+   }
    */
   async getStatus() {
     const result = await this.provider.call('cfx_getStatus');
@@ -124,6 +134,10 @@ class Conflux {
    *
    * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
    * @return {Promise<JSBI>} The interest rate of given parameter.
+   *
+   * @example
+   * > await conflux.getInterestRate();
+   "2522880000000"
    */
   async getInterestRate(epochNumber) {
     const result = await this.provider.call('cfx_getInterestRate',
@@ -137,6 +151,10 @@ class Conflux {
    *
    * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
    * @return {Promise<JSBI>} The accumulate interest rate of given parameter.
+   *
+   * @example
+   * > await conflux.getAccumulateInterestRate()
+   "76269979767787603657181926319926"
    */
   async getAccumulateInterestRate(epochNumber) {
     const result = await this.provider.call('cfx_getAccumulateInterestRate',
@@ -151,7 +169,7 @@ class Conflux {
    *
    * @param address {string} - address to get account.
    * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
-   * @return {Promise<object>} States of the given account:
+   * @return {Promise<object>} Return the states of the given account:
    * balance `JSBI`: the balance of the account.
    * nonce `JSBI`: the nonce of the account's next transaction.
    * codeHash `string`: the code hash of the account.
@@ -159,6 +177,18 @@ class Conflux {
    * collateralForStorage `JSBI`: the collateral storage of the account.
    * accumulatedInterestReturn `JSBI`: accumulated unterest return of the account.
    * admin `string`: admin of the account.
+   *
+   * @example
+   > await conflux.getAccount('0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b');
+   {
+    "accumulatedInterestReturn": "0",
+    "balance": "0",
+    "collateralForStorage": "0",
+    "nonce": "0",
+    "stakingBalance": "0",
+    "admin": "0x0000000000000000000000000000000000000000",
+    "codeHash": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"
+   }
    */
   async getAccount(address, epochNumber) {
     const result = await this.provider.call('cfx_getAccount',
@@ -173,7 +203,7 @@ class Conflux {
    *
    * @param address {string} - The address to get the balance of.
    * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
-   * @return {Promise<JSBI>} The current balance in Drip.
+   * @return {Promise<JSBI>} The balance in Drip.
    *
    * @example
    * > await conflux.getBalance("0x1000000000000000000000000000000000000060");
@@ -192,7 +222,7 @@ class Conflux {
    *
    * @param address {string} - Address to check for staking balance.
    * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
-   * @return {Promise<JSBI>} The current staking balance in Drip.
+   * @return {Promise<JSBI>} The staking balance in Drip.
    *
    * @example
    * > await conflux.getStakingBalance('0xc94770007dda54cF92009BFF0dE90c06F603a09f', 'latest_state');
@@ -394,6 +424,10 @@ class Conflux {
    *
    * @param blockHash {string} - Hash of a block
    * @return {Promise<number|null>} Number >0 and <1
+   *
+   * @example
+   * > await conflux.getConfirmationRiskByHash('0x24dcc768132dc7f651d7cb35c52e7bba632eda073d8743f81cfe905ff7e4157a')
+   1e-8
    */
   async getConfirmationRiskByHash(blockHash) {
     const result = await this.provider.call('cfx_getConfirmationRiskByHash',
@@ -471,7 +505,7 @@ class Conflux {
    * - gasUsed `number`: Gas used the transaction.
    * - contractCreated `string|null`: Address of created contract. `null` when it's not a contract creating transaction.
    * - stateRoot `string`: Hash of the state root.
-   * - outcomeStatus `number`:  the outcome status code, 0 was successful, 1 EVM reverted the transaction.
+   * - outcomeStatus `number`:  the outcome status code, 0 was successful, 1 for an error occurred in the execution.
    * - logsBloom `string`: Bloom filter for light clients to quickly retrieve related logs.
    * - logs `object[]`: Array of log objects, which this transaction generated.
    *
@@ -556,7 +590,11 @@ class Conflux {
    * @param address {string} - Address to contract.
    * @param position {string} - The given position.
    * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
-   * @return {Promise<string>} Storage entry of given query, or null if the it does not exist.
+   * @return {Promise<string|null>} Storage entry of given query, or null if the it does not exist.
+   *
+   * @example
+   * > await conflux.getStorageAt('0x866aca87ff33a0ae05d2164b3d999a804f583222', '0x6661e9d6d8b923d5bbaab1b96e1dd51ff6ea2a93520fdc9eb75d059238b8c5e9')
+   "0x000000000000000000000000000000000000000000000000000000000000162e"
    */
   async getStorageAt(address, position, epochNumber) {
     return this.provider.call('cfx_getStorageAt',
@@ -575,6 +613,14 @@ class Conflux {
    * - delta `string`: storage root in the delta trie.
    * - intermediate `string`: storage root in the intermediate trie.
    * - snapshot `string`: storage root in the snapshot.
+   *
+   * @example
+   * > await conflux.getStorageRoot('0x866aca87ff33a0ae05d2164b3d999a804f583222')
+   {
+      "delta": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470",
+      "intermediate": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470",
+      "snapshot": "0x7bb7d43152e56f529fbef709aab7371b0672f2332ae0fb4786da350f664df5b4"
+   }
    */
   async getStorageRoot(address, epochNumber) {
     return this.provider.call('cfx_getStorageRoot',
@@ -594,6 +640,16 @@ class Conflux {
    * - sponsorGasBound `JSBI`: the max gas could be sponsored for one transaction.
    * - sponsorForCollateral `string`: the address of the storage sponsor.
    * - sponsorForGas `string`: the address of the gas sponsor.
+   *
+   * @example
+   * > await conflux.getSponsorInfo('0x866aca87ff33a0ae05d2164b3d999a804f583222')
+   {
+      "sponsorBalanceForCollateral": "0",
+      "sponsorBalanceForGas": "0",
+      "sponsorGasBound": "0",
+      "sponsorForCollateral": "0x0000000000000000000000000000000000000000",
+      "sponsorForGas": "0x0000000000000000000000000000000000000000"
+   }
    */
   async getSponsorInfo(address, epochNumber) {
     const result = await this.provider.call('cfx_getSponsorInfo',
