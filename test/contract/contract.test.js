@@ -18,8 +18,6 @@ conflux.provider = new MockProvider();
 
 const contract = conflux.Contract({ abi, bytecode, address });
 
-console.log(contract);
-
 test('without code', async () => {
   const contractWithoutCode = conflux.Contract({ abi, address });
   expect(() => contractWithoutCode.constructor(100)).toThrow('bytecode is empty');
@@ -44,9 +42,6 @@ test('Contract', async () => {
 
   value = await contract.inc(0).options({ from: ADDRESS, nonce: 0 });
   expect(value.toString()).toEqual('100');
-
-  const logs = await contract.SelfEvent(ADDRESS, null).getLogs({ fromEpoch: 0 }); // `fromEpoch` for mock parse
-  expect(logs.length).toEqual(2);
 });
 
 test('contract.call', async () => {
@@ -89,7 +84,6 @@ test('contract.override', () => {
   expect(() => contract.OverrideEvent()).toThrow('can not match override "OverrideEvent(bytes),OverrideEvent(string),OverrideEvent(uint256,string)" with args ()');
 
   event = contract.OverrideEvent('str');
-  console.log(event.topics);
   expect(event.topics).toEqual([
     sha3('OverrideEvent(string)'),
     sha3('str'),

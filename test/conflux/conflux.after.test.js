@@ -285,8 +285,6 @@ test('getLogs', async () => {
   expect(eventLog.address.startsWith('0x')).toEqual(true);
   expect(eventLog.blockHash.startsWith('0x')).toEqual(true);
   expect(eventLog.transactionHash.startsWith('0x')).toEqual(true);
-  expect(lodash.isString(eventLog.type)).toEqual(true);
-  expect(lodash.isBoolean(eventLog.removed)).toEqual(true);
   expect(Number.isInteger(eventLog.epochNumber)).toEqual(true);
   expect(Number.isInteger(eventLog.transactionIndex)).toEqual(true);
   expect(Number.isInteger(eventLog.logIndex)).toEqual(true);
