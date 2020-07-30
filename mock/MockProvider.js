@@ -73,7 +73,7 @@ function mockTxByHash(self, transactionHash) {
   };
 }
 
-function mockLogsByEpochNumber(self, epochNumber, [topic] = []) {
+function mockLogsByEpochNumber(self, epochNumber) {
   const [blockHash] = mockBlockHashArray(self, epochNumber);
   if (!blockHash) {
     return [];
@@ -84,23 +84,22 @@ function mockLogsByEpochNumber(self, epochNumber, [topic] = []) {
     return [];
   }
 
-  return lodash.range(self.txLogCount)
-    .map(index => ({
-      address: randomHex(40),
-      blockHash: randomHex(64),
-      data: randomHex(64),
-      epochNumber: toHex(epochNumber),
-      logIndex: randomHex(1),
-      removed: false,
-      topics: [
-        topic || randomHex(64),
-        randomHex(64),
-      ],
-      transactionHash,
-      transactionIndex: toHex(0),
-      transactionLogIndex: toHex(index),
-      type: 'mined',
-    }));
+  const address = addressStruct.encode({ address: epochNumber });
+  return lodash.range(self.epochTxCount).map(index => ({
+    address,
+    epochNumber: toHex(epochNumber),
+    blockHash,
+    logIndex: randomHex(1),
+    transactionHash,
+    transactionIndex: toHex(0),
+    transactionLogIndex: toHex(index),
+    topics: [
+      '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef',
+      padHex(epochNumber, 64),
+      padHex(epochNumber + 1, 64),
+    ],
+    data: randomHex(64),
+  }));
 }
 
 // ----------------------------------------------------------------------------
@@ -111,7 +110,7 @@ class MockProvider {
     addressCount = 10,
     epochBlockCount = 5,
     blockTxCount = 2,
-    txLogCount = 2,
+    epochTxCount = 2,
     stable = true,
   } = {}) {
     this.startTimestamp = startTimestamp;
@@ -119,7 +118,7 @@ class MockProvider {
     this.addressCount = addressCount;
     this.epochBlockCount = epochBlockCount;
     this.blockTxCount = blockTxCount;
-    this.txLogCount = txLogCount;
+    this.epochTxCount = epochTxCount;
     this.stable = stable;
   }
 
