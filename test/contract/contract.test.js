@@ -44,6 +44,19 @@ test('Contract', async () => {
   expect(value.toString()).toEqual('100');
 });
 
+test('Internal Contract', async () => {
+  const adminControl = conflux.InternalContract('AdminControl');
+  expect(adminControl.address).toEqual('0x0888000000000000000000000000000000000000');
+
+  const sponsorWhitelistControl = conflux.InternalContract('SponsorWhitelistControl');
+  expect(sponsorWhitelistControl.address).toEqual('0x0888000000000000000000000000000000000001');
+
+  const staking = conflux.InternalContract('Staking');
+  expect(staking.address).toEqual('0x0888000000000000000000000000000000000002');
+
+  expect(() => conflux.InternalContract('xxx')).toThrow('can not find internal contract');
+});
+
 test('contract.call', async () => {
   const call = jest.spyOn(conflux.provider, 'call');
   call.mockReturnValueOnce('0x00000000000000000000000000000000000000000000000000000000000000ff');
