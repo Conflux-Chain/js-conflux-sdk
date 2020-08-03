@@ -1,9 +1,10 @@
-const { format, decorate } = require('./util');
+const { assert, format, decorate } = require('./util');
 const providerFactory = require('./provider');
 const accountFactory = require('./account');
 const Contract = require('./contract');
 const decodeError = require('./contract/decodeError');
 const { PendingTransaction } = require('./subscribe');
+const internalContract = require('../internalContract');
 
 /**
  * A sdk of conflux.
@@ -67,6 +68,36 @@ class Conflux {
    */
   Contract(options) {
     return new Contract(options, this);
+  }
+
+  /**
+   * Create internal contract by default abi and address
+   *
+   * - [AdminControl](https://github.com/Conflux-Chain/conflux-rust/blob/master/internal_contract/contracts/AdminControl.sol)
+   * - [SponsorWhitelistControl](https://github.com/Conflux-Chain/conflux-rust/blob/master/internal_contract/contracts/SponsorWhitelistControl.sol)
+   * - [Staking](https://github.com/Conflux-Chain/conflux-rust/blob/master/internal_contract/contracts/Staking.sol)
+   *
+   * @param name {string} Internal contract name
+   * @return {Contract}
+   *
+   * @example
+   * > conflux.InternalContract('AdminControl')
+   {
+    constructor: [Function: bound call],
+    abi: ContractABICoder { * },
+    address: '0x0888000000000000000000000000000000000000',
+    destroy: [Function: bound call],
+    set_admin: [Function: bound call],
+    'destroy(address)': [Function: bound call],
+    '0x00f55d9d': [Function: bound call],
+    'set_admin(address,address)': [Function: bound call],
+    '0x73e80cba': [Function: bound call]
+  }
+   */
+  InternalContract(name) {
+    const options = internalContract[name];
+    assert(options, `can not find internal contract named "${name}"`);
+    return this.Contract(options);
   }
 
   /**

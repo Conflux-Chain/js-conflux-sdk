@@ -389,6 +389,41 @@ options | `object` | true     |         | See [Contract.constructor](#Contract.j
 
 `Contract` - A Contract instance
 
+## Conflux.prototype.InternalContract <a id="Conflux.js/InternalContract"></a>
+
+Create internal contract by default abi and address
+
+- [AdminControl](https://github.com/Conflux-Chain/conflux-rust/blob/master/internal_contract/contracts/AdminControl.sol)
+- [SponsorWhitelistControl](https://github.com/Conflux-Chain/conflux-rust/blob/master/internal_contract/contracts/SponsorWhitelistControl.sol)
+- [Staking](https://github.com/Conflux-Chain/conflux-rust/blob/master/internal_contract/contracts/Staking.sol)
+
+* **Parameters**
+
+Name | Type     | Required | Default | Description
+-----|----------|----------|---------|-----------------------
+name | `string` | true     |         | Internal contract name
+
+* **Returns**
+
+`Contract` 
+
+* **Examples**
+
+```
+> conflux.InternalContract('AdminControl')
+   {
+    constructor: [Function: bound call],
+    abi: ContractABICoder { * },
+    address: '0x0888000000000000000000000000000000000000',
+    destroy: [Function: bound call],
+    set_admin: [Function: bound call],
+    'destroy(address)': [Function: bound call],
+    '0x00f55d9d': [Function: bound call],
+    'set_admin(address,address)': [Function: bound call],
+    '0x73e80cba': [Function: bound call]
+  }
+```
+
 ## Conflux.prototype.close <a id="Conflux.js/close"></a>
 
 close connection.
