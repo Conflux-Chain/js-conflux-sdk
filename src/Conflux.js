@@ -728,6 +728,22 @@ class Conflux {
    }
    */
   async sendTransaction({ ...options }, password) { // shallow copy `options`
+    options = await this.prepareTransaction(options);
+
+    if (options.from.privateKey) {
+      // sign by local
+      const tx = options.from.signTransaction(options);
+      return this.sendRawTransaction(tx.serialize());
+    } else {
+      // sign by remote
+      return this.provider.call('cfx_sendTransaction', format.sendTx(options), password);
+    }
+  }
+
+  /*
+  * set default value for a transaction
+  */
+  async prepareTransaction({ ...options }) {
     if (!(options.from instanceof Account)) {
       options.from = new Account(options.from);
     }
@@ -763,15 +779,7 @@ class Conflux {
       const status = await this.getStatus();
       options.chainId = status.chainId;
     }
-
-    if (options.from.privateKey) {
-      // sign by local
-      const tx = options.from.signTransaction(options);
-      return this.sendRawTransaction(tx.serialize());
-    } else {
-      // sign by remote
-      return this.provider.call('cfx_sendTransaction', format.sendTx(options), password);
-    }
+    return options;
   }
 
   /**
@@ -843,6 +851,23 @@ class Conflux {
       format.estimateTx(options),
     );
     return format.estimate(result);
+  }
+
+  /**
+   * Check whether balance is enough for an transaction
+   */
+  async checkBalanceAgainstTransaction({ ...options }) {
+    options = await this.prepareTransaction(options);
+    const tx = format.sendTx(options);
+    const result = await this.provider.call('cfx_checkBalanceAgainstTransaction',
+      tx.from,
+      tx.to,
+      tx.gas,
+      tx.gasPrice,
+      tx.storageLimit,
+      // tx.epochHeight,
+    );
+    return result;
   }
 }
 
