@@ -855,10 +855,17 @@ class Conflux {
 
   /**
    * Check whether balance is enough for an transaction
+   * 
+   * @param options {object} - See [format.againstTx](#util/format.js/againstTx)
+   * @return {Promise<object>} The gas used and storage occupied for the simulated call/transaction.
+   * - `bool` isBalanceEnough: is balance cover everything.
+   * - `bool` willPayCollateral: is balance cover collateral.
+   * - `bool` willPayTxFee: is balance cover tx fee.
+   * 
    */
   async checkBalanceAgainstTransaction({ ...options }) {
     options = await this.prepareTransaction(options);
-    const tx = format.sendTx(options);
+    const tx = format.againstTx(options);
     const result = await this.provider.call('cfx_checkBalanceAgainstTransaction',
       tx.from,
       tx.to,
