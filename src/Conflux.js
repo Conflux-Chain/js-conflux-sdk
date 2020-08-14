@@ -728,22 +728,6 @@ class Conflux {
    }
    */
   async sendTransaction({ ...options }, password) { // shallow copy `options`
-    options = await this.prepareTransaction(options);
-
-    if (options.from.privateKey) {
-      // sign by local
-      const tx = options.from.signTransaction(options);
-      return this.sendRawTransaction(tx.serialize());
-    } else {
-      // sign by remote
-      return this.provider.call('cfx_sendTransaction', format.sendTx(options), password);
-    }
-  }
-
-  /*
-  * set default value for a transaction
-  */
-  async prepareTransaction({ ...options }) {
     if (!(options.from instanceof Account)) {
       options.from = new Account(options.from);
     }
@@ -779,7 +763,15 @@ class Conflux {
       const status = await this.getStatus();
       options.chainId = status.chainId;
     }
-    return options;
+
+    if (options.from.privateKey) {
+      // sign by local
+      const tx = options.from.signTransaction(options);
+      return this.sendRawTransaction(tx.serialize());
+    } else {
+      // sign by remote
+      return this.provider.call('cfx_sendTransaction', format.sendTx(options), password);
+    }
   }
 
   /**
@@ -855,16 +847,35 @@ class Conflux {
 
   /**
    * Check whether balance is enough for an transaction
-   * 
    * @param options {object} - See [format.againstTx](#util/format.js/againstTx)
    * @return {Promise<object>} The gas used and storage occupied for the simulated call/transaction.
    * - `bool` isBalanceEnough: is balance cover everything.
    * - `bool` willPayCollateral: is balance cover collateral.
    * - `bool` willPayTxFee: is balance cover tx fee.
-   * 
    */
   async checkBalanceAgainstTransaction({ ...options }) {
-    options = await this.prepareTransaction(options);
+    if (options.gasPrice === undefined) {
+      options.gasPrice = this.defaultGasPrice;
+    }
+    if (options.gasPrice === undefined) {
+      options.gasPrice = await this.getGasPrice() || 1; // MIN_GAS_PRICE
+    }
+
+    if (options.gas === undefined || options.storageLimit === undefined) {
+      const { gasUsed, storageCollateralized } = await this.estimateGasAndCollateral(options);
+
+      if (options.gas === undefined) {
+        options.gas = gasUsed;
+      }
+
+      if (options.storageLimit === undefined) {
+        options.storageLimit = storageCollateralized;
+      }
+    }
+
+    if (options.epochHeight === undefined) {
+      options.epochHeight = await this.getEpochNumber();
+    }
     const tx = format.againstTx(options);
     const result = await this.provider.call('cfx_checkBalanceAgainstTransaction',
       tx.from,
