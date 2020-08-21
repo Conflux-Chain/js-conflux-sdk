@@ -844,6 +844,49 @@ class Conflux {
     );
     return format.estimate(result);
   }
+
+  /**
+   * Check whether balance is enough for an transaction
+   * @param options {object} - See [format.againstTx](#util/format.js/againstTx)
+   * @return {Promise<object>} The gas used and storage occupied for the simulated call/transaction.
+   * - `bool` isBalanceEnough: is balance cover everything.
+   * - `bool` willPayCollateral: is balance cover collateral.
+   * - `bool` willPayTxFee: is balance cover tx fee.
+   */
+  async checkBalanceAgainstTransaction({ ...options }) {
+    if (options.gasPrice === undefined) {
+      options.gasPrice = this.defaultGasPrice;
+    }
+    if (options.gasPrice === undefined) {
+      options.gasPrice = await this.getGasPrice() || 1; // MIN_GAS_PRICE
+    }
+
+    if (options.gas === undefined || options.storageLimit === undefined) {
+      const { gasUsed, storageCollateralized } = await this.estimateGasAndCollateral(options);
+
+      if (options.gas === undefined) {
+        options.gas = gasUsed;
+      }
+
+      if (options.storageLimit === undefined) {
+        options.storageLimit = storageCollateralized;
+      }
+    }
+
+    if (options.epochHeight === undefined) {
+      options.epochHeight = await this.getEpochNumber();
+    }
+    const tx = format.againstTx(options);
+    const result = await this.provider.call('cfx_checkBalanceAgainstTransaction',
+      tx.from,
+      tx.to,
+      tx.gas,
+      tx.gasPrice,
+      tx.storageLimit,
+      // tx.epochHeight,
+    );
+    return result;
+  }
 }
 
 module.exports = Conflux;

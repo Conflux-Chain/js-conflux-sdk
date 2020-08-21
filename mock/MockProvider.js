@@ -305,6 +305,14 @@ class MockProvider {
   cfx_getConfirmationRiskByHash() {
     return randomHex(64);
   }
+
+  cfx_checkBalanceAgainstTransaction() {
+    return {
+      willPayTxFee: true,
+      willPayCollateral: true,
+      isBalanceEnough: true,
+    };
+  }
 }
 
 module.exports = MockProvider;
