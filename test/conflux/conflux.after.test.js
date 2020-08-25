@@ -200,16 +200,3 @@ test('sendTransaction by address', async () => {
 
   await expect(promise.confirmed({ timeout: 0 })).rejects.toThrow('Timeout');
 });
-
-test('checkBalanceAgainstTransaction', async() => {
-  const balanceEnoughResponse = await cfx.checkBalanceAgainstTransaction({
-    from: ADDRESS,
-    nonce: 0,
-    gasPrice: 100,
-    gas: 21000,
-    chainId: 0,
-  });
-  expect(balanceEnoughResponse.willPayTxFee).toEqual(true);
-  expect(balanceEnoughResponse.willPayCollateral).toEqual(true);
-  expect(balanceEnoughResponse.isBalanceEnough).toEqual(true);
-});
