@@ -1,8 +1,7 @@
 const lodash = require('lodash');
 const BaseProvider = require('./BaseProvider');
 const HttpProvider = require('./HttpProvider');
-
-// const WebsocketProvider = require('./WebsocketProvider');
+const WebsocketProvider = require('./WebSocketProvider');
 
 /**
  * @param options {object}
@@ -44,9 +43,8 @@ function providerFactory({ url, ...rest } = {}) {
     return new HttpProvider({ url, ...rest });
   }
 
-  if (lodash.startsWith(url, 'es')) {
-    throw new Error('Not support websocket provider yet');
-    // provider = new WebsocketProvider({ url, ...rest }); // FIXME: support ws in browser
+  if (lodash.startsWith(url, 'ws')) {
+    return new WebsocketProvider({ url, ...rest }); // FIXME: support ws in browser
   }
 
   throw new Error('Invalid provider options');

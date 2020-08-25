@@ -67,23 +67,25 @@ If you want send a transaction to conflux network, you can use the SDK's `sendTr
 
 ```js
 const account = conflux.Account({ privateKey: PRIVATE_KEY }); // create account instance
-const txHash = await conflux.sendTransaction({
-    from: account, // from account instance and will by sign by account.privateKey
+const txHash = await account.sendTransaction({
     to: "0x-another-address", // accept address string or account instance
     value: util.unit.fromCFXToDrip(0.125), // use unit to transfer from CFX to Drip
 });
 const tx = await conflux.getTransactionByHash(txHash);  // status 0x0 means success
 const txReceipt = await conflux.getTransactionReceipt(txHash);  // outcomeStatus 0x0 means success
 ```
-That's it, it's so easy. Besides `from`, `to`, `value` there are other fields you can set and should know:
+There are fields you can set to sign and send a transaction:
 
-* gas
+* from
+* nonce
 * gasPrice
+* gas
+* to
+* value
+* storageLimit
 * epochHeight
 * chainId
 * data
-* `storageLimit`
-* nonce
 
 For the detail explanation of these fields check [official doc](https://developer.conflux-chain.org/docs/conflux-doc/docs/send_transaction#installation).
 
@@ -97,15 +99,14 @@ The SDK's `sendTransaction` and `sendRawTransaction` method have several advance
 
 ```js
 let txParameters = {
-  from: account,
   to: "0x-a-address",
   value: "0x100"
 };
-const txHash = await conflux.sendTransaction(txParameters);  // send the tx and return a hash
-const tx = await conflux.sendTransaction(txParameters).get();  // will also get the tx by hash
-const tx = await conflux.sendTransaction(txParameters).mined();  // wait tx mined and return the tx
-const receipt = await conflux.sendTransaction(txParameters).executed();  // wait tx executed and return receipt
-const receipt = await conflux.sendTransaction(txParameters).confirmed();  // wait tx confirmed and return receipt
+const txHash = await account.sendTransaction(txParameters);  // send the tx and return a hash
+const tx = await account.sendTransaction(txParameters).get();  // will also get the tx by hash
+const tx = await account.sendTransaction(txParameters).mined();  // wait tx mined and return the tx
+const receipt = await account.sendTransaction(txParameters).executed();  // wait tx executed and return receipt
+const receipt = await account.sendTransaction(txParameters).confirmed();  // wait tx confirmed and return receipt
 ```
 
 ### Deploy or interact with contract
@@ -122,7 +123,7 @@ const contract = conflux.Contract({
 // deploy the contract, and get `contractCreated`
 const receipt = await account.sendTransaction(
   contract.constructor(...args) // fill the parameter to your constructor
-    .options({ from: account }) // you can set other tx parameters such as: gas, gasPrice, storageLimit and so on (leave `to` empty)
+    .options({}) // you can set other tx parameters such as: gas, gasPrice, storageLimit and so on (leave `to` empty)
 ).confirmed(); 
 console.log(receipt); // contract address is receipt.contractCreated
 ```
@@ -150,5 +151,4 @@ const receipt = await account.sendTransaction(contract.inc(1)).confirmed(); // `
 ## Change log
 
 [see](https://github.com/Conflux-Chain/js-conflux-sdk/tree/master/CHANGE_LOG.md)
-
 

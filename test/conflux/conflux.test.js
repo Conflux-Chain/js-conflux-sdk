@@ -1,13 +1,29 @@
 const { Conflux, providerFactory } = require('../../src');
 
 // ----------------------------------------------------------------------------
-test('constructor({...})', () => {
+test('constructor({http})', () => {
   const conflux = new Conflux({
     url: 'http://localhost:12537',
     logger: console,
   });
 
   expect(conflux.provider.constructor.name).toEqual('HttpProvider');
+
+  const providerClose = jest.spyOn(conflux.provider, 'close');
+  conflux.close();
+  expect(providerClose).toHaveBeenCalledTimes(1);
+  providerClose.mockRestore();
+
+  expect(conflux.provider.constructor.name).toEqual('BaseProvider');
+});
+
+test('constructor({ws})', () => {
+  const conflux = new Conflux({
+    url: 'ws://localhost:12537',
+    logger: console,
+  });
+
+  expect(conflux.provider.constructor.name).toEqual('WebSocketProvider');
 
   const providerClose = jest.spyOn(conflux.provider, 'close');
   conflux.close();
@@ -24,14 +40,14 @@ test('constructor({defaultGasPrice})', async () => {
 
   expect(conflux.defaultGasPrice).toEqual(100);
 
-  await expect(conflux.provider.call()).rejects.toThrow('call not implement');
+  await expect(conflux.provider.call()).rejects.toThrow('request not implement');
 });
 
 test('change provider', async () => {
   const conflux = new Conflux();
 
   expect(conflux.provider.constructor.name).toEqual('BaseProvider');
-  await expect(conflux.provider.call()).rejects.toThrow('call not implement');
+  await expect(conflux.provider.call()).rejects.toThrow('request not implement');
 
   conflux.provider = providerFactory({ url: 'http://localhost:12537', timeout: 30 * 1000 });
   expect(conflux.provider.constructor.name).toEqual('HttpProvider');

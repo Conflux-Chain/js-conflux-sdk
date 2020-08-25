@@ -11,7 +11,7 @@ const markdown = jsdocToMd(`${__dirname}/src`, {
       'provider\\index.js',
       'provider\\BaseProvider.js',
       'provider\\HttpProvider.js',
-      'provider\\WebsocketProvider.js',
+      'provider\\WebSocketProvider.js',
       'subscribe\\PendingTransaction.js',
       'util\\format.js',
       'util\\sign.js',
