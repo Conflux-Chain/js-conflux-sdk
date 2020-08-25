@@ -27,6 +27,8 @@ keywords:
         - [HttpProvider](#provider/HttpProvider.js/HttpProvider)
     - index.js
         - [providerFactory](#provider/index.js/providerFactory)
+    - WebSocketProvider.js
+        - [WebSocketProvider](#provider/WebSocketProvider.js/WebSocketProvider)
 - subscribe
     - PendingTransaction.js
         - [PendingTransaction](#subscribe/PendingTransaction.js/PendingTransaction)
@@ -1387,13 +1389,7 @@ It is used in `call` method, overwrite it to gen your own id.
 
 `string` 
 
-----------------------------------------
-
-## HttpProvider <a id="provider/HttpProvider.js/HttpProvider"></a>
-
-Http protocol json rpc provider.
-
-## HttpProvider.prototype.call <a id="provider/HttpProvider.js/call"></a>
+## BaseProvider.prototype.call <a id="provider/BaseProvider.js/call"></a>
 
 Call a json rpc method with params
 
@@ -1414,6 +1410,37 @@ method    | `string` | true     |         | Json rpc method name.
 > await provider.call('cfx_epochNumber');
 > await provider.call('cfx_getBlockByHash', blockHash);
 ```
+
+## BaseProvider.prototype.batch <a id="provider/BaseProvider.js/batch"></a>
+
+Batch call json rpc methods with params
+
+* **Parameters**
+
+Name  | Type             | Required | Default | Description
+------|------------------|----------|---------|-------------------------------------------
+array | `Array.<object>` | true     |         | Array of object with "method" and "params"
+
+* **Returns**
+
+`Promise.<Array>` 
+
+* **Examples**
+
+```
+> await provider.batch([
+  { method: 'cfx_epochNumber' },
+  { method: 'cfx_getBalance', params: ['0x0123456789012345678901234567890123456789'] },
+  { method: 'InValidInput' },
+])
+   [ '0x3b734d', '0x22374d959c622f74728', RPCError: Method not found ]
+```
+
+----------------------------------------
+
+## HttpProvider <a id="provider/HttpProvider.js/HttpProvider"></a>
+
+Http protocol json rpc provider.
 
 ----------------------------------------
 
@@ -1459,6 +1486,12 @@ options.url | `string` | true     |         |
     logger: {...}
   }
 ```
+
+----------------------------------------
+
+## WebSocketProvider <a id="provider/WebSocketProvider.js/WebSocketProvider"></a>
+
+Websocket protocol json rpc provider.
 
 ----------------------------------------
 
