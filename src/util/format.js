@@ -434,13 +434,4 @@ format.estimateTx = Parser({
   data: format.hex.or(undefined),
 });
 
-format.againstTx = Parser({
-  from: format.address,
-  to: format.address.or(null).or(undefined),
-  gasPrice: format.hexUInt,
-  gas: format.hexUInt,
-  storageLimit: format.hexUInt,
-  epochHeight: format.uInt.or(undefined),
-});
-
 module.exports = format;
