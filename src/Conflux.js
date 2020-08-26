@@ -172,7 +172,7 @@ class Conflux {
    */
   async getInterestRate(epochNumber) {
     const result = await this.provider.call('cfx_getInterestRate',
-      format.epochNumber.or(undefined)(epochNumber),
+      format.epochNumber.$or(undefined)(epochNumber),
     );
     return format.bigUInt(result);
   }
@@ -189,7 +189,7 @@ class Conflux {
    */
   async getAccumulateInterestRate(epochNumber) {
     const result = await this.provider.call('cfx_getAccumulateInterestRate',
-      format.epochNumber.or(undefined)(epochNumber),
+      format.epochNumber.$or(undefined)(epochNumber),
     );
     return format.bigUInt(result);
   }
@@ -224,7 +224,7 @@ class Conflux {
   async getAccount(address, epochNumber) {
     const result = await this.provider.call('cfx_getAccount',
       format.address(address),
-      format.epochNumber.or(undefined)(epochNumber),
+      format.epochNumber.$or(undefined)(epochNumber),
     );
     return format.account(result);
   }
@@ -243,7 +243,7 @@ class Conflux {
   async getBalance(address, epochNumber) {
     const result = await this.provider.call('cfx_getBalance',
       format.address(address),
-      format.epochNumber.or(undefined)(epochNumber),
+      format.epochNumber.$or(undefined)(epochNumber),
     );
     return format.bigUInt(result);
   }
@@ -262,7 +262,7 @@ class Conflux {
   async getStakingBalance(address, epochNumber) {
     const result = await this.provider.call('cfx_getStakingBalance',
       format.address(address),
-      format.epochNumber.or(undefined)(epochNumber),
+      format.epochNumber.$or(undefined)(epochNumber),
     );
     return format.bigUInt(result);
   }
@@ -281,7 +281,7 @@ class Conflux {
   async getNextNonce(address, epochNumber) {
     const result = await this.provider.call('cfx_getNextNonce',
       format.address(address),
-      format.epochNumber.or(undefined)(epochNumber),
+      format.epochNumber.$or(undefined)(epochNumber),
     );
     return format.bigUInt(result);
   }
@@ -300,7 +300,7 @@ class Conflux {
   async getAdmin(address, epochNumber) {
     return this.provider.call('cfx_getAdmin',
       format.address(address),
-      format.epochNumber.or(undefined)(epochNumber),
+      format.epochNumber.$or(undefined)(epochNumber),
     );
   }
 
@@ -317,7 +317,7 @@ class Conflux {
    */
   async getEpochNumber(epochNumber) {
     const result = await this.provider.call('cfx_epochNumber',
-      format.epochNumber.or(undefined)(epochNumber),
+      format.epochNumber.$or(undefined)(epochNumber),
     );
     return format.uInt(result);
   }
@@ -338,7 +338,7 @@ class Conflux {
       format.epochNumber(epochNumber),
       format.boolean(detail),
     );
-    return format.block.or(null)(result);
+    return format.block.$or(null)(result);
   }
 
   /**
@@ -428,7 +428,7 @@ class Conflux {
       format.blockHash(blockHash),
       format.boolean(detail),
     );
-    return format.block.or(null)(result);
+    return format.block.$or(null)(result);
   }
 
   /**
@@ -464,7 +464,7 @@ class Conflux {
     const result = await this.provider.call('cfx_getConfirmationRiskByHash',
       format.blockHash(blockHash),
     );
-    return format.riskNumber(result);
+    return format.riskNumber.$or(null)(result);
   }
 
   // ----------------------------- transaction --------------------------------
@@ -519,7 +519,7 @@ class Conflux {
     const result = await this.provider.call('cfx_getTransactionByHash',
       format.transactionHash(transactionHash),
     );
-    return format.transaction.or(null)(result);
+    return format.transaction.$or(null)(result);
   }
 
   /**
@@ -562,7 +562,7 @@ class Conflux {
     const result = await this.provider.call('cfx_getTransactionReceipt',
       format.transactionHash(transactionHash),
     );
-    return format.receipt.or(null)(result);
+    return format.receipt.$or(null)(result);
   }
 
   /**
@@ -611,7 +611,7 @@ class Conflux {
   async getCode(address, epochNumber) {
     return this.provider.call('cfx_getCode',
       format.address(address),
-      format.epochNumber.or(undefined)(epochNumber),
+      format.epochNumber.$or(undefined)(epochNumber),
     );
   }
 
@@ -631,7 +631,7 @@ class Conflux {
     return this.provider.call('cfx_getStorageAt',
       format.address(address),
       format.hex64(position),
-      format.epochNumber.or(undefined)(epochNumber),
+      format.epochNumber.$or(undefined)(epochNumber),
     );
   }
 
@@ -656,7 +656,7 @@ class Conflux {
   async getStorageRoot(address, epochNumber) {
     return this.provider.call('cfx_getStorageRoot',
       format.address(address),
-      format.epochNumber.or(undefined)(epochNumber),
+      format.epochNumber.$or(undefined)(epochNumber),
     );
   }
 
@@ -685,7 +685,7 @@ class Conflux {
   async getSponsorInfo(address, epochNumber) {
     const result = await this.provider.call('cfx_getSponsorInfo',
       format.address(address),
-      format.epochNumber.or(undefined)(epochNumber),
+      format.epochNumber.$or(undefined)(epochNumber),
     );
     return format.sponsorInfo(result);
   }
@@ -704,7 +704,7 @@ class Conflux {
   async getCollateralForStorage(address, epochNumber) {
     const result = await this.provider.call('cfx_getCollateralForStorage',
       format.address(address),
-      format.epochNumber.or(undefined)(epochNumber),
+      format.epochNumber.$or(undefined)(epochNumber),
     );
     return format.bigUInt(result);
   }
@@ -720,7 +720,7 @@ class Conflux {
     try {
       return await this.provider.call('cfx_call',
         format.callTx(options),
-        format.epochNumber.or(undefined)(epochNumber),
+        format.epochNumber.$or(undefined)(epochNumber),
       );
     } catch (e) {
       throw decodeError(e);

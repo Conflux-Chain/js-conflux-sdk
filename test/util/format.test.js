@@ -112,7 +112,7 @@ test('hexUInt', () => {
 
 test('riskNumber', () => {
   expect(() => format.riskNumber(undefined)).toThrow('convert undefined to');
-  expect(format.riskNumber(null)).toEqual(null);
+  expect(() => format.riskNumber(null)).toThrow('of null');
   expect(format.riskNumber('0xe666666666666666666666666666666666666666666666666666666666666665')).toEqual(0.9);
   expect(format.riskNumber('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')).toEqual(1);
 });
@@ -154,18 +154,6 @@ test('buffer', () => {
 
   expect(format.buffer(false)).toEqual(Buffer.from([0]));
   expect(format.buffer(true)).toEqual(Buffer.from([1]));
-});
-
-test('bytes', () => {
-  expect(() => format.bytes(undefined)).toThrow('type');
-  expect(() => format.bytes(null)).toThrow('type');
-  expect(() => format.bytes(0)).toThrow('type');
-  expect(() => format.bytes(3.14)).toThrow('type');
-
-  expect(format.bytes('abcd')).toEqual(Buffer.from([97, 98, 99, 100]));
-  expect(format.bytes('0x0a')).toEqual(Buffer.from([48, 120, 48, 97]));
-  expect(format.bytes([0, 1])).toEqual(Buffer.from([0, 1]));
-  expect(format.bytes(Buffer.from([0, 1]))).toEqual(Buffer.from([0, 1]));
 });
 
 test('boolean', () => {

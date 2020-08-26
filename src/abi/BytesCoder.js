@@ -1,4 +1,4 @@
-const { assert, format, sign } = require('../util');
+const { assert, sign } = require('../util');
 const BaseCoder = require('./BaseCoder');
 const { WORD_BYTES, padBuffer, encodeUInt256, decodeUInt256 } = require('./util');
 
@@ -37,7 +37,7 @@ class BytesCoder extends BaseCoder {
    * @return {Buffer}
    */
   encode(value) {
-    value = format.bytes(value);
+    value = Buffer.isBuffer(value) ? value : Buffer.from(value);
 
     if (this.size !== undefined) {
       assert(value.length === this.size, {
