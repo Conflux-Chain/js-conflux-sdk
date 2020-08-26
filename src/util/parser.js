@@ -1,5 +1,4 @@
 const lodash = require('lodash');
-const callable = require('./callable');
 
 // ============================================================================
 class ParserError extends Error {
@@ -39,16 +38,22 @@ class ParserError extends Error {
 
 // ----------------------------------------------------------------------------
 function valueParser(schema) {
-  return value => {
+  return asParser(value => {
     if (!(value === schema)) {
       throw new Error(`${value} not equal ${schema}`);
     }
     return value;
-  };
+  });
 }
 
-function arrayParser(parser) {
-  return array => {
+function functionParser(func) {
+  return asParser(value => func(value));
+}
+
+function arrayParser(schema) {
+  const func = schema.length ? parser(schema[0]) : v => v;
+
+  return asParser(array => {
     if (!Array.isArray(array)) {
       throw new Error(`expected array, got ${typeof array}`);
     }
@@ -56,106 +61,108 @@ function arrayParser(parser) {
     const error = new ParserError(); // create Error here for shallow stack
     return array.map((v, i) => {
       try {
-        return parser(v);
+        return func(v);
       } catch (e) {
         throw error.set(e, `[${i}]`, array);
       }
     });
-  };
+  });
 }
 
-function objectParser(keyToParser, pick = false) {
-  return object => {
+function objectParser(schema, pick = false) {
+  const keyToFunc = lodash.mapValues(schema, parser);
+
+  return asParser(object => {
     if (!lodash.isObject(object)) {
       throw new Error(`expected plain object, got ${typeof object}`);
     }
 
     const error = new ParserError(); // create Error here for shallow stack
-    const picked = lodash.mapValues(keyToParser, (parser, key) => {
+    const picked = lodash.mapValues(keyToFunc, (func, key) => {
       try {
-        return parser(object[key]);
+        return func(object[key]);
       } catch (e) {
         throw error.set(e, `.${key}`, object);
       }
     });
 
     return pick ? picked : lodash.defaults(picked, object);
-  };
+  });
 }
 
-// ----------------------------------------------------------------------------
-class Parser {
-  constructor(arg, options) {
-    if (Array.isArray(arg)) {
-      const parser = arg.length ? new this.constructor(arg[0]) : v => v;
-      arg = arrayParser(parser);
-    } else if (lodash.isPlainObject(arg)) {
-      const keyToParser = lodash.mapValues(arg, v => new this.constructor(v));
-      arg = objectParser(keyToParser, options);
-    } else if (!lodash.isFunction(arg)) {
-      arg = valueParser(arg);
+function $before(func) {
+  return asParser(value => {
+    return this(func(value));
+  });
+}
+
+function $after(func) {
+  return asParser(value => {
+    return func(this(value));
+  });
+}
+
+function $default(defaultValue) {
+  return asParser(value => {
+    if (value === undefined) {
+      value = defaultValue;
     }
-    return callable(this, arg);
-  }
-
-  /**
-   * @param defaultValue {*}
-   * @return {Parser}
-   */
-  default(defaultValue) {
-    const inner = value => {
-      if (value === undefined) {
-        value = defaultValue;
-      }
-      return this(value);
-    };
-    return new this.constructor(inner);
-  }
-
-  parse(schema) {
-    const outer = new this.constructor(schema);
-    const inner = value => outer(this(value));
-    return new this.constructor(inner);
-  }
-
-  /**
-   * @param func {function}
-   * @param [name] {string}
-   * @return {Parser}
-   */
-  validate(func, name = func.name) {
-    const inner = value => {
-      value = this(value);
-      if (!func(value)) {
-        throw new Error(`${value} not match ${name}`);
-      }
-      return value;
-    };
-    return new this.constructor(inner);
-  }
-
-  /**
-   * @param schema {*}
-   * @return {Parser}
-   */
-  or(schema) {
-    const other = new this.constructor(schema);
-    const parserArray = [this, other];
-
-    const inner = value => {
-      const errorArray = [];
-      for (const parser of parserArray) {
-        try {
-          return parser(value);
-        } catch (e) {
-          errorArray.push(e instanceof ParserError ? e.msg : e.message);
-        }
-      }
-
-      throw new Error(errorArray.map(e => `(${e})`).join(' && '));
-    };
-    return new this.constructor(inner);
-  }
+    return this(value);
+  });
 }
 
-module.exports = callable.withoutNew(Parser);
+function $validate(func, name = func.name) {
+  return asParser(value => {
+    value = this(value);
+    if (!func(value)) {
+      throw new Error(`${value} not match ${name}`);
+    }
+    return value;
+  });
+}
+
+function $or(schema) {
+  const other = parser(schema);
+
+  return asParser(value => {
+    const funcArray = [this, other];
+
+    const errorArray = [];
+    for (const func of funcArray) {
+      try {
+        return func(value);
+      } catch (e) {
+        errorArray.push(e instanceof ParserError ? e.msg : e.message);
+      }
+    }
+
+    throw new Error(errorArray.map(e => `(${e})`).join(' && '));
+  });
+}
+
+function asParser(func) {
+  func.$before = $before;
+  func.$after = $after;
+  func.$default = $default;
+  func.$validate = $validate;
+  func.$or = $or;
+  return func;
+}
+
+function parser(arg, ...args) {
+  if (Array.isArray(arg)) {
+    return arrayParser(arg, ...args);
+  }
+
+  if (lodash.isPlainObject(arg)) {
+    return objectParser(arg, ...args);
+  }
+
+  if (lodash.isFunction(arg)) {
+    return functionParser(arg, ...args);
+  }
+
+  return valueParser(arg, ...args);
+}
+
+module.exports = parser;
