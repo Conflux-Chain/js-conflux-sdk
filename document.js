@@ -19,6 +19,7 @@ const markdown = jsdocToMd(`${__dirname}/src`, {
       'Conflux.js',
       'Message.js',
       'Transaction.js',
+      'Drip.js',
     ];
 
     if (lodash.some(suffixArray, suffix => filename.endsWith(suffix))) {

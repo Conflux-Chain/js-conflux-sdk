@@ -18,6 +18,8 @@ keywords:
 - contract
     - Contract.js
         - [Contract](#contract/Contract.js/Contract)
+- Drip.js
+    - [Drip](#Drip.js/Drip)
 - Message.js
     - [Message](#Message.js/Message)
 - provider
@@ -47,8 +49,6 @@ keywords:
         - [ecdsaRecover](#util/sign.js/ecdsaRecover)
         - [encrypt](#util/sign.js/encrypt)
         - [decrypt](#util/sign.js/decrypt)
-    - unit.js
-        - [unit](#util/unit.js/unit)
 
 ----------------------------------------
 
@@ -468,13 +468,13 @@ Returns the current price per gas in Drip.
 
 * **Returns**
 
-`Promise.<JSBI>` Gas price in drip.
+`Promise.<Drip>` Gas price in drip.
 
 * **Examples**
 
 ```
 > await conflux.getGasPrice();
-   "0"
+   [String (Drip): '1']
 ```
 
 ## Conflux.prototype.getInterestRate <a id="Conflux.js/getInterestRate"></a>
@@ -569,13 +569,13 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](
 
 * **Returns**
 
-`Promise.<JSBI>` The balance in Drip.
+`Promise.<Drip>` The balance in Drip.
 
 * **Examples**
 
 ```
-> await conflux.getBalance("0x1000000000000000000000000000000000000060");
-   "0"
+> await conflux.getBalance("0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b");
+   [String (Drip): '10098788868004995614504']
 ```
 
 ## Conflux.prototype.getStakingBalance <a id="Conflux.js/getStakingBalance"></a>
@@ -591,13 +591,13 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](
 
 * **Returns**
 
-`Promise.<JSBI>` The staking balance in Drip.
+`Promise.<Drip>` The staking balance in Drip.
 
 * **Examples**
 
 ```
-> await conflux.getStakingBalance('0xc94770007dda54cF92009BFF0dE90c06F603a09f', 'latest_state');
-   "158972490234375000"
+> await conflux.getStakingBalance('0x194770007dda54cF92009BFF0dE90c06F603a09f', 'latest_state');
+   [String (Drip): '6334100968004995614504']
 ```
 
 ## Conflux.prototype.getNextNonce <a id="Conflux.js/getNextNonce"></a>
@@ -1229,6 +1229,126 @@ conflux          | `Conflux` | true     |         | Conflux instance.
         current: JSBI.BigInt(100),
       },
     }
+```
+
+----------------------------------------
+
+## Drip <a id="Drip.js/Drip"></a>
+
+Positive decimal integer string in `Drip`
+
+## Drip.fromCFX <a id="Drip.js/fromCFX"></a>
+
+Get `Drip` string from `CFX`
+
+* **Parameters**
+
+Name  | Type            | Required | Default | Description
+------|-----------------|----------|---------|------------
+value | `string,number` | true     |         |
+
+* **Returns**
+
+`Drip` 
+
+* **Examples**
+
+```
+> Drip.fromCFX(3.14)
+   [String (Drip): '3140000000000000000']
+> Drip.fromCFX('0xab')
+   [String (Drip): '171000000000000000000']
+```
+
+## Drip.fromGDrip <a id="Drip.js/fromGDrip"></a>
+
+Get `Drip` string from `GDrip`
+
+* **Parameters**
+
+Name  | Type            | Required | Default | Description
+------|-----------------|----------|---------|------------
+value | `string,number` | true     |         |
+
+* **Returns**
+
+`Drip` 
+
+* **Examples**
+
+```
+> Drip.fromGDrip(3.14)
+   [String (Drip): '3140000000']
+> Drip.fromGDrip('0xab')
+   [String (Drip): '171000000000']
+```
+
+## Drip.fromDrip <a id="Drip.js/fromDrip"></a>
+
+Get `Drip` string from `Drip`
+
+* **Parameters**
+
+Name  | Type            | Required | Default | Description
+------|-----------------|----------|---------|------------
+value | `string,number` | true     |         |
+
+* **Returns**
+
+`Drip` 
+
+* **Examples**
+
+```
+> Drip.fromDrip(1.00)
+   [String (Drip): '1']
+> Drip.fromDrip('0xab')
+   [String (Drip): '171']
+```
+
+## Drip.prototype.toCFX <a id="Drip.js/toCFX"></a>
+
+Get `CFX` number string
+
+* **Returns**
+
+`string` 
+
+* **Examples**
+
+```
+> Drip.fromDrip(1e9).toCFX()
+   "0.000000001"
+```
+
+## Drip.prototype.toGDrip <a id="Drip.js/toGDrip"></a>
+
+Get `GDrip` number string
+
+* **Returns**
+
+`string` 
+
+* **Examples**
+
+```
+> Drip.fromDrip(1e9).toGDrip()
+   "1"
+```
+
+## Drip.prototype.toDrip <a id="Drip.js/toDrip"></a>
+
+Get `Drip` number string
+
+* **Returns**
+
+`string` 
+
+* **Examples**
+
+```
+> Drip.fromDrip(1e9).toGDrip()
+   "1000000000"
 ```
 
 ----------------------------------------
@@ -2019,29 +2139,6 @@ arg  | `number,JSBI,string,Buffer,boolean,null` | true     |         |
  Error("not match hex")
 ```
 
-## format.bytes <a id="util/format.js/bytes"></a>
-
-* **Parameters**
-
-Name | Type                  | Required | Default | Description
------|-----------------------|----------|---------|------------
-arg  | `string,Buffer,array` | true     |         |
-
-* **Returns**
-
-`Buffer` 
-
-* **Examples**
-
-```
-> format.bytes('abcd')
- <Buffer 61 62 63 64>
-> format.bytes(Buffer.from([0, 1]))
- <Buffer 00 01>
-> format.bytes([0, 1])
- <Buffer 00 01>
-```
-
 ## format.boolean <a id="util/format.js/boolean"></a>
 
 * **Parameters**
@@ -2377,60 +2474,4 @@ password   | `string,Buffer` | true     |         |
     }
   }, 'password')
  <Buffer 01 23 45 67 89 ab cd ef 01 23 45 67 89 ab cd ef 01 23 45 67 89 ab cd ef 01 23 45 67 89 ab cd ef>
-```
-
-----------------------------------------
-
-## unit <a id="util/unit.js/unit"></a>
-
-Unit converter factory
-
-* **Parameters**
-
-Name | Type     | Required | Default | Description
------|----------|----------|---------|---------------------------------
-from | `string` | true     |         | Enum in ['CFX', 'GDrip', 'Drip']
-to   | `string` | true     |         | Enum in ['CFX', 'GDrip', 'Drip']
-
-* **Returns**
-
-`string` 
-
-* **Examples**
-
-```
-> unit('CFX', 'Drip')(1)
- "1000000000000000000"
-> unit('Drip', 'CFX')(1000000000000000000)
- "1"
-```
-
-```
-> unit.fromCFXToGDrip(123)
- "123000000000"
-```
-
-```
-> fromCFXToDrip(123)
- "123000000000000000000"
-```
-
-```
-> fromGDripToCFX(123000000000)
- "123"
-```
-
-```
-> fromGDripToDrip(123)
- "123000000000"
-```
-
-```
-> fromDripToCFX(123000000000000000000)
- "123"
-```
-
-```
-> fromDripToGDrip(123000000000)
- "123"
 ```
