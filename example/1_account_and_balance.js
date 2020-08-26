@@ -1,6 +1,5 @@
 /* eslint-disable */
-const JSBI = require('jsbi');
-const { Conflux, util } = require('../src'); // require('js-conflux-sdk');
+const { Conflux, Drip } = require('../src'); // require('js-conflux-sdk');
 
 const conflux = new Conflux({
   url: 'http://testnet-jsonrpc.conflux-chain.org:12537',
@@ -14,18 +13,12 @@ const account = conflux.Account({ privateKey: '0x46b9e861b63d3509c88b7817275a30d
 async function getAccountBalance() {
   const balance = await conflux.getBalance(account.address); // or `conflux.getBalance(account)`
 
-  // returned balance is a instance of JSBI
-  console.log(balance instanceof JSBI); // true
-  console.log(balance); // JSBI(4) [ 1054198248, 2078599074, -1055322018, 12621, sign: false ]
-
-  // get balance string in Drip
-  console.log(balance.toString()); // "999998399999871999915999848942056"
-
-  const account = conflux.Account({ privateKey: '0x46b9e861b63d3509c88b7817275a30d22d62c8cd8fa6486ddee35ef0d8e0495f' });
-  console.log(account.address); // 0x1be45681ac6c53d5a40475f7526bac1fe7590fb8
-
-  // get balance string in CFX
-  console.log(util.unit.fromDripToCFX(balance)); // "999998399999871.999915999848942056
+  // returned balance is a instance of Drip
+  console.log(balance instanceof Drip); // true
+  console.log(balance); // [String (Drip): '1999999999999999999999999886753792']
+  console.log(balance.toDrip()); // 1999999999999999999999999886753792
+  console.log(balance.toGDrip()); // 1999999999999999999999999.886753792
+  console.log(balance.toCFX()); // 1999999999999999.999999999886753792
 }
 
 function encryptAndDecryptPrivateKeyAccount() {

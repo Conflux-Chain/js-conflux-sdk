@@ -12,13 +12,17 @@ class BaseCoder {
   /**
    * @return {Buffer}
    */
-  encode(value) {} // eslint-disable-line no-unused-vars
+  encode(value) { // eslint-disable-line no-unused-vars
+    throw new Error(`${this.constructor.name}.encode not implemented`);
+  }
 
   /**
    * @param stream {HexStream}
    * @return {*}
    */
-  decode(stream) {} // eslint-disable-line no-unused-vars
+  decode(stream) { // eslint-disable-line no-unused-vars
+    throw new Error(`${this.constructor.name}.decode not implemented`);
+  }
 
   encodeIndex(value) {
     return this.encode(value);

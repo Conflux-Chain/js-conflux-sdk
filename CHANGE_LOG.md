@@ -1,6 +1,44 @@
 # change log
 
-## v1.0.0
+## v1.0.0-alpha.1
+
+* implement `Drip` to replace unit
+
+conflux `getGasPrice`, `getBalance` and `getStakingBalance` returned `Drip` instance
+
+```
+// old
+const { util } = require('js-conflux-sdk');
+
+const balance = await conflux.getBalance(ADDRESS);
+console.log(util.unit.fromDripToCFX(balance))
+
+// new
+const balance = await conflux.getBalance(ADDRESS);
+console.log(balance.toCFX())
+```
+
+for input, use `Drip.fromXXX` to get drip number string
+
+```
+// old
+const { util } = require('js-conflux-sdk');
+
+const tx = {
+  to: ADDRESS,
+  value: util.unit.fromCFXToDrip(0.1),
+  ...
+}
+
+// new
+const { Drip } = require('js-conflux-sdk');
+
+const tx = {
+  to: ADDRESS,
+  value: Drip.fromCFX(0.1),
+  ...
+}
+```
 
 * friendly example code
 

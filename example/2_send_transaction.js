@@ -1,5 +1,5 @@
 /* eslint-disable */
-const { Conflux, Transaction, util } = require('../src'); // require('js-conflux-sdk');
+const { Conflux, Transaction, Drip, util } = require('../src'); // require('js-conflux-sdk');
 
 const conflux = new Conflux({
   url: 'http://testnet-jsonrpc.conflux-chain.org:12537',
@@ -20,12 +20,13 @@ async function sendTransactionSimple() {
   // alice send some CFX to bob
   const txHash = await accountAlice.sendTransaction({
     to: addressBob,
-    value: util.unit.fromCFXToDrip('0.1'), // 0.1 CFX = 100000000000000000 Drip
+    value: Drip.fromCFX(0.1), // 0.1 CFX = 100000000000000000 Drip
   });
 
   console.log(txHash); // 0x50cd13d5f97dd867d4ca65e24eb642f6444c07d6af8143018c558df456f11e63
 
   // you might need wait seconds here...
+  console.log('waiting...');
   await util.sleep(30 * 1000);
 
   const transaction = await conflux.getTransactionByHash(txHash);
@@ -82,7 +83,7 @@ async function sendTransactionSimple() {
  */
 async function sendTransactionComplete() {
   const to = addressBob;
-  const value = util.unit.fromGDripToDrip(100); // 100 GDrip = 100000000000 Drip
+  const value = Drip.fromGDrip(100); // 100 GDrip = 100000000000 Drip
   const estimate = await conflux.estimateGasAndCollateral({ to, value });
 
   const status = await conflux.getStatus();

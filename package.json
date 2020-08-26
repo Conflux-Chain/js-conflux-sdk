@@ -65,6 +65,6 @@
     "build": "node development/build-frontend.js",
     "document": "node document.js",
     "prepublishOnly": "npm run build",
-    "test": "jest"
+    "test": "jest --coverage"
   }
 }

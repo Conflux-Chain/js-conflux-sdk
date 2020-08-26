@@ -1,5 +1,7 @@
-const Message = require('../src/Message');
-const { sign } = require('../src/util');
+const {
+  Message,
+  util: { sign },
+} = require('../src');
 
 const KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 const PUBLIC = '0x4646ae5047316b4230d0086c8acec687f00b1cd9d1dc634f6cb358ac0a9a8ffffe77b4dd0a4bfb95851f3b7355c781dd60f8418fc8a65d14907aff47c903a559';

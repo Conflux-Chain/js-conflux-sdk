@@ -1,6 +1,5 @@
 const lodash = require('lodash');
 const sign = require('./sign');
-const unit = require('./unit');
 const format = require('./format');
 
 function assert(bool, value) {
@@ -54,4 +53,4 @@ function decorate(func, callback) {
   };
 }
 
-module.exports = { sign, unit, format, assert, sleep, loop, decorate };
+module.exports = { sign, format, assert, sleep, loop, decorate };
