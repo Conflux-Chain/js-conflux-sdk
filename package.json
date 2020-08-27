@@ -59,6 +59,8 @@
     "tinyify/unassertify/unassert/acorn": "7.1.1",
     "**/minimist": "^1.2.3",
     "**/kind-of": "^6.0.3",
+    "**/elliptic": "^6.5.3",
+    "**/lodash": "^4.17.20",
     "jest/jest-cli/jest-config/jest-environment-jsdom/jsdom/acorn-globals/acorn": "6.4.1"
   },
   "scripts": {
