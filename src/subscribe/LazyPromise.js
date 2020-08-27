@@ -9,9 +9,21 @@ class LazyPromise {
     this._promise = this._promise || this._func(...this._params);
 
     try {
-      resolve(await this._promise);
+      return resolve(await this._promise);
     } catch (e) {
-      reject(e);
+      return reject(e);
+    }
+  }
+
+  async catch(callback) {
+    return this.then(v => v, callback);
+  }
+
+  async finally(callback) {
+    try {
+      return await this;
+    } finally {
+      await callback();
     }
   }
 }
