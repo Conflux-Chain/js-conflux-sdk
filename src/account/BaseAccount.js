@@ -39,6 +39,10 @@ class BaseAccount {
     return this.address;
   }
 
+  toJSON() {
+    return this.address;
+  }
+
   // --------------------------------------------------------------------------
   /**
    *

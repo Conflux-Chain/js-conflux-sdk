@@ -292,6 +292,20 @@ format.transactionHash = format.hex64; // alias
 format.buffer = format.hex.$after(v => Buffer.from(v.substr(2), 'hex'));
 
 /**
+ * @param arg {string|Buffer|array}
+ * @return {Buffer}
+ *
+ * @example
+ * > format.bytes('abcd')
+ <Buffer 61 62 63 64>
+ * > format.bytes([0, 1])
+ <Buffer 00 01>
+ * > format.bytes(Buffer.from([0, 1]))
+ <Buffer 00 01>
+ */
+format.bytes = parser(v => (Buffer.isBuffer(v) ? v : Buffer.from(v)));
+
+/**
  * @param arg {boolean}
  * @return {boolean}
  *
@@ -434,5 +448,13 @@ format.sponsorInfo = parser({
   sponsorBalanceForGas: format.bigUInt,
   sponsorGasBound: format.bigUInt,
 });
+
+format.rewardInfo = parser([
+  {
+    baseReward: format.bigUInt,
+    totalReward: format.bigUInt,
+    txFee: format.bigUInt,
+  },
+]);
 
 module.exports = format;

@@ -358,6 +358,44 @@ class Conflux {
     );
   }
 
+  /**
+   * Get epoch blocks reward info
+   *
+   * @private
+   * @param epochNumber {string|number} - See [format.sendTx](#util/format.js/epochNumber)
+   * @return {Promise<object[]>} List of block reward info
+   * - blockHash `string`: Hash of the block.
+   * - author `string`: The address of the beneficiary to whom the mining rewards were given.
+   * - baseReward `JSBI`: Block base reward in `Drip`
+   * - totalReward `JSBI`: Block total reward in `Drip`
+   * - txFee `JSBI`: Total gas fee of block transaction
+   *
+   * @example
+   * > await conflux.getBlockRewardInfo(4060000);
+   [
+   {
+      "baseReward": "11295480000000000000",
+      "totalReward": "11295509726193823715",
+      "txFee": "0",
+      "author": "0x13bbe31525cb9ed1461d3277c4413c854d9f8355",
+      "blockHash": "0x305c0a205af135ffca55a6ffb9569cbf93451ea3b7211b8f0ae39c147f3320e8"
+    },
+   {
+      "baseReward": "11300000000000000000",
+      "totalReward": "11300029738091185588",
+      "txFee": "2126250",
+      "author": "0x1a84009b2f981155b98bb7e10aa0965fbc169be7",
+      "blockHash": "0xfc75086a3a752d742673859d371061e8a59c85a54e90f13914b62c20364a2150"
+    }
+   ]
+   */
+  async getBlockRewardInfo(epochNumber) {
+    const result = await this.provider.call('cfx_getBlockRewardInfo',
+      format.epochNumber(epochNumber),
+    );
+    return format.rewardInfo(result);
+  }
+
   // -------------------------------- block -----------------------------------
   /**
    * Returns the hash of best block.
