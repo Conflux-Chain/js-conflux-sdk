@@ -19,9 +19,21 @@ class MethodTransaction extends Transaction {
     try {
       const hex = await this.method.conflux.call(this);
       const result = this.method.decodeOutputs(hex);
-      resolve(result);
+      return resolve(result);
     } catch (e) {
-      reject(e);
+      return reject(e);
+    }
+  }
+
+  async catch(callback) {
+    return this.then(v => v, callback);
+  }
+
+  async finally(callback) {
+    try {
+      return await this;
+    } finally {
+      await callback();
     }
   }
 }
