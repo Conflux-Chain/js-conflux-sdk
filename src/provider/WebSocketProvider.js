@@ -5,8 +5,7 @@ const BaseProvider = require('./BaseProvider');
 class Client extends websocket.client {
   constructor({ url, ...options }) {
     super(options);
-
-    this.connection = { connected: false };
+    this.url = url;
 
     this.once('connect', connection => {
       connection.send = promisify(connection.send);
@@ -17,11 +16,14 @@ class Client extends websocket.client {
     this.once('connectFailed', e => {
       throw e;
     });
-
-    this.connect(url);
   }
 
   async connected() {
+    if (!this.connection) {
+      this.connect(this.url);
+      this.connection = { connected: false };
+    }
+
     if (!this.connection.connected) {
       await new Promise(resolve => this.once('connect', resolve));
     }
@@ -33,7 +35,7 @@ class Client extends websocket.client {
   }
 
   close() {
-    if (this.connection.connected) {
+    if (this.connection && this.connection.connected) {
       this.connection.close();
     }
   }

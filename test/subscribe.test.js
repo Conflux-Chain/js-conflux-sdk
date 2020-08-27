@@ -10,18 +10,18 @@ const PRIVATE_KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef012345678
 const account = conflux.Account({ privateKey: PRIVATE_KEY });
 
 test('PendingTransaction', async () => {
-  conflux.getTransactionByHash = jest.fn();
-  conflux.getTransactionByHash
+  const getTransactionByHash = jest.spyOn(conflux, 'getTransactionByHash');
+  getTransactionByHash
     .mockResolvedValueOnce(null)
     .mockResolvedValue({ blockHash: 'blockHash' });
 
-  conflux.getTransactionReceipt = jest.fn();
-  conflux.getTransactionReceipt
+  const getTransactionReceipt = jest.spyOn(conflux, 'getTransactionReceipt');
+  getTransactionReceipt
     .mockResolvedValueOnce(null)
     .mockResolvedValue({ outcomeStatus: 0, contractCreated: 'address' });
 
-  conflux.getConfirmationRiskByHash = jest.fn();
-  conflux.getConfirmationRiskByHash
+  const getConfirmationRiskByHash = jest.spyOn(conflux, 'getConfirmationRiskByHash');
+  getConfirmationRiskByHash
     .mockResolvedValueOnce(1)
     .mockResolvedValue(0);
 
@@ -31,6 +31,10 @@ test('PendingTransaction', async () => {
   expect(await pending.mined({ delta: 0 })).toEqual({ blockHash: 'blockHash' });
   expect(await pending.executed({ delta: 0 })).toEqual({ outcomeStatus: 0, contractCreated: 'address' });
   expect(await pending.confirmed({ delta: 0 })).toEqual({ outcomeStatus: 0, contractCreated: 'address' });
+
+  getTransactionByHash.mockRestore();
+  getTransactionReceipt.mockRestore();
+  getConfirmationRiskByHash.mockRestore();
 });
 
 test('PendingTransaction failed', async () => {
