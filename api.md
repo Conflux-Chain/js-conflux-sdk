@@ -201,32 +201,6 @@ conflux  | `Conflux`       | false    |         | Conflux instance to connected 
   }
 ```
 
-## PrivateKeyAccount.prototype.constructor <a id="account/PrivateKeyAccount.js/constructor"></a>
-
-Create a account by privateKey.
-
-* **Parameters**
-
-Name       | Type            | Required | Default | Description
------------|-----------------|----------|---------|-----------------------------------
-privateKey | `string,Buffer` | true     |         | Private key of account
-conflux    | `Conflux`       | true     |         | Conflux instance to connected with
-
-* **Returns**
-
-`PrivateKeyAccount` 
-
-* **Examples**
-
-```
-> new PrivateKeyAccount('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
-   PrivateKeyAccount {
-    address: '0x1cad0b19bb29d4674531d6f115237e16afce377c',
-    publicKey: '0x4646ae5047316b4230d0086c8acec687f00b1cd9d1dc634f6cb358ac0a9a8ffffe77b4dd0a4bfb95851f3b7355c781dd60f8418fc8a65d14907aff47c903a559',
-    privateKey: '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'
-  }
-```
-
 ## PrivateKeyAccount.prototype.encrypt <a id="account/PrivateKeyAccount.js/encrypt"></a>
 
 Encrypt account privateKey to object.
@@ -323,32 +297,6 @@ message | `string` | true     |         |
 ## Conflux <a id="Conflux.js/Conflux"></a>
 
 A sdk of conflux.
-
-## Conflux.prototype.constructor <a id="Conflux.js/constructor"></a>
-
-* **Parameters**
-
-Name                    | Type            | Required | Default | Description
-------------------------|-----------------|----------|---------|-------------------------------------------------------
-options                 | `object`        | false    |         | Conflux and Provider constructor options.
-options.url             | `string`        | false    |         | Url of Conflux node to connect.
-options.defaultGasPrice | `string,number` | false    |         | The default gas price in drip to use for transactions.
-options.logger          | `Object`        | false    |         | Logger object with 'info' and 'error' method.
-
-* **Examples**
-
-```
-> const { Conflux } = require('js-conflux-sdk');
-> const conflux = new Conflux({url:'http://testnet-jsonrpc.conflux-chain.org:12537'});
-```
-
-```
-> const conflux = new Conflux({
-     url: 'http://localhost:8000',
-     defaultGasPrice: 100,
-     logger: console,
-   });
-```
 
 ## ~~Conflux.prototype.defaultGasPrice~~ <a id="Conflux.js/defaultGasPrice"></a>
 
@@ -1159,78 +1107,6 @@ options.limit       | `number`                | false    |                     |
 
 Contract with all its methods and events defined in its abi.
 
-## Contract.prototype.constructor <a id="contract/Contract.js/constructor"></a>
-
-* **Parameters**
-
-Name             | Type      | Required | Default | Description
------------------|-----------|----------|---------|-----------------------------------------------------------------------------------------------------
-options          | `object`  | true     |         |
-options.abi      | `array`   | true     |         | The json interface for the contract to instantiate
-options.address  | `string`  | false    |         | The address of the smart contract to call, can be added later using `contract.address = '0x1234...'`
-options.bytecode | `string`  | false    |         | The byte code of the contract, can be added later using `contract.constructor.code = '0x1234...'`
-conflux          | `Conflux` | true     |         | Conflux instance.
-
-* **Returns**
-
-`object` 
-
-* **Examples**
-
-```
-> const contract = conflux.Contract({ abi, bytecode });
-   {
-      constructor: [Function: bound call],
-      abi: ContractABICoder { * },
-      address: undefined,
-      count: [Function: bound call],
-      inc: [Function: bound call],
-      'count()': [Function: bound call],
-      '0x06661abd': [Function: bound call],
-      'inc(uint256)': [Function: bound call],
-      '0x812600df': [Function: bound call],
-   }
-> contract.constructor.bytecode; // input code
-   "0x6080604052600080..."
-```
-
-```
-> const contract = conflux.Contract({ abi, address });
-> contract.address
-   "0xc3ed1a06471be1d3bcd014051fbe078387ec0ad8"
-> await contract.count(); // call a method without parameter, get decoded return value.
-   "100"
-> await contract.inc(1); // call a method with parameters, get decoded return value.
-   "101"
-> await contract.count().options({ from: account }); // call a method from a account.
-   "100"
-> transaction = await conflux.getTransactionByHash('0x8a5f48c2de0f1bdacfe90443810ad650e4b327a0d19ce49a53faffb224883e42');
-> await contract.abi.decodeData(transaction.data)
-   {
-      name: 'inc',
-      fullName: 'inc(uint256 num)',
-      type: 'inc(uint256)',
-      signature: '0x7f98a45e',
-      array: [ JSBI.BigInt(101) ],
-      object: { num: JSBI.BigInt(101) }
-   }
-> await contract.count(); // data in block chain changed by transaction.
-   JSBI.BigInt(101)
-> receipt = await conflux.getTransactionReceipt('0x8a5f48c2de0f1bdacfe90443810ad650e4b327a0d19ce49a53faffb224883e42');
-> contract.abi.decodeLog(receipt.logs[0]);
-   {
-      name: 'SelfEvent',
-      fullName: 'SelfEvent(address indexed sender, uint256 current)',
-      type: 'SelfEvent(address,uint256))',
-      signature: '0xc4c01f6de493c58245fb681341f3a76bba9551ce81b11cbbb5d6d297844594df',
-      array: [ '0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b', JSBI.BigInt(100) ],
-      object: {
-        sender: '0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b',
-        current: JSBI.BigInt(100),
-      },
-    }
-```
-
 ----------------------------------------
 
 ## Drip <a id="Drip.js/Drip"></a>
@@ -1407,44 +1283,6 @@ messageHash | `string,Buffer` | true     |         |
    "0x4646ae5047316b4230d0086c8acec687f00b1cd9d1dc634f6cb358ac0a9a8ffffe77b4dd0a4bfb95851f3b7355c781dd60f8418fc8a65d14907aff47c903a559"
 ```
 
-## Message.prototype.constructor <a id="Message.js/constructor"></a>
-
-* **Parameters**
-
-Name    | Type     | Required | Default | Description
---------|----------|----------|---------|------------
-message | `string` | true     |         |
-
-* **Returns**
-
-`Message` 
-
-* **Examples**
-
-```
-> msg = new Message('Hello World');
-   Message {
-      message: 'Hello World',
-    }
-> msg.sign('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef');
-   Message {
-      message: 'Hello World',
-      signature: '0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01'
-    }
-> msg.signature
-   "0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01"
-> msg.hash
-   "0x592fa743889fc7f92ac2a37bb1f5ba1daf2a5c84741ca0e0061d243a2e6707ba"
-> msg.from
-   "0x1cad0b19bb29d4674531d6f115237e16afce377c"
-> msg.r
-   "0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c"
-> msg.s
-   "0x29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f"
-> msg.v
-   1
-```
-
 ## Message.prototype.hash (getter) <a id="Message.js/hash (getter)"></a>
 
 Getter of message hash include signature.
@@ -1484,21 +1322,6 @@ privateKey | `string` | true     |         | Private key hex string.
 ## BaseProvider <a id="provider/BaseProvider.js/BaseProvider"></a>
 
 
-
-## BaseProvider.prototype.constructor <a id="provider/BaseProvider.js/constructor"></a>
-
-* **Parameters**
-
-Name            | Type     | Required | Default | Description
-----------------|----------|----------|---------|-------------------------------
-options         | `object` | false    |         |
-options.url     | `string` | true     |         | Full json rpc http url
-options.timeout | `number` | false    | 60*1000 | Request time out in ms
-options.logger  | `object` | false    |         | Logger with `info` and `error`
-
-* **Returns**
-
-`BaseProvider` 
 
 ## BaseProvider.prototype.requestId <a id="provider/BaseProvider.js/requestId"></a>
 
@@ -1697,33 +1520,6 @@ options.threshold | `number` | false    | 1e-8       | Number in range (0,1)
 ## Transaction <a id="Transaction.js/Transaction"></a>
 
 
-
-## Transaction.prototype.constructor <a id="Transaction.js/constructor"></a>
-
-Create a transaction.
-
-* **Parameters**
-
-Name                 | Type            | Required | Default | Description
----------------------|-----------------|----------|---------|------------------------------------------------------------------------------------------------------------------------------------------------------------
-options              | `object`        | true     |         |
-options.from         | `string`        | true     |         | The sender address.
-options.nonce        | `string,number` | true     |         | This allows to overwrite your own pending transactions that use the same nonce.
-options.gasPrice     | `string,number` | true     |         | The price of gas for this transaction in drip.
-options.gas          | `string,number` | true     |         | The amount of gas to use for the transaction (unused gas is refunded).
-options.to           | `string`        | false    |         | The destination address of the message, left undefined for a contract-creation transaction.
-options.value        | `string,number` | false    | 0       | The value transferred for the transaction in drip, also the endowment if it’s a contract-creation transaction.
-options.storageLimit | `string,number` | true     |         | TODO
-options.epochHeight  | `string,number` | true     |         | TODO
-options.chainId      | `string,number` | false    | 0       | TODO
-options.data         | `string,Buffer` | false    | '0x'    | Either a ABI byte string containing the data of the function call on a contract, or in the case of a contract-creation transaction the initialisation code.
-options.r            | `string,Buffer` | false    |         | ECDSA signature r
-options.s            | `string,Buffer` | false    |         | ECDSA signature s
-options.v            | `number`        | false    |         | ECDSA recovery id
-
-* **Returns**
-
-`Transaction` 
 
 ## Transaction.prototype.hash (getter) <a id="Transaction.js/hash (getter)"></a>
 
@@ -2137,6 +1933,29 @@ arg  | `number,JSBI,string,Buffer,boolean,null` | true     |         |
  <Buffer 01>
 > format.buffer(3.14)
  Error("not match hex")
+```
+
+## format.bytes <a id="util/format.js/bytes"></a>
+
+* **Parameters**
+
+Name | Type                  | Required | Default | Description
+-----|-----------------------|----------|---------|------------
+arg  | `string,Buffer,array` | true     |         |
+
+* **Returns**
+
+`Buffer` 
+
+* **Examples**
+
+```
+> format.bytes('abcd')
+ <Buffer 61 62 63 64>
+> format.bytes([0, 1])
+ <Buffer 00 01>
+> format.bytes(Buffer.from([0, 1]))
+ <Buffer 00 01>
 ```
 
 ## format.boolean <a id="util/format.js/boolean"></a>

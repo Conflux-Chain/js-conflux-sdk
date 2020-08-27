@@ -156,6 +156,18 @@ test('buffer', () => {
   expect(format.buffer(true)).toEqual(Buffer.from([1]));
 });
 
+test('bytes', () => {
+  expect(() => format.bytes(undefined)).toThrow('type');
+  expect(() => format.bytes(null)).toThrow('type');
+  expect(() => format.bytes(0)).toThrow('type');
+  expect(() => format.bytes(3.14)).toThrow('type');
+
+  expect(format.bytes('abcd')).toEqual(Buffer.from([97, 98, 99, 100]));
+  expect(format.bytes('0x0a')).toEqual(Buffer.from([48, 120, 48, 97]));
+  expect(format.bytes([0, 1])).toEqual(Buffer.from([0, 1]));
+  expect(format.bytes(Buffer.from([0, 1]))).toEqual(Buffer.from([0, 1]));
+});
+
 test('boolean', () => {
   expect(() => format.boolean(undefined)).toThrow('not match boolean');
   expect(() => format.boolean(1)).toThrow('not match boolean');

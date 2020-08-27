@@ -42,6 +42,7 @@ test('conflux.Account({privateKey})', () => {
   expect(account.publicKey).toEqual(PUBLIC_KEY);
   expect(account.address).toEqual(ADDRESS);
   expect(`${account}`).toEqual(ADDRESS);
+  expect(JSON.stringify(account)).toEqual(JSON.stringify(ADDRESS));
 });
 
 test('conflux.Account({keystore,password})', () => {
