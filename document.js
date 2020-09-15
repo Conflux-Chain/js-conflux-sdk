@@ -30,7 +30,7 @@ const markdown = jsdocToMd(`${__dirname}/src`, {
   },
 });
 
-fs.writeFileSync('./api.md', `---
+fs.writeFileSync(`${__dirname}/api.md`, `---
 id: javascript_sdk
 title: Javascript SDK
 custom_edit_url: https://github.com/Conflux-Chain/js-conflux-sdk/edit/master/api.md

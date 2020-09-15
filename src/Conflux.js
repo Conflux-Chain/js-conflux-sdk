@@ -109,7 +109,6 @@ class Conflux {
    */
   close() {
     this.provider.close();
-    this.provider = providerFactory();
   }
 
   // --------------------------------------------------------------------------
