@@ -12,19 +12,69 @@ keywords:
     - index.js
         - [accountFactory](#account/index.js/accountFactory)
     - PrivateKeyAccount.js
-        - [PrivateKeyAccount](#account/PrivateKeyAccount.js/PrivateKeyAccount)
+        - PrivateKeyAccount
+            - [(static)random](#account/PrivateKeyAccount.js/PrivateKeyAccount/(static)random)
+            - [(static)decrypt](#account/PrivateKeyAccount.js/PrivateKeyAccount/(static)decrypt)
+            - [encrypt](#account/PrivateKeyAccount.js/PrivateKeyAccount/encrypt)
+            - [signTransaction](#account/PrivateKeyAccount.js/PrivateKeyAccount/signTransaction)
+            - [signMessage](#account/PrivateKeyAccount.js/PrivateKeyAccount/signMessage)
 - Conflux.js
-    - [Conflux](#Conflux.js/Conflux)
+    - Conflux
+        - [defaultGasPrice](#Conflux.js/Conflux/defaultGasPrice)
+        - [Account](#Conflux.js/Conflux/Account)
+        - [Contract](#Conflux.js/Conflux/Contract)
+        - [InternalContract](#Conflux.js/Conflux/InternalContract)
+        - [close](#Conflux.js/Conflux/close)
+        - [getStatus](#Conflux.js/Conflux/getStatus)
+        - [getGasPrice](#Conflux.js/Conflux/getGasPrice)
+        - [getInterestRate](#Conflux.js/Conflux/getInterestRate)
+        - [getAccumulateInterestRate](#Conflux.js/Conflux/getAccumulateInterestRate)
+        - [getAccount](#Conflux.js/Conflux/getAccount)
+        - [getBalance](#Conflux.js/Conflux/getBalance)
+        - [getStakingBalance](#Conflux.js/Conflux/getStakingBalance)
+        - [getNextNonce](#Conflux.js/Conflux/getNextNonce)
+        - [getAdmin](#Conflux.js/Conflux/getAdmin)
+        - [getEpochNumber](#Conflux.js/Conflux/getEpochNumber)
+        - [getBlockByEpochNumber](#Conflux.js/Conflux/getBlockByEpochNumber)
+        - [getBlocksByEpochNumber](#Conflux.js/Conflux/getBlocksByEpochNumber)
+        - [getBestBlockHash](#Conflux.js/Conflux/getBestBlockHash)
+        - [getBlockByHash](#Conflux.js/Conflux/getBlockByHash)
+        - [getConfirmationRiskByHash](#Conflux.js/Conflux/getConfirmationRiskByHash)
+        - [getTransactionByHash](#Conflux.js/Conflux/getTransactionByHash)
+        - [getTransactionReceipt](#Conflux.js/Conflux/getTransactionReceipt)
+        - [sendRawTransaction](#Conflux.js/Conflux/sendRawTransaction)
+        - [getCode](#Conflux.js/Conflux/getCode)
+        - [getStorageAt](#Conflux.js/Conflux/getStorageAt)
+        - [getStorageRoot](#Conflux.js/Conflux/getStorageRoot)
+        - [getSponsorInfo](#Conflux.js/Conflux/getSponsorInfo)
+        - [getCollateralForStorage](#Conflux.js/Conflux/getCollateralForStorage)
+        - [call](#Conflux.js/Conflux/call)
+        - [estimateGasAndCollateral](#Conflux.js/Conflux/estimateGasAndCollateral)
+        - [getLogs](#Conflux.js/Conflux/getLogs)
 - contract
     - Contract.js
         - [Contract](#contract/Contract.js/Contract)
 - Drip.js
-    - [Drip](#Drip.js/Drip)
+    - Drip
+        - [(static)fromCFX](#Drip.js/Drip/(static)fromCFX)
+        - [(static)fromGDrip](#Drip.js/Drip/(static)fromGDrip)
+        - [(static)fromDrip](#Drip.js/Drip/(static)fromDrip)
+        - [toCFX](#Drip.js/Drip/toCFX)
+        - [toGDrip](#Drip.js/Drip/toGDrip)
+        - [toDrip](#Drip.js/Drip/toDrip)
 - Message.js
-    - [Message](#Message.js/Message)
+    - Message
+        - [(static)sign](#Message.js/Message/(static)sign)
+        - [(static)recover](#Message.js/Message/(static)recover)
+        - [hash(getter)](#Message.js/Message/hash(getter))
+        - [from(getter)](#Message.js/Message/from(getter))
+        - [sign](#Message.js/Message/sign)
 - provider
     - BaseProvider.js
-        - [BaseProvider](#provider/BaseProvider.js/BaseProvider)
+        - BaseProvider
+            - [requestId](#provider/BaseProvider.js/BaseProvider/requestId)
+            - [call](#provider/BaseProvider.js/BaseProvider/call)
+            - [batch](#provider/BaseProvider.js/BaseProvider/batch)
     - HttpProvider.js
         - [HttpProvider](#provider/HttpProvider.js/HttpProvider)
     - index.js
@@ -33,10 +83,38 @@ keywords:
         - [WebSocketProvider](#provider/WebSocketProvider.js/WebSocketProvider)
 - subscribe
     - PendingTransaction.js
-        - [PendingTransaction](#subscribe/PendingTransaction.js/PendingTransaction)
+        - PendingTransaction
+            - [get](#subscribe/PendingTransaction.js/PendingTransaction/get)
+            - [mined](#subscribe/PendingTransaction.js/PendingTransaction/mined)
+            - [executed](#subscribe/PendingTransaction.js/PendingTransaction/executed)
+            - [confirmed](#subscribe/PendingTransaction.js/PendingTransaction/confirmed)
 - Transaction.js
-    - [Transaction](#Transaction.js/Transaction)
+    - Transaction
+        - [hash(getter)](#Transaction.js/Transaction/hash(getter))
+        - [sign](#Transaction.js/Transaction/sign)
+        - [recover](#Transaction.js/Transaction/recover)
+        - [encode](#Transaction.js/Transaction/encode)
+        - [serialize](#Transaction.js/Transaction/serialize)
 - util
+    - format.js
+        - format
+            - [(static)any](#util/format.js/format/(static)any)
+            - [(static)hex](#util/format.js/format/(static)hex)
+            - [(static)uInt](#util/format.js/format/(static)uInt)
+            - [(static)bigInt](#util/format.js/format/(static)bigInt)
+            - [(static)bigUInt](#util/format.js/format/(static)bigUInt)
+            - [(static)hexUInt](#util/format.js/format/(static)hexUInt)
+            - [(static)riskNumber](#util/format.js/format/(static)riskNumber)
+            - [(static)epochNumber](#util/format.js/format/(static)epochNumber)
+            - [(static)address](#util/format.js/format/(static)address)
+            - [(static)publicKey](#util/format.js/format/(static)publicKey)
+            - [(static)privateKey](#util/format.js/format/(static)privateKey)
+            - [(static)signature](#util/format.js/format/(static)signature)
+            - [(static)blockHash](#util/format.js/format/(static)blockHash)
+            - [(static)transactionHash](#util/format.js/format/(static)transactionHash)
+            - [(static)buffer](#util/format.js/format/(static)buffer)
+            - [(static)bytes](#util/format.js/format/(static)bytes)
+            - [(static)boolean](#util/format.js/format/(static)boolean)
     - sign.js
         - [sha3](#util/sign.js/sha3)
         - [checksumAddress](#util/sign.js/checksumAddress)
@@ -111,7 +189,7 @@ conflux            | `Conflux`       | false    |         | Conflux instance to 
 
 
 
-## PrivateKeyAccount.random <a id="account/PrivateKeyAccount.js/random"></a>
+## PrivateKeyAccount.random <a id="account/PrivateKeyAccount.js/PrivateKeyAccount/(static)random"></a>
 
 Create a new PrivateKeyAccount with random privateKey.
 
@@ -156,7 +234,7 @@ conflux | `Conflux`       | false    |         | Conflux instance to connected w
     }
 ```
 
-## PrivateKeyAccount.decrypt <a id="account/PrivateKeyAccount.js/decrypt"></a>
+## PrivateKeyAccount.decrypt <a id="account/PrivateKeyAccount.js/PrivateKeyAccount/(static)decrypt"></a>
 
 Decrypt account encrypt info.
 
@@ -201,7 +279,7 @@ conflux  | `Conflux`       | false    |         | Conflux instance to connected 
   }
 ```
 
-## PrivateKeyAccount.prototype.encrypt <a id="account/PrivateKeyAccount.js/encrypt"></a>
+## PrivateKeyAccount.prototype.encrypt <a id="account/PrivateKeyAccount.js/PrivateKeyAccount/encrypt"></a>
 
 Encrypt account privateKey to object.
 
@@ -223,7 +301,7 @@ password | `string` | true     |         |
    {version:3, id:..., address:..., crypto:...}
 ```
 
-## PrivateKeyAccount.prototype.signTransaction <a id="account/PrivateKeyAccount.js/signTransaction"></a>
+## PrivateKeyAccount.prototype.signTransaction <a id="account/PrivateKeyAccount.js/PrivateKeyAccount/signTransaction"></a>
 
 Sign a transaction.
 
@@ -267,7 +345,7 @@ options | `object` | true     |         | See [Transaction](Transaction.js/const
     }
 ```
 
-## PrivateKeyAccount.prototype.signMessage <a id="account/PrivateKeyAccount.js/signMessage"></a>
+## PrivateKeyAccount.prototype.signMessage <a id="account/PrivateKeyAccount.js/PrivateKeyAccount/signMessage"></a>
 
 Sign a string.
 
@@ -298,14 +376,14 @@ message | `string` | true     |         |
 
 A sdk of conflux.
 
-## ~~Conflux.prototype.defaultGasPrice~~ <a id="Conflux.js/defaultGasPrice"></a>
+## ~~Conflux.prototype.defaultGasPrice~~ <a id="Conflux.js/Conflux/defaultGasPrice"></a>
 
 `number,string`
 
 Default gas price for following methods:
 - `Conflux.sendTransaction`
 
-## Conflux.prototype.Account <a id="Conflux.js/Account"></a>
+## Conflux.prototype.Account <a id="Conflux.js/Conflux/Account"></a>
 
 A shout cut for `accountFactory(options, conflux);`
 
@@ -325,7 +403,7 @@ options | `object` | true     |         | See [accountFactory](#account/index.js
 > account = conflux.Account({privateKey: '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'})
 ```
 
-## Conflux.prototype.Contract <a id="Conflux.js/Contract"></a>
+## Conflux.prototype.Contract <a id="Conflux.js/Conflux/Contract"></a>
 
 A shout cut for `new Contract(options, conflux);`
 
@@ -339,7 +417,7 @@ options | `object` | true     |         | See [Contract.constructor](#Contract.j
 
 `Contract` - A Contract instance
 
-## Conflux.prototype.InternalContract <a id="Conflux.js/InternalContract"></a>
+## Conflux.prototype.InternalContract <a id="Conflux.js/Conflux/InternalContract"></a>
 
 Create internal contract by default abi and address
 
@@ -374,7 +452,7 @@ name | `string` | true     |         | Internal contract name
   }
 ```
 
-## Conflux.prototype.close <a id="Conflux.js/close"></a>
+## Conflux.prototype.close <a id="Conflux.js/Conflux/close"></a>
 
 close connection.
 
@@ -384,7 +462,7 @@ close connection.
 > conflux.close();
 ```
 
-## Conflux.prototype.getStatus <a id="Conflux.js/getStatus"></a>
+## Conflux.prototype.getStatus <a id="Conflux.js/Conflux/getStatus"></a>
 
 Get status
 
@@ -410,7 +488,7 @@ Get status
    }
 ```
 
-## Conflux.prototype.getGasPrice <a id="Conflux.js/getGasPrice"></a>
+## Conflux.prototype.getGasPrice <a id="Conflux.js/Conflux/getGasPrice"></a>
 
 Returns the current price per gas in Drip.
 
@@ -425,7 +503,7 @@ Returns the current price per gas in Drip.
    [String (Drip): '1']
 ```
 
-## Conflux.prototype.getInterestRate <a id="Conflux.js/getInterestRate"></a>
+## Conflux.prototype.getInterestRate <a id="Conflux.js/Conflux/getInterestRate"></a>
 
 Returns the interest rate of given parameter.
 
@@ -446,7 +524,7 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](
    "2522880000000"
 ```
 
-## Conflux.prototype.getAccumulateInterestRate <a id="Conflux.js/getAccumulateInterestRate"></a>
+## Conflux.prototype.getAccumulateInterestRate <a id="Conflux.js/Conflux/getAccumulateInterestRate"></a>
 
 Returns the accumulate interest rate of given parameter.
 
@@ -467,7 +545,7 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](
    "76269979767787603657181926319926"
 ```
 
-## Conflux.prototype.getAccount <a id="Conflux.js/getAccount"></a>
+## Conflux.prototype.getAccount <a id="Conflux.js/Conflux/getAccount"></a>
 
 Return account related states of the given account
 
@@ -504,7 +582,7 @@ admin `string`: admin of the account.
    }
 ```
 
-## Conflux.prototype.getBalance <a id="Conflux.js/getBalance"></a>
+## Conflux.prototype.getBalance <a id="Conflux.js/Conflux/getBalance"></a>
 
 Returns the balance of the account of given address.
 
@@ -526,7 +604,7 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](
    [String (Drip): '10098788868004995614504']
 ```
 
-## Conflux.prototype.getStakingBalance <a id="Conflux.js/getStakingBalance"></a>
+## Conflux.prototype.getStakingBalance <a id="Conflux.js/Conflux/getStakingBalance"></a>
 
 Returns the balance of the staking account of given address.
 
@@ -548,7 +626,7 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](
    [String (Drip): '6334100968004995614504']
 ```
 
-## Conflux.prototype.getNextNonce <a id="Conflux.js/getNextNonce"></a>
+## Conflux.prototype.getNextNonce <a id="Conflux.js/Conflux/getNextNonce"></a>
 
 Returns the next nonce should be used by given address.
 
@@ -570,7 +648,7 @@ epochNumber | `string,number` | false    |         | See [format.sendTx](#util/f
    "3"
 ```
 
-## Conflux.prototype.getAdmin <a id="Conflux.js/getAdmin"></a>
+## Conflux.prototype.getAdmin <a id="Conflux.js/Conflux/getAdmin"></a>
 
 Returns the admin of given contract.
 
@@ -592,7 +670,7 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](
    "0x144aa8f554d2ffbc81e0aa0f533f76f5220db09c"
 ```
 
-## Conflux.prototype.getEpochNumber <a id="Conflux.js/getEpochNumber"></a>
+## Conflux.prototype.getEpochNumber <a id="Conflux.js/Conflux/getEpochNumber"></a>
 
 Returns the epoch number of given parameter.
 
@@ -613,7 +691,7 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](
    443
 ```
 
-## Conflux.prototype.getBlockByEpochNumber <a id="Conflux.js/getBlockByEpochNumber"></a>
+## Conflux.prototype.getBlockByEpochNumber <a id="Conflux.js/Conflux/getBlockByEpochNumber"></a>
 
 Returns information about a block by epoch number.
 
@@ -635,7 +713,7 @@ detail      | `boolean`       | false    | false   | If `true` it returns the fu
    {...}
 ```
 
-## Conflux.prototype.getBlocksByEpochNumber <a id="Conflux.js/getBlocksByEpochNumber"></a>
+## Conflux.prototype.getBlocksByEpochNumber <a id="Conflux.js/Conflux/getBlocksByEpochNumber"></a>
 
 Returns hashes of blocks located in some epoch.
 
@@ -656,7 +734,7 @@ epochNumber | `string,number` | true     |         | See [format.sendTx](#util/f
    ['0xe677ae5206a5d67d9efa183d867b4b986ed82a3e62174a1488cf8364d58534ec']
 ```
 
-## Conflux.prototype.getBestBlockHash <a id="Conflux.js/getBestBlockHash"></a>
+## Conflux.prototype.getBestBlockHash <a id="Conflux.js/Conflux/getBestBlockHash"></a>
 
 Returns the hash of best block.
 
@@ -671,7 +749,7 @@ Returns the hash of best block.
    "0xb8bb355bfeaf055a032d5b7df719917c090ee4fb6fee42383004dfe8911d7daf"
 ```
 
-## Conflux.prototype.getBlockByHash <a id="Conflux.js/getBlockByHash"></a>
+## Conflux.prototype.getBlockByHash <a id="Conflux.js/Conflux/getBlockByHash"></a>
 
 Returns information about a block by hash.
 
@@ -734,7 +812,7 @@ detail    | `boolean` | false    | false   | If `true` it returns the full trans
     }
 ```
 
-## Conflux.prototype.getConfirmationRiskByHash <a id="Conflux.js/getConfirmationRiskByHash"></a>
+## Conflux.prototype.getConfirmationRiskByHash <a id="Conflux.js/Conflux/getConfirmationRiskByHash"></a>
 
 Get the risk of the block could be reverted.
 All block in one same epoch returned same risk number
@@ -756,7 +834,7 @@ blockHash | `string` | true     |         | Hash of a block
    1e-8
 ```
 
-## Conflux.prototype.getTransactionByHash <a id="Conflux.js/getTransactionByHash"></a>
+## Conflux.prototype.getTransactionByHash <a id="Conflux.js/Conflux/getTransactionByHash"></a>
 
 Returns the information about a transaction requested by transaction hash.
 
@@ -814,7 +892,7 @@ transactionHash | `string` | true     |         | hash of a transaction
    }
 ```
 
-## Conflux.prototype.getTransactionReceipt <a id="Conflux.js/getTransactionReceipt"></a>
+## Conflux.prototype.getTransactionReceipt <a id="Conflux.js/Conflux/getTransactionReceipt"></a>
 
 Returns the information about a transaction receipt requested by transaction hash.
 
@@ -861,7 +939,7 @@ transactionHash | `string` | true     |         | Hash of a transaction
     }
 ```
 
-## Conflux.prototype.sendRawTransaction <a id="Conflux.js/sendRawTransaction"></a>
+## Conflux.prototype.sendRawTransaction <a id="Conflux.js/Conflux/sendRawTransaction"></a>
 
 Creates new message call transaction or a contract creation for signed transactions.
 
@@ -882,7 +960,7 @@ hex  | `string,Buffer` | true     |         | The signed transaction data.
    "0xbe007c3eca92d01f3917f33ae983f40681182cf618defe75f490a65aac016914"
 ```
 
-## Conflux.prototype.getCode <a id="Conflux.js/getCode"></a>
+## Conflux.prototype.getCode <a id="Conflux.js/Conflux/getCode"></a>
 
 Returns the code of given contract.
 
@@ -904,7 +982,7 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](
    "0x6080604052348015600f57600080fd5b506004361060325760003560e01c806306661abd1460375780638..."
 ```
 
-## Conflux.prototype.getStorageAt <a id="Conflux.js/getStorageAt"></a>
+## Conflux.prototype.getStorageAt <a id="Conflux.js/Conflux/getStorageAt"></a>
 
 Returns storage entries from a given contract.
 
@@ -927,7 +1005,7 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](
    "0x000000000000000000000000000000000000000000000000000000000000162e"
 ```
 
-## Conflux.prototype.getStorageRoot <a id="Conflux.js/getStorageRoot"></a>
+## Conflux.prototype.getStorageRoot <a id="Conflux.js/Conflux/getStorageRoot"></a>
 
 Returns the storage root of a given contract.
 
@@ -956,7 +1034,7 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](
    }
 ```
 
-## Conflux.prototype.getSponsorInfo <a id="Conflux.js/getSponsorInfo"></a>
+## Conflux.prototype.getSponsorInfo <a id="Conflux.js/Conflux/getSponsorInfo"></a>
 
 Returns the sponsor info of given contract.
 
@@ -989,7 +1067,7 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](
    }
 ```
 
-## Conflux.prototype.getCollateralForStorage <a id="Conflux.js/getCollateralForStorage"></a>
+## Conflux.prototype.getCollateralForStorage <a id="Conflux.js/Conflux/getCollateralForStorage"></a>
 
 Returns the size of the collateral storage of given address, in Byte.
 
@@ -1011,7 +1089,7 @@ epochNumber |          | false    | 'latest_state' | See [format.sendTx](#util/f
    "158972490234375000"
 ```
 
-## Conflux.prototype.call <a id="Conflux.js/call"></a>
+## Conflux.prototype.call <a id="Conflux.js/Conflux/call"></a>
 
 Virtually call a contract, return the output data.
 
@@ -1026,7 +1104,7 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](
 
 `Promise.<string>` The output data.
 
-## Conflux.prototype.estimateGasAndCollateral <a id="Conflux.js/estimateGasAndCollateral"></a>
+## Conflux.prototype.estimateGasAndCollateral <a id="Conflux.js/Conflux/estimateGasAndCollateral"></a>
 
 Virtually call a contract, return the estimate gas used and storage collateralized.
 
@@ -1042,7 +1120,7 @@ options | `object` | true     |         | See [format.estimateTx](#util/format.j
 - `BigInt` gasUsed: The gas used.
 - `BigInt` storageCollateralized: The storage collateralized in Byte.
 
-## Conflux.prototype.getLogs <a id="Conflux.js/getLogs"></a>
+## Conflux.prototype.getLogs <a id="Conflux.js/Conflux/getLogs"></a>
 
 Returns logs matching the filter provided.
 
@@ -1113,7 +1191,7 @@ Contract with all its methods and events defined in its abi.
 
 Positive decimal integer string in `Drip`
 
-## Drip.fromCFX <a id="Drip.js/fromCFX"></a>
+## Drip.fromCFX <a id="Drip.js/Drip/(static)fromCFX"></a>
 
 Get `Drip` string from `CFX`
 
@@ -1136,7 +1214,7 @@ value | `string,number` | true     |         |
    [String (Drip): '171000000000000000000']
 ```
 
-## Drip.fromGDrip <a id="Drip.js/fromGDrip"></a>
+## Drip.fromGDrip <a id="Drip.js/Drip/(static)fromGDrip"></a>
 
 Get `Drip` string from `GDrip`
 
@@ -1159,7 +1237,7 @@ value | `string,number` | true     |         |
    [String (Drip): '171000000000']
 ```
 
-## Drip.fromDrip <a id="Drip.js/fromDrip"></a>
+## Drip.fromDrip <a id="Drip.js/Drip/(static)fromDrip"></a>
 
 Get `Drip` string from `Drip`
 
@@ -1182,7 +1260,7 @@ value | `string,number` | true     |         |
    [String (Drip): '171']
 ```
 
-## Drip.prototype.toCFX <a id="Drip.js/toCFX"></a>
+## Drip.prototype.toCFX <a id="Drip.js/Drip/toCFX"></a>
 
 Get `CFX` number string
 
@@ -1197,7 +1275,7 @@ Get `CFX` number string
    "0.000000001"
 ```
 
-## Drip.prototype.toGDrip <a id="Drip.js/toGDrip"></a>
+## Drip.prototype.toGDrip <a id="Drip.js/Drip/toGDrip"></a>
 
 Get `GDrip` number string
 
@@ -1212,7 +1290,7 @@ Get `GDrip` number string
    "1"
 ```
 
-## Drip.prototype.toDrip <a id="Drip.js/toDrip"></a>
+## Drip.prototype.toDrip <a id="Drip.js/Drip/toDrip"></a>
 
 Get `Drip` number string
 
@@ -1233,7 +1311,7 @@ Get `Drip` number string
 
 
 
-## Message.sign <a id="Message.js/sign"></a>
+## Message.sign <a id="Message.js/Message/(static)sign"></a>
 
 Signs the hash with the privateKey.
 
@@ -1258,7 +1336,7 @@ messageHash | `string,Buffer` | true     |         |
    "0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01"
 ```
 
-## Message.recover <a id="Message.js/recover"></a>
+## Message.recover <a id="Message.js/Message/(static)recover"></a>
 
 Recovers the signers publicKey from the signature.
 
@@ -1283,7 +1361,7 @@ messageHash | `string,Buffer` | true     |         |
    "0x4646ae5047316b4230d0086c8acec687f00b1cd9d1dc634f6cb358ac0a9a8ffffe77b4dd0a4bfb95851f3b7355c781dd60f8418fc8a65d14907aff47c903a559"
 ```
 
-## Message.prototype.hash (getter) <a id="Message.js/hash (getter)"></a>
+## Message.prototype.hash <a id="Message.js/Message/hash(getter)"></a>
 
 Getter of message hash include signature.
 
@@ -1293,7 +1371,7 @@ Getter of message hash include signature.
 
 `string` 
 
-## Message.prototype.from (getter) <a id="Message.js/from (getter)"></a>
+## Message.prototype.from <a id="Message.js/Message/from(getter)"></a>
 
 Getter of sender address.
 
@@ -1303,7 +1381,7 @@ Getter of sender address.
 
 `string,undefined` If ECDSA recover success return address, else return undefined.
 
-## Message.prototype.sign <a id="Message.js/sign"></a>
+## Message.prototype.sign <a id="Message.js/Message/sign"></a>
 
 Sign message and set 'r','s','v' and 'hash'.
 
@@ -1323,7 +1401,7 @@ privateKey | `string` | true     |         | Private key hex string.
 
 
 
-## BaseProvider.prototype.requestId <a id="provider/BaseProvider.js/requestId"></a>
+## BaseProvider.prototype.requestId <a id="provider/BaseProvider.js/BaseProvider/requestId"></a>
 
 Gen a random json rpc id.
 It is used in `call` method, overwrite it to gen your own id.
@@ -1332,7 +1410,7 @@ It is used in `call` method, overwrite it to gen your own id.
 
 `string` 
 
-## BaseProvider.prototype.call <a id="provider/BaseProvider.js/call"></a>
+## BaseProvider.prototype.call <a id="provider/BaseProvider.js/BaseProvider/call"></a>
 
 Call a json rpc method with params
 
@@ -1354,7 +1432,7 @@ method    | `string` | true     |         | Json rpc method name.
 > await provider.call('cfx_getBlockByHash', blockHash);
 ```
 
-## BaseProvider.prototype.batch <a id="provider/BaseProvider.js/batch"></a>
+## BaseProvider.prototype.batch <a id="provider/BaseProvider.js/BaseProvider/batch"></a>
 
 Batch call json rpc methods with params
 
@@ -1442,7 +1520,7 @@ Websocket protocol json rpc provider.
 
 Pending transaction subscriber
 
-## PendingTransaction.prototype.get <a id="subscribe/PendingTransaction.js/get"></a>
+## PendingTransaction.prototype.get <a id="subscribe/PendingTransaction.js/PendingTransaction/get"></a>
 
 Get transaction by hash.
 
@@ -1457,7 +1535,7 @@ options.delay | `number` | false    | 0       | Defer execute after `delay` ms.
 
 `Promise.<(Object|null)>` See [Conflux.getTransactionByHash](#Conflux.js/getTransactionByHash)
 
-## PendingTransaction.prototype.mined <a id="subscribe/PendingTransaction.js/mined"></a>
+## PendingTransaction.prototype.mined <a id="subscribe/PendingTransaction.js/PendingTransaction/mined"></a>
 
 Async wait till transaction been mined.
 
@@ -1475,7 +1553,7 @@ options.timeout | `number` | false    | 60*1000 | Loop timeout in ms.
 
 `Promise.<object>` See [Conflux.getTransactionByHash](#Conflux.js/getTransactionByHash)
 
-## PendingTransaction.prototype.executed <a id="subscribe/PendingTransaction.js/executed"></a>
+## PendingTransaction.prototype.executed <a id="subscribe/PendingTransaction.js/PendingTransaction/executed"></a>
 
 Async wait till transaction been executed.
 
@@ -1495,7 +1573,7 @@ options.timeout | `number` | false    | 5*60*1000 | Loop timeout in ms.
 
 `Promise.<object>` See [Conflux.getTransactionReceipt](#Conflux.js/getTransactionReceipt)
 
-## PendingTransaction.prototype.confirmed <a id="subscribe/PendingTransaction.js/confirmed"></a>
+## PendingTransaction.prototype.confirmed <a id="subscribe/PendingTransaction.js/PendingTransaction/confirmed"></a>
 
 Async wait till transaction been confirmed.
 
@@ -1521,7 +1599,7 @@ options.threshold | `number` | false    | 1e-8       | Number in range (0,1)
 
 
 
-## Transaction.prototype.hash (getter) <a id="Transaction.js/hash (getter)"></a>
+## Transaction.prototype.hash <a id="Transaction.js/Transaction/hash(getter)"></a>
 
 Getter of transaction hash include signature.
 
@@ -1531,7 +1609,7 @@ Getter of transaction hash include signature.
 
 `string,undefined` If transaction has r,s,v return hex string, else return undefined.
 
-## Transaction.prototype.sign <a id="Transaction.js/sign"></a>
+## Transaction.prototype.sign <a id="Transaction.js/Transaction/sign"></a>
 
 Sign transaction and set 'r','s','v'.
 
@@ -1545,7 +1623,7 @@ privateKey | `string` | true     |         | Private key hex string.
 
 `Transaction` 
 
-## Transaction.prototype.recover <a id="Transaction.js/recover"></a>
+## Transaction.prototype.recover <a id="Transaction.js/Transaction/recover"></a>
 
 Recover public key from signed Transaction.
 
@@ -1553,7 +1631,7 @@ Recover public key from signed Transaction.
 
 `string` 
 
-## Transaction.prototype.encode <a id="Transaction.js/encode"></a>
+## Transaction.prototype.encode <a id="Transaction.js/Transaction/encode"></a>
 
 Encode rlp.
 
@@ -1567,7 +1645,7 @@ includeSignature | `boolean` | false    | false   | Whether or not to include th
 
 `Buffer` 
 
-## Transaction.prototype.serialize <a id="Transaction.js/serialize"></a>
+## Transaction.prototype.serialize <a id="Transaction.js/Transaction/serialize"></a>
 
 Get the raw transaction hex string.
 
@@ -1577,7 +1655,7 @@ Get the raw transaction hex string.
 
 ----------------------------------------
 
-## format.any <a id="util/format.js/any"></a>
+## format.any <a id="util/format.js/format/(static)any"></a>
 
 * **Parameters**
 
@@ -1596,7 +1674,7 @@ arg  | `any` | true     |         |
  1
 ```
 
-## format.hex <a id="util/format.js/hex"></a>
+## format.hex <a id="util/format.js/format/(static)hex"></a>
 
 When encoding UNFORMATTED DATA (byte arrays, account addresses, hashes, bytecode arrays): encode as hex, prefix with "0x", two hex digits per byte.
 
@@ -1627,7 +1705,7 @@ arg  | `number,JSBI,string,Buffer,boolean,null` | true     |         |
  "0x0a"
 ```
 
-## format.uInt <a id="util/format.js/uInt"></a>
+## format.uInt <a id="util/format.js/format/(static)uInt"></a>
 
 * **Parameters**
 
@@ -1664,7 +1742,7 @@ arg  | `number,JSBI,string,boolean` | true     |         |
  Error("not match uint")
 ```
 
-## format.bigInt <a id="util/format.js/bigInt"></a>
+## format.bigInt <a id="util/format.js/format/(static)bigInt"></a>
 
 * **Parameters**
 
@@ -1695,7 +1773,7 @@ arg  | `number,JSBI,string,boolean` | true     |         |
  Error("not match uint")
 ```
 
-## format.bigUInt <a id="util/format.js/bigUInt"></a>
+## format.bigUInt <a id="util/format.js/format/(static)bigUInt"></a>
 
 * **Parameters**
 
@@ -1716,7 +1794,7 @@ arg  | `number,JSBI,string,boolean` | true     |         |
  Error("not match bigUInt")
 ```
 
-## format.hexUInt <a id="util/format.js/hexUInt"></a>
+## format.hexUInt <a id="util/format.js/format/(static)hexUInt"></a>
 
 When encoding QUANTITIES (integers, numbers): encode as hex, prefix with "0x", the most compact representation (slight exception: zero should be represented as "0x0")
 
@@ -1745,7 +1823,7 @@ arg  | `number,string,boolean` | true     |         |
  Error("not match uintHex")
 ```
 
-## format.riskNumber <a id="util/format.js/riskNumber"></a>
+## format.riskNumber <a id="util/format.js/format/(static)riskNumber"></a>
 
 * **Parameters**
 
@@ -1766,7 +1844,7 @@ hex  | `string` | true     |         |
  0.9
 ```
 
-## format.epochNumber <a id="util/format.js/epochNumber"></a>
+## format.epochNumber <a id="util/format.js/format/(static)epochNumber"></a>
 
 * **Parameters**
 
@@ -1789,7 +1867,7 @@ arg  | `number,string` | true     |         | number or string in ['latest_state
  "latest_state"
 ```
 
-## format.address <a id="util/format.js/address"></a>
+## format.address <a id="util/format.js/format/(static)address"></a>
 
 * **Parameters**
 
@@ -1810,7 +1888,7 @@ arg  | `string,Buffer` | true     |         |
  Error("not match address")
 ```
 
-## format.publicKey <a id="util/format.js/publicKey"></a>
+## format.publicKey <a id="util/format.js/format/(static)publicKey"></a>
 
 * **Parameters**
 
@@ -1831,7 +1909,7 @@ arg  | `string,Buffer` | true     |         |
  Error("not match publicKey")
 ```
 
-## format.privateKey <a id="util/format.js/privateKey"></a>
+## format.privateKey <a id="util/format.js/format/(static)privateKey"></a>
 
 * **Parameters**
 
@@ -1852,7 +1930,7 @@ arg  | `string,Buffer` | true     |         |
  Error("not match hex64")
 ```
 
-## format.signature <a id="util/format.js/signature"></a>
+## format.signature <a id="util/format.js/format/(static)signature"></a>
 
 * **Parameters**
 
@@ -1864,28 +1942,7 @@ arg  | `string,Buffer` | true     |         |
 
 `string` Hex string
 
-## format.blockHash <a id="util/format.js/blockHash"></a>
-
-* **Parameters**
-
-Name | Type            | Required | Default | Description
------|-----------------|----------|---------|------------
-arg  | `string,Buffer` | true     |         |
-
-* **Returns**
-
-`string` Hex string
-
-* **Examples**
-
-```
-> format.privateKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
- "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-> format.privateKey('0x0123456789012345678901234567890123456789')
- Error("not match hex64")
-```
-
-## format.transactionHash <a id="util/format.js/transactionHash"></a>
+## format.blockHash <a id="util/format.js/format/(static)blockHash"></a>
 
 * **Parameters**
 
@@ -1906,7 +1963,28 @@ arg  | `string,Buffer` | true     |         |
  Error("not match hex64")
 ```
 
-## format.buffer <a id="util/format.js/buffer"></a>
+## format.transactionHash <a id="util/format.js/format/(static)transactionHash"></a>
+
+* **Parameters**
+
+Name | Type            | Required | Default | Description
+-----|-----------------|----------|---------|------------
+arg  | `string,Buffer` | true     |         |
+
+* **Returns**
+
+`string` Hex string
+
+* **Examples**
+
+```
+> format.privateKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
+ "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+> format.privateKey('0x0123456789012345678901234567890123456789')
+ Error("not match hex64")
+```
+
+## format.buffer <a id="util/format.js/format/(static)buffer"></a>
 
 * **Parameters**
 
@@ -1935,7 +2013,7 @@ arg  | `number,JSBI,string,Buffer,boolean,null` | true     |         |
  Error("not match hex")
 ```
 
-## format.bytes <a id="util/format.js/bytes"></a>
+## format.bytes <a id="util/format.js/format/(static)bytes"></a>
 
 * **Parameters**
 
@@ -1958,7 +2036,7 @@ arg  | `string,Buffer,array` | true     |         |
  <Buffer 00 01>
 ```
 
-## format.boolean <a id="util/format.js/boolean"></a>
+## format.boolean <a id="util/format.js/format/(static)boolean"></a>
 
 * **Parameters**
 

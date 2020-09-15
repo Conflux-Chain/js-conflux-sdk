@@ -14,7 +14,7 @@ test('constructor({http})', () => {
   expect(providerClose).toHaveBeenCalledTimes(1);
   providerClose.mockRestore();
 
-  expect(conflux.provider.constructor.name).toEqual('BaseProvider');
+  expect(conflux.provider.constructor.name).toEqual('HttpProvider');
 });
 
 test('constructor({ws})', () => {
@@ -30,7 +30,7 @@ test('constructor({ws})', () => {
   expect(providerClose).toHaveBeenCalledTimes(1);
   providerClose.mockRestore();
 
-  expect(conflux.provider.constructor.name).toEqual('BaseProvider');
+  expect(conflux.provider.constructor.name).toEqual('WebSocketProvider');
 });
 
 test('constructor({defaultGasPrice})', async () => {
