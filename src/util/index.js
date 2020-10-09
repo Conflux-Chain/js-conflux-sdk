@@ -1,6 +1,5 @@
 const lodash = require('lodash');
-const sign = require('./sign');
-const format = require('./format');
+const { WORD_BYTES } = require('../CONST');
 
 function assert(bool, value) {
   if (!bool) {
@@ -47,10 +46,25 @@ async function loop({ delta = 1000, timeout = 30 * 1000 }, func) {
   throw new Error(`Timeout after ${Date.now() - startTime} ms`);
 }
 
-function decorate(func, callback) {
-  return function (...args) {
-    return callback(func.bind(this), ...args);
-  };
+/**
+ * @param buffer {Buffer}
+ * @param alignLeft {boolean}
+ * @return {Buffer}
+ */
+function alignBuffer(buffer, alignLeft = false) {
+  const count = WORD_BYTES - (buffer.length % WORD_BYTES);
+  if (0 < count && count < WORD_BYTES) {
+    buffer = alignLeft
+      ? Buffer.concat([buffer, Buffer.alloc(count)])
+      : Buffer.concat([Buffer.alloc(count), buffer]);
+  }
+
+  return buffer;
 }
 
-module.exports = { sign, format, assert, sleep, loop, decorate };
+module.exports = {
+  assert,
+  sleep,
+  loop,
+  alignBuffer,
+};

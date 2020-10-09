@@ -1,5 +1,5 @@
 const JSBI = require('jsbi');
-const { format } = require('../../src/util');
+const { format } = require('../../src');
 
 const HEX_64 = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 const HEX_40 = '0x0123456789012345678901234567890123456789';

@@ -1,5 +1,5 @@
 const JSBI = require('jsbi');
-const EventCoder = require('../../src/contract/EventCoder');
+const EventCoder = require('../../src/contract/event/EventCoder');
 
 test('event', () => {
   const abi = {

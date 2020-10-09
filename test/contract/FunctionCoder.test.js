@@ -1,5 +1,5 @@
 const JSBI = require('jsbi');
-const FunctionCoder = require('../../src/contract/FunctionCoder');
+const FunctionCoder = require('../../src/contract/method/FunctionCoder');
 
 test('function', () => {
   const abi = {

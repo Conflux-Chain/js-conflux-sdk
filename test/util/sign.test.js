@@ -1,5 +1,5 @@
 const lodash = require('lodash');
-const { format, sign } = require('../../src/util');
+const { format, sign } = require('../../src');
 
 const {
   checksumAddress,

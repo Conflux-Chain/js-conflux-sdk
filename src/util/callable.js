@@ -23,9 +23,4 @@ function callable(object, func) {
   });
 }
 
-function withoutNew(Class) {
-  return new Proxy(Class, { apply: (_, __, params) => new Class(...params) });
-}
-
 module.exports = callable;
-module.exports.withoutNew = withoutNew;

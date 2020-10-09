@@ -1,5 +1,5 @@
 const lodash = require('lodash');
-const { format } = require('../../src/util');
+const { format } = require('../../src');
 const { encode } = require('../../src/util/rlp');
 
 test('zero', () => {

@@ -1,10 +1,10 @@
-const { assert, format, decorate } = require('./util');
-const providerFactory = require('./provider');
-const accountFactory = require('./account');
-const Contract = require('./contract');
+const { assert } = require('./util');
+const format = require('./util/format');
+const PendingTransaction = require('./util/PendingTransaction');
 const Drip = require('./Drip');
-const decodeError = require('./contract/decodeError');
-const { PendingTransaction } = require('./subscribe');
+const providerFactory = require('./provider');
+const Wallet = require('./wallet');
+const Contract = require('./contract');
 const internalContract = require('./contract/internal');
 
 /**
@@ -29,6 +29,7 @@ class Conflux {
    */
   constructor({ defaultGasPrice, ...rest } = {}) {
     this.provider = providerFactory(rest);
+    this.wallet = new Wallet();
 
     /**
      * Default gas price for following methods:
@@ -39,26 +40,15 @@ class Conflux {
      */
     this.defaultGasPrice = defaultGasPrice;
 
-    this.sendTransaction = decorate(this.sendTransaction, (func, ...args) => {
-      return new PendingTransaction(func, args, this);
-    });
-
-    this.sendRawTransaction = decorate(this.sendRawTransaction, (func, ...args) => {
-      return new PendingTransaction(func, args, this);
-    });
+    this.sendRawTransaction = this._decoratePollTransaction(this.sendRawTransaction);
+    this.sendTransaction = this._decoratePollTransaction(this.sendTransaction);
   }
 
-  /**
-   * A shout cut for `accountFactory(options, conflux);`
-   *
-   * @param options {object} - See [accountFactory](#account/index.js/accountFactory)
-   * @return {BaseAccount} A BaseAccount subclass instance
-   *
-   * @example
-   * > account = conflux.Account({privateKey: '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'})
-   */
-  Account(options) {
-    return accountFactory(options, this);
+  _decoratePollTransaction(func) {
+    const conflux = this;
+    return function (...args) {
+      return new PendingTransaction(conflux, func.bind(this), args);
+    };
   }
 
   /**
@@ -85,7 +75,7 @@ class Conflux {
    * > conflux.InternalContract('AdminControl')
    {
     constructor: [Function: bound call],
-    abi: ContractABICoder { * },
+    abi: ContractABI { * },
     address: '0x0888000000000000000000000000000000000000',
     destroy: [Function: bound call],
     set_admin: [Function: bound call],
@@ -620,14 +610,163 @@ class Conflux {
   }
 
   /**
-   * Send transaction and sign by remote by password
+   * Create `Transaction` and sign by account which key by `from` filed in `conflux.wallet`, then send transaction
    *
    * @private
+   * @param options {object}
+   * @param options.from {string} - Key of account in conflux.wallet
+   * @return {Promise<Transaction>}
+   */
+  async _signTransaction(options) {
+    const account = await this.wallet.get(`${options.from}`);
+
+    if (options.nonce === undefined) {
+      options.nonce = await this.getNextNonce(account);
+    }
+
+    if (options.chainId === undefined) {
+      const status = await this.getStatus();
+      options.chainId = status.chainId;
+    }
+
+    if (options.epochHeight === undefined) {
+      options.epochHeight = await this.getEpochNumber();
+    }
+
+    if (options.gasPrice === undefined) {
+      if (this.defaultGasPrice === undefined) {
+        options.gasPrice = await this.getGasPrice() || 1; // MIN_GAS_PRICE
+      } else {
+        options.gasPrice = this.defaultGasPrice;
+      }
+    }
+
+    if (options.gas === undefined || options.storageLimit === undefined) {
+      let gas;
+      let storageLimit;
+
+      if (options.data) {
+        const { gasUsed, storageCollateralized } = await this.estimateGasAndCollateral(options);
+        gas = gasUsed;
+        storageLimit = storageCollateralized;
+      } else {
+        gas = 21000; // TX_GAS
+        storageLimit = 0; // TX_STORAGE_LIMIT
+      }
+
+      if (options.gas === undefined) {
+        options.gas = gas;
+      }
+
+      if (options.storageLimit === undefined) {
+        options.storageLimit = storageLimit;
+      }
+    }
+
+    return account.signTransaction(options);
+  }
+
+  /**
+   * Sign and send transaction
+   * if `from` field in `conflux.wallet`, sign by local account and send raw transaction,
+   * else call `cfx_sendTransaction` and sign by remote wallet
+   *
    * @param options {object} - See [format.sendTx](#util/format.js/sendTx)
    * @param password {string} - Password for remote node.
    * @return {Promise<PendingTransaction>} The PendingTransaction object.
+   *
+   * @example
+   * > txHash = await conflux.sendTransaction({from:account, to:address, value:0}); // send and get transaction hash
+   "0xb2ba6cca35f0af99a9601d09ee19c1949d8130312550e3f5413c520c6d828f88"
+
+   * @example
+   * > packedTx = await conflux.sendTransaction({from:account, to:address, value:0}).get(); // await till transaction packed
+   {
+    "nonce": "8",
+    "value": "0",
+    "gasPrice": "1000000000",
+    "gas": "21000",
+    "v": 0,
+    "transactionIndex": null,
+    "status": null,
+    "storageLimit": "0",
+    "chainId": 1,
+    "epochHeight": 791394,
+    "blockHash": null,
+    "contractCreated": null,
+    "data": "0x",
+    "from": "0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b",
+    "hash": "0xb2ba6cca35f0af99a9601d09ee19c1949d8130312550e3f5413c520c6d828f88",
+    "r": "0x245a1a86ae405eb72c1eaf98f5e22baa326fcf8262abad2c4a3e5bdcf2e912b5",
+    "s": "0x4df8058887a4dd8aaf60208accb3e57292a50ff06a117df6e54f7f56176248c0",
+    "to": "0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b"
+   }
+
+   * @example
+   * > minedTx = await conflux.sendTransaction({from:account, to:address, value:0}).mined(); // await till transaction mined
+   {
+    "nonce": "8",
+    "value": "0",
+    "gasPrice": "1000000000",
+    "gas": "21000",
+    "v": 0,
+    "transactionIndex": 0,
+    "status": 0,
+    "storageLimit": "0",
+    "chainId": 1,
+    "epochHeight": 791394,
+    "blockHash": "0xdb2d2d438dcdee8d61c6f495bd363b1afb68cb0fdff16582c08450a9ca487852",
+    "contractCreated": null,
+    "data": "0x",
+    "from": "0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b",
+    "hash": "0xb2ba6cca35f0af99a9601d09ee19c1949d8130312550e3f5413c520c6d828f88",
+    "r": "0x245a1a86ae405eb72c1eaf98f5e22baa326fcf8262abad2c4a3e5bdcf2e912b5",
+    "s": "0x4df8058887a4dd8aaf60208accb3e57292a50ff06a117df6e54f7f56176248c0",
+    "to": "0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b"
+   }
+
+   * @example
+   * > executedReceipt = await conflux.sendTransaction({from:account, to:address, value:0}).executed(); // await till transaction executed
+   {
+    "index": 0,
+    "epochNumber": 791402,
+    "outcomeStatus": 0,
+    "gasUsed": "21000",
+    "gasFee": "21000000000000",
+    "blockHash": "0xdb2d2d438dcdee8d61c6f495bd363b1afb68cb0fdff16582c08450a9ca487852",
+    "contractCreated": null,
+    "from": "0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b",
+    "logs": [],
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "stateRoot": "0x510d680cdbf60d34bcd987b3bf9925449c0839a7381dc8fd8222d2c7ee96122d",
+    "to": "0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b",
+    "transactionHash": "0xb2ba6cca35f0af99a9601d09ee19c1949d8130312550e3f5413c520c6d828f88"
+   }
+
+   * @example
+   * > confirmedReceipt = await conflux.sendTransaction({from:account, to:address, value:0}).confirmed(); // await till risk coefficient < threshold (default 1e-8)
+   {
+    "index": 0,
+    "epochNumber": 791402,
+    "outcomeStatus": 0,
+    "gasUsed": "21000",
+    "gasFee": "21000000000000",
+    "blockHash": "0xdb2d2d438dcdee8d61c6f495bd363b1afb68cb0fdff16582c08450a9ca487852",
+    "contractCreated": null,
+    "from": "0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b",
+    "logs": [],
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "stateRoot": "0x510d680cdbf60d34bcd987b3bf9925449c0839a7381dc8fd8222d2c7ee96122d",
+    "to": "0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b",
+    "transactionHash": "0xb2ba6cca35f0af99a9601d09ee19c1949d8130312550e3f5413c520c6d828f88"
+   }
    */
   async sendTransaction(options, password) {
+    if (this.wallet.has(`${options.from}`)) {
+      const transaction = await this._signTransaction(options);
+      return this.sendRawTransaction(transaction.serialize());
+    }
+
     return this.provider.call('cfx_sendTransaction',
       format.sendTx(options),
       password,
@@ -761,7 +900,7 @@ class Conflux {
         format.epochNumber.$or(undefined)(epochNumber),
       );
     } catch (e) {
-      throw decodeError(e);
+      throw Contract.decodeError(e);
     }
   }
 
@@ -780,7 +919,7 @@ class Conflux {
       );
       return format.estimate(result);
     } catch (e) {
-      throw decodeError(e);
+      throw Contract.decodeError(e);
     }
   }
 
@@ -841,6 +980,8 @@ class Conflux {
 
     return format.logs(result);
   }
+
+  // TODO recall failed tx 0xbbf1a43d2d7d51a33c15f87af1582e2d762b669db8aef2bc657458087b0f805c
 }
 
 module.exports = Conflux;

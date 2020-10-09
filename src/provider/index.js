@@ -34,7 +34,7 @@ const WebsocketProvider = require('./WebSocketProvider');
     logger: {...}
   }
  */
-function providerFactory({ url, ...rest } = {}) {
+function providerFactory({ url, ...rest }) {
   if (!url) {
     return new BaseProvider(rest); // empty provider
   }

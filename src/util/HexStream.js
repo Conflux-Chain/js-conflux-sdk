@@ -1,6 +1,5 @@
 const { assert } = require('./index');
-
-const WORD_CHARS = 64;
+const { WORD_CHARS } = require('../CONST');
 
 class HexStream {
   constructor(hex) {
