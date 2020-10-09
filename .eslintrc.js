@@ -25,7 +25,6 @@ module.exports = {
     'max-len': 0, // for jsdoc
     'no-await-in-loop': 0, // for loop request
     'no-else-return': 0,
-    'no-ex-assign': 0, // for extend Error
     'no-param-reassign': 0, // for merge default Value
     'no-restricted-syntax': 0, // for `for(... of ...)`
     'no-underscore-dangle': 0, // for private attribute

@@ -2,13 +2,7 @@ const JSBI = require('jsbi');
 const Big = require('big.js');
 const lodash = require('lodash');
 const parser = require('./parser');
-
-const MAX_UINT = JSBI.BigInt('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
-
-// https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/BigInt
-JSBI.prototype.toJSON = function () {
-  return this.toString();
-};
+const { MAX_UINT } = require('../CONST');
 
 // ----------------------------------------------------------------------------
 function toHex(value) {

@@ -1,12 +1,11 @@
 const JSBI = require('jsbi');
-const { Conflux } = require('../../src');
-const { format, sign } = require('../../src/util');
+const { Conflux, format, sign } = require('../../src');
 const { MockProvider } = require('../../mock');
 const { abi, bytecode, address } = require('./contract.json');
-const ContractConstructor = require('../../src/contract/ContractConstructor');
+const ContractConstructor = require('../../src/contract/method/ContractConstructor');
 
 const ADDRESS = '0xfcad0b19bb29d4674531d6f115237e16afce377c';
-const HEX_64 = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
+const HEX64 = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 
 function sha3(string) {
   return format.hex(sign.sha3(Buffer.from(string)));
@@ -40,7 +39,7 @@ test('Contract', async () => {
   value = await contract.count();
   expect(value.toString()).toEqual('100');
 
-  value = await contract.inc(0).options({ from: ADDRESS, nonce: 0 });
+  value = await contract.inc(0).call({ from: ADDRESS, nonce: 0 });
   expect(value.toString()).toEqual('100');
 });
 
@@ -79,6 +78,96 @@ test('contract.call', async () => {
 
   call.mockReturnValueOnce('0x0');
   await expect(contract.count()).rejects.toThrow('length not match');
+
+  call.mockRestore();
+});
+
+test('contract.call catch', async () => {
+  const call = jest.spyOn(conflux.provider, 'call');
+
+  call.mockReturnValueOnce('0x00000000000000000000000000000000000000000000000000000000000000ff');
+  const value = await contract.count().catch(v => v);
+  expect(`${value}`).toEqual('255');
+
+  call.mockRejectedValueOnce(new Error('XXX'));
+  const error = await contract.count().catch(v => v);
+  expect(error.message).toEqual('XXX');
+
+  call.mockRestore();
+});
+
+test('contract.call finally', async () => {
+  const call = jest.spyOn(conflux.provider, 'call');
+
+  let called;
+
+  called = false;
+  await contract.count().finally(() => {
+    called = true;
+  });
+  expect(called).toEqual(true);
+
+  called = false;
+  call.mockRejectedValueOnce(new Error('XXX'));
+  await expect(
+    contract.count().finally(() => {
+      called = true;
+    }),
+  ).rejects.toThrow('XXX');
+  expect(called).toEqual(true);
+
+  call.mockRestore();
+});
+
+test('contract.estimateGasAndCollateral', async () => {
+  const call = jest.spyOn(conflux.provider, 'call');
+
+  await contract.count().estimateGasAndCollateral({});
+
+  expect(call).toHaveBeenLastCalledWith('cfx_estimateGasAndCollateral', {
+    to: address,
+    data: '0x06661abd',
+  });
+
+  call.mockRestore();
+});
+
+test('contract.sendTransaction', async () => {
+  const call = jest.spyOn(conflux.provider, 'call');
+
+  await contract.count().sendTransaction({ from: ADDRESS, gasPrice: 0, gas: 0, storageLimit: 0 });
+
+  expect(call).toHaveBeenLastCalledWith('cfx_sendTransaction', {
+    from: ADDRESS,
+    to: address,
+    data: '0x06661abd',
+    gasPrice: '0x0',
+    gas: '0x0',
+    storageLimit: '0x0',
+  }, undefined);
+
+  call.mockRestore();
+});
+
+test('contract.getLogs', async () => {
+  const call = jest.spyOn(conflux.provider, 'call');
+
+  const topics = [sha3('StringEvent(string)'), sha3('string')];
+  call.mockReturnValueOnce([
+    {
+      epochNumber: '0x0',
+      logIndex: '0x0',
+      transactionIndex: '0x0',
+      transactionLogIndex: '0x0',
+      topics,
+      data: '0x',
+    },
+  ]);
+
+  const result = await contract.StringEvent('string').getLogs();
+  expect(result[0].params).toEqual([topics[1]]);
+
+  expect(call).toHaveBeenLastCalledWith('cfx_getLogs', { address, topics });
 
   call.mockRestore();
 });
@@ -122,6 +211,15 @@ test('contract.override', () => {
     sha3('OverrideEvent(uint256,string)'),
     null,
   ]);
+
+  const result = contract.OverrideEvent.decodeLog({
+    topics: [
+      sha3('OverrideEvent(string)'),
+      sha3('str'),
+    ],
+    data: '0x',
+  });
+  expect(result[0]).toEqual(sha3('str'));
 });
 
 test('contract.StringEvent', () => {
@@ -131,7 +229,7 @@ test('contract.StringEvent', () => {
     sha3('string'),
   ]);
 
-  const result = contract.StringEvent.decodeLog({ data: '0x', topics: [topics[0], topics[1]] });
+  const result = contract.abi.decodeLog({ data: '0x', topics });
   expect(result).toEqual({
     name: 'StringEvent',
     fullName: 'StringEvent(string indexed _string)',
@@ -145,45 +243,45 @@ test('contract.StringEvent', () => {
 });
 
 test('contract.ArrayEvent', () => {
-  const { topics } = contract.ArrayEvent(HEX_64);
+  const { topics } = contract.ArrayEvent(HEX64);
   expect(topics).toEqual([
     sha3('ArrayEvent(string[3])'),
-    HEX_64,
+    HEX64,
   ]);
 
   expect(() => contract.ArrayEvent(['a', 'b', 'c'])).toThrow('not supported encode array to index');
 
-  const result = contract.ArrayEvent.decodeLog({ data: '0x', topics: [topics[0], topics[1]] });
+  const result = contract.abi.decodeLog({ data: '0x', topics });
   expect(result).toEqual({
     name: 'ArrayEvent',
     fullName: 'ArrayEvent(string[3] indexed _array)',
     type: 'ArrayEvent(string[3])',
     signature: sha3('ArrayEvent(string[3])'),
-    array: [HEX_64],
+    array: [HEX64],
     object: {
-      _array: HEX_64,
+      _array: HEX64,
     },
   });
 });
 
 test('contract.StructEvent', () => {
-  const { topics } = contract.StructEvent(HEX_64);
+  const { topics } = contract.StructEvent(HEX64);
   expect(topics).toEqual([
     sha3('StructEvent((string,int32))'),
-    HEX_64,
+    HEX64,
   ]);
 
   expect(() => contract.StructEvent(['Tom', 18])).toThrow('not supported encode tuple to index');
 
-  const result = contract.StructEvent.decodeLog({ data: '0x', topics: [topics[0], topics[1]] });
+  const result = contract.abi.decodeLog({ data: '0x', topics });
   expect(result).toEqual({
     name: 'StructEvent',
     fullName: 'StructEvent((string,int32) indexed _struct)',
     type: 'StructEvent((string,int32))',
     signature: sha3('StructEvent((string,int32))'),
-    array: [HEX_64],
+    array: [HEX64],
     object: {
-      _struct: HEX_64,
+      _struct: HEX64,
     },
   });
 });
@@ -218,6 +316,14 @@ test('decodeData.function', () => {
   });
 
   expect(contract.abi.decodeData('0x')).toEqual(undefined);
+});
+
+test('decodeData.override', () => {
+  const data = contract.override(Buffer.from('bytes')).data;
+
+  const tuple = contract.override.decodeData(data);
+
+  expect(tuple[0]).toEqual(Buffer.from('bytes'));
 });
 
 test('decodeLog', () => {

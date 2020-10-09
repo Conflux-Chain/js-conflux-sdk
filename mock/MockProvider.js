@@ -203,6 +203,20 @@ class MockProvider {
     return mockBlockHashArray(this, epochNumber);
   }
 
+  cfx_getBlockRewardInfo(epochNumber) {
+    const blockHashArray = this.cfx_getBlocksByEpoch(epochNumber);
+    return blockHashArray.map(blockHash => {
+      const block = this.cfx_getBlockByHash(blockHash);
+      return {
+        blockHash,
+        author: block.miner,
+        baseReward: randomHex(8),
+        totalReward: randomHex(10),
+        txFee: randomHex(12),
+      };
+    });
+  }
+
   // -------------------------------- block -----------------------------------
   cfx_getBestBlockHash() {
     return randomHex(64); // XXX

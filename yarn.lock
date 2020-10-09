@@ -846,14 +846,14 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@geekberry/jsdoc-to-md@0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@geekberry/jsdoc-to-md/-/jsdoc-to-md-0.0.6.tgz#f4c2dc68dc22aeff34af8c84408235814a6ef8d9"
-  integrity sha512-iLm8fy6CiS9jmbSWlg+iVDnVE4+wtrcCt1vYFc3UbP5gdCQG/FWgFLey1miLfIRUDGbaWpZYU30H0nSoy9jvrw==
+"@geekberry/jsdoc-to-md@0.0.8":
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/@geekberry/jsdoc-to-md/-/jsdoc-to-md-0.0.8.tgz#20f3870e53ea61fe7f2d6a3f5ddace0b3319d150"
+  integrity sha512-SegitS/UWHSJgjM0Y8ZUp1uV/RJcQ5E3WWSrP//r+A7zewD9UvycJdzVSBihzouk4WzhV4fzQWEQ3pQJvwBQGA==
   dependencies:
     jsdoc-api "^6.0.0"
     jsdoc-parse "^5.0.0"
-    lodash "4.17.15"
+    lodash "^4.17.20"
 
 "@jest/console@^24.7.1", "@jest/console@^24.9.0":
   version "24.9.0"
@@ -4112,7 +4112,7 @@ lodash.sortby@^4.7.0:
   resolved "https://registry.yarnpkg.com/lodash.sortby/-/lodash.sortby-4.7.0.tgz#edd14c824e2cc9c1e0b0a1b42bb5210516a42438"
   integrity sha1-7dFMgk4sycHgsKG0K7UhBRakJDg=
 
-lodash@4.17.15, lodash@^4.17.10, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20:
+lodash@^4.17.10, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20:
   version "4.17.20"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.20.tgz#b44a9b6297bcb698f1c51a3545a2b3b368d59c52"
   integrity sha512-PlhdFcillOINfeV7Ni6oF1TAEayyZBoZ8bcshTHqOYJYlrqzRK5hagpagky5o4HfCzzd1TRkXPMFq6cKk9rGmA==
