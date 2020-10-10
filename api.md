@@ -42,6 +42,8 @@ keywords:
         - [call](#Conflux.js/Conflux/call)
         - [estimateGasAndCollateral](#Conflux.js/Conflux/estimateGasAndCollateral)
         - [getLogs](#Conflux.js/Conflux/getLogs)
+- CONST.js
+    - [EPOCH_NUMBER](#CONST.js/EPOCH_NUMBER)
 - contract
     - Contract.js
         - Contract
@@ -1065,6 +1067,18 @@ options.limit       | `number`                | false    |                     |
 
 ----------------------------------------
 
+## EPOCH_NUMBER <a id="CONST.js/EPOCH_NUMBER"></a>
+
+epochNumber label
+
+- LATEST_MINED 'latest_mined': latest epoch.
+- LATEST_STATE 'latest_state': latest state, about 5 epoch less then `LATEST_MINED`
+- LATEST_CONFIRMED 'latest_confirmed': latest epoch which confirmation risk less 1e-8.
+- LATEST_CHECKPOINT 'latest_checkpoint': latest check point epoch.
+- EARLIEST 'earliest': earliest epoch number, same as 0.
+
+----------------------------------------
+
 ### Contract <a id="contract/Contract.js/Contract"></a>
 
 Contract with all its methods and events defined in its abi.
@@ -1806,8 +1820,8 @@ hex  | `string` | true     |         |
 * **Parameters**
 
 Name | Type            | Required | Default | Description
------|-----------------|----------|---------|-----------------------------------------------------
-arg  | `number,string` | true     |         | number or string in ['latest_state', 'latest_mined']
+-----|-----------------|----------|---------|-----------------
+arg  | `number,string` | true     |         | number or string
 
 * **Returns**
 
@@ -1818,7 +1832,7 @@ arg  | `number,string` | true     |         | number or string in ['latest_state
 ```
 > format.epochNumber(10)
  "0xa"
-> format.epochNumber('latest_state')
+> format.epochNumber(EPOCH_NUMBER.LATEST_STATE)
  "latest_state"
 > format.epochNumber('latest_mined')
  "latest_state"
