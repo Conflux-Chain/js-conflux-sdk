@@ -2,7 +2,7 @@ const JSBI = require('jsbi');
 const Big = require('big.js');
 const lodash = require('lodash');
 const parser = require('./parser');
-const { MAX_UINT } = require('../CONST');
+const { EPOCH_NUMBER, MAX_UINT } = require('../CONST');
 
 // ----------------------------------------------------------------------------
 function toHex(value) {
@@ -181,23 +181,23 @@ format.hexUInt = format.bigUInt
 format.riskNumber = format.bigUInt.$after(v => Number(Big(v).div(MAX_UINT)));
 
 /**
- * @param arg {number|string} - number or string in ['latest_state', 'latest_mined']
+ * @param arg {number|string} - number or string
  * @return {string}
  *
  * @example
  * > format.epochNumber(10)
  "0xa"
- * > format.epochNumber('latest_state')
+ * > format.epochNumber(EPOCH_NUMBER.LATEST_STATE)
  "latest_state"
  * > format.epochNumber('latest_mined')
  "latest_state"
  */
 format.epochNumber = format.hexUInt
-  .$or('earliest')
-  .$or('latest_checkpoint')
-  .$or('latest_confirmed')
-  .$or('latest_state')
-  .$or('latest_mined');
+  .$or(EPOCH_NUMBER.EARLIEST)
+  .$or(EPOCH_NUMBER.LATEST_CHECKPOINT)
+  .$or(EPOCH_NUMBER.LATEST_CONFIRMED)
+  .$or(EPOCH_NUMBER.LATEST_STATE)
+  .$or(EPOCH_NUMBER.LATEST_MINED);
 
 /**
  * @param arg {string|Buffer}
