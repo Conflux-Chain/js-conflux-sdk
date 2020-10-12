@@ -133,7 +133,6 @@ test('getBlockByHash', async () => {
   expect(block.deferredReceiptsRoot.startsWith('0x')).toEqual(true);
   expect(block.deferredStateRoot.startsWith('0x')).toEqual(true);
   expect(lodash.isBoolean(block.adaptive)).toEqual(true);
-  // expect(lodash.isBoolean(block.stable)).toEqual(true); ???
   expect(Number.isInteger(block.blame)).toEqual(true);
   expect(Number.isInteger(block.epochNumber)).toEqual(true);
   expect(Number.isInteger(block.size)).toEqual(true);

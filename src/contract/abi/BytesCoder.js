@@ -1,5 +1,6 @@
 const { WORD_BYTES } = require('../../CONST');
 const { assert, alignBuffer } = require('../../util');
+const format = require('../../util/format');
 const sign = require('../../util/sign');
 const BaseCoder = require('./BaseCoder');
 const { uIntCoder } = require('./IntegerCoder');
@@ -39,7 +40,7 @@ class BytesCoder extends BaseCoder {
    * @return {Buffer}
    */
   encode(value) {
-    value = Buffer.isBuffer(value) ? value : Buffer.from(value);
+    value = format.bytes(value);
 
     if (this.size !== undefined) {
       assert(value.length === this.size, {

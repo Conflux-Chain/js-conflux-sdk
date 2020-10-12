@@ -15,7 +15,7 @@ class AddressCoder extends BaseCoder {
    * @return {Buffer}
    */
   encode(address) {
-    return alignBuffer(format.buffer(format.address(address)));
+    return alignBuffer(format.hexBuffer(format.address(address)));
   }
 
   /**

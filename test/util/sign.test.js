@@ -43,32 +43,32 @@ test('randomPrivateKey', () => {
   const key2 = format.privateKey(randomPrivateKey());
   expect(key1).not.toEqual(key2); // almost impossible
 
-  const entropy = format.buffer('0x0123456789012345678901234567890123456789012345678901234567890123');
+  const entropy = format.hexBuffer('0x0123456789012345678901234567890123456789012345678901234567890123');
   const key3 = format.privateKey(randomPrivateKey(entropy));
   const key4 = format.privateKey(randomPrivateKey(entropy));
   expect(key3).not.toEqual(key4); // almost impossible
 
-  const entropyInvalid = format.buffer('0x0123456789');
+  const entropyInvalid = format.hexBuffer('0x0123456789');
   expect(() => randomPrivateKey(entropyInvalid)).toThrow('entropy must be 32 length Buffer');
 });
 
 test('privateKeyToPublicKey', () => {
-  const publicKey = format.publicKey(privateKeyToPublicKey(format.buffer(KEY)));
+  const publicKey = format.publicKey(privateKeyToPublicKey(format.hexBuffer(KEY)));
   expect(publicKey).toEqual(PUBLIC);
 });
 
 test('publicKeyToAddress', () => {
-  const address = format.address(publicKeyToAddress(format.buffer(PUBLIC)));
+  const address = format.address(publicKeyToAddress(format.hexBuffer(PUBLIC)));
   expect(address).toEqual(ADDRESS);
 });
 
 test('privateKeyToAddress', () => {
-  const address = format.address(privateKeyToAddress(format.buffer(KEY)));
+  const address = format.address(privateKeyToAddress(format.hexBuffer(KEY)));
   expect(address).toEqual(ADDRESS);
 });
 
 test('encrypt and decrypt', () => {
-  const keystore = encrypt(format.buffer(KEY), PASSWORD);
+  const keystore = encrypt(format.hexBuffer(KEY), PASSWORD);
 
   expect(keystore.version).toEqual(3);
   expect(lodash.isString(keystore.id)).toEqual(true);
@@ -96,7 +96,7 @@ test('encrypt and decrypt', () => {
 
 test('ecdsaSign and ecdsaRecover', () => {
   const hash = randomBuffer(32);
-  const { r, s, v } = ecdsaSign(hash, format.buffer(KEY));
+  const { r, s, v } = ecdsaSign(hash, format.hexBuffer(KEY));
 
   expect(r.length).toEqual(32);
   expect(s.length).toEqual(32);

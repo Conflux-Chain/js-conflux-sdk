@@ -157,7 +157,7 @@ class Conflux {
    */
   async getGasPrice() {
     const result = await this.provider.call('cfx_gasPrice');
-    return format.decUInt(result);
+    return format.bigUIntDec(result);
   }
 
   /**
@@ -174,7 +174,7 @@ class Conflux {
     const result = await this.provider.call('cfx_getInterestRate',
       format.epochNumber.$or(undefined)(epochNumber),
     );
-    return format.decUInt(result);
+    return format.bigUIntDec(result);
   }
 
   /**
@@ -191,7 +191,7 @@ class Conflux {
     const result = await this.provider.call('cfx_getAccumulateInterestRate',
       format.epochNumber.$or(undefined)(epochNumber),
     );
-    return format.decUInt(result);
+    return format.bigUIntDec(result);
   }
 
   // ------------------------------- address ----------------------------------
@@ -245,7 +245,7 @@ class Conflux {
       format.address(address),
       format.epochNumber.$or(undefined)(epochNumber),
     );
-    return format.decUInt(result);
+    return format.bigUIntDec(result);
   }
 
   /**
@@ -264,7 +264,7 @@ class Conflux {
       format.address(address),
       format.epochNumber.$or(undefined)(epochNumber),
     );
-    return format.decUInt(result);
+    return format.bigUIntDec(result);
   }
 
   /**
@@ -283,7 +283,7 @@ class Conflux {
       format.address(address),
       format.epochNumber.$or(undefined)(epochNumber),
     );
-    return format.decUInt(result);
+    return format.bigUIntDec(result);
   }
 
   /**
@@ -893,7 +893,7 @@ class Conflux {
       format.address(address),
       format.epochNumber.$or(undefined)(epochNumber),
     );
-    return format.decUInt(result);
+    return format.bigUIntDec(result);
   }
 
   /**

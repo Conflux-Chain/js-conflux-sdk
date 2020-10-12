@@ -59,7 +59,7 @@ class Transaction {
    * @return {Transaction}
    */
   sign(privateKey) {
-    const privateKeyBuffer = format.buffer(privateKey);
+    const privateKeyBuffer = format.hexBuffer(privateKey);
     const addressBuffer = privateKeyToAddress(privateKeyBuffer);
     const { r, s, v } = ecdsaSign(sha3(this.encode(false)), privateKeyBuffer);
 
@@ -78,8 +78,8 @@ class Transaction {
    */
   recover() {
     const publicKey = ecdsaRecover(sha3(this.encode(false)), {
-      r: format.buffer(this.r),
-      s: format.buffer(this.s),
+      r: format.hexBuffer(this.r),
+      s: format.hexBuffer(this.s),
       v: format.uInt(this.v),
     });
     return format.publicKey(publicKey);

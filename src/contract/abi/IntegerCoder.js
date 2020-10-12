@@ -56,7 +56,7 @@ class IntegerCoder extends BaseCoder {
       value,
     });
 
-    return alignBuffer(format.buffer(number));
+    return alignBuffer(format.hexBuffer(number));
   }
 
   /**
@@ -64,7 +64,7 @@ class IntegerCoder extends BaseCoder {
    * @return {BigInt}
    */
   decode(stream) {
-    let value = format.bigInt(`0x${stream.read(this.size * 2)}`); // 16: read out naked hex string
+    let value = JSBI.BigInt(`0x${stream.read(this.size * 2)}`); // 16: read out naked hex string
 
     if (this.signed && JSBI.GE(value, this.bound)) {
       const mask = JSBI.leftShift(JSBI.BigInt(1), JSBI.BigInt(this.size * 8));

@@ -333,7 +333,7 @@ test('estimateGasAndCollateral', async () => {
   await conflux.estimateGasAndCollateral(
     {
       from: ADDRESS,
-      to: format.buffer(ADDRESS),
+      to: format.hexBuffer(ADDRESS),
       gas: '0x01',
       chainId: '0x01',
       value: 100,

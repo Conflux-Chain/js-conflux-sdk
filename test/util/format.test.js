@@ -89,19 +89,19 @@ test('bigInt', () => {
   expect(format.bigInt(Number.MAX_SAFE_INTEGER + 1)).toEqual(JSBI.BigInt(2 ** 53));
 });
 
-test('decUInt', () => {
-  expect(format.decUInt('')).toEqual('0');
-  expect(format.decUInt(100)).toEqual('100');
-  expect(format.decUInt('10')).toEqual('10');
-  expect(format.decUInt('0x000a')).toEqual('10');
-  expect(format.decUInt(JSBI.BigInt(10))).toEqual('10');
-  expect(format.decUInt(Number.MAX_SAFE_INTEGER)).toEqual('9007199254740991');
-  expect(() => format.decUInt(Buffer.from([0, 1, 2]))).toThrow('not match BigInt');
-  expect(() => format.decUInt(3.50)).toThrow('cannot be converted to');
-  expect(() => format.decUInt(-0.5)).toThrow('cannot be converted to');
-  expect(() => format.decUInt(-1)).toThrow('not match bigUInt');
-  expect(() => format.decUInt('-0x1')).toThrow('Cannot');
-  expect(() => format.decUInt(null)).toThrow('Cannot');
+test('bigUIntDec', () => {
+  expect(format.bigUIntDec('')).toEqual('0');
+  expect(format.bigUIntDec(100)).toEqual('100');
+  expect(format.bigUIntDec('10')).toEqual('10');
+  expect(format.bigUIntDec('0x000a')).toEqual('10');
+  expect(format.bigUIntDec(JSBI.BigInt(10))).toEqual('10');
+  expect(format.bigUIntDec(Number.MAX_SAFE_INTEGER)).toEqual('9007199254740991');
+  expect(() => format.bigUIntDec(Buffer.from([0, 1, 2]))).toThrow('not match BigInt');
+  expect(() => format.bigUIntDec(3.50)).toThrow('cannot be converted to');
+  expect(() => format.bigUIntDec(-0.5)).toThrow('cannot be converted to');
+  expect(() => format.bigUIntDec(-1)).toThrow('not match bigUInt');
+  expect(() => format.bigUIntDec('-0x1')).toThrow('Cannot');
+  expect(() => format.bigUIntDec(null)).toThrow('Cannot');
 });
 
 test('bigUInt', () => {
@@ -113,18 +113,18 @@ test('bigUInt', () => {
   expect(format.bigUInt('0.0')).toEqual(JSBI.BigInt(0));
 });
 
-test('hexUInt', () => {
-  expect(format.hexUInt('')).toEqual('0x0');
-  expect(format.hexUInt(100)).toEqual('0x64');
-  expect(format.hexUInt('10')).toEqual('0xa');
-  expect(format.hexUInt('0x000a')).toEqual('0xa');
-  expect(format.hexUInt(JSBI.BigInt(10))).toEqual('0xa');
-  expect(format.hexUInt(Number.MAX_SAFE_INTEGER)).toEqual('0x1fffffffffffff');
-  expect(() => format.hexUInt(Buffer.from([0, 1, 2]))).toThrow('not match BigInt');
-  expect(() => format.hexUInt(3.50)).toThrow('cannot be converted to');
-  expect(() => format.hexUInt(-0.5)).toThrow('cannot be converted to');
-  expect(() => format.hexUInt(-1)).toThrow('not match bigUInt');
-  expect(() => format.hexUInt(null)).toThrow('Cannot');
+test('bigUIntHex', () => {
+  expect(format.bigUIntHex('')).toEqual('0x0');
+  expect(format.bigUIntHex(100)).toEqual('0x64');
+  expect(format.bigUIntHex('10')).toEqual('0xa');
+  expect(format.bigUIntHex('0x000a')).toEqual('0xa');
+  expect(format.bigUIntHex(JSBI.BigInt(10))).toEqual('0xa');
+  expect(format.bigUIntHex(Number.MAX_SAFE_INTEGER)).toEqual('0x1fffffffffffff');
+  expect(() => format.bigUIntHex(Buffer.from([0, 1, 2]))).toThrow('not match BigInt');
+  expect(() => format.bigUIntHex(3.50)).toThrow('cannot be converted to');
+  expect(() => format.bigUIntHex(-0.5)).toThrow('cannot be converted to');
+  expect(() => format.bigUIntHex(-1)).toThrow('not match bigUInt');
+  expect(() => format.bigUIntHex(null)).toThrow('Cannot');
 });
 
 test('riskNumber', () => {
@@ -157,20 +157,20 @@ test('hex64', () => {
   expect(() => format.transactionHash(HEX_40)).toThrow('not match hex64');
 });
 
-test('buffer', () => {
-  expect(() => format.buffer(undefined)).toThrow('not match hex');
+test('hexBuffer', () => {
+  expect(() => format.hexBuffer(undefined)).toThrow('not match hex');
 
-  expect(format.buffer(Buffer.from([0, 1]))).toEqual(Buffer.from([0, 1]));
+  expect(format.hexBuffer(Buffer.from([0, 1]))).toEqual(Buffer.from([0, 1]));
 
-  expect(format.buffer(null)).toEqual(Buffer.from([]));
+  expect(format.hexBuffer(null)).toEqual(Buffer.from([]));
 
-  expect(format.buffer(0)).toEqual(Buffer.from([0]));
-  expect(() => format.buffer(3.14)).toThrow('not match hex');
-  expect(format.buffer(1024)).toEqual(Buffer.from([4, 0]));
-  expect(format.buffer('0x0a')).toEqual(Buffer.from([10]));
+  expect(format.hexBuffer(0)).toEqual(Buffer.from([0]));
+  expect(() => format.hexBuffer(3.14)).toThrow('not match hex');
+  expect(format.hexBuffer(1024)).toEqual(Buffer.from([4, 0]));
+  expect(format.hexBuffer('0x0a')).toEqual(Buffer.from([10]));
 
-  expect(format.buffer(false)).toEqual(Buffer.from([0]));
-  expect(format.buffer(true)).toEqual(Buffer.from([1]));
+  expect(format.hexBuffer(false)).toEqual(Buffer.from([0]));
+  expect(format.hexBuffer(true)).toEqual(Buffer.from([1]));
 });
 
 test('bytes', () => {
