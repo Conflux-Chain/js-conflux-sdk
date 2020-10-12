@@ -1,3 +1,5 @@
+const EventEmitter = require('events');
+
 class RPCError extends Error {
   constructor(object) {
     super(object);
@@ -5,7 +7,7 @@ class RPCError extends Error {
   }
 }
 
-class BaseProvider {
+class BaseProvider extends EventEmitter {
   /**
    * @param [options] {object}
    * @param options.url {string} - Full json rpc http url
@@ -18,6 +20,7 @@ class BaseProvider {
     timeout = 5 * 60 * 1000,
     logger = { info: () => undefined, error: () => undefined },
   } = {}) {
+    super();
     this.url = url;
     this.timeout = timeout;
     this.logger = logger;
@@ -96,7 +99,9 @@ class BaseProvider {
     return returnArray.map(({ result, error }) => (error ? new BaseProvider.RPCError(error) : result));
   }
 
-  close() {}
+  close() {
+    this.removeAllListeners();
+  }
 }
 
 module.exports = BaseProvider;

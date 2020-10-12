@@ -438,14 +438,14 @@ format.receipt = parser({
   gasFee: format.bigUIntDec,
 });
 
-format.logs = parser([
-  {
-    epochNumber: format.uInt,
-    logIndex: format.uInt,
-    transactionIndex: format.uInt,
-    transactionLogIndex: format.uInt,
-  },
-]);
+format.log = parser({
+  epochNumber: format.uInt,
+  logIndex: format.uInt,
+  transactionIndex: format.uInt,
+  transactionLogIndex: format.uInt,
+});
+
+format.logs = parser([format.log]);
 
 format.sponsorInfo = parser({
   sponsorBalanceForCollateral: format.bigUIntDec,
@@ -460,5 +460,23 @@ format.rewardInfo = parser([
     txFee: format.bigUIntDec,
   },
 ]);
+
+// ---------------------------- parse subscribe event -------------------------
+format.head = parser({
+  difficulty: format.bigUIntDec,
+  epochNumber: format.uInt.$or(null),
+  gasLimit: format.bigUIntDec,
+  height: format.uInt,
+  powQuality: format.bigUIntDec,
+  timestamp: format.uInt,
+});
+
+format.revert = parser({
+  revertTo: format.uInt,
+});
+
+format.epoch = parser({
+  epochNumber: format.uInt,
+});
 
 module.exports = format;

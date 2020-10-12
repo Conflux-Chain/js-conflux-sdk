@@ -1,4 +1,4 @@
-const { sleep, loop } = require('./index');
+const { sleep, loop } = require('../util');
 
 class PendingTransaction {
   constructor(conflux, func, args) {

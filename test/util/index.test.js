@@ -1,4 +1,4 @@
-const { alignBuffer } = require('../../src/util');
+const { alignBuffer, awaitTimeout, sleep } = require('../../src/util');
 const format = require('../../src/util/format');
 
 test('alignBuffer', () => {
@@ -19,4 +19,11 @@ test('alignBuffer', () => {
     '00000000000000000000000000000000000000000000000000000000000000ff' +
     '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef',
   );
+});
+
+test('awaitTimeout', async () => {
+  const result = await awaitTimeout(sleep(100), 1000);
+  expect(result).toEqual(undefined);
+
+  await expect(awaitTimeout(sleep(100), 10)).rejects.toThrow('Timeout');
 });

@@ -44,6 +44,11 @@ keywords:
         - [call](#Conflux.js/Conflux/call)
         - [estimateGasAndCollateral](#Conflux.js/Conflux/estimateGasAndCollateral)
         - [getLogs](#Conflux.js/Conflux/getLogs)
+        - [subscribe](#Conflux.js/Conflux/subscribe)
+        - [subscribeEpochs](#Conflux.js/Conflux/subscribeEpochs)
+        - [subscribeNewHeads](#Conflux.js/Conflux/subscribeNewHeads)
+        - [subscribeLogs](#Conflux.js/Conflux/subscribeLogs)
+        - [unsubscribe](#Conflux.js/Conflux/unsubscribe)
 - CONST.js
     - [EPOCH_NUMBER](#CONST.js/EPOCH_NUMBER)
 - contract
@@ -79,6 +84,15 @@ keywords:
         - [providerFactory](#provider/index.js/providerFactory)
     - WebSocketProvider.js
         - [WebSocketProvider](#provider/WebSocketProvider.js/WebSocketProvider)
+- subscribe
+    - PendingTransaction.js
+        - PendingTransaction
+            - [get](#subscribe/PendingTransaction.js/PendingTransaction/get)
+            - [mined](#subscribe/PendingTransaction.js/PendingTransaction/mined)
+            - [executed](#subscribe/PendingTransaction.js/PendingTransaction/executed)
+            - [confirmed](#subscribe/PendingTransaction.js/PendingTransaction/confirmed)
+    - Subscription.js
+        - [Subscription](#subscribe/Subscription.js/Subscription)
 - Transaction.js
     - Transaction
         - [**constructor**](#Transaction.js/Transaction/**constructor**)
@@ -108,12 +122,6 @@ keywords:
             - [(static)hexBuffer](#util/format.js/format/(static)hexBuffer)
             - [(static)bytes](#util/format.js/format/(static)bytes)
             - [(static)boolean](#util/format.js/format/(static)boolean)
-    - PendingTransaction.js
-        - PendingTransaction
-            - [get](#util/PendingTransaction.js/PendingTransaction/get)
-            - [mined](#util/PendingTransaction.js/PendingTransaction/mined)
-            - [executed](#util/PendingTransaction.js/PendingTransaction/executed)
-            - [confirmed](#util/PendingTransaction.js/PendingTransaction/confirmed)
     - sign.js
         - [sha3](#util/sign.js/sha3)
         - [checksumAddress](#util/sign.js/checksumAddress)
@@ -127,16 +135,6 @@ keywords:
         - [encrypt](#util/sign.js/encrypt)
         - [decrypt](#util/sign.js/decrypt)
 - wallet
-    - index.js
-        - Wallet
-            - [has](#wallet/index.js/Wallet/has)
-            - [delete](#wallet/index.js/Wallet/delete)
-            - [clear](#wallet/index.js/Wallet/clear)
-            - [set](#wallet/index.js/Wallet/set)
-            - [get](#wallet/index.js/Wallet/get)
-            - [addPrivateKey](#wallet/index.js/Wallet/addPrivateKey)
-            - [addRandom](#wallet/index.js/Wallet/addRandom)
-            - [addKeystore](#wallet/index.js/Wallet/addKeystore)
     - PrivateKeyAccount.js
         - PrivateKeyAccount
             - [(static)random](#wallet/PrivateKeyAccount.js/PrivateKeyAccount/(static)random)
@@ -145,6 +143,16 @@ keywords:
             - [encrypt](#wallet/PrivateKeyAccount.js/PrivateKeyAccount/encrypt)
             - [signTransaction](#wallet/PrivateKeyAccount.js/PrivateKeyAccount/signTransaction)
             - [signMessage](#wallet/PrivateKeyAccount.js/PrivateKeyAccount/signMessage)
+    - Wallet.js
+        - Wallet
+            - [has](#wallet/Wallet.js/Wallet/has)
+            - [delete](#wallet/Wallet.js/Wallet/delete)
+            - [clear](#wallet/Wallet.js/Wallet/clear)
+            - [set](#wallet/Wallet.js/Wallet/set)
+            - [get](#wallet/Wallet.js/Wallet/get)
+            - [addPrivateKey](#wallet/Wallet.js/Wallet/addPrivateKey)
+            - [addRandom](#wallet/Wallet.js/Wallet/addRandom)
+            - [addKeystore](#wallet/Wallet.js/Wallet/addKeystore)
 
 ----------------------------------------
 
@@ -1086,6 +1094,191 @@ options.limit       | `number`                | false    |                     |
    ]
 ```
 
+### Conflux.prototype.subscribe <a id="Conflux.js/Conflux/subscribe"></a>
+
+Subscribe event by name and got id, and provider will emit event by id
+
+> Note: suggest use `conflux.subscribeXXX` to subscribe
+
+* **Parameters**
+
+Name    | Type     | Required | Default | Description
+--------|----------|----------|---------|-----------------------
+name    | `string` | true     |         | Subscription name
+...args | `array`  | true     |         | Subscription arguments
+
+* **Returns**
+
+`Promise.<string>` Id of subscription
+
+* **Examples**
+
+```
+> conflux = new Conflux({url:'ws://127.0.0.1:12535'})
+> id = await conflux.subscribe('epochs');
+   "0x8fe7879a1681e9b9"
+> conflux.provider.on(id, data=>console.log(data));
+   {
+     epochHashesOrdered: [
+       '0x0eff33578346b8e8347af3bae948eb7f4f5c27add9dbcfeb55eaf7cb3640088f',
+       '0xb0cedac34a06ebcb42c3446a6bb2df1f0dcd9d83061f550460e387d19a4d8e91'
+     ],
+     epochNumber: '0x8cb32'
+   }
+```
+
+### Conflux.prototype.subscribeEpochs <a id="Conflux.js/Conflux/subscribeEpochs"></a>
+
+The epochs topic streams consensus results: the total order of blocks, as expressed by a sequence of epochs.
+The returned series of epoch numbers is monotonically increasing with an increment of one.
+If you see the same epoch twice, this suggests a pivot chain reorg has happened (this might happen for recent epochs).
+For each epoch, the last hash in epochHashesOrdered is the hash of the pivot block.
+
+* **Returns**
+
+`Promise.<Subscription>` EventEmitter instance with the follow events:
+- 'data':
+  - epochNumber `number`: epoch number
+  - epochHashesOrdered `array`: epoch block hash in order
+    - `string`: block hash
+
+* **Examples**
+
+```
+> subscription = await conflux.subscribeEpochs()
+> subscription.on('data', data=>console.log(data))
+   {
+     epochNumber: 566031,
+     epochHashesOrdered: [
+       '0x2820dbb5c4126455ad37bc88c635ae1f35e0d4f85c74300c01828f57ea1e5969',
+       '0xd66b801335ba01e2448df52e59da584b54fc7ee7c2f8160943c097e1ebd23038'
+     ]
+    }
+   {
+     epochNumber: 566032,
+     epochHashesOrdered: [
+       '0x899606b462f0141d672aaea8497c82aebbd7b16d266fad71e9d5093b5c6d392e',
+       '0xf6093d19c4df3645cd972e9f791fe0db3a1ab70881023a8aee63f64e0c3ca152'
+     ]
+   }
+```
+
+### Conflux.prototype.subscribeNewHeads <a id="Conflux.js/Conflux/subscribeNewHeads"></a>
+
+The newHeads topic streams all new block headers participating in the consensus.
+
+* **Returns**
+
+`Promise.<Subscription>` EventEmitter instance with the follow events:
+- 'data': see `getBlockByHash`
+
+* **Examples**
+
+```
+> subscription = await conflux.subscribeNewHeads()
+> subscription.on('data', data=>console.log(data))
+   {
+     difficulty: '19874410',
+     epochNumber: null,
+     gasLimit: '30000000',
+     height: 566239,
+     powQuality: '39637224',
+     timestamp: 1602644636,
+     adaptive: false,
+     blame: 0,
+     deferredLogsBloomHash: '0xd397b3b043d87fcd6fad1291ff0bfd16401c274896d8c63a923727f077b8e0b5',
+     deferredReceiptsRoot: '0x35182c1c5f1fbb0864758585d94cefcb794619ba8ef4a7adc2e3d48e85a2d4b0',
+     deferredStateRoot: '0x2cf6ee27ed82e76c585ca46838746907512b86aab04f9f27cb04047939ec056f',
+     hash: '0x9454515ccd8493d2121e60549efd321de96a7322a95e8d537f7b2d0504a03f21',
+     miner: '0x10f9db11bb1509041909b35be6a3546fe65d22d0',
+     nonce: '0x611a95000001fe98',
+     parentHash: '0xf7edf9f6c11ebd4e9c1aa0a2c03203932c0ad79c3fd92cb7540bcf351aa90376',
+     refereeHashes: [
+       '0x4d69e1b945ec2c819bc20bcb0e128e4b161ed28355d42b6d05a6f7cac9ab91f9'
+     ],
+     transactionsRoot: '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'
+    }
+```
+
+### Conflux.prototype.subscribeLogs <a id="Conflux.js/Conflux/subscribeLogs"></a>
+
+The logs topic streams all logs matching a certain filter, in order.
+In case of a pivot chain reorg (which might affect recent logs), a special revert message is sent.
+All logs received previously that belong to epochs larger than the one in this message should be considered invalid.
+
+* **Parameters**
+
+Name            | Type                    | Required | Default | Description
+----------------|-------------------------|----------|---------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+options         | `object`                | false    |         |
+options.address | `string,Array.<string>` | false    |         | Search contract addresses. If null, match all. If specified, log must be produced by one of these addresses.
+options.topics  | `array`                 | false    |         | Search topics. Logs can have 4 topics: the function signature and up to 3 indexed event arguments. The elements of topics match the corresponding log topics. Example: ["0xA", null, ["0xB", "0xC"], null] matches logs with "0xA" as the 1st topic AND ("0xB" OR "0xC") as the 3rd topic. If null, match all.
+
+* **Returns**
+
+`Promise.<Subscription>` EventEmitter instance with the follow events:
+- 'data': see `getLogs`
+- 'revert':
+  - revertTo 'number': epoch number
+
+* **Examples**
+
+```
+> subscription = await conflux.subscribeLogs()
+> subscription.on('data', data=>console.log(data))
+   {
+     epochNumber: 568224,
+     logIndex: 0,
+     transactionIndex: 0,
+     transactionLogIndex: 0,
+     address: '0x84ed30d7ddc5ff82ac271ae4e7add5a8b22a8d71',
+     blockHash: '0xc02689eea6a507250838463c13e6b633479e2757dfb7e9b2593d5c31b54adb63',
+     data: '0x0000000000000000000000000000000000000000000000000000000000000001',
+     topics: [
+       '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef',
+       '0x0000000000000000000000001bd9e9be525ab967e633bcdaeac8bd5723ed4d6b',
+       '0x0000000000000000000000001bd9e9be525ab967e633bcdaeac8bd5723ed4d6b'
+     ],
+     transactionHash: '0x950ddec9ce3b42c4d8ca120722fa318ae64dc2e24553201f55f68c00bfd9cc4c'
+   }
+```
+
+```
+> subscription.on('revert', data=>console.log(data))
+   { revertTo: 568230 }
+   { revertTo: 568231 }
+```
+
+### Conflux.prototype.unsubscribe <a id="Conflux.js/Conflux/unsubscribe"></a>
+
+Unsubscribe subscription.
+
+* **Parameters**
+
+Name | Type                  | Required | Default | Description
+-----|-----------------------|----------|---------|----------------
+id   | `string,Subscription` | true     |         | Subscription id
+
+* **Returns**
+
+`Promise.<boolean>` Is success
+
+* **Examples**
+
+```
+> id = await conflux.subscribe('epochs');
+> await conflux.unsubscribe(id);
+   true
+> await conflux.unsubscribe(id);
+   false
+```
+
+```
+> subscription = await conflux.subscribeLogs();
+> await conflux.unsubscribe(subscription);
+   true
+```
+
 ----------------------------------------
 
 ## EPOCH_NUMBER <a id="CONST.js/EPOCH_NUMBER"></a>
@@ -1557,6 +1750,12 @@ options.url | `string` | true     |         |
 ### WebSocketProvider <a id="provider/WebSocketProvider.js/WebSocketProvider"></a>
 
 Websocket protocol json rpc provider.
+
+----------------------------------------
+
+### Subscription <a id="subscribe/Subscription.js/Subscription"></a>
+
+Subscription event emitter
 
 ----------------------------------------
 
@@ -2386,106 +2585,6 @@ password   | `string,Buffer` | true     |         |
 
 ----------------------------------------
 
-### Wallet <a id="wallet/index.js/Wallet"></a>
-
-Wallet to manager accounts.
-
-#### Wallet.prototype.has <a id="wallet/index.js/Wallet/has"></a>
-
-Check if key exist
-
-* **Parameters**
-
-Name | Type     | Required | Default | Description
------|----------|----------|---------|------------
-key  | `string` | true     |         |
-
-* **Returns**
-
-`boolean` 
-
-#### Wallet.prototype.delete <a id="wallet/index.js/Wallet/delete"></a>
-
-Drop one account by key
-
-* **Parameters**
-
-Name | Type     | Required | Default | Description
------|----------|----------|---------|------------
-key  | `string` | true     |         |
-
-* **Returns**
-
-`boolean` 
-
-#### Wallet.prototype.clear <a id="wallet/index.js/Wallet/clear"></a>
-
-Drop all account in wallet
-
-#### Wallet.prototype.set <a id="wallet/index.js/Wallet/set"></a>
-
-* **Parameters**
-
-Name    | Type      | Required | Default | Description
---------|-----------|----------|---------|-------------------------------------
-key     | `string`  | true     |         | Key of account, usually is `address`
-account | `Account` | true     |         | Account instance
-
-* **Returns**
-
-`Wallet` 
-
-#### Wallet.prototype.get <a id="wallet/index.js/Wallet/get"></a>
-
-* **Parameters**
-
-Name | Type     | Required | Default | Description
------|----------|----------|---------|------------
-key  | `string` | true     |         |
-
-* **Returns**
-
-`Account` 
-
-#### Wallet.prototype.addPrivateKey <a id="wallet/index.js/Wallet/addPrivateKey"></a>
-
-* **Parameters**
-
-Name       | Type            | Required | Default | Description
------------|-----------------|----------|---------|-----------------------
-privateKey | `string,Buffer` | true     |         | Private key of account
-
-* **Returns**
-
-`PrivateKeyAccount` 
-
-#### Wallet.prototype.addRandom <a id="wallet/index.js/Wallet/addRandom"></a>
-
-* **Parameters**
-
-Name    | Type            | Required | Default | Description
---------|-----------------|----------|---------|--------------------------
-entropy | `string,Buffer` | false    |         | Entropy of random account
-
-* **Returns**
-
-`PrivateKeyAccount` 
-
-#### Wallet.prototype.addKeystore <a id="wallet/index.js/Wallet/addKeystore"></a>
-
-* **Parameters**
-
-Name     | Type            | Required | Default | Description
----------|-----------------|----------|---------|---------------------------------------
-keystore | `object`        | true     |         | Keystore version 3 object.
-password | `string,Buffer` | true     |         | Password for keystore to decrypt with.
-
-* **Returns**
-
-`PrivateKeyAccount` 
-
-----------------------------------------
-
 ### PrivateKeyAccount <a id="wallet/PrivateKeyAccount.js/PrivateKeyAccount"></a>
 
 
@@ -2693,3 +2792,103 @@ options | `string` | true     |         |
       signature: '0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01'
     }
 ```
+
+----------------------------------------
+
+### Wallet <a id="wallet/Wallet.js/Wallet"></a>
+
+Wallet to manager accounts.
+
+#### Wallet.prototype.has <a id="wallet/Wallet.js/Wallet/has"></a>
+
+Check if key exist
+
+* **Parameters**
+
+Name | Type     | Required | Default | Description
+-----|----------|----------|---------|------------
+key  | `string` | true     |         |
+
+* **Returns**
+
+`boolean` 
+
+#### Wallet.prototype.delete <a id="wallet/Wallet.js/Wallet/delete"></a>
+
+Drop one account by key
+
+* **Parameters**
+
+Name | Type     | Required | Default | Description
+-----|----------|----------|---------|------------
+key  | `string` | true     |         |
+
+* **Returns**
+
+`boolean` 
+
+#### Wallet.prototype.clear <a id="wallet/Wallet.js/Wallet/clear"></a>
+
+Drop all account in wallet
+
+#### Wallet.prototype.set <a id="wallet/Wallet.js/Wallet/set"></a>
+
+* **Parameters**
+
+Name    | Type      | Required | Default | Description
+--------|-----------|----------|---------|-------------------------------------
+key     | `string`  | true     |         | Key of account, usually is `address`
+account | `Account` | true     |         | Account instance
+
+* **Returns**
+
+`Wallet` 
+
+#### Wallet.prototype.get <a id="wallet/Wallet.js/Wallet/get"></a>
+
+* **Parameters**
+
+Name | Type     | Required | Default | Description
+-----|----------|----------|---------|------------
+key  | `string` | true     |         |
+
+* **Returns**
+
+`Account` 
+
+#### Wallet.prototype.addPrivateKey <a id="wallet/Wallet.js/Wallet/addPrivateKey"></a>
+
+* **Parameters**
+
+Name       | Type            | Required | Default | Description
+-----------|-----------------|----------|---------|-----------------------
+privateKey | `string,Buffer` | true     |         | Private key of account
+
+* **Returns**
+
+`PrivateKeyAccount` 
+
+#### Wallet.prototype.addRandom <a id="wallet/Wallet.js/Wallet/addRandom"></a>
+
+* **Parameters**
+
+Name    | Type            | Required | Default | Description
+--------|-----------------|----------|---------|--------------------------
+entropy | `string,Buffer` | false    |         | Entropy of random account
+
+* **Returns**
+
+`PrivateKeyAccount` 
+
+#### Wallet.prototype.addKeystore <a id="wallet/Wallet.js/Wallet/addKeystore"></a>
+
+* **Parameters**
+
+Name     | Type            | Required | Default | Description
+---------|-----------------|----------|---------|---------------------------------------
+keystore | `object`        | true     |         | Keystore version 3 object.
+password | `string,Buffer` | true     |         | Password for keystore to decrypt with.
+
+* **Returns**
+
+`PrivateKeyAccount` 

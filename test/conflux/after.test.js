@@ -5,6 +5,7 @@ const { MockProvider } = require('../../mock');
 const ADDRESS = '0xfcad0b19bb29d4674531d6f115237e16afce377c';
 const BLOCK_HASH = '0xe1b0000000000000000000000000000000000000000000000000000000000001';
 const TX_HASH = '0xb0a0000000000000000000000000000000000000000000000000000000000000';
+const HEX64 = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 
 // ----------------------------------------------------------------------------
 const conflux = new Conflux();
@@ -304,5 +305,104 @@ test('getLogs', async () => {
   expect(eventLog.data.startsWith('0x')).toEqual(true);
   eventLog.topics.forEach(topic => {
     expect(topic.startsWith('0x')).toEqual(true);
+  });
+});
+
+// ------------------------------- subscribe ----------------------------------
+test('subscribeEpochs', async () => {
+  const subscription = await conflux.subscribeEpochs();
+
+  subscription.on('data', data => {
+    expect(data).toEqual({
+      epochNumber: 0,
+      epochHashesOrdered: [BLOCK_HASH],
+    });
+  });
+  conflux.provider.emit(`${subscription}`, {
+    epochNumber: '0x0',
+    epochHashesOrdered: [BLOCK_HASH],
+  });
+});
+
+test('subscribeNewHeads', async () => {
+  const subscription = await conflux.subscribeNewHeads();
+
+  subscription.on('data', data => {
+    expect(data).toEqual({
+      difficulty: '1048575',
+      epochNumber: null,
+      gasLimit: '1',
+      height: 10,
+      powQuality: '4095',
+      timestamp: 1602644636,
+      adaptive: false,
+      blame: 0,
+      deferredLogsBloomHash: HEX64,
+      deferredReceiptsRoot: HEX64,
+      deferredStateRoot: HEX64,
+      hash: BLOCK_HASH,
+      miner: ADDRESS,
+      nonce: '0x1000000000000000',
+      parentHash: BLOCK_HASH,
+      refereeHashes: [BLOCK_HASH],
+      transactionsRoot: HEX64,
+    });
+  });
+  conflux.provider.emit(subscription.id, {
+    adaptive: false,
+    blame: 0,
+    deferredLogsBloomHash: HEX64,
+    deferredReceiptsRoot: HEX64,
+    deferredStateRoot: HEX64,
+    difficulty: '0xfffff',
+    epochNumber: null,
+    gasLimit: '0x1',
+    hash: BLOCK_HASH,
+    height: '0xa',
+    miner: ADDRESS,
+    nonce: '0x1000000000000000',
+    parentHash: BLOCK_HASH,
+    powQuality: '0xfff',
+    refereeHashes: [BLOCK_HASH],
+    timestamp: 1602644636,
+    transactionsRoot: HEX64,
+  });
+});
+
+test('subscribeLogs', async () => {
+  const subscription = await conflux.subscribeLogs();
+
+  subscription.on('data', data => {
+    expect(data).toEqual({
+      epochNumber: 65535,
+      logIndex: 0,
+      transactionIndex: 0,
+      transactionLogIndex: 0,
+      address: ADDRESS,
+      blockHash: BLOCK_HASH,
+      data: '0x0000000000000000000000000000000000000000000000000000000000000001',
+      topics: [HEX64, HEX64, HEX64],
+      transactionHash: HEX64,
+    });
+  });
+  conflux.provider.emit(subscription.id, {
+    epochNumber: '0xffff',
+    logIndex: '0x0',
+    transactionIndex: '0x0',
+    transactionLogIndex: '0x0',
+    address: ADDRESS,
+    blockHash: BLOCK_HASH,
+    data: '0x0000000000000000000000000000000000000000000000000000000000000001',
+    topics: [HEX64, HEX64, HEX64],
+    transactionHash: HEX64,
+  });
+
+  subscription.on('revert', data => {
+    expect(data).toEqual({
+      revertTo: 65535,
+    });
+  });
+  conflux.provider.emit(subscription.id, {
+    revertTo: '0xffff',
   });
 });
