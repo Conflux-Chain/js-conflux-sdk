@@ -78,7 +78,7 @@ class Conflux {
    * - [SponsorWhitelistControl](https://github.com/Conflux-Chain/conflux-rust/blob/master/internal_contract/contracts/SponsorWhitelistControl.sol)
    * - [Staking](https://github.com/Conflux-Chain/conflux-rust/blob/master/internal_contract/contracts/Staking.sol)
    *
-   * @param name {string} Internal contract name
+   * @param name {"AdminControl"|"SponsorWhitelistControl"|"Staking"} Internal contract name
    * @return {Contract}
    *
    * @example
@@ -88,11 +88,14 @@ class Conflux {
     abi: ContractABI { * },
     address: '0x0888000000000000000000000000000000000000',
     destroy: [Function: bound call],
-    set_admin: [Function: bound call],
+    getAdmin: [Function: bound call],
+    setAdmin: [Function: bound call],
     'destroy(address)': [Function: bound call],
     '0x00f55d9d': [Function: bound call],
-    'set_admin(address,address)': [Function: bound call],
-    '0x73e80cba': [Function: bound call]
+    'getAdmin(address)': [Function: bound call],
+    '0x64efb22b': [Function: bound call],
+    'setAdmin(address,address)': [Function: bound call],
+    '0xc55b6bb7': [Function: bound call]
   }
    */
   InternalContract(name) {
