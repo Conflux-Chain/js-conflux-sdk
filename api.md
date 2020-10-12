@@ -221,9 +221,9 @@ Create internal contract by default abi and address
 
 * **Parameters**
 
-Name | Type     | Required | Default | Description
------|----------|----------|---------|-----------------------
-name | `string` | true     |         | Internal contract name
+Name | Type                                                 | Required | Default | Description
+-----|------------------------------------------------------|----------|---------|-----------------------
+name | `"AdminControl","SponsorWhitelistControl","Staking"` | true     |         | Internal contract name
 
 * **Returns**
 
@@ -238,11 +238,14 @@ name | `string` | true     |         | Internal contract name
     abi: ContractABI { * },
     address: '0x0888000000000000000000000000000000000000',
     destroy: [Function: bound call],
-    set_admin: [Function: bound call],
+    getAdmin: [Function: bound call],
+    setAdmin: [Function: bound call],
     'destroy(address)': [Function: bound call],
     '0x00f55d9d': [Function: bound call],
-    'set_admin(address,address)': [Function: bound call],
-    '0x73e80cba': [Function: bound call]
+    'getAdmin(address)': [Function: bound call],
+    '0x64efb22b': [Function: bound call],
+    'setAdmin(address,address)': [Function: bound call],
+    '0xc55b6bb7': [Function: bound call]
   }
 ```
 
