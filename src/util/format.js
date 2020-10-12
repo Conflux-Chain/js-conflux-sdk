@@ -135,7 +135,7 @@ format.uInt = parser(toNumber).$validate(v => Number.isSafeInteger(v) && v >= 0,
 format.bigInt = parser(toBigInt);
 
 /**
- * @param arg {number|JSBI|string|boolean}
+ * @param arg {number|string|JSBI}
  * @return {JSBI}
  *
  * @example
@@ -147,26 +147,34 @@ format.bigInt = parser(toBigInt);
 format.bigUInt = format.bigInt.$validate(v => v >= 0, 'bigUInt');
 
 /**
+ * @param arg {number|string|JSBI}
+ * @return {string} decimal string
+ *
+ * @example
+ * > format.decInt(100)
+ "100"
+ * > format.decInt('0x0a')
+ "10"
+ * > format.decInt(-1)
+ Error("not match decInt")
+ */
+format.decInt = format.bigInt.$after(v => v.toString(10));
+
+/**
  * When encoding QUANTITIES (integers, numbers): encode as hex, prefix with "0x", the most compact representation (slight exception: zero should be represented as "0x0")
  *
- * @param arg {number|string|boolean}
+ * @param arg {number|string|JSBI}
  * @return {string} Hex string
  *
  * @example
  * > format.hexUInt(100)
  "0x64"
- * > format.hexUInt(10)
+ * > format.hexUInt('0x0a')
  "0xa"
- * > format.hexUInt(3.50)
- "0x4"
- * > format.hexUInt(3.49)
- "0x3"
  * > format.hexUInt(-1))
  Error("not match uintHex")
  */
-format.hexUInt = format.bigUInt
-  .$after(v => `0x${v.toString(16)}`)
-  .$validate(v => /^0x[0-9a-f]+$/.test(v), 'hexUInt');
+format.hexUInt = format.bigUInt.$after(v => `0x${v.toString(16)}`);
 
 /**
  * @param hex {string}
@@ -190,14 +198,14 @@ format.riskNumber = format.bigUInt.$after(v => Number(Big(v).div(MAX_UINT)));
  * > format.epochNumber(EPOCH_NUMBER.LATEST_STATE)
  "latest_state"
  * > format.epochNumber('latest_mined')
- "latest_state"
+ "latest_mined"
  */
 format.epochNumber = format.hexUInt
-  .$or(EPOCH_NUMBER.EARLIEST)
-  .$or(EPOCH_NUMBER.LATEST_CHECKPOINT)
-  .$or(EPOCH_NUMBER.LATEST_CONFIRMED)
+  .$or(EPOCH_NUMBER.LATEST_MINED)
   .$or(EPOCH_NUMBER.LATEST_STATE)
-  .$or(EPOCH_NUMBER.LATEST_MINED);
+  .$or(EPOCH_NUMBER.LATEST_CONFIRMED)
+  .$or(EPOCH_NUMBER.LATEST_CHECKPOINT)
+  .$or(EPOCH_NUMBER.EARLIEST);
 
 /**
  * @param arg {string|Buffer}
@@ -393,15 +401,15 @@ format.account = parser({
 
 format.transaction = parser({
   nonce: format.bigUInt,
-  value: format.bigUInt,
   gasPrice: format.bigUInt,
   gas: format.bigUInt,
-  v: format.uInt,
-  transactionIndex: format.uInt.$or(null),
-  status: format.uInt.$or(null), // XXX: might be remove in rpc returned
+  value: format.bigUInt,
   storageLimit: format.bigUInt,
-  chainId: format.uInt,
   epochHeight: format.uInt,
+  chainId: format.uInt,
+  v: format.uInt,
+  status: format.uInt.$or(null),
+  transactionIndex: format.uInt.$or(null),
 });
 
 format.estimate = parser({

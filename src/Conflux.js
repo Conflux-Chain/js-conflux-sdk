@@ -1,7 +1,6 @@
 const { assert } = require('./util');
 const format = require('./util/format');
 const PendingTransaction = require('./util/PendingTransaction');
-const Drip = require('./Drip');
 const providerFactory = require('./provider');
 const Wallet = require('./wallet');
 const Contract = require('./contract');
@@ -28,7 +27,18 @@ class Conflux {
    });
    */
   constructor({ defaultGasPrice, ...rest } = {}) {
+    /**
+     * Provider for rpc call
+     *
+     * @type {WebsocketProvider|HttpProvider|BaseProvider}
+     */
     this.provider = providerFactory(rest);
+
+    /**
+     * Wallet for `sendTransaction` to get `Account` by `from` field
+     *
+     * @type {Wallet}
+     */
     this.wallet = new Wallet();
 
     /**
@@ -40,11 +50,11 @@ class Conflux {
      */
     this.defaultGasPrice = defaultGasPrice;
 
-    this.sendRawTransaction = this._decoratePollTransaction(this.sendRawTransaction);
-    this.sendTransaction = this._decoratePollTransaction(this.sendTransaction);
+    this.sendRawTransaction = this._decoratePendingTransaction(this.sendRawTransaction);
+    this.sendTransaction = this._decoratePendingTransaction(this.sendTransaction);
   }
 
-  _decoratePollTransaction(func) {
+  _decoratePendingTransaction(func) {
     const conflux = this;
     return function (...args) {
       return new PendingTransaction(conflux, func.bind(this), args);
@@ -139,15 +149,15 @@ class Conflux {
   /**
    * Returns the current price per gas in Drip.
    *
-   * @return {Promise<Drip>} Gas price in drip.
+   * @return {Promise<JSBI>} Gas price in drip.
    *
    * @example
    * > await conflux.getGasPrice();
-   [String (Drip): '1']
+   '1'
    */
   async getGasPrice() {
     const result = await this.provider.call('cfx_gasPrice');
-    return Drip.fromDrip(result);
+    return format.bigUInt(result);
   }
 
   /**
@@ -224,18 +234,18 @@ class Conflux {
    *
    * @param address {string} - The address to get the balance of.
    * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
-   * @return {Promise<Drip>} The balance in Drip.
+   * @return {Promise<JSBI>} The balance in Drip.
    *
    * @example
    * > await conflux.getBalance("0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b");
-   [String (Drip): '10098788868004995614504']
+   '10098788868004995614504'
    */
   async getBalance(address, epochNumber) {
     const result = await this.provider.call('cfx_getBalance',
       format.address(address),
       format.epochNumber.$or(undefined)(epochNumber),
     );
-    return Drip.fromDrip(result);
+    return format.bigUInt(result);
   }
 
   /**
@@ -243,18 +253,18 @@ class Conflux {
    *
    * @param address {string} - Address to check for staking balance.
    * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
-   * @return {Promise<Drip>} The staking balance in Drip.
+   * @return {Promise<JSBI>} The staking balance in Drip.
    *
    * @example
    * > await conflux.getStakingBalance('0x194770007dda54cF92009BFF0dE90c06F603a09f', 'latest_state');
-   [String (Drip): '6334100968004995614504']
+   '6334100968004995614504'
    */
   async getStakingBalance(address, epochNumber) {
     const result = await this.provider.call('cfx_getStakingBalance',
       format.address(address),
       format.epochNumber.$or(undefined)(epochNumber),
     );
-    return Drip.fromDrip(result);
+    return format.bigUInt(result);
   }
 
   /**

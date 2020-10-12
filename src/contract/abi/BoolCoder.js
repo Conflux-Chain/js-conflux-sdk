@@ -1,15 +1,19 @@
 const JSBI = require('jsbi');
 const lodash = require('lodash');
 const { assert } = require('../../util');
-const BaseCoder = require('./BaseCoder');
-const { uIntCoder } = require('./IntegerCoder');
+const IntegerCoder = require('./IntegerCoder');
 
-class BoolCoder extends BaseCoder {
-  static from({ type, name }) {
+class BoolCoder extends IntegerCoder {
+  static from({ type, ...options }) {
     if (type !== 'bool') {
       return undefined;
     }
-    return new this({ type, name });
+    return new this({ ...options, type });
+  }
+
+  constructor({ type, name }) {
+    super({ name });
+    this.type = type;
   }
 
   /**
@@ -24,7 +28,7 @@ class BoolCoder extends BaseCoder {
       coder: this,
     });
 
-    return uIntCoder.encode(value ? 1 : 0);
+    return super.encode(value ? 1 : 0);
   }
 
   /**
@@ -32,7 +36,7 @@ class BoolCoder extends BaseCoder {
    * @return {boolean}
    */
   decode(stream) {
-    return JSBI.notEqual(uIntCoder.decode(stream), JSBI.BigInt(0));
+    return JSBI.notEqual(super.decode(stream), JSBI.BigInt(0));
   }
 }
 

@@ -296,7 +296,9 @@ test('decodeData.constructor', () => {
     type: 'constructor(uint256)',
     signature: contract.constructor.bytecode,
     array: [JSBI.BigInt(50)],
-    object: { num: JSBI.BigInt(50) },
+    object: {
+      num: JSBI.BigInt(50),
+    },
   });
 });
 

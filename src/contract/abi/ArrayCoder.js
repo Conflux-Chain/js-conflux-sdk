@@ -6,7 +6,7 @@ const { uIntCoder } = require('./IntegerCoder');
 const { pack, unpack } = require('./TupleCoder');
 
 class ArrayCoder extends BaseCoder {
-  static from({ type, name, components }, valueCoder) {
+  static from({ type, components, ...options }, valueCoder) {
     const match = type.match(/^(.*)\[([0-9]*)]$/);
     if (!match) {
       return undefined;
@@ -14,7 +14,7 @@ class ArrayCoder extends BaseCoder {
 
     const [, subType, size] = match;
     return new this({
-      name,
+      ...options,
       coder: valueCoder({ type: subType, components }),
       size: size ? parseInt(size, 10) : undefined,
     });

@@ -5,7 +5,7 @@ const format = require('../../util/format');
 const BaseCoder = require('./BaseCoder');
 
 class IntegerCoder extends BaseCoder {
-  static from({ type, name }) {
+  static from({ type, ...options }) {
     const match = type.match(/^(int|uint)([0-9]*)$/);
     if (!match) {
       return undefined;
@@ -13,7 +13,7 @@ class IntegerCoder extends BaseCoder {
 
     const [, label, bits] = match;
     return new this({
-      name,
+      ...options,
       type: label,
       signed: !label.startsWith('u'),
       bits: bits ? parseInt(bits, 10) : undefined,

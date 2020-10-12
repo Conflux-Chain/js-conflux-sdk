@@ -2,7 +2,37 @@ const { assert } = require('../util');
 const Account = require('./Account');
 const PrivateKeyAccount = require('./PrivateKeyAccount');
 
+/**
+ * Wallet to manager accounts.
+ */
 class Wallet extends Map {
+  /**
+   * Check if key exist
+   *
+   * @param key {string}
+   * @return {boolean}
+   */
+  has(key) {
+    return super.has(key); // XXX: for jsdoc
+  }
+
+  /**
+   * Drop one account by key
+   *
+   * @param key {string}
+   * @return {boolean}
+   */
+  delete(key) {
+    return super.delete(key); // XXX: for jsdoc
+  }
+
+  /**
+   * Drop all account in wallet
+   */
+  clear() {
+    return super.clear();
+  }
+
   /**
    * @param key {string} - Key of account, usually is `address`
    * @param account {Account} - Account instance

@@ -1,6 +1,6 @@
 const JSBI = require('jsbi');
 const lodash = require('lodash');
-const { Conflux, Drip } = require('../../src');
+const { Conflux } = require('../../src');
 const { MockProvider } = require('../../mock');
 
 const ADDRESS = '0xfcad0b19bb29d4674531d6f115237e16afce377c';
@@ -30,7 +30,7 @@ test('getStatus', async () => {
 test('getGasPrice', async () => {
   const gasPrice = await conflux.getGasPrice();
 
-  expect(gasPrice.constructor).toEqual(Drip);
+  expect(gasPrice.constructor).toEqual(JSBI);
 });
 
 test('getInterestRate', async () => {
@@ -61,13 +61,13 @@ test('getAccount', async () => {
 test('getBalance', async () => {
   const balance = await conflux.getBalance(ADDRESS);
 
-  expect(balance.constructor).toEqual(Drip);
+  expect(balance.constructor).toEqual(JSBI);
 });
 
 test('getStakingBalance', async () => {
   const balance = await conflux.getStakingBalance(ADDRESS);
 
-  expect(balance.constructor).toEqual(Drip);
+  expect(balance.constructor).toEqual(JSBI);
 });
 
 test('getNextNonce', async () => {
