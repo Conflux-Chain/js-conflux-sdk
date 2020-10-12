@@ -1,4 +1,3 @@
-const JSBI = require('jsbi');
 const { Conflux, format, sign } = require('../../src');
 const { MockProvider } = require('../../mock');
 const { abi, bytecode, address } = require('./contract.json');
@@ -295,9 +294,9 @@ test('decodeData.constructor', () => {
     fullName: 'constructor(uint256 num)',
     type: 'constructor(uint256)',
     signature: contract.constructor.bytecode,
-    array: [JSBI.BigInt(50)],
+    array: [`${BigInt(50)}`],
     object: {
-      num: JSBI.BigInt(50),
+      num: `${BigInt(50)}`,
     },
   });
 });
@@ -311,9 +310,9 @@ test('decodeData.function', () => {
     fullName: 'inc(uint256 num)',
     type: 'inc(uint256)',
     signature: '0x812600df',
-    array: [JSBI.BigInt(100)],
+    array: [`${BigInt(100)}`],
     object: {
-      num: JSBI.BigInt(100),
+      num: `${BigInt(100)}`,
     },
   });
 
@@ -343,10 +342,10 @@ test('decodeLog', () => {
     fullName: 'SelfEvent(address indexed sender, uint256 current)',
     type: 'SelfEvent(address,uint256)',
     signature: '0xc4c01f6de493c58245fb681341f3a76bba9551ce81b11cbbb5d6d297844594df',
-    array: ['0xa000000000000000000000000000000000000001', JSBI.BigInt(100)],
+    array: ['0xa000000000000000000000000000000000000001', `${BigInt(100)}`],
     object: {
       sender: '0xa000000000000000000000000000000000000001',
-      current: JSBI.BigInt(100),
+      current: `${BigInt(100)}`,
     },
   });
 

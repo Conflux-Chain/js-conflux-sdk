@@ -151,14 +151,14 @@ format.bigUInt = format.bigInt.$validate(v => v >= 0, 'bigUInt');
  * @return {string} decimal string
  *
  * @example
- * > format.decInt(100)
+ * > format.decUInt(100)
  "100"
- * > format.decInt('0x0a')
+ * > format.decUInt('0x0a')
  "10"
- * > format.decInt(-1)
- Error("not match decInt")
+ * > format.decUInt(-1)
+ Error("not match bigUInt")
  */
-format.decInt = format.bigInt.$after(v => v.toString(10));
+format.decUInt = format.bigUInt.$after(v => v.toString(10));
 
 /**
  * When encoding QUANTITIES (integers, numbers): encode as hex, prefix with "0x", the most compact representation (slight exception: zero should be represented as "0x0")
@@ -392,29 +392,29 @@ format.status = parser({
 });
 
 format.account = parser({
-  accumulatedInterestReturn: format.bigUInt,
-  balance: format.bigUInt,
-  collateralForStorage: format.bigUInt,
-  nonce: format.bigUInt,
-  stakingBalance: format.bigUInt,
+  accumulatedInterestReturn: format.decUInt,
+  balance: format.decUInt,
+  collateralForStorage: format.decUInt,
+  nonce: format.decUInt,
+  stakingBalance: format.decUInt,
+});
+
+format.estimate = parser({
+  gasUsed: format.decUInt,
+  storageCollateralized: format.decUInt,
 });
 
 format.transaction = parser({
-  nonce: format.bigUInt,
-  gasPrice: format.bigUInt,
-  gas: format.bigUInt,
-  value: format.bigUInt,
-  storageLimit: format.bigUInt,
+  nonce: format.decUInt,
+  gasPrice: format.decUInt,
+  gas: format.decUInt,
+  value: format.decUInt,
+  storageLimit: format.decUInt,
   epochHeight: format.uInt,
   chainId: format.uInt,
   v: format.uInt,
   status: format.uInt.$or(null),
   transactionIndex: format.uInt.$or(null),
-});
-
-format.estimate = parser({
-  gasUsed: format.bigUInt,
-  storageCollateralized: format.bigUInt,
 });
 
 format.block = parser({
@@ -423,8 +423,8 @@ format.block = parser({
   height: format.uInt,
   size: format.uInt,
   timestamp: format.uInt,
-  gasLimit: format.bigUInt,
-  difficulty: format.bigUInt,
+  gasLimit: format.decUInt,
+  difficulty: format.decUInt,
   transactions: [(format.transaction).$or(format.transactionHash)],
 });
 
@@ -432,8 +432,8 @@ format.receipt = parser({
   index: format.uInt,
   epochNumber: format.uInt,
   outcomeStatus: format.uInt.$or(null),
-  gasUsed: format.bigUInt,
-  gasFee: format.bigUInt,
+  gasUsed: format.decUInt,
+  gasFee: format.decUInt,
 });
 
 format.logs = parser([
@@ -446,16 +446,16 @@ format.logs = parser([
 ]);
 
 format.sponsorInfo = parser({
-  sponsorBalanceForCollateral: format.bigUInt,
-  sponsorBalanceForGas: format.bigUInt,
-  sponsorGasBound: format.bigUInt,
+  sponsorBalanceForCollateral: format.decUInt,
+  sponsorBalanceForGas: format.decUInt,
+  sponsorGasBound: format.decUInt,
 });
 
 format.rewardInfo = parser([
   {
-    baseReward: format.bigUInt,
-    totalReward: format.bigUInt,
-    txFee: format.bigUInt,
+    baseReward: format.decUInt,
+    totalReward: format.decUInt,
+    txFee: format.decUInt,
   },
 ]);
 

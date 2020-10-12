@@ -89,20 +89,19 @@ test('bigInt', () => {
   expect(format.bigInt(Number.MAX_SAFE_INTEGER + 1)).toEqual(JSBI.BigInt(2 ** 53));
 });
 
-test('decInt', () => {
-  expect(format.decInt('')).toEqual('0');
-  expect(format.decInt(100)).toEqual('100');
-  expect(format.decInt(-10)).toEqual('-10');
-  expect(format.decInt('10')).toEqual('10');
-  expect(format.decInt('-10')).toEqual('-10');
-  expect(format.decInt('0x000a')).toEqual('10');
-  expect(format.decInt(JSBI.BigInt(10))).toEqual('10');
-  expect(format.decInt(Number.MAX_SAFE_INTEGER)).toEqual('9007199254740991');
-  expect(() => format.decInt(Buffer.from([0, 1, 2]))).toThrow('not match BigInt');
-  expect(() => format.decInt(3.50)).toThrow('cannot be converted to');
-  expect(() => format.decInt(-0.5)).toThrow('cannot be converted to');
-  expect(() => format.decInt('-0x1')).toThrow('Cannot');
-  expect(() => format.decInt(null)).toThrow('Cannot');
+test('decUInt', () => {
+  expect(format.decUInt('')).toEqual('0');
+  expect(format.decUInt(100)).toEqual('100');
+  expect(format.decUInt('10')).toEqual('10');
+  expect(format.decUInt('0x000a')).toEqual('10');
+  expect(format.decUInt(JSBI.BigInt(10))).toEqual('10');
+  expect(format.decUInt(Number.MAX_SAFE_INTEGER)).toEqual('9007199254740991');
+  expect(() => format.decUInt(Buffer.from([0, 1, 2]))).toThrow('not match BigInt');
+  expect(() => format.decUInt(3.50)).toThrow('cannot be converted to');
+  expect(() => format.decUInt(-0.5)).toThrow('cannot be converted to');
+  expect(() => format.decUInt(-1)).toThrow('not match bigUInt');
+  expect(() => format.decUInt('-0x1')).toThrow('Cannot');
+  expect(() => format.decUInt(null)).toThrow('Cannot');
 });
 
 test('bigUInt', () => {

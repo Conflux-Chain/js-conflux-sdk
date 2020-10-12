@@ -1,4 +1,3 @@
-const JSBI = require('jsbi');
 const FunctionCoder = require('../../src/contract/method/FunctionCoder');
 
 test('function', () => {
@@ -35,9 +34,9 @@ test('function', () => {
   };
 
   const params = [
-    JSBI.BigInt(-1),
+    `${BigInt(-1)}`,
     ['0x0123456789012345678901234567890123456789', ['Hello', 'World']],
-    [[JSBI.BigInt(0xab), JSBI.BigInt(0xcd)], true],
+    [[`${BigInt(0xab)}`, `${BigInt(0xcd)}`], true],
   ];
 
   const hex = '0x664b7e11' +
@@ -61,5 +60,5 @@ test('function', () => {
   expect(coder.type).toEqual('func(int256,(address,string[]),((int256,int256),bool))');
   expect(coder.encodeData(params)).toEqual(hex);
   expect(coder.decodeData(hex)).toEqual(params);
-  expect(coder.decodeOutputs('0x0000000000000000000000000000000000000000000000000000000000000001')).toEqual(JSBI.BigInt(1));
+  expect(coder.decodeOutputs('0x0000000000000000000000000000000000000000000000000000000000000001')).toEqual(`${BigInt(1)}`);
 });

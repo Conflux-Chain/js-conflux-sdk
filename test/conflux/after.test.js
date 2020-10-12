@@ -1,4 +1,3 @@
-const JSBI = require('jsbi');
 const lodash = require('lodash');
 const { Conflux } = require('../../src');
 const { MockProvider } = require('../../mock');
@@ -30,30 +29,30 @@ test('getStatus', async () => {
 test('getGasPrice', async () => {
   const gasPrice = await conflux.getGasPrice();
 
-  expect(gasPrice.constructor).toEqual(JSBI);
+  expect(gasPrice).toMatch(/^\d+$/);
 });
 
 test('getInterestRate', async () => {
   const interestRate = await conflux.getInterestRate();
 
-  expect(interestRate.constructor).toEqual(JSBI);
+  expect(interestRate).toMatch(/^\d+$/);
 });
 
 test('getAccumulateInterestRate', async () => {
   const interestRate = await conflux.getAccumulateInterestRate();
 
-  expect(interestRate.constructor).toEqual(JSBI);
+  expect(interestRate).toMatch(/^\d+$/);
 });
 
 // ------------------------------- address ----------------------------------
 test('getAccount', async () => {
   const account = await conflux.getAccount(ADDRESS);
 
-  expect(account.accumulatedInterestReturn.constructor).toEqual(JSBI);
-  expect(account.balance.constructor).toEqual(JSBI);
-  expect(account.collateralForStorage.constructor).toEqual(JSBI);
-  expect(account.nonce.constructor).toEqual(JSBI);
-  expect(account.stakingBalance.constructor).toEqual(JSBI);
+  expect(account.accumulatedInterestReturn).toMatch(/^\d+$/);
+  expect(account.balance).toMatch(/^\d+$/);
+  expect(account.collateralForStorage).toMatch(/^\d+$/);
+  expect(account.nonce).toMatch(/^\d+$/);
+  expect(account.stakingBalance).toMatch(/^\d+$/);
   expect(account.admin.startsWith('0x')).toEqual(true);
   expect(account.codeHash.startsWith('0x')).toEqual(true);
 });
@@ -61,19 +60,19 @@ test('getAccount', async () => {
 test('getBalance', async () => {
   const balance = await conflux.getBalance(ADDRESS);
 
-  expect(balance.constructor).toEqual(JSBI);
+  expect(balance).toMatch(/^\d+$/);
 });
 
 test('getStakingBalance', async () => {
   const balance = await conflux.getStakingBalance(ADDRESS);
 
-  expect(balance.constructor).toEqual(JSBI);
+  expect(balance).toMatch(/^\d+$/);
 });
 
 test('getNextNonce', async () => {
   const txCount = await conflux.getNextNonce(ADDRESS);
 
-  expect(txCount.constructor).toEqual(JSBI);
+  expect(txCount).toMatch(/^\d+$/);
 });
 
 test('getAdmin', async () => {
@@ -110,9 +109,9 @@ test('getBlockRewardInfo', async () => {
   rewardArray.forEach(reward => {
     expect(reward.blockHash.startsWith('0x')).toEqual(true);
     expect(reward.author.startsWith('0x')).toEqual(true);
-    expect(reward.baseReward.constructor).toEqual(JSBI);
-    expect(reward.totalReward.constructor).toEqual(JSBI);
-    expect(reward.txFee.constructor).toEqual(JSBI);
+    expect(reward.baseReward).toMatch(/^\d+$/);
+    expect(reward.totalReward).toMatch(/^\d+$/);
+    expect(reward.txFee).toMatch(/^\d+$/);
   });
 });
 
@@ -141,8 +140,8 @@ test('getBlockByHash', async () => {
   expect(Number.isInteger(block.height)).toEqual(true);
   expect(Number.isInteger(block.timestamp)).toEqual(true);
   expect(block.nonce.startsWith('0x')).toEqual(true);
-  expect(block.gasLimit.constructor).toEqual(JSBI);
-  expect(block.difficulty.constructor).toEqual(JSBI);
+  expect(block.gasLimit).toMatch(/^\d+$/);
+  expect(block.difficulty).toMatch(/^\d+$/);
   expect(Array.isArray(block.refereeHashes)).toEqual(true);
   expect(Array.isArray(block.transactions)).toEqual(true);
   block.transactions.forEach(transactionHash => {
@@ -185,13 +184,13 @@ test('getTransactionByHash', async () => {
   expect(transaction.s.startsWith('0x')).toEqual(true);
   expect(lodash.isNull(transaction.contractCreated) || transaction.contractCreated.startsWith('0x')).toEqual(true);
   expect(Number.isInteger(transaction.transactionIndex)).toEqual(true);
-  expect(transaction.nonce.constructor).toEqual(JSBI);
+  expect(transaction.nonce).toMatch(/^\d+$/);
   expect(lodash.isNull(transaction.status) || Number.isInteger(transaction.status)).toEqual(true);
   expect(Number.isInteger(transaction.v)).toEqual(true);
-  expect(transaction.gas.constructor).toEqual(JSBI);
-  expect(transaction.gasPrice.constructor).toEqual(JSBI);
-  expect(transaction.value.constructor).toEqual(JSBI);
-  expect(transaction.storageLimit.constructor).toEqual(JSBI);
+  expect(transaction.gas).toMatch(/^\d+$/);
+  expect(transaction.gasPrice).toMatch(/^\d+$/);
+  expect(transaction.value).toMatch(/^\d+$/);
+  expect(transaction.storageLimit).toMatch(/^\d+$/);
   expect(Number.isInteger(transaction.chainId)).toEqual(true);
   expect(Number.isInteger(transaction.epochHeight)).toEqual(true);
 });
@@ -209,7 +208,8 @@ test('getTransactionReceipt', async () => {
   expect(Number.isInteger(receipt.index)).toEqual(true);
   expect(Number.isInteger(receipt.epochNumber)).toEqual(true);
   expect(lodash.isNull(receipt.outcomeStatus) || Number.isInteger(receipt.outcomeStatus)).toEqual(true);
-  expect(receipt.gasUsed.constructor).toEqual(JSBI);
+  expect(receipt.gasUsed).toMatch(/^\d+$/);
+  expect(receipt.gasFee).toMatch(/^\d+$/);
   expect(Array.isArray(receipt.logs)).toEqual(true);
 });
 
@@ -264,9 +264,9 @@ test('getStorageRoot', async () => {
 test('getSponsorInfo', async () => {
   const info = await conflux.getSponsorInfo(ADDRESS);
 
-  expect(info.sponsorBalanceForCollateral.constructor).toEqual(JSBI);
-  expect(info.sponsorBalanceForGas.constructor).toEqual(JSBI);
-  expect(info.sponsorGasBound.constructor).toEqual(JSBI);
+  expect(info.sponsorBalanceForCollateral).toMatch(/^\d+$/);
+  expect(info.sponsorBalanceForGas).toMatch(/^\d+$/);
+  expect(info.sponsorGasBound).toMatch(/^\d+$/);
   expect(info.sponsorForCollateral.startsWith('0x')).toEqual(true);
   expect(info.sponsorForGas.startsWith('0x')).toEqual(true);
 });
@@ -274,7 +274,7 @@ test('getSponsorInfo', async () => {
 test('getCollateralForStorage', async () => {
   const collateral = await conflux.getCollateralForStorage(ADDRESS);
 
-  expect(collateral.constructor).toEqual(JSBI);
+  expect(collateral).toMatch(/^\d+$/);
 });
 
 test('call', async () => {
@@ -286,8 +286,8 @@ test('call', async () => {
 test('estimateGasAndCollateral', async () => {
   const estimate = await conflux.estimateGasAndCollateral({});
 
-  expect(estimate.gasUsed.constructor).toEqual(JSBI);
-  expect(estimate.storageCollateralized.constructor).toEqual(JSBI);
+  expect(estimate.gasUsed).toMatch(/^\d+$/);
+  expect(estimate.storageCollateralized).toMatch(/^\d+$/);
 });
 
 test('getLogs', async () => {

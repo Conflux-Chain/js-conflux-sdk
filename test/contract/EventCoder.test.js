@@ -1,4 +1,3 @@
-const JSBI = require('jsbi');
 const EventCoder = require('../../src/contract/event/EventCoder');
 
 test('event', () => {
@@ -37,7 +36,7 @@ test('event', () => {
     .toThrow('length not match');
 
   expect([...coder.decodeLog(log)])
-    .toEqual(['0x0123456789012345678901234567890123456789', JSBI.BigInt(10)]);
+    .toEqual(['0x0123456789012345678901234567890123456789', `${BigInt(10)}`]);
 });
 
 test('event.anonymous', () => {
@@ -66,5 +65,5 @@ test('event.anonymous', () => {
 
   const coder = new EventCoder(abi);
   expect([...coder.decodeLog(log)])
-    .toEqual(['0x0123456789012345678901234567890123456789', JSBI.BigInt(10)]);
+    .toEqual(['0x0123456789012345678901234567890123456789', `${BigInt(10)}`]);
 });
