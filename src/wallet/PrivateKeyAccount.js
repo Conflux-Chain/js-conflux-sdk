@@ -38,7 +38,7 @@ class PrivateKeyAccount extends Account {
     }
    */
   static random(entropy) {
-    const privateKeyBuffer = sign.randomPrivateKey(entropy === undefined ? undefined : format.buffer(entropy));
+    const privateKeyBuffer = sign.randomPrivateKey(entropy === undefined ? undefined : format.hexBuffer(entropy));
     return new this(privateKeyBuffer);
   }
 
@@ -95,7 +95,7 @@ class PrivateKeyAccount extends Account {
   }
    */
   constructor(privateKey) {
-    const privateKeyBuffer = format.buffer(privateKey);
+    const privateKeyBuffer = format.hexBuffer(privateKey);
     const publicKeyBuffer = sign.privateKeyToPublicKey(privateKeyBuffer);
     const addressBuffer = sign.publicKeyToAddress(publicKeyBuffer);
 
@@ -116,7 +116,7 @@ class PrivateKeyAccount extends Account {
    {version:3, id:..., address:..., crypto:...}
    */
   encrypt(password) {
-    return sign.encrypt(format.buffer(this.privateKey), password);
+    return sign.encrypt(format.hexBuffer(this.privateKey), password);
   }
 
   /**

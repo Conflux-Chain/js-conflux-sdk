@@ -95,8 +95,8 @@ keywords:
             - [(static)uInt](#util/format.js/format/(static)uInt)
             - [(static)bigInt](#util/format.js/format/(static)bigInt)
             - [(static)bigUInt](#util/format.js/format/(static)bigUInt)
-            - [(static)decUInt](#util/format.js/format/(static)decUInt)
-            - [(static)hexUInt](#util/format.js/format/(static)hexUInt)
+            - [(static)bigUIntDec](#util/format.js/format/(static)bigUIntDec)
+            - [(static)bigUIntHex](#util/format.js/format/(static)bigUIntHex)
             - [(static)riskNumber](#util/format.js/format/(static)riskNumber)
             - [(static)epochNumber](#util/format.js/format/(static)epochNumber)
             - [(static)address](#util/format.js/format/(static)address)
@@ -105,7 +105,7 @@ keywords:
             - [(static)signature](#util/format.js/format/(static)signature)
             - [(static)blockHash](#util/format.js/format/(static)blockHash)
             - [(static)transactionHash](#util/format.js/format/(static)transactionHash)
-            - [(static)buffer](#util/format.js/format/(static)buffer)
+            - [(static)hexBuffer](#util/format.js/format/(static)hexBuffer)
             - [(static)bytes](#util/format.js/format/(static)bytes)
             - [(static)boolean](#util/format.js/format/(static)boolean)
     - PendingTransaction.js
@@ -1089,11 +1089,11 @@ options.limit       | `number`                | false    |                     |
 
 epochNumber label
 
-- LATEST_MINED 'latest_mined': latest epoch.
-- LATEST_STATE 'latest_state': latest state, about 5 epoch less then `LATEST_MINED`
-- LATEST_CONFIRMED 'latest_confirmed': latest epoch which confirmation risk less 1e-8.
-- LATEST_CHECKPOINT 'latest_checkpoint': latest check point epoch.
-- EARLIEST 'earliest': earliest epoch number, same as 0.
+- `LATEST_MINED` 'latest_mined': latest epoch.
+- `LATEST_STATE` 'latest_state': latest state, about 5 epoch less then `LATEST_MINED`
+- `LATEST_CONFIRMED` 'latest_confirmed': latest epoch which confirmation risk less 1e-8.
+- `LATEST_CHECKPOINT` 'latest_checkpoint': latest check point epoch.
+- `EARLIEST` 'earliest': earliest epoch number, same as 0.
 
 ----------------------------------------
 
@@ -1735,9 +1735,9 @@ arg  | `number,JSBI,string,boolean` | true     |         |
 
 * **Parameters**
 
-Name | Type                         | Required | Default | Description
------|------------------------------|----------|---------|------------
-arg  | `number,JSBI,string,boolean` | true     |         |
+Name | Type                 | Required | Default | Description
+-----|----------------------|----------|---------|------------
+arg  | `number,string,JSBI` | true     |         |
 
 * **Returns**
 
@@ -1754,7 +1754,7 @@ arg  | `number,JSBI,string,boolean` | true     |         |
  JSBI.BigInt(-1)
 > format.bigInt(1)
  JSBI.BigInt(1)
-> format.bigInt(JSBI(100))
+> format.bigInt(JSBI.BigInt(100))
  JSBI.BigInt(100)
 > format.bigInt('0x10')
  JSBI.BigInt(16)
@@ -1783,7 +1783,7 @@ arg  | `number,string,JSBI` | true     |         |
  Error("not match bigUInt")
 ```
 
-#### format.decUInt <a id="util/format.js/format/(static)decUInt"></a>
+#### format.bigUIntDec <a id="util/format.js/format/(static)bigUIntDec"></a>
 
 * **Parameters**
 
@@ -1798,15 +1798,15 @@ arg  | `number,string,JSBI` | true     |         |
 * **Examples**
 
 ```
-> format.decUInt(100)
+> format.bigUIntDec(100)
  "100"
-> format.decUInt('0x0a')
+> format.bigUIntDec('0x0a')
  "10"
-> format.decUInt(-1)
+> format.bigUIntDec(-1)
  Error("not match bigUInt")
 ```
 
-#### format.hexUInt <a id="util/format.js/format/(static)hexUInt"></a>
+#### format.bigUIntHex <a id="util/format.js/format/(static)bigUIntHex"></a>
 
 When encoding QUANTITIES (integers, numbers): encode as hex, prefix with "0x", the most compact representation (slight exception: zero should be represented as "0x0")
 
@@ -1823,11 +1823,11 @@ arg  | `number,string,JSBI` | true     |         |
 * **Examples**
 
 ```
-> format.hexUInt(100)
+> format.bigUIntHex(100)
  "0x64"
-> format.hexUInt('0x0a')
+> format.bigUIntHex('0x0a')
  "0xa"
-> format.hexUInt(-1))
+> format.bigUIntHex(-1))
  Error("not match uintHex")
 ```
 
@@ -1992,13 +1992,13 @@ arg  | `string,Buffer` | true     |         |
  Error("not match hex64")
 ```
 
-#### format.buffer <a id="util/format.js/format/(static)buffer"></a>
+#### format.hexBuffer <a id="util/format.js/format/(static)hexBuffer"></a>
 
 * **Parameters**
 
 Name | Type                                     | Required | Default | Description
 -----|------------------------------------------|----------|---------|------------
-arg  | `number,JSBI,string,Buffer,boolean,null` | true     |         |
+arg  | `number,string,JSBI,Buffer,boolean,null` | true     |         |
 
 * **Returns**
 
@@ -2007,17 +2007,17 @@ arg  | `number,JSBI,string,Buffer,boolean,null` | true     |         |
 * **Examples**
 
 ```
-> format.buffer(Buffer.from([0, 1]))
+> format.hexBuffer(Buffer.from([0, 1]))
  <Buffer 00 01>
-> format.buffer(null)
+> format.hexBuffer(null)
  <Buffer >
-> format.buffer(1024)
+> format.hexBuffer(1024)
  <Buffer 04 00>
-> format.buffer('0x0a')
+> format.hexBuffer('0x0a')
  <Buffer 0a>
-> format.buffer(true)
+> format.hexBuffer(true)
  <Buffer 01>
-> format.buffer(3.14)
+> format.hexBuffer(3.14)
  Error("not match hex")
 ```
 

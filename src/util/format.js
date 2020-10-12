@@ -113,7 +113,7 @@ format.hex64 = format.hex.$validate(v => v.length === 2 + 64, 'hex64');
 format.uInt = parser(toNumber).$validate(v => Number.isSafeInteger(v) && v >= 0, 'uint');
 
 /**
- * @param arg {number|JSBI|string|boolean}
+ * @param arg {number|string|JSBI}
  * @return {JSBI}
  *
  * @example
@@ -125,7 +125,7 @@ format.uInt = parser(toNumber).$validate(v => Number.isSafeInteger(v) && v >= 0,
  JSBI.BigInt(-1)
  * > format.bigInt(1)
  JSBI.BigInt(1)
- * > format.bigInt(JSBI(100))
+ * > format.bigInt(JSBI.BigInt(100))
  JSBI.BigInt(100)
  * > format.bigInt('0x10')
  JSBI.BigInt(16)
@@ -151,14 +151,14 @@ format.bigUInt = format.bigInt.$validate(v => v >= 0, 'bigUInt');
  * @return {string} decimal string
  *
  * @example
- * > format.decUInt(100)
+ * > format.bigUIntDec(100)
  "100"
- * > format.decUInt('0x0a')
+ * > format.bigUIntDec('0x0a')
  "10"
- * > format.decUInt(-1)
+ * > format.bigUIntDec(-1)
  Error("not match bigUInt")
  */
-format.decUInt = format.bigUInt.$after(v => v.toString(10));
+format.bigUIntDec = format.bigUInt.$after(v => v.toString(10));
 
 /**
  * When encoding QUANTITIES (integers, numbers): encode as hex, prefix with "0x", the most compact representation (slight exception: zero should be represented as "0x0")
@@ -167,14 +167,14 @@ format.decUInt = format.bigUInt.$after(v => v.toString(10));
  * @return {string} Hex string
  *
  * @example
- * > format.hexUInt(100)
+ * > format.bigUIntHex(100)
  "0x64"
- * > format.hexUInt('0x0a')
+ * > format.bigUIntHex('0x0a')
  "0xa"
- * > format.hexUInt(-1))
+ * > format.bigUIntHex(-1))
  Error("not match uintHex")
  */
-format.hexUInt = format.bigUInt.$after(v => `0x${v.toString(16)}`);
+format.bigUIntHex = format.bigUInt.$after(v => `0x${v.toString(16)}`);
 
 /**
  * @param hex {string}
@@ -200,7 +200,7 @@ format.riskNumber = format.bigUInt.$after(v => Number(Big(v).div(MAX_UINT)));
  * > format.epochNumber('latest_mined')
  "latest_mined"
  */
-format.epochNumber = format.hexUInt
+format.epochNumber = format.bigUIntHex
   .$or(EPOCH_NUMBER.LATEST_MINED)
   .$or(EPOCH_NUMBER.LATEST_STATE)
   .$or(EPOCH_NUMBER.LATEST_CONFIRMED)
@@ -274,24 +274,24 @@ format.blockHash = format.hex64; // alias
 format.transactionHash = format.hex64; // alias
 
 /**
- * @param arg {number|JSBI|string|Buffer|boolean|null}
+ * @param arg {number|string|JSBI|Buffer|boolean|null}
  * @return {Buffer}
  *
  * @example
- * > format.buffer(Buffer.from([0, 1]))
+ * > format.hexBuffer(Buffer.from([0, 1]))
  <Buffer 00 01>
- * > format.buffer(null)
+ * > format.hexBuffer(null)
  <Buffer >
- * > format.buffer(1024)
+ * > format.hexBuffer(1024)
  <Buffer 04 00>
- * > format.buffer('0x0a')
+ * > format.hexBuffer('0x0a')
  <Buffer 0a>
- * > format.buffer(true)
+ * > format.hexBuffer(true)
  <Buffer 01>
- * > format.buffer(3.14)
+ * > format.hexBuffer(3.14)
  Error("not match hex")
  */
-format.buffer = format.hex.$after(v => Buffer.from(v.substr(2), 'hex'));
+format.hexBuffer = format.hex.$after(v => Buffer.from(v.substr(2), 'hex'));
 
 /**
  * @param arg {string|Buffer|array}
@@ -321,7 +321,7 @@ format.boolean = format.any.$validate(lodash.isBoolean, 'boolean');
 
 // -------------------------- format method arguments -------------------------
 format.getLogs = parser({
-  limit: format.hexUInt.$or(undefined),
+  limit: format.bigUIntHex.$or(undefined),
   fromEpoch: format.epochNumber.$or(undefined),
   toEpoch: format.epochNumber.$or(undefined),
   blockHashes: format.blockHash.$or([format.blockHash]).$or(undefined),
@@ -330,41 +330,41 @@ format.getLogs = parser({
 }, true);
 
 format.signTx = parser({
-  nonce: format.hexUInt.$after(format.buffer),
-  gasPrice: format.hexUInt.$after(format.buffer),
-  gas: format.hexUInt.$after(format.buffer),
-  to: parser(format.address.$or(null).$default(null)).$after(format.buffer),
-  value: format.hexUInt.$default(0).$after(format.buffer),
-  storageLimit: format.hexUInt.$after(format.buffer),
-  epochHeight: format.uInt.$after(format.buffer),
-  chainId: format.uInt.$default(0).$after(format.buffer),
-  data: format.hex.$default('0x').$after(format.buffer),
-  r: (format.hexUInt.$after(format.buffer)).$or(undefined),
-  s: (format.hexUInt.$after(format.buffer)).$or(undefined),
-  v: (format.uInt.$after(format.buffer)).$or(undefined),
+  nonce: format.bigUIntHex.$after(format.hexBuffer),
+  gasPrice: format.bigUIntHex.$after(format.hexBuffer),
+  gas: format.bigUIntHex.$after(format.hexBuffer),
+  to: parser(format.address.$or(null).$default(null)).$after(format.hexBuffer),
+  value: format.bigUIntHex.$default(0).$after(format.hexBuffer),
+  storageLimit: format.bigUIntHex.$after(format.hexBuffer),
+  epochHeight: format.uInt.$after(format.hexBuffer),
+  chainId: format.uInt.$default(0).$after(format.hexBuffer),
+  data: format.hex.$default('0x').$after(format.hexBuffer),
+  r: (format.bigUIntHex.$after(format.hexBuffer)).$or(undefined),
+  s: (format.bigUIntHex.$after(format.hexBuffer)).$or(undefined),
+  v: (format.uInt.$after(format.hexBuffer)).$or(undefined),
 }, true);
 
 format.sendTx = parser({
   from: format.address,
-  nonce: format.hexUInt.$or(undefined),
-  gasPrice: format.hexUInt,
-  gas: format.hexUInt,
+  nonce: format.bigUIntHex.$or(undefined),
+  gasPrice: format.bigUIntHex,
+  gas: format.bigUIntHex,
   to: format.address.$or(null).$or(undefined),
-  value: format.hexUInt.$or(undefined),
-  storageLimit: format.hexUInt,
-  epochHeight: format.hexUInt.$or(undefined),
-  chainId: format.hexUInt.$or(undefined),
+  value: format.bigUIntHex.$or(undefined),
+  storageLimit: format.bigUIntHex,
+  epochHeight: format.bigUIntHex.$or(undefined),
+  chainId: format.bigUIntHex.$or(undefined),
   data: format.hex.$or(undefined),
 }, true);
 
 format.callTx = parser({
   from: format.address.$or(undefined),
-  nonce: format.hexUInt.$or(undefined),
-  gasPrice: format.hexUInt.$or(undefined),
-  gas: format.hexUInt.$or(undefined),
+  nonce: format.bigUIntHex.$or(undefined),
+  gasPrice: format.bigUIntHex.$or(undefined),
+  gas: format.bigUIntHex.$or(undefined),
   to: format.address.$or(null),
-  value: format.hexUInt.$or(undefined),
-  storageLimit: format.hexUInt.$or(undefined),
+  value: format.bigUIntHex.$or(undefined),
+  storageLimit: format.bigUIntHex.$or(undefined),
   epochHeight: format.uInt.$or(undefined),
   chainId: format.uInt.$or(undefined),
   data: format.hex.$or(undefined),
@@ -372,12 +372,12 @@ format.callTx = parser({
 
 format.estimateTx = parser({
   from: format.address.$or(undefined),
-  nonce: format.hexUInt.$or(undefined),
-  gasPrice: format.hexUInt.$or(undefined),
-  gas: format.hexUInt.$or(undefined),
+  nonce: format.bigUIntHex.$or(undefined),
+  gasPrice: format.bigUIntHex.$or(undefined),
+  gas: format.bigUIntHex.$or(undefined),
   to: format.address.$or(null).$or(undefined),
-  value: format.hexUInt.$or(undefined),
-  storageLimit: format.hexUInt.$or(undefined),
+  value: format.bigUIntHex.$or(undefined),
+  storageLimit: format.bigUIntHex.$or(undefined),
   epochHeight: format.uInt.$or(undefined),
   chainId: format.uInt.$or(undefined),
   data: format.hex.$or(undefined),
@@ -392,24 +392,24 @@ format.status = parser({
 });
 
 format.account = parser({
-  accumulatedInterestReturn: format.decUInt,
-  balance: format.decUInt,
-  collateralForStorage: format.decUInt,
-  nonce: format.decUInt,
-  stakingBalance: format.decUInt,
+  accumulatedInterestReturn: format.bigUIntDec,
+  balance: format.bigUIntDec,
+  collateralForStorage: format.bigUIntDec,
+  nonce: format.bigUIntDec,
+  stakingBalance: format.bigUIntDec,
 });
 
 format.estimate = parser({
-  gasUsed: format.decUInt,
-  storageCollateralized: format.decUInt,
+  gasUsed: format.bigUIntDec,
+  storageCollateralized: format.bigUIntDec,
 });
 
 format.transaction = parser({
-  nonce: format.decUInt,
-  gasPrice: format.decUInt,
-  gas: format.decUInt,
-  value: format.decUInt,
-  storageLimit: format.decUInt,
+  nonce: format.bigUIntDec,
+  gasPrice: format.bigUIntDec,
+  gas: format.bigUIntDec,
+  value: format.bigUIntDec,
+  storageLimit: format.bigUIntDec,
   epochHeight: format.uInt,
   chainId: format.uInt,
   v: format.uInt,
@@ -423,8 +423,10 @@ format.block = parser({
   height: format.uInt,
   size: format.uInt,
   timestamp: format.uInt,
-  gasLimit: format.decUInt,
-  difficulty: format.decUInt,
+  gasLimit: format.bigUIntDec,
+  gasUsed: format.bigUIntDec.$or(undefined), // XXX: undefined before main net upgrade
+  difficulty: format.bigUIntDec,
+  powQuality: format.bigUIntDec,
   transactions: [(format.transaction).$or(format.transactionHash)],
 });
 
@@ -432,8 +434,8 @@ format.receipt = parser({
   index: format.uInt,
   epochNumber: format.uInt,
   outcomeStatus: format.uInt.$or(null),
-  gasUsed: format.decUInt,
-  gasFee: format.decUInt,
+  gasUsed: format.bigUIntDec,
+  gasFee: format.bigUIntDec,
 });
 
 format.logs = parser([
@@ -446,16 +448,16 @@ format.logs = parser([
 ]);
 
 format.sponsorInfo = parser({
-  sponsorBalanceForCollateral: format.decUInt,
-  sponsorBalanceForGas: format.decUInt,
-  sponsorGasBound: format.decUInt,
+  sponsorBalanceForCollateral: format.bigUIntDec,
+  sponsorBalanceForGas: format.bigUIntDec,
+  sponsorGasBound: format.bigUIntDec,
 });
 
 format.rewardInfo = parser([
   {
-    baseReward: format.decUInt,
-    totalReward: format.decUInt,
-    txFee: format.decUInt,
+    baseReward: format.bigUIntDec,
+    totalReward: format.bigUIntDec,
+    txFee: format.bigUIntDec,
   },
 ]);
 

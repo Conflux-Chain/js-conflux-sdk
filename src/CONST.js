@@ -13,11 +13,11 @@ const MAX_UINT = JSBI.subtract(UINT_BOUND, JSBI.BigInt(1)); // 2**256-1
 /**
  * epochNumber label
  *
- * - LATEST_MINED 'latest_mined': latest epoch.
- * - LATEST_STATE 'latest_state': latest state, about 5 epoch less then `LATEST_MINED`
- * - LATEST_CONFIRMED 'latest_confirmed': latest epoch which confirmation risk less 1e-8.
- * - LATEST_CHECKPOINT 'latest_checkpoint': latest check point epoch.
- * - EARLIEST 'earliest': earliest epoch number, same as 0.
+ * - `LATEST_MINED` 'latest_mined': latest epoch.
+ * - `LATEST_STATE` 'latest_state': latest state, about 5 epoch less then `LATEST_MINED`
+ * - `LATEST_CONFIRMED` 'latest_confirmed': latest epoch which confirmation risk less 1e-8.
+ * - `LATEST_CHECKPOINT` 'latest_checkpoint': latest check point epoch.
+ * - `EARLIEST` 'earliest': earliest epoch number, same as 0.
  */
 const EPOCH_NUMBER = {
   LATEST_MINED: 'latest_mined',

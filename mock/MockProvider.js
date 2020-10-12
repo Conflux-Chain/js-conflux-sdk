@@ -246,7 +246,7 @@ class MockProvider {
       parentHash,
       refereeHashes,
       size: randomHex(4),
-      stable: randomPick(null, true, false),
+      powQuality: randomHex(4),
       timestamp,
       transactions,
       transactionsRoot: randomHex(64),
