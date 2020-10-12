@@ -11,6 +11,8 @@ keywords:
 - Conflux.js
     - Conflux
         - [**constructor**](#Conflux.js/Conflux/**constructor**)
+        - [provider](#Conflux.js/Conflux/provider)
+        - [wallet](#Conflux.js/Conflux/wallet)
         - [defaultGasPrice](#Conflux.js/Conflux/defaultGasPrice)
         - [Contract](#Conflux.js/Conflux/Contract)
         - [InternalContract](#Conflux.js/Conflux/InternalContract)
@@ -93,6 +95,7 @@ keywords:
             - [(static)uInt](#util/format.js/format/(static)uInt)
             - [(static)bigInt](#util/format.js/format/(static)bigInt)
             - [(static)bigUInt](#util/format.js/format/(static)bigUInt)
+            - [(static)decInt](#util/format.js/format/(static)decInt)
             - [(static)hexUInt](#util/format.js/format/(static)hexUInt)
             - [(static)riskNumber](#util/format.js/format/(static)riskNumber)
             - [(static)epochNumber](#util/format.js/format/(static)epochNumber)
@@ -126,6 +129,9 @@ keywords:
 - wallet
     - index.js
         - Wallet
+            - [has](#wallet/index.js/Wallet/has)
+            - [delete](#wallet/index.js/Wallet/delete)
+            - [clear](#wallet/index.js/Wallet/clear)
             - [set](#wallet/index.js/Wallet/set)
             - [get](#wallet/index.js/Wallet/get)
             - [addPrivateKey](#wallet/index.js/Wallet/addPrivateKey)
@@ -171,6 +177,18 @@ options.logger          | `Object`        | false    |         | Logger object w
      logger: console,
    });
 ```
+
+### Conflux.prototype.provider <a id="Conflux.js/Conflux/provider"></a>
+
+`WebsocketProvider,HttpProvider,BaseProvider`
+
+Provider for rpc call
+
+### Conflux.prototype.wallet <a id="Conflux.js/Conflux/wallet"></a>
+
+`Wallet`
+
+Wallet for `sendTransaction` to get `Account` by `from` field
 
 ### ~~Conflux.prototype.defaultGasPrice~~ <a id="Conflux.js/Conflux/defaultGasPrice"></a>
 
@@ -270,13 +288,13 @@ Returns the current price per gas in Drip.
 
 * **Returns**
 
-`Promise.<Drip>` Gas price in drip.
+`Promise.<JSBI>` Gas price in drip.
 
 * **Examples**
 
 ```
 > await conflux.getGasPrice();
-   [String (Drip): '1']
+   '1'
 ```
 
 ### Conflux.prototype.getInterestRate <a id="Conflux.js/Conflux/getInterestRate"></a>
@@ -371,13 +389,13 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](
 
 * **Returns**
 
-`Promise.<Drip>` The balance in Drip.
+`Promise.<JSBI>` The balance in Drip.
 
 * **Examples**
 
 ```
 > await conflux.getBalance("0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b");
-   [String (Drip): '10098788868004995614504']
+   '10098788868004995614504'
 ```
 
 ### Conflux.prototype.getStakingBalance <a id="Conflux.js/Conflux/getStakingBalance"></a>
@@ -393,13 +411,13 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](
 
 * **Returns**
 
-`Promise.<Drip>` The staking balance in Drip.
+`Promise.<JSBI>` The staking balance in Drip.
 
 * **Examples**
 
 ```
 > await conflux.getStakingBalance('0x194770007dda54cF92009BFF0dE90c06F603a09f', 'latest_state');
-   [String (Drip): '6334100968004995614504']
+   '6334100968004995614504'
 ```
 
 ### Conflux.prototype.getNextNonce <a id="Conflux.js/Conflux/getNextNonce"></a>
@@ -1499,7 +1517,7 @@ options.url | `string` | true     |         |
 
 * **Returns**
 
-`HttpProvider,BaseProvider` 
+`WebsocketProvider,HttpProvider,BaseProvider` 
 
 * **Examples**
 
@@ -1748,9 +1766,9 @@ arg  | `number,JSBI,string,boolean` | true     |         |
 
 * **Parameters**
 
-Name | Type                         | Required | Default | Description
------|------------------------------|----------|---------|------------
-arg  | `number,JSBI,string,boolean` | true     |         |
+Name | Type                 | Required | Default | Description
+-----|----------------------|----------|---------|------------
+arg  | `number,string,JSBI` | true     |         |
 
 * **Returns**
 
@@ -1765,15 +1783,38 @@ arg  | `number,JSBI,string,boolean` | true     |         |
  Error("not match bigUInt")
 ```
 
+#### format.decInt <a id="util/format.js/format/(static)decInt"></a>
+
+* **Parameters**
+
+Name | Type                 | Required | Default | Description
+-----|----------------------|----------|---------|------------
+arg  | `number,string,JSBI` | true     |         |
+
+* **Returns**
+
+`string` decimal string
+
+* **Examples**
+
+```
+> format.decInt(100)
+ "100"
+> format.decInt('0x0a')
+ "10"
+> format.decInt(-1)
+ Error("not match decInt")
+```
+
 #### format.hexUInt <a id="util/format.js/format/(static)hexUInt"></a>
 
 When encoding QUANTITIES (integers, numbers): encode as hex, prefix with "0x", the most compact representation (slight exception: zero should be represented as "0x0")
 
 * **Parameters**
 
-Name | Type                    | Required | Default | Description
------|-------------------------|----------|---------|------------
-arg  | `number,string,boolean` | true     |         |
+Name | Type                 | Required | Default | Description
+-----|----------------------|----------|---------|------------
+arg  | `number,string,JSBI` | true     |         |
 
 * **Returns**
 
@@ -1784,12 +1825,8 @@ arg  | `number,string,boolean` | true     |         |
 ```
 > format.hexUInt(100)
  "0x64"
-> format.hexUInt(10)
+> format.hexUInt('0x0a')
  "0xa"
-> format.hexUInt(3.50)
- "0x4"
-> format.hexUInt(3.49)
- "0x3"
 > format.hexUInt(-1))
  Error("not match uintHex")
 ```
@@ -1835,7 +1872,7 @@ arg  | `number,string` | true     |         | number or string
 > format.epochNumber(EPOCH_NUMBER.LATEST_STATE)
  "latest_state"
 > format.epochNumber('latest_mined')
- "latest_state"
+ "latest_mined"
 ```
 
 #### format.address <a id="util/format.js/format/(static)address"></a>
@@ -2343,6 +2380,106 @@ password   | `string,Buffer` | true     |         |
   }, 'password')
  <Buffer 01 23 45 67 89 ab cd ef 01 23 45 67 89 ab cd ef 01 23 45 67 89 ab cd ef 01 23 45 67 89 ab cd ef>
 ```
+
+----------------------------------------
+
+### Wallet <a id="wallet/index.js/Wallet"></a>
+
+Wallet to manager accounts.
+
+#### Wallet.prototype.has <a id="wallet/index.js/Wallet/has"></a>
+
+Check if key exist
+
+* **Parameters**
+
+Name | Type     | Required | Default | Description
+-----|----------|----------|---------|------------
+key  | `string` | true     |         |
+
+* **Returns**
+
+`boolean` 
+
+#### Wallet.prototype.delete <a id="wallet/index.js/Wallet/delete"></a>
+
+Drop one account by key
+
+* **Parameters**
+
+Name | Type     | Required | Default | Description
+-----|----------|----------|---------|------------
+key  | `string` | true     |         |
+
+* **Returns**
+
+`boolean` 
+
+#### Wallet.prototype.clear <a id="wallet/index.js/Wallet/clear"></a>
+
+Drop all account in wallet
+
+#### Wallet.prototype.set <a id="wallet/index.js/Wallet/set"></a>
+
+* **Parameters**
+
+Name    | Type      | Required | Default | Description
+--------|-----------|----------|---------|-------------------------------------
+key     | `string`  | true     |         | Key of account, usually is `address`
+account | `Account` | true     |         | Account instance
+
+* **Returns**
+
+`Wallet` 
+
+#### Wallet.prototype.get <a id="wallet/index.js/Wallet/get"></a>
+
+* **Parameters**
+
+Name | Type     | Required | Default | Description
+-----|----------|----------|---------|------------
+key  | `string` | true     |         |
+
+* **Returns**
+
+`Account` 
+
+#### Wallet.prototype.addPrivateKey <a id="wallet/index.js/Wallet/addPrivateKey"></a>
+
+* **Parameters**
+
+Name       | Type            | Required | Default | Description
+-----------|-----------------|----------|---------|-----------------------
+privateKey | `string,Buffer` | true     |         | Private key of account
+
+* **Returns**
+
+`PrivateKeyAccount` 
+
+#### Wallet.prototype.addRandom <a id="wallet/index.js/Wallet/addRandom"></a>
+
+* **Parameters**
+
+Name    | Type            | Required | Default | Description
+--------|-----------------|----------|---------|--------------------------
+entropy | `string,Buffer` | false    |         | Entropy of random account
+
+* **Returns**
+
+`PrivateKeyAccount` 
+
+#### Wallet.prototype.addKeystore <a id="wallet/index.js/Wallet/addKeystore"></a>
+
+* **Parameters**
+
+Name     | Type            | Required | Default | Description
+---------|-----------------|----------|---------|---------------------------------------
+keystore | `object`        | true     |         | Keystore version 3 object.
+password | `string,Buffer` | true     |         | Password for keystore to decrypt with.
+
+* **Returns**
+
+`PrivateKeyAccount` 
 
 ----------------------------------------
 

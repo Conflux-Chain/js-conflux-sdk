@@ -5,7 +5,7 @@ const BaseCoder = require('./BaseCoder');
 const { uIntCoder } = require('./IntegerCoder');
 
 class BytesCoder extends BaseCoder {
-  static from({ type, name }) {
+  static from({ type, ...options }) {
     const match = type.match(/^bytes([0-9]*)$/);
     if (!match) {
       return undefined;
@@ -13,7 +13,7 @@ class BytesCoder extends BaseCoder {
 
     const [, size] = match;
     return new this({
-      name,
+      ...options,
       size: size ? parseInt(size, 10) : undefined,
     });
   }

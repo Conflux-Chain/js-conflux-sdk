@@ -2,11 +2,11 @@ const { assert } = require('../../util');
 const BaseCoder = require('./BaseCoder');
 
 class NullCoder extends BaseCoder {
-  static from({ type, name }) {
+  static from({ type, ...options }) {
     if (type !== '') {
       return undefined;
     }
-    return new this({ name, type: 'null' });
+    return new this({ ...options, type: 'null' });
   }
 
   /**

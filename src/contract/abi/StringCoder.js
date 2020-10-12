@@ -3,11 +3,11 @@ const { assert } = require('../../util');
 const BytesCoder = require('./BytesCoder');
 
 class StringCoder extends BytesCoder {
-  static from({ type, name }) {
+  static from({ type, ...options }) {
     if (type !== 'string') {
       return undefined;
     }
-    return new this({ type, name });
+    return new this({ ...options, type });
   }
 
   constructor({ type, name }) {

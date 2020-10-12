@@ -3,11 +3,11 @@ const format = require('../../util/format');
 const BaseCoder = require('./BaseCoder');
 
 class AddressCoder extends BaseCoder {
-  static from({ type, name }) {
+  static from({ type, ...options }) {
     if (type !== 'address') {
       return undefined;
     }
-    return new this({ type, name });
+    return new this({ ...options, type });
   }
 
   /**

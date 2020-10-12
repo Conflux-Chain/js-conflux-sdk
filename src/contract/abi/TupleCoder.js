@@ -80,11 +80,11 @@ function unpack(coders, stream) {
 }
 
 class TupleCoder extends BaseCoder {
-  static from({ type, name, components }, valueCoder) {
+  static from({ type, components, ...options }, valueCoder) {
     if (type !== 'tuple') {
       return undefined;
     }
-    return new this({ name, coders: components.map(valueCoder) });
+    return new this({ ...options, coders: components.map(valueCoder) });
   }
 
   constructor({ name, coders }) {

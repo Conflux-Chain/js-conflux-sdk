@@ -63,10 +63,6 @@ class Drip extends String {
     super(string);
   }
 
-  toJSON() {
-    return this.toString();
-  }
-
   /**
    * Get `CFX` number string
    * @return {string}
