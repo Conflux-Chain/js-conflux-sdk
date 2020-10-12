@@ -1,4 +1,5 @@
 /* eslint-disable camelcase */
+const EventEmitter = require('events');
 const lodash = require('lodash');
 const { toHex, padHex, randomPick, randomHex, HexStruct } = require('./util');
 
@@ -103,7 +104,7 @@ function mockLogsByEpochNumber(self, epochNumber) {
 }
 
 // ----------------------------------------------------------------------------
-class MockProvider {
+class MockProvider extends EventEmitter {
   constructor({
     startTimestamp = Math.floor(Date.now() / 1000) - 2 * 30 * 24 * 3600,
     blockDelta = 1,
@@ -113,6 +114,7 @@ class MockProvider {
     epochTxCount = 2,
     stable = true,
   } = {}) {
+    super();
     this.startTimestamp = startTimestamp;
     this.blockDelta = blockDelta;
     this.addressCount = addressCount;
@@ -376,6 +378,15 @@ class MockProvider {
     }
 
     return [];
+  }
+
+  // ------------------------------ subscribe ---------------------------------
+  cfx_subscribe() {
+    return randomHex(16);
+  }
+
+  cfx_unsubscribe() {
+    return randomPick(true, false);
   }
 }
 

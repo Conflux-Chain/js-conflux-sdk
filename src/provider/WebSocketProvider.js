@@ -1,6 +1,7 @@
 const { promisify } = require('util');
 const websocket = require('websocket');
 const BaseProvider = require('./BaseProvider');
+const { awaitTimeout } = require('../util');
 
 class Client extends websocket.client {
   constructor({ url, ...options }) {
@@ -50,39 +51,42 @@ class WebSocketProvider extends BaseProvider {
 
     this.client = new Client(options);
     this.client.on('message', json => {
-      const result = JSON.parse(json);
-      if (Array.isArray(result)) {
-        result.forEach(each => this.client.emit(each.id, each));
+      const data = JSON.parse(json);
+      if (Array.isArray(data)) {
+        data.forEach(each => this._onData(each));
       } else {
-        this.client.emit(result.id, result);
+        this._onData(data);
       }
     });
   }
 
-  async _await(promise) {
-    const timer = setTimeout(() => {
-      throw new Error(`Timeout of ${this.timeout}ms exceeded`);
-    }, this.timeout);
-
-    try {
-      return await promise;
-    } finally {
-      clearTimeout(timer);
+  _onData(data = {}) {
+    const { id, params: { subscription, result } = {} } = data;
+    if (id) {
+      this.emit(id, data);
+    } else if (subscription) {
+      this.emit(subscription, result);
     }
   }
 
   async request(data) {
     await this.client.send(JSON.stringify(data));
-    const body = await this._await(new Promise(resolve => this.client.once(data.id, resolve)));
-    return body || {};
+
+    const promise = new Promise(resolve => this.once(data.id, resolve));
+    return await awaitTimeout(promise, this.timeout) || {};
   }
 
   async requestBatch(dataArray) {
     await this.client.send(JSON.stringify(dataArray));
-    return this._await(Promise.all(dataArray.map(each => new Promise(resolve => this.client.once(each.id, resolve)))));
+
+    return Promise.all(dataArray.map(async data => {
+      const promise = new Promise(resolve => this.once(data.id, resolve));
+      return awaitTimeout(promise, this.timeout);
+    }));
   }
 
   close() {
+    super.close();
     this.client.close();
   }
 }

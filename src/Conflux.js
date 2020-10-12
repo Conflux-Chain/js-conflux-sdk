@@ -1,10 +1,11 @@
 const { assert } = require('./util');
 const format = require('./util/format');
-const PendingTransaction = require('./util/PendingTransaction');
 const providerFactory = require('./provider');
 const Wallet = require('./wallet');
 const Contract = require('./contract');
 const internalContract = require('./contract/internal');
+const PendingTransaction = require('./subscribe/PendingTransaction');
+const Subscription = require('./subscribe/Subscription');
 
 /**
  * A sdk of conflux.
@@ -995,6 +996,189 @@ class Conflux {
   }
 
   // TODO recall failed tx 0xbbf1a43d2d7d51a33c15f87af1582e2d762b669db8aef2bc657458087b0f805c
+
+  // ----------------------------- subscription -------------------------------
+  /**
+   * Subscribe event by name and got id, and provider will emit event by id
+   *
+   * > Note: suggest use `conflux.subscribeXXX` to subscribe
+   *
+   * @param name {string} - Subscription name
+   * @param args {array} - Subscription arguments
+   * @return {Promise<string>} Id of subscription
+   *
+   * @example
+   * > conflux = new Conflux({url:'ws://127.0.0.1:12535'})
+   * > id = await conflux.subscribe('epochs');
+   "0x8fe7879a1681e9b9"
+   * > conflux.provider.on(id, data=>console.log(data));
+   {
+     epochHashesOrdered: [
+       '0x0eff33578346b8e8347af3bae948eb7f4f5c27add9dbcfeb55eaf7cb3640088f',
+       '0xb0cedac34a06ebcb42c3446a6bb2df1f0dcd9d83061f550460e387d19a4d8e91'
+     ],
+     epochNumber: '0x8cb32'
+   }
+   */
+  async subscribe(name, ...args) {
+    return this.provider.call('cfx_subscribe', name, ...args);
+  }
+
+  /**
+   * The epochs topic streams consensus results: the total order of blocks, as expressed by a sequence of epochs.
+   * The returned series of epoch numbers is monotonically increasing with an increment of one.
+   * If you see the same epoch twice, this suggests a pivot chain reorg has happened (this might happen for recent epochs).
+   * For each epoch, the last hash in epochHashesOrdered is the hash of the pivot block.
+   *
+   * @return {Promise<Subscription>} EventEmitter instance with the follow events:
+   * - 'data':
+   *   - epochNumber `number`: epoch number
+   *   - epochHashesOrdered `array`: epoch block hash in order
+   *     - `string`: block hash
+   *
+   * @example
+   * > subscription = await conflux.subscribeEpochs()
+   * > subscription.on('data', data=>console.log(data))
+   {
+     epochNumber: 566031,
+     epochHashesOrdered: [
+       '0x2820dbb5c4126455ad37bc88c635ae1f35e0d4f85c74300c01828f57ea1e5969',
+       '0xd66b801335ba01e2448df52e59da584b54fc7ee7c2f8160943c097e1ebd23038'
+     ]
+    }
+   {
+     epochNumber: 566032,
+     epochHashesOrdered: [
+       '0x899606b462f0141d672aaea8497c82aebbd7b16d266fad71e9d5093b5c6d392e',
+       '0xf6093d19c4df3645cd972e9f791fe0db3a1ab70881023a8aee63f64e0c3ca152'
+     ]
+   }
+   */
+  async subscribeEpochs() {
+    const id = await this.subscribe('epochs');
+    const subscription = new Subscription(id);
+
+    this.provider.on(id, data => {
+      subscription.emit('data', format.epoch(data));
+    });
+
+    return subscription;
+  }
+
+  /**
+   * The newHeads topic streams all new block headers participating in the consensus.
+   *
+   * @return {Promise<Subscription>} EventEmitter instance with the follow events:
+   * - 'data': see `getBlockByHash`
+   *
+   * @example
+   * > subscription = await conflux.subscribeNewHeads()
+   * > subscription.on('data', data=>console.log(data))
+   {
+     difficulty: '19874410',
+     epochNumber: null,
+     gasLimit: '30000000',
+     height: 566239,
+     powQuality: '39637224',
+     timestamp: 1602644636,
+     adaptive: false,
+     blame: 0,
+     deferredLogsBloomHash: '0xd397b3b043d87fcd6fad1291ff0bfd16401c274896d8c63a923727f077b8e0b5',
+     deferredReceiptsRoot: '0x35182c1c5f1fbb0864758585d94cefcb794619ba8ef4a7adc2e3d48e85a2d4b0',
+     deferredStateRoot: '0x2cf6ee27ed82e76c585ca46838746907512b86aab04f9f27cb04047939ec056f',
+     hash: '0x9454515ccd8493d2121e60549efd321de96a7322a95e8d537f7b2d0504a03f21',
+     miner: '0x10f9db11bb1509041909b35be6a3546fe65d22d0',
+     nonce: '0x611a95000001fe98',
+     parentHash: '0xf7edf9f6c11ebd4e9c1aa0a2c03203932c0ad79c3fd92cb7540bcf351aa90376',
+     refereeHashes: [
+       '0x4d69e1b945ec2c819bc20bcb0e128e4b161ed28355d42b6d05a6f7cac9ab91f9'
+     ],
+     transactionsRoot: '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'
+    }
+   */
+  async subscribeNewHeads() {
+    const id = await this.subscribe('newHeads');
+    const subscription = new Subscription(id);
+
+    this.provider.on(id, data => {
+      subscription.emit('data', format.head(data));
+    });
+
+    return subscription;
+  }
+
+  /**
+   * The logs topic streams all logs matching a certain filter, in order.
+   * In case of a pivot chain reorg (which might affect recent logs), a special revert message is sent.
+   * All logs received previously that belong to epochs larger than the one in this message should be considered invalid.
+   *
+   * @param [options] {object}
+   * @param [options.address] {string|string[]} - Search contract addresses. If null, match all. If specified, log must be produced by one of these addresses.
+   * @param [options.topics] {array} - Search topics. Logs can have 4 topics: the function signature and up to 3 indexed event arguments. The elements of topics match the corresponding log topics. Example: ["0xA", null, ["0xB", "0xC"], null] matches logs with "0xA" as the 1st topic AND ("0xB" OR "0xC") as the 3rd topic. If null, match all.
+   * @return {Promise<Subscription>} EventEmitter instance with the follow events:
+   * - 'data': see `getLogs`
+   * - 'revert':
+   *   - revertTo 'number': epoch number
+   *
+   * @example
+   * > subscription = await conflux.subscribeLogs()
+   * > subscription.on('data', data=>console.log(data))
+   {
+     epochNumber: 568224,
+     logIndex: 0,
+     transactionIndex: 0,
+     transactionLogIndex: 0,
+     address: '0x84ed30d7ddc5ff82ac271ae4e7add5a8b22a8d71',
+     blockHash: '0xc02689eea6a507250838463c13e6b633479e2757dfb7e9b2593d5c31b54adb63',
+     data: '0x0000000000000000000000000000000000000000000000000000000000000001',
+     topics: [
+       '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef',
+       '0x0000000000000000000000001bd9e9be525ab967e633bcdaeac8bd5723ed4d6b',
+       '0x0000000000000000000000001bd9e9be525ab967e633bcdaeac8bd5723ed4d6b'
+     ],
+     transactionHash: '0x950ddec9ce3b42c4d8ca120722fa318ae64dc2e24553201f55f68c00bfd9cc4c'
+   }
+   * @example
+   * > subscription.on('revert', data=>console.log(data))
+   { revertTo: 568230 }
+   { revertTo: 568231 }
+   */
+  async subscribeLogs({ address, topics } = {}) {
+    const id = await this.subscribe('logs', format.getLogs({ address, topics }));
+
+    const subscription = new Subscription(id);
+    this.provider.on(id, data => {
+      if (data.revertTo) {
+        subscription.emit('revert', format.revert(data));
+      } else {
+        subscription.emit('data', format.log(data));
+      }
+    });
+
+    return subscription;
+  }
+
+  /**
+   * Unsubscribe subscription.
+   *
+   * @param id {string|Subscription} - Subscription id
+   * @return {Promise<boolean>} Is success
+   *
+   * @example
+   * > id = await conflux.subscribe('epochs');
+   * > await conflux.unsubscribe(id);
+   true
+   * > await conflux.unsubscribe(id);
+   false
+
+   * @example
+   * > subscription = await conflux.subscribeLogs();
+   * > await conflux.unsubscribe(subscription);
+   true
+   */
+  async unsubscribe(id) {
+    return this.provider.call('cfx_unsubscribe', `${id}`);
+  }
 }
 
 module.exports = Conflux;

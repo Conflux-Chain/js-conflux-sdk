@@ -390,3 +390,52 @@ test('getLogs', async () => {
 
   call.mockRestore();
 });
+
+// ------------------------------- subscribe ----------------------------------
+test('subscribe', async () => {
+  const id = await conflux.subscribe('epochs');
+
+  expect(id).toMatch(/^0x[\da-f]+$/);
+});
+
+test('subscribeEpochs', async () => {
+  const call = jest.spyOn(conflux.provider, 'call');
+
+  await conflux.subscribeEpochs();
+  expect(call).toHaveBeenLastCalledWith('cfx_subscribe', 'epochs');
+
+  call.mockRestore();
+});
+
+test('subscribeNewHeads', async () => {
+  const call = jest.spyOn(conflux.provider, 'call');
+
+  await conflux.subscribeNewHeads();
+  expect(call).toHaveBeenLastCalledWith('cfx_subscribe', 'newHeads');
+
+  call.mockRestore();
+});
+
+test('subscribeLogs', async () => {
+  const call = jest.spyOn(conflux.provider, 'call');
+
+  await conflux.subscribeLogs();
+  expect(call).toHaveBeenLastCalledWith('cfx_subscribe', 'logs', {});
+
+  await conflux.subscribeLogs({
+    address: ADDRESS,
+    topics: [[TX_HASH], null],
+  });
+  expect(call).toHaveBeenLastCalledWith('cfx_subscribe', 'logs', {
+    address: ADDRESS,
+    topics: [TX_HASH, null],
+  });
+
+  call.mockRestore();
+});
+
+test('unsubscribe', async () => {
+  const result = await conflux.unsubscribe('');
+
+  expect(lodash.isBoolean(result)).toEqual(true);
+});

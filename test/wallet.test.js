@@ -57,6 +57,9 @@ test('set already exist', async () => {
 
   conflux.wallet.set(ADDRESS, account);
   expect(() => conflux.wallet.set(ADDRESS, account)).toThrow('already has account');
+
+  conflux.wallet.delete(ADDRESS);
+  conflux.wallet.set(ADDRESS, account);
 });
 
 test('addPrivateKey', async () => {
