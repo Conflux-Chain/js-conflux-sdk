@@ -149,7 +149,7 @@ class Conflux {
   /**
    * Returns the current price per gas in Drip.
    *
-   * @return {Promise<JSBI>} Gas price in drip.
+   * @return {Promise<BigInt>} Gas price in drip.
    *
    * @example
    * > await conflux.getGasPrice();
@@ -157,14 +157,14 @@ class Conflux {
    */
   async getGasPrice() {
     const result = await this.provider.call('cfx_gasPrice');
-    return format.bigUInt(result);
+    return format.decUInt(result);
   }
 
   /**
    * Returns the interest rate of given parameter.
    *
    * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
-   * @return {Promise<JSBI>} The interest rate of given parameter.
+   * @return {Promise<BigInt>} The interest rate of given parameter.
    *
    * @example
    * > await conflux.getInterestRate();
@@ -174,14 +174,14 @@ class Conflux {
     const result = await this.provider.call('cfx_getInterestRate',
       format.epochNumber.$or(undefined)(epochNumber),
     );
-    return format.bigUInt(result);
+    return format.decUInt(result);
   }
 
   /**
    * Returns the accumulate interest rate of given parameter.
    *
    * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
-   * @return {Promise<JSBI>} The accumulate interest rate of given parameter.
+   * @return {Promise<BigInt>} The accumulate interest rate of given parameter.
    *
    * @example
    * > await conflux.getAccumulateInterestRate()
@@ -191,7 +191,7 @@ class Conflux {
     const result = await this.provider.call('cfx_getAccumulateInterestRate',
       format.epochNumber.$or(undefined)(epochNumber),
     );
-    return format.bigUInt(result);
+    return format.decUInt(result);
   }
 
   // ------------------------------- address ----------------------------------
@@ -201,12 +201,12 @@ class Conflux {
    * @param address {string} - address to get account.
    * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
    * @return {Promise<object>} Return the states of the given account:
-   * balance `JSBI`: the balance of the account.
-   * nonce `JSBI`: the nonce of the account's next transaction.
+   * balance `BigInt`: the balance of the account.
+   * nonce `BigInt`: the nonce of the account's next transaction.
    * codeHash `string`: the code hash of the account.
-   * stakingBalance `JSBI`: the staking balance of the account.
-   * collateralForStorage `JSBI`: the collateral storage of the account.
-   * accumulatedInterestReturn `JSBI`: accumulated unterest return of the account.
+   * stakingBalance `BigInt`: the staking balance of the account.
+   * collateralForStorage `BigInt`: the collateral storage of the account.
+   * accumulatedInterestReturn `BigInt`: accumulated unterest return of the account.
    * admin `string`: admin of the account.
    *
    * @example
@@ -234,7 +234,7 @@ class Conflux {
    *
    * @param address {string} - The address to get the balance of.
    * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
-   * @return {Promise<JSBI>} The balance in Drip.
+   * @return {Promise<BigInt>} The balance in Drip.
    *
    * @example
    * > await conflux.getBalance("0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b");
@@ -245,7 +245,7 @@ class Conflux {
       format.address(address),
       format.epochNumber.$or(undefined)(epochNumber),
     );
-    return format.bigUInt(result);
+    return format.decUInt(result);
   }
 
   /**
@@ -253,7 +253,7 @@ class Conflux {
    *
    * @param address {string} - Address to check for staking balance.
    * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
-   * @return {Promise<JSBI>} The staking balance in Drip.
+   * @return {Promise<BigInt>} The staking balance in Drip.
    *
    * @example
    * > await conflux.getStakingBalance('0x194770007dda54cF92009BFF0dE90c06F603a09f', 'latest_state');
@@ -264,7 +264,7 @@ class Conflux {
       format.address(address),
       format.epochNumber.$or(undefined)(epochNumber),
     );
-    return format.bigUInt(result);
+    return format.decUInt(result);
   }
 
   /**
@@ -272,7 +272,7 @@ class Conflux {
    *
    * @param address {string} - The address to get the numbers of transactions from.
    * @param [epochNumber] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
-   * @return {Promise<JSBI>} The next nonce should be used by given address.
+   * @return {Promise<BigInt>} The next nonce should be used by given address.
    *
    * @example
    * > await conflux.getNextNonce("0x1be45681ac6c53d5a40475f7526bac1fe7590fb8");
@@ -283,7 +283,7 @@ class Conflux {
       format.address(address),
       format.epochNumber.$or(undefined)(epochNumber),
     );
-    return format.bigUInt(result);
+    return format.decUInt(result);
   }
 
   /**
@@ -365,9 +365,9 @@ class Conflux {
    * @return {Promise<object[]>} List of block reward info
    * - blockHash `string`: Hash of the block.
    * - author `string`: The address of the beneficiary to whom the mining rewards were given.
-   * - baseReward `JSBI`: Block base reward in `Drip`
-   * - totalReward `JSBI`: Block total reward in `Drip`
-   * - txFee `JSBI`: Total gas fee of block transaction
+   * - baseReward `BigInt`: Block base reward in `Drip`
+   * - totalReward `BigInt`: Block total reward in `Drip`
+   * - txFee `BigInt`: Total gas fee of block transaction
    *
    * @example
    * > await conflux.getBlockRewardInfo(4060000);
@@ -422,7 +422,7 @@ class Conflux {
    * - deferredStateRoot `string`: The root of the final state trie of the block after deferred execution.
    * - difficulty `string`: Integer string of the difficulty for this block.
    * - epochNumber `number|null`: The current block epoch number in the client's view. null when it's not in best block's past set and the epoch number is not determined.
-   * - gasLimit `JSBI`: The maximum gas allowed in this block.
+   * - gasLimit `BigInt`: The maximum gas allowed in this block.
    * - hash `string|null`: Hash of the block. `null` when its pending block.
    * - height `number`: The block heights. `null` when its pending block.
    * - miner `string`: The address of the beneficiary to whom the mining rewards were given.
@@ -516,19 +516,19 @@ class Conflux {
    * - data `string`: the data send along with the transaction.
    * - epochHeight `number`: TODO
    * - from `string`: address of the sender.
-   * - gas `JSBI`: gas provided by the sender.
+   * - gas `BigInt`: gas provided by the sender.
    * - gasPrice `number`: gas price provided by the sender in Drip.
    * - hash `string`: hash of the transaction.
-   * - nonce `JSBI`: the number of transactions made by the sender prior to this one.
+   * - nonce `BigInt`: the number of transactions made by the sender prior to this one.
    * - r `string`: ECDSA signature r
    * - s `string`: ECDSA signature s
    * - status `number`: 0 for success, 1 for error occured, `null` when the transaction is skipped or not packed.
-   * - storageLimit `JSBI`: TODO
+   * - storageLimit `BigInt`: TODO
    * - chainId `number`: TODO
    * - to `string`: address of the receiver. null when its a contract creation transaction.
    * - transactionIndex `number`: integer of the transactions's index position in the block. `null` when its pending.
    * - v `string`: ECDSA recovery id
-   * - value `JSBI`: value transferred in Drip.
+   * - value `BigInt`: value transferred in Drip.
    *
    * @example
    * > await conflux.getTransactionByHash('0xe6b56ef6a2be1987b0353a316cb02c78493673c31adb847b947d47c3936d89a8');
@@ -853,9 +853,9 @@ class Conflux {
    * @param address {string} - Address to contract.
    * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
    * @return {Promise<object>} A sponsor info object, if the contract doesn't have a sponsor, then the all fields in returned object will be 0:
-   * - sponsorBalanceForCollateral `JSBI`: the sponsored balance for storage.
-   * - sponsorBalanceForGas `JSBI`: the sponsored balance for gas.
-   * - sponsorGasBound `JSBI`: the max gas could be sponsored for one transaction.
+   * - sponsorBalanceForCollateral `BigInt`: the sponsored balance for storage.
+   * - sponsorBalanceForGas `BigInt`: the sponsored balance for gas.
+   * - sponsorGasBound `BigInt`: the max gas could be sponsored for one transaction.
    * - sponsorForCollateral `string`: the address of the storage sponsor.
    * - sponsorForGas `string`: the address of the gas sponsor.
    *
@@ -882,7 +882,7 @@ class Conflux {
    *
    * @param address {string} - Address to check for collateral storage.
    * @param [epochNumber='latest_state'] - See [format.sendTx](#util/format.js/epochNumber)
-   * @return {Promise<JSBI>} - The collateral storage in Byte.
+   * @return {Promise<BigInt>} - The collateral storage in Byte.
    *
    * @example
    * > await conflux.getCollateralForStorage('0xc94770007dda54cf92009bff0de90c06f603a09f')
@@ -893,7 +893,7 @@ class Conflux {
       format.address(address),
       format.epochNumber.$or(undefined)(epochNumber),
     );
-    return format.bigUInt(result);
+    return format.decUInt(result);
   }
 
   /**

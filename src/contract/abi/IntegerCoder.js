@@ -61,7 +61,7 @@ class IntegerCoder extends BaseCoder {
 
   /**
    * @param stream {HexStream}
-   * @return {JSBI}
+   * @return {BigInt}
    */
   decode(stream) {
     let value = format.bigInt(`0x${stream.read(this.size * 2)}`); // 16: read out naked hex string
@@ -71,7 +71,7 @@ class IntegerCoder extends BaseCoder {
       value = JSBI.subtract(value, mask);
     }
 
-    return value;
+    return JSBI.BigInt(value).toString();
   }
 }
 
