@@ -1,3 +1,4 @@
+const { MAX_UINT } = require('./CONST');
 const { assert } = require('./util');
 const format = require('./util/format');
 const providerFactory = require('./provider');
@@ -506,7 +507,7 @@ class Conflux {
     const result = await this.provider.call('cfx_getConfirmationRiskByHash',
       format.blockHash(blockHash),
     );
-    return format.riskNumber.$or(null)(result);
+    return format.big.$after(v => Number(v.div(MAX_UINT))).$or(null)(result);
   }
 
   // ----------------------------- transaction --------------------------------

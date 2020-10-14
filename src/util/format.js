@@ -2,7 +2,7 @@ const JSBI = require('jsbi');
 const Big = require('big.js');
 const lodash = require('lodash');
 const parser = require('./parser');
-const { EPOCH_NUMBER, MAX_UINT } = require('../CONST');
+const { EPOCH_NUMBER } = require('../CONST');
 
 // ----------------------------------------------------------------------------
 function toHex(value) {
@@ -46,6 +46,13 @@ function toBigInt(value) {
     throw new Error(`${value} not match BigInt`);
   }
   return JSBI.BigInt(value);
+}
+
+function toBig(value) {
+  if (/^0[xob]/i.test(value)) {
+    value = JSBI.BigInt(value);
+  }
+  return new Big(value);
 }
 
 // ----------------------------------------------------------------------------
@@ -177,16 +184,26 @@ format.bigUIntDec = format.bigUInt.$after(v => v.toString(10));
 format.bigUIntHex = format.bigUInt.$after(v => `0x${v.toString(16)}`);
 
 /**
- * @param hex {string}
- * @return {number}
+ * @param arg {number|string|JSBI}
+ * @return {Big} Big instance
  *
  * @example
- * > format.riskNumber('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')
- 1
- * > format.riskNumber('0xe666666666666666666666666666666666666666666666666666666666666665')
- 0.9
+ * > format.big('0b10').toString()
+ '2'
+ * > format.big('0O10').toString()
+ '8'
+ * > format.big('010').toString()
+ '10'
+ * > format.big('0x10').toString()
+ '16'
+ * > format.big(3.14).toString()
+ '3.14'
+ * > format.big('-03.140').toString()
+ '-3.14'
+ * > format.big(null)
+ Error('Invalid number')
  */
-format.riskNumber = format.bigUInt.$after(v => Number(Big(v).div(MAX_UINT)));
+format.big = parser(toBig);
 
 /**
  * @param arg {number|string} - number or string
