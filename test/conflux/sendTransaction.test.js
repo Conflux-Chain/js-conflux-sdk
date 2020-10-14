@@ -1,4 +1,4 @@
-const { Conflux, format } = require('../../src');
+const { Conflux, format, CONST } = require('../../src');
 const { MockProvider } = require('../../mock');
 
 const PRIVATE_KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
@@ -57,6 +57,71 @@ test('sendTransaction local', async () => {
   call.mockRestore();
 });
 
+test('sendTransaction defaultGasPrice', async () => {
+  const signTransaction = jest.spyOn(account, 'signTransaction');
+
+  conflux.defaultGasPrice = 1;
+
+  await conflux.sendTransaction({
+    from: account,
+    nonce: 100,
+    gasPrice: undefined,
+    gas: format.bigUInt(1024),
+    storageLimit: format.bigUInt(2048),
+    epochHeight: 1000,
+    chainId: 1,
+  });
+
+  expect(signTransaction).toHaveBeenLastCalledWith({
+    from: account,
+    nonce: 100,
+    gasPrice: conflux.defaultGasPrice,
+    gas: format.bigUInt(1024),
+    to: undefined,
+    value: undefined,
+    storageLimit: format.bigUInt(2048),
+    epochHeight: 1000,
+    chainId: 1,
+    data: undefined,
+  });
+
+  signTransaction.mockRestore();
+  conflux.defaultGasPrice = undefined;
+});
+
+test('sendTransaction MIN_GAS_PRICE', async () => {
+  const signTransaction = jest.spyOn(account, 'signTransaction');
+
+  const getGasPrice = jest.spyOn(conflux, 'getGasPrice');
+  getGasPrice.mockReturnValue(0);
+
+  await conflux.sendTransaction({
+    from: account,
+    nonce: 100,
+    gasPrice: undefined,
+    gas: format.bigUInt(1024),
+    storageLimit: format.bigUInt(2048),
+    epochHeight: 1000,
+    chainId: 1,
+  });
+
+  expect(signTransaction).toHaveBeenLastCalledWith({
+    from: account,
+    nonce: 100,
+    gasPrice: CONST.MIN_GAS_PRICE,
+    gas: format.bigUInt(1024),
+    to: undefined,
+    value: undefined,
+    storageLimit: format.bigUInt(2048),
+    epochHeight: 1000,
+    chainId: 1,
+    data: undefined,
+  });
+
+  getGasPrice.mockRestore();
+  signTransaction.mockRestore();
+});
+
 test('sendTransaction auto', async () => {
   const getNextNonce = jest.spyOn(conflux, 'getNextNonce');
   getNextNonce.mockReturnValue(100);
@@ -68,7 +133,7 @@ test('sendTransaction auto', async () => {
   getEpochNumber.mockReturnValue(1000);
 
   const getGasPrice = jest.spyOn(conflux, 'getGasPrice');
-  getGasPrice.mockReturnValue('10');
+  getGasPrice.mockReturnValue(10);
 
   const estimateGasAndCollateral = jest.spyOn(conflux, 'estimateGasAndCollateral');
   estimateGasAndCollateral.mockReturnValue({
@@ -93,10 +158,10 @@ test('sendTransaction auto', async () => {
     epochHeight: 1000,
     from: account.address,
     to: account.address,
-    gas: 21000,
-    gasPrice: '10',
+    gas: CONST.TRANSACTION_GAS,
+    gasPrice: 10,
     nonce: 100,
-    storageLimit: 0,
+    storageLimit: CONST.TRANSACTION_STORAGE_LIMIT,
   });
 
   await conflux.sendTransaction({
@@ -113,9 +178,43 @@ test('sendTransaction auto', async () => {
     epochHeight: 1000,
     from: account.address,
     gas: format.bigUInt(1024),
-    gasPrice: '10',
+    gasPrice: 10,
     nonce: 100,
     storageLimit: format.bigUInt(2048),
+    data: '0xabcd',
+  });
+
+  await conflux.sendTransaction({
+    from: account.address,
+    gas: 1000,
+    data: '0xabcd',
+  });
+  expect(estimateGasAndCollateral).toHaveBeenCalledTimes(2);
+  expect(signTransaction).toHaveBeenLastCalledWith({
+    chainId: 1,
+    epochHeight: 1000,
+    from: account.address,
+    gas: 1000,
+    gasPrice: 10,
+    nonce: 100,
+    storageLimit: format.bigUInt(2048),
+    data: '0xabcd',
+  });
+
+  await conflux.sendTransaction({
+    from: account.address,
+    storageLimit: 2000,
+    data: '0xabcd',
+  });
+  expect(estimateGasAndCollateral).toHaveBeenCalledTimes(3);
+  expect(signTransaction).toHaveBeenLastCalledWith({
+    chainId: 1,
+    epochHeight: 1000,
+    from: account.address,
+    gas: format.bigUInt(1024),
+    gasPrice: 10,
+    nonce: 100,
+    storageLimit: 2000,
     data: '0xabcd',
   });
 

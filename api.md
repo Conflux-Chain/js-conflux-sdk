@@ -51,6 +51,9 @@ keywords:
         - [unsubscribe](#Conflux.js/Conflux/unsubscribe)
 - CONST.js
     - [EPOCH_NUMBER](#CONST.js/EPOCH_NUMBER)
+    - [MIN_GAS_PRICE](#CONST.js/MIN_GAS_PRICE)
+    - [TRANSACTION_GAS](#CONST.js/TRANSACTION_GAS)
+    - [TRANSACTION_STORAGE_LIMIT](#CONST.js/TRANSACTION_STORAGE_LIMIT)
 - contract
     - Contract.js
         - Contract
@@ -59,10 +62,9 @@ keywords:
     - Drip
         - [(static)fromCFX](#Drip.js/Drip/(static)fromCFX)
         - [(static)fromGDrip](#Drip.js/Drip/(static)fromGDrip)
-        - [(static)fromDrip](#Drip.js/Drip/(static)fromDrip)
+        - [**constructor**](#Drip.js/Drip/**constructor**)
         - [toCFX](#Drip.js/Drip/toCFX)
         - [toGDrip](#Drip.js/Drip/toGDrip)
-        - [toDrip](#Drip.js/Drip/toDrip)
 - Message.js
     - Message
         - [(static)sign](#Message.js/Message/(static)sign)
@@ -105,25 +107,25 @@ keywords:
     - format.js
         - format
             - [(static)any](#util/format.js/format/(static)any)
-            - [(static)hex](#util/format.js/format/(static)hex)
             - [(static)uInt](#util/format.js/format/(static)uInt)
             - [(static)bigInt](#util/format.js/format/(static)bigInt)
             - [(static)bigUInt](#util/format.js/format/(static)bigUInt)
             - [(static)bigUIntDec](#util/format.js/format/(static)bigUIntDec)
             - [(static)bigUIntHex](#util/format.js/format/(static)bigUIntHex)
-            - [(static)riskNumber](#util/format.js/format/(static)riskNumber)
+            - [(static)big](#util/format.js/format/(static)big)
             - [(static)epochNumber](#util/format.js/format/(static)epochNumber)
+            - [(static)hex](#util/format.js/format/(static)hex)
             - [(static)address](#util/format.js/format/(static)address)
-            - [(static)publicKey](#util/format.js/format/(static)publicKey)
-            - [(static)privateKey](#util/format.js/format/(static)privateKey)
-            - [(static)signature](#util/format.js/format/(static)signature)
             - [(static)blockHash](#util/format.js/format/(static)blockHash)
             - [(static)transactionHash](#util/format.js/format/(static)transactionHash)
+            - [(static)privateKey](#util/format.js/format/(static)privateKey)
+            - [(static)publicKey](#util/format.js/format/(static)publicKey)
+            - [(static)messageSignature](#util/format.js/format/(static)messageSignature)
             - [(static)hexBuffer](#util/format.js/format/(static)hexBuffer)
             - [(static)bytes](#util/format.js/format/(static)bytes)
             - [(static)boolean](#util/format.js/format/(static)boolean)
     - sign.js
-        - [sha3](#util/sign.js/sha3)
+        - [keccak256](#util/sign.js/keccak256)
         - [checksumAddress](#util/sign.js/checksumAddress)
         - [randomBuffer](#util/sign.js/randomBuffer)
         - [randomPrivateKey](#util/sign.js/randomPrivateKey)
@@ -1293,6 +1295,30 @@ epochNumber label
 
 ----------------------------------------
 
+## MIN_GAS_PRICE <a id="CONST.js/MIN_GAS_PRICE"></a>
+
+`number`
+
+min gas price for transaction
+
+----------------------------------------
+
+## TRANSACTION_GAS <a id="CONST.js/TRANSACTION_GAS"></a>
+
+`number`
+
+gas use for pure transfer transaction
+
+----------------------------------------
+
+## TRANSACTION_STORAGE_LIMIT <a id="CONST.js/TRANSACTION_STORAGE_LIMIT"></a>
+
+`number`
+
+storage limit for pure transfer transaction
+
+----------------------------------------
+
 ### Contract <a id="contract/Contract.js/Contract"></a>
 
 Contract with all its methods and events defined in its abi.
@@ -1421,15 +1447,13 @@ value | `string,number` | true     |         |
    [String (Drip): '171000000000']
 ```
 
-### Drip.fromDrip <a id="Drip.js/Drip/(static)fromDrip"></a>
-
-Get `Drip` string from `Drip`
+### Drip.prototype.**constructor** <a id="Drip.js/Drip/**constructor**"></a>
 
 * **Parameters**
 
 Name  | Type            | Required | Default | Description
 ------|-----------------|----------|---------|------------
-value | `string,number` | true     |         |
+value | `number,string` | true     |         |
 
 * **Returns**
 
@@ -1438,9 +1462,9 @@ value | `string,number` | true     |         |
 * **Examples**
 
 ```
-> Drip.fromDrip(1.00)
+> Drip(1.00)
    [String (Drip): '1']
-> Drip.fromDrip('0xab')
+> Drip('0xab')
    [String (Drip): '171']
 ```
 
@@ -1472,21 +1496,6 @@ Get `GDrip` number string
 ```
 > Drip.fromDrip(1e9).toGDrip()
    "1"
-```
-
-### Drip.prototype.toDrip <a id="Drip.js/Drip/toDrip"></a>
-
-Get `Drip` number string
-
-* **Returns**
-
-`string` 
-
-* **Examples**
-
-```
-> Drip.fromDrip(1e9).toGDrip()
-   "1000000000"
 ```
 
 ----------------------------------------
@@ -1865,37 +1874,6 @@ arg  | `any` | true     |         |
  1
 ```
 
-#### format.hex <a id="util/format.js/format/(static)hex"></a>
-
-When encoding UNFORMATTED DATA (byte arrays, account addresses, hashes, bytecode arrays): encode as hex, prefix with "0x", two hex digits per byte.
-
-* **Parameters**
-
-Name | Type                                     | Required | Default | Description
------|------------------------------------------|----------|---------|------------
-arg  | `number,JSBI,string,Buffer,boolean,null` | true     |         |
-
-* **Returns**
-
-`string` Hex string
-
-* **Examples**
-
-```
-> format.hex(null)
- '0x'
-> format.hex(1)
- "0x01"
-> format.hex(256)
- "0x0100"
-> format.hex(true)
- "0x01"
-> format.hex(Buffer.from([1,10,255]))
- "0x010aff"
-> format.hex("0x0a")
- "0x0a"
-```
-
 #### format.uInt <a id="util/format.js/format/(static)uInt"></a>
 
 * **Parameters**
@@ -2033,25 +2011,35 @@ arg  | `number,string,JSBI` | true     |         |
  Error("not match uintHex")
 ```
 
-#### format.riskNumber <a id="util/format.js/format/(static)riskNumber"></a>
+#### format.big <a id="util/format.js/format/(static)big"></a>
 
 * **Parameters**
 
-Name | Type     | Required | Default | Description
------|----------|----------|---------|------------
-hex  | `string` | true     |         |
+Name | Type                 | Required | Default | Description
+-----|----------------------|----------|---------|------------
+arg  | `number,string,JSBI` | true     |         |
 
 * **Returns**
 
-`number` 
+`Big` Big instance
 
 * **Examples**
 
 ```
-> format.riskNumber('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')
- 1
-> format.riskNumber('0xe666666666666666666666666666666666666666666666666666666666666665')
- 0.9
+> format.big('0b10').toString()
+ '2'
+> format.big('0O10').toString()
+ '8'
+> format.big('010').toString()
+ '10'
+> format.big('0x10').toString()
+ '16'
+> format.big(3.14).toString()
+ '3.14'
+> format.big('-03.140').toString()
+ '-3.14'
+> format.big(null)
+ Error('Invalid number')
 ```
 
 #### format.epochNumber <a id="util/format.js/format/(static)epochNumber"></a>
@@ -2077,6 +2065,37 @@ arg  | `number,string` | true     |         | number or string
  "latest_mined"
 ```
 
+#### format.hex <a id="util/format.js/format/(static)hex"></a>
+
+When encoding UNFORMATTED DATA (byte arrays, account addresses, hashes, bytecode arrays): encode as hex, prefix with "0x", two hex digits per byte.
+
+* **Parameters**
+
+Name | Type                                     | Required | Default | Description
+-----|------------------------------------------|----------|---------|------------
+arg  | `number,JSBI,string,Buffer,boolean,null` | true     |         |
+
+* **Returns**
+
+`string` Hex string
+
+* **Examples**
+
+```
+> format.hex(null)
+ '0x'
+> format.hex(1)
+ "0x01"
+> format.hex(256)
+ "0x0100"
+> format.hex(true)
+ "0x01"
+> format.hex(Buffer.from([1,10,255]))
+ "0x010aff"
+> format.hex("0x0a")
+ "0x0a"
+```
+
 #### format.address <a id="util/format.js/format/(static)address"></a>
 
 * **Parameters**
@@ -2097,60 +2116,6 @@ arg  | `string,Buffer` | true     |         |
 > format.address('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
  Error("not match address")
 ```
-
-#### format.publicKey <a id="util/format.js/format/(static)publicKey"></a>
-
-* **Parameters**
-
-Name | Type            | Required | Default | Description
------|-----------------|----------|---------|------------
-arg  | `string,Buffer` | true     |         |
-
-* **Returns**
-
-`string` Hex string
-
-* **Examples**
-
-```
-> format.publicKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
- "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-> format.publicKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
- Error("not match publicKey")
-```
-
-#### format.privateKey <a id="util/format.js/format/(static)privateKey"></a>
-
-* **Parameters**
-
-Name | Type            | Required | Default | Description
------|-----------------|----------|---------|------------
-arg  | `string,Buffer` | true     |         |
-
-* **Returns**
-
-`string` Hex string
-
-* **Examples**
-
-```
-> format.privateKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
- "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-> format.privateKey('0x0123456789012345678901234567890123456789')
- Error("not match hex64")
-```
-
-#### format.signature <a id="util/format.js/format/(static)signature"></a>
-
-* **Parameters**
-
-Name | Type            | Required | Default | Description
------|-----------------|----------|---------|------------
-arg  | `string,Buffer` | true     |         |
-
-* **Returns**
-
-`string` Hex string
 
 #### format.blockHash <a id="util/format.js/format/(static)blockHash"></a>
 
@@ -2193,6 +2158,60 @@ arg  | `string,Buffer` | true     |         |
 > format.privateKey('0x0123456789012345678901234567890123456789')
  Error("not match hex64")
 ```
+
+#### format.privateKey <a id="util/format.js/format/(static)privateKey"></a>
+
+* **Parameters**
+
+Name | Type            | Required | Default | Description
+-----|-----------------|----------|---------|------------
+arg  | `string,Buffer` | true     |         |
+
+* **Returns**
+
+`string` Hex string
+
+* **Examples**
+
+```
+> format.privateKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
+ "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+> format.privateKey('0x0123456789012345678901234567890123456789')
+ Error("not match hex64")
+```
+
+#### format.publicKey <a id="util/format.js/format/(static)publicKey"></a>
+
+* **Parameters**
+
+Name | Type            | Required | Default | Description
+-----|-----------------|----------|---------|------------
+arg  | `string,Buffer` | true     |         |
+
+* **Returns**
+
+`string` Hex string
+
+* **Examples**
+
+```
+> format.publicKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
+ "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+> format.publicKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
+ Error("not match publicKey")
+```
+
+#### format.messageSignature <a id="util/format.js/format/(static)messageSignature"></a>
+
+* **Parameters**
+
+Name | Type            | Required | Default | Description
+-----|-----------------|----------|---------|------------
+arg  | `string,Buffer` | true     |         |
+
+* **Returns**
+
+`string` Hex string
 
 #### format.hexBuffer <a id="util/format.js/format/(static)hexBuffer"></a>
 
@@ -2269,9 +2288,9 @@ arg  | `boolean` | true     |         |
 
 ----------------------------------------
 
-### sha3 <a id="util/sign.js/sha3"></a>
+### keccak256 <a id="util/sign.js/keccak256"></a>
 
-alias of keccak256
+keccak 256
 
 * **Parameters**
 
@@ -2286,7 +2305,7 @@ buffer | `Buffer` | true     |         |
 * **Examples**
 
 ```
-> sha3(Buffer.from(''))
+> keccak256(Buffer.from(''))
  <Buffer c5 d2 46 01 86 f7 23 3c 92 7e 7d b2 dc c7 03 c0 e5 00 b6 53 ca 82 27 3b 7b fa d8 04 5d 85 a4 70>
 ```
 

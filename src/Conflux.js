@@ -1,4 +1,4 @@
-const { MAX_UINT } = require('./CONST');
+const CONST = require('./CONST');
 const { assert } = require('./util');
 const format = require('./util/format');
 const providerFactory = require('./provider');
@@ -507,7 +507,7 @@ class Conflux {
     const result = await this.provider.call('cfx_getConfirmationRiskByHash',
       format.blockHash(blockHash),
     );
-    return format.big.$after(v => Number(v.div(MAX_UINT))).$or(null)(result);
+    return format.big.$after(v => Number(v.div(CONST.MAX_UINT))).$or(null)(result);
   }
 
   // ----------------------------- transaction --------------------------------
@@ -650,7 +650,7 @@ class Conflux {
 
     if (options.gasPrice === undefined) {
       if (this.defaultGasPrice === undefined) {
-        options.gasPrice = await this.getGasPrice() || 1; // MIN_GAS_PRICE
+        options.gasPrice = Math.max(await this.getGasPrice(), CONST.MIN_GAS_PRICE);
       } else {
         options.gasPrice = this.defaultGasPrice;
       }
@@ -665,8 +665,8 @@ class Conflux {
         gas = gasUsed;
         storageLimit = storageCollateralized;
       } else {
-        gas = 21000; // TX_GAS
-        storageLimit = 0; // TX_STORAGE_LIMIT
+        gas = CONST.TRANSACTION_GAS;
+        storageLimit = CONST.TRANSACTION_STORAGE_LIMIT;
       }
 
       if (options.gas === undefined) {

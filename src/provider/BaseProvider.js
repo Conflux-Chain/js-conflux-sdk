@@ -19,7 +19,7 @@ class BaseProvider extends EventEmitter {
     url,
     timeout = 5 * 60 * 1000,
     logger = { info: () => undefined, error: () => undefined },
-  } = {}) {
+  }) {
     super();
     this.url = url;
     this.timeout = timeout;

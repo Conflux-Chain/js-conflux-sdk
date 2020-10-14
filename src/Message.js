@@ -1,4 +1,4 @@
-const { sha3, ecdsaSign, ecdsaRecover, publicKeyToAddress } = require('./util/sign');
+const { keccak256, ecdsaSign, ecdsaRecover, publicKeyToAddress } = require('./util/sign');
 const format = require('./util/format');
 
 class Message {
@@ -19,7 +19,7 @@ class Message {
   static sign(privateKey, messageHash) {
     const { r, s, v } = ecdsaSign(format.hexBuffer(messageHash), format.hexBuffer(privateKey));
     const buffer = Buffer.concat([r, s, format.hexBuffer(v)]);
-    return format.signature(buffer);
+    return format.messageSignature(buffer);
   }
 
   /**
@@ -84,7 +84,7 @@ class Message {
    * @return {string}
    */
   get hash() {
-    return format.hex(sha3(Buffer.from(this.message)));
+    return format.hex(keccak256(Buffer.from(this.message)));
   }
 
   /**

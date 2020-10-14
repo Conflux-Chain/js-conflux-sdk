@@ -27,9 +27,9 @@ test('new Message(string)', () => {
 });
 
 test('Message.sign/recover', () => {
-  const signature = Message.sign(KEY, sign.sha3('Hello World'));
+  const signature = Message.sign(KEY, sign.keccak256('Hello World'));
   expect(signature).toEqual('0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01');
 
-  const publicKey = Message.recover(signature, sign.sha3('Hello World'));
+  const publicKey = Message.recover(signature, sign.keccak256('Hello World'));
   expect(publicKey).toEqual(PUBLIC);
 });

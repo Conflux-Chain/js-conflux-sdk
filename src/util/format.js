@@ -1,8 +1,8 @@
 const JSBI = require('jsbi');
 const Big = require('big.js');
 const lodash = require('lodash');
+const CONST = require('../CONST');
 const parser = require('./parser');
-const { EPOCH_NUMBER } = require('../CONST');
 
 // ----------------------------------------------------------------------------
 function toHex(value) {
@@ -67,29 +67,6 @@ const format = {};
  1
  */
 format.any = parser(v => v);
-
-/**
- * When encoding UNFORMATTED DATA (byte arrays, account addresses, hashes, bytecode arrays): encode as hex, prefix with "0x", two hex digits per byte.
- *
- * @param arg {number|JSBI|string|Buffer|boolean|null}
- * @return {string} Hex string
- *
- * @example
- * > format.hex(null)
- '0x'
- * > format.hex(1)
- "0x01"
- * > format.hex(256)
- "0x0100"
- * > format.hex(true)
- "0x01"
- * > format.hex(Buffer.from([1,10,255]))
- "0x010aff"
- * > format.hex("0x0a")
- "0x0a"
- */
-format.hex = parser(toHex);
-format.hex64 = format.hex.$validate(v => v.length === 2 + 64, 'hex64');
 
 /**
  * @param arg {number|JSBI|string|boolean}
@@ -218,11 +195,33 @@ format.big = parser(toBig);
  "latest_mined"
  */
 format.epochNumber = format.bigUIntHex
-  .$or(EPOCH_NUMBER.LATEST_MINED)
-  .$or(EPOCH_NUMBER.LATEST_STATE)
-  .$or(EPOCH_NUMBER.LATEST_CONFIRMED)
-  .$or(EPOCH_NUMBER.LATEST_CHECKPOINT)
-  .$or(EPOCH_NUMBER.EARLIEST);
+  .$or(CONST.EPOCH_NUMBER.LATEST_MINED)
+  .$or(CONST.EPOCH_NUMBER.LATEST_STATE)
+  .$or(CONST.EPOCH_NUMBER.LATEST_CONFIRMED)
+  .$or(CONST.EPOCH_NUMBER.LATEST_CHECKPOINT)
+  .$or(CONST.EPOCH_NUMBER.EARLIEST);
+
+/**
+ * When encoding UNFORMATTED DATA (byte arrays, account addresses, hashes, bytecode arrays): encode as hex, prefix with "0x", two hex digits per byte.
+ *
+ * @param arg {number|JSBI|string|Buffer|boolean|null}
+ * @return {string} Hex string
+ *
+ * @example
+ * > format.hex(null)
+ '0x'
+ * > format.hex(1)
+ "0x01"
+ * > format.hex(256)
+ "0x0100"
+ * > format.hex(true)
+ "0x01"
+ * > format.hex(Buffer.from([1,10,255]))
+ "0x010aff"
+ * > format.hex("0x0a")
+ "0x0a"
+ */
+format.hex = parser(toHex);
 
 /**
  * @param arg {string|Buffer}
@@ -236,35 +235,7 @@ format.epochNumber = format.bigUIntHex
  */
 format.address = format.hex.$validate(v => v.length === 2 + 40, 'address'); // alias
 
-/**
- * @param arg {string|Buffer}
- * @return {string} Hex string
- *
- * @example
- * > format.publicKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
- "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
- * > format.publicKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
- Error("not match publicKey")
- */
-format.publicKey = format.hex.$validate(v => v.length === 2 + 128, 'publicKey');
-
-/**
- * @param arg {string|Buffer}
- * @return {string} Hex string
- *
- * @example
- * > format.privateKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
- "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
- * > format.privateKey('0x0123456789012345678901234567890123456789')
- Error("not match hex64")
- */
-format.privateKey = format.hex64; // alias
-
-/**
- * @param arg {string|Buffer}
- * @return {string} Hex string
- */
-format.signature = format.hex.$validate(v => v.length === 2 + 130, 'signature');
+format.hex64 = format.hex.$validate(v => v.length === 2 + 64, 'hex64');
 
 /**
  * @param arg {string|Buffer}
@@ -289,6 +260,36 @@ format.blockHash = format.hex64; // alias
  Error("not match hex64")
  */
 format.transactionHash = format.hex64; // alias
+
+/**
+ * @param arg {string|Buffer}
+ * @return {string} Hex string
+ *
+ * @example
+ * > format.privateKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
+ "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+ * > format.privateKey('0x0123456789012345678901234567890123456789')
+ Error("not match hex64")
+ */
+format.privateKey = format.hex64; // alias
+
+/**
+ * @param arg {string|Buffer}
+ * @return {string} Hex string
+ *
+ * @example
+ * > format.publicKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
+ "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+ * > format.publicKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
+ Error("not match publicKey")
+ */
+format.publicKey = format.hex.$validate(v => v.length === 2 + 128, 'publicKey');
+
+/**
+ * @param arg {string|Buffer}
+ * @return {string} Hex string
+ */
+format.messageSignature = format.hex.$validate(v => v.length === 2 + 130, 'signature');
 
 /**
  * @param arg {number|string|JSBI|Buffer|boolean|null}

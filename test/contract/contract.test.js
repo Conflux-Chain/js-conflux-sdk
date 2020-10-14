@@ -6,8 +6,8 @@ const ContractConstructor = require('../../src/contract/method/ContractConstruct
 const ADDRESS = '0xfcad0b19bb29d4674531d6f115237e16afce377c';
 const HEX64 = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 
-function sha3(string) {
-  return format.hex(sign.sha3(Buffer.from(string)));
+function keccak256(string) {
+  return format.hex(sign.keccak256(Buffer.from(string)));
 }
 
 // ----------------------------------------------------------------------------
@@ -151,7 +151,7 @@ test('contract.sendTransaction', async () => {
 test('contract.getLogs', async () => {
   const call = jest.spyOn(conflux.provider, 'call');
 
-  const topics = [sha3('StringEvent(string)'), sha3('string')];
+  const topics = [keccak256('StringEvent(string)'), keccak256('string')];
   call.mockReturnValueOnce([
     {
       epochNumber: '0x0',
@@ -186,19 +186,19 @@ test('contract.override', () => {
 
   event = contract.OverrideEvent('str');
   expect(event.topics).toEqual([
-    sha3('OverrideEvent(string)'),
-    sha3('str'),
+    keccak256('OverrideEvent(string)'),
+    keccak256('str'),
   ]);
 
   event = contract.OverrideEvent(Buffer.from('bytes'));
   expect(event.topics).toEqual([
-    sha3('OverrideEvent(bytes)'),
-    sha3('bytes'),
+    keccak256('OverrideEvent(bytes)'),
+    keccak256('bytes'),
   ]);
 
   event = contract.OverrideEvent(100, null);
   expect(event.topics).toEqual([
-    sha3('OverrideEvent(uint256,string)'),
+    keccak256('OverrideEvent(uint256,string)'),
     '0x0000000000000000000000000000000000000000000000000000000000000064',
   ]);
 
@@ -207,25 +207,25 @@ test('contract.override', () => {
 
   event = contract.OverrideEvent(null, null);
   expect(event.topics).toEqual([
-    sha3('OverrideEvent(uint256,string)'),
+    keccak256('OverrideEvent(uint256,string)'),
     null,
   ]);
 
   const result = contract.OverrideEvent.decodeLog({
     topics: [
-      sha3('OverrideEvent(string)'),
-      sha3('str'),
+      keccak256('OverrideEvent(string)'),
+      keccak256('str'),
     ],
     data: '0x',
   });
-  expect(result[0]).toEqual(sha3('str'));
+  expect(result[0]).toEqual(keccak256('str'));
 });
 
 test('contract.StringEvent', () => {
   const { topics } = contract.StringEvent('string');
   expect(topics).toEqual([
-    sha3('StringEvent(string)'),
-    sha3('string'),
+    keccak256('StringEvent(string)'),
+    keccak256('string'),
   ]);
 
   const result = contract.abi.decodeLog({ data: '0x', topics });
@@ -233,10 +233,10 @@ test('contract.StringEvent', () => {
     name: 'StringEvent',
     fullName: 'StringEvent(string indexed _string)',
     type: 'StringEvent(string)',
-    signature: sha3('StringEvent(string)'),
-    array: [sha3('string')],
+    signature: keccak256('StringEvent(string)'),
+    array: [keccak256('string')],
     object: {
-      _string: sha3('string'),
+      _string: keccak256('string'),
     },
   });
 });
@@ -244,7 +244,7 @@ test('contract.StringEvent', () => {
 test('contract.ArrayEvent', () => {
   const { topics } = contract.ArrayEvent(HEX64);
   expect(topics).toEqual([
-    sha3('ArrayEvent(string[3])'),
+    keccak256('ArrayEvent(string[3])'),
     HEX64,
   ]);
 
@@ -255,7 +255,7 @@ test('contract.ArrayEvent', () => {
     name: 'ArrayEvent',
     fullName: 'ArrayEvent(string[3] indexed _array)',
     type: 'ArrayEvent(string[3])',
-    signature: sha3('ArrayEvent(string[3])'),
+    signature: keccak256('ArrayEvent(string[3])'),
     array: [HEX64],
     object: {
       _array: HEX64,
@@ -266,7 +266,7 @@ test('contract.ArrayEvent', () => {
 test('contract.StructEvent', () => {
   const { topics } = contract.StructEvent(HEX64);
   expect(topics).toEqual([
-    sha3('StructEvent((string,int32))'),
+    keccak256('StructEvent((string,int32))'),
     HEX64,
   ]);
 
@@ -277,7 +277,7 @@ test('contract.StructEvent', () => {
     name: 'StructEvent',
     fullName: 'StructEvent((string,int32) indexed _struct)',
     type: 'StructEvent((string,int32))',
-    signature: sha3('StructEvent((string,int32))'),
+    signature: keccak256('StructEvent((string,int32))'),
     array: [HEX64],
     object: {
       _struct: HEX64,

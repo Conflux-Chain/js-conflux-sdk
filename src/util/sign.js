@@ -2,20 +2,19 @@ const crypto = require('crypto');
 const keccak = require('keccak');
 const secp256k1 = require('secp256k1');
 const { syncScrypt: scrypt } = require('scrypt-js');
-const { encode: rlpEncode } = require('./rlp');
 
 // ----------------------------------------------------------------------------
 /**
- * alias of keccak256
+ * keccak 256
  *
  * @param buffer {Buffer}
  * @return {Buffer}
  *
  * @example
- * > sha3(Buffer.from(''))
+ * > keccak256(Buffer.from(''))
  <Buffer c5 d2 46 01 86 f7 23 3c 92 7e 7d b2 dc c7 03 c0 e5 00 b6 53 ca 82 27 3b 7b fa d8 04 5d 85 a4 70>
  */
-function sha3(buffer) {
+function keccak256(buffer) {
   return keccak('keccak256').update(buffer).digest();
 }
 
@@ -32,7 +31,7 @@ function sha3(buffer) {
 function checksumAddress(address) {
   address = address.toLowerCase().replace('0x', '');
 
-  const hash = sha3(Buffer.from(address)).toString('hex');
+  const hash = keccak256(Buffer.from(address)).toString('hex');
   const sequence = Object.entries(address).map(([index, char]) => {
     return parseInt(hash[index], 16) >= 8 ? char.toUpperCase() : char;
   });
@@ -84,9 +83,9 @@ function randomPrivateKey(entropy = randomBuffer(32)) {
     throw new Error(`entropy must be 32 length Buffer, got "${typeof entropy}"`);
   }
 
-  const inner = sha3(Buffer.concat([randomBuffer(32), entropy]));
+  const inner = keccak256(Buffer.concat([randomBuffer(32), entropy]));
   const middle = Buffer.concat([randomBuffer(32), inner, randomBuffer(32)]);
-  return sha3(middle);
+  return keccak256(middle);
 }
 
 /**
@@ -110,7 +109,7 @@ function privateKeyToPublicKey(privateKey) {
  <Buffer 4c 6f a3 22 12 5f a3 1a 42 cb dd a8 73 0d 4c f0 20 0d 72 db>
  */
 function publicKeyToAddress(publicKey) {
-  const buffer = sha3(publicKey).slice(-20);
+  const buffer = keccak256(publicKey).slice(-20);
   buffer[0] = (buffer[0] & 0x0f) | 0x10; // eslint-disable-line no-bitwise
   return buffer;
 }
@@ -226,7 +225,7 @@ function encrypt(privateKey, password) {
   password = Buffer.from(password);
   const derived = scrypt(password, salt, n, r, p, dklen);
   const ciphertext = crypto.createCipheriv(cipher, derived.slice(0, 16), iv).update(privateKey);
-  const mac = sha3(Buffer.concat([derived.slice(16, 32), ciphertext]));
+  const mac = keccak256(Buffer.concat([derived.slice(16, 32), ciphertext]));
   const address = privateKeyToAddress(privateKey);
 
   return {
@@ -298,16 +297,14 @@ function decrypt({
   mac = Buffer.from(mac, 'hex');
 
   const derived = scrypt(password, salt, n, r, p, dklen);
-  if (!sha3(Buffer.concat([derived.slice(16, 32), ciphertext])).equals(mac)) {
+  if (!keccak256(Buffer.concat([derived.slice(16, 32), ciphertext])).equals(mac)) {
     throw new Error('Key derivation failed, possibly wrong password!');
   }
   return crypto.createDecipheriv(cipher, derived.slice(0, 16), iv).update(ciphertext);
 }
 
 module.exports = {
-  rlpEncode,
-
-  sha3,
+  keccak256,
   checksumAddress,
 
   randomBuffer,
