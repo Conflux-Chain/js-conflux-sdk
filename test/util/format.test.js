@@ -1,4 +1,5 @@
 const JSBI = require('jsbi');
+const Big = require('big.js');
 const { format } = require('../../src');
 
 const HEX_64 = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
@@ -80,6 +81,7 @@ test('bigInt', () => {
   expect(() => format.bigInt(3.14)).toThrow('cannot be converted to');
   expect(() => format.bigInt('3.14')).toThrow('Cannot convert 3.14 to a BigInt');
   expect(() => format.bigInt(Buffer.from([0, 1, 2]))).toThrow('not match BigInt');
+  expect(format.bigInt('')).toEqual(JSBI.BigInt(0));
   expect(format.bigInt('-1')).toEqual(JSBI.BigInt(-1));
   expect(format.bigInt('0')).toEqual(JSBI.BigInt(0));
   expect(format.bigInt(1)).toEqual(JSBI.BigInt(1));
@@ -127,11 +129,17 @@ test('bigUIntHex', () => {
   expect(() => format.bigUIntHex(null)).toThrow('Cannot');
 });
 
-test('riskNumber', () => {
-  expect(() => format.riskNumber(undefined)).toThrow('convert undefined to');
-  expect(() => format.riskNumber(null)).toThrow('of null');
-  expect(format.riskNumber('0xe666666666666666666666666666666666666666666666666666666666666665')).toEqual(0.9);
-  expect(format.riskNumber('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')).toEqual(1);
+test('big', () => {
+  expect(format.big('0b10')).toEqual(Big(2));
+  expect(format.big('0O10')).toEqual(Big(8));
+  expect(format.big('010')).toEqual(Big(10));
+  expect(format.big('0x10')).toEqual(Big(16));
+  expect(format.big(3.14)).toEqual(Big(3.14));
+  expect(format.big('-03.140')).toEqual(Big(-3.14));
+  expect(() => format.big()).toThrow('Invalid number');
+  expect(() => format.big(null)).toThrow('Invalid number');
+  expect(() => format.big(true)).toThrow('Invalid number');
+  expect(() => format.big('-0x10')).toThrow('Invalid number');
 });
 
 test('epochNumber', () => {

@@ -1,5 +1,4 @@
-const Big = require('big.js');
-const JSBI = require('jsbi');
+const format = require('./util/format');
 
 /**
  * Positive decimal integer string in `Drip`
@@ -18,8 +17,7 @@ class Drip extends String {
    [String (Drip): '171000000000000000000']
    */
   static fromCFX(value) {
-    value = /^0x[0-9a-f]+$/i.test(value) ? JSBI.BigInt(value) : value;
-    return new this(Big(value).times(1e18).toFixed());
+    return new this(format.big(value).times(1e18));
   }
 
   /**
@@ -35,32 +33,21 @@ class Drip extends String {
    [String (Drip): '171000000000']
    */
   static fromGDrip(value) {
-    value = /^0x[0-9a-f]+$/i.test(value) ? JSBI.BigInt(value) : value;
-    return new this(Big(value).times(1e9).toFixed());
+    return new this(format.big(value).times(1e9));
   }
 
   /**
-   * Get `Drip` string from `Drip`
-   *
-   * @param value {string|number}
+   * @param value {number|string}
    * @return {Drip}
    *
    * @example
-   * > Drip.fromDrip(1.00)
+   * > Drip(1.00)
    [String (Drip): '1']
-   * > Drip.fromDrip('0xab')
+   * > Drip('0xab')
    [String (Drip): '171']
    */
-  static fromDrip(value) {
-    value = /^0x[0-9a-f]+$/i.test(value) ? JSBI.BigInt(value) : value;
-    return new this(Big(value).toFixed());
-  }
-
-  constructor(string) {
-    if (!/^\d+$/.test(string)) {
-      throw new Error(`"${string}" not match bigUInt`);
-    }
-    super(string);
+  constructor(value) {
+    super(format.bigUInt(value).toString());
   }
 
   /**
@@ -72,7 +59,7 @@ class Drip extends String {
    "0.000000001"
    */
   toCFX() {
-    return Big(this).div(1e18).toFixed();
+    return format.big(this).div(1e18).toFixed();
   }
 
   /**
@@ -84,20 +71,12 @@ class Drip extends String {
    "1"
    */
   toGDrip() {
-    return Big(this).div(1e9).toFixed();
-  }
-
-  /**
-   * Get `Drip` number string
-   * @return {string}
-   *
-   * @example
-   * > Drip.fromDrip(1e9).toGDrip()
-   "1000000000"
-   */
-  toDrip() {
-    return this.toString();
+    return format.big(this).div(1e9).toFixed();
   }
 }
 
-module.exports = Drip;
+module.exports = new Proxy(Drip, {
+  apply(target, thisArg, argArray) {
+    return new Drip(...argArray);
+  },
+});

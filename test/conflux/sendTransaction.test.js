@@ -1,4 +1,4 @@
-const { Conflux, Drip, format } = require('../../src');
+const { Conflux, format } = require('../../src');
 const { MockProvider } = require('../../mock');
 
 const PRIVATE_KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
@@ -68,7 +68,7 @@ test('sendTransaction auto', async () => {
   getEpochNumber.mockReturnValue(1000);
 
   const getGasPrice = jest.spyOn(conflux, 'getGasPrice');
-  getGasPrice.mockReturnValue(Drip.fromDrip(10));
+  getGasPrice.mockReturnValue('10');
 
   const estimateGasAndCollateral = jest.spyOn(conflux, 'estimateGasAndCollateral');
   estimateGasAndCollateral.mockReturnValue({

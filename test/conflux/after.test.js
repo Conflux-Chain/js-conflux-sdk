@@ -169,6 +169,8 @@ test('getConfirmationRiskByHash', async () => {
   const risk = await conflux.getConfirmationRiskByHash(BLOCK_HASH);
 
   expect(Number.isFinite(risk)).toEqual(true);
+  expect(risk < 1).toEqual(true);
+  expect(risk > 0).toEqual(true);
 });
 
 // ----------------------------- transaction --------------------------------
