@@ -408,3 +408,7 @@ test('subscribeLogs', async () => {
     revertTo: '0xffff',
   });
 });
+
+afterAll(() => {
+  conflux.close();
+});

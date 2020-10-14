@@ -27,7 +27,7 @@ class FunctionCoder {
     this.name = name; // example: "add"
     this.fullName = formatFullName({ name, inputs }); // example: "add(uint number, uint count)"
     this.type = formatType({ name, inputs }); // example: "add(uint,uint)"
-    this.signature = format.hex(sign.sha3(this.type)).slice(0, 10); // example: "0xb8966352"
+    this.signature = format.hex(sign.keccak256(this.type)).slice(0, 10); // example: "0xb8966352"
 
     this.inputCoder = valueCoder({ type: 'tuple', components: inputs });
     this.outputCoder = valueCoder({ type: 'tuple', components: outputs });

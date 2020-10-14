@@ -1,4 +1,5 @@
-const { sha3, ecdsaSign, ecdsaRecover, privateKeyToAddress, rlpEncode } = require('./util/sign');
+const { keccak256, ecdsaSign, ecdsaRecover, privateKeyToAddress } = require('./util/sign');
+const rlp = require('./util/rlp');
 const format = require('./util/format');
 
 class Transaction {
@@ -46,7 +47,7 @@ class Transaction {
    */
   get hash() {
     try {
-      return format.hex(sha3(this.encode(true)));
+      return format.hex(keccak256(this.encode(true)));
     } catch (e) {
       return undefined;
     }
@@ -61,7 +62,7 @@ class Transaction {
   sign(privateKey) {
     const privateKeyBuffer = format.hexBuffer(privateKey);
     const addressBuffer = privateKeyToAddress(privateKeyBuffer);
-    const { r, s, v } = ecdsaSign(sha3(this.encode(false)), privateKeyBuffer);
+    const { r, s, v } = ecdsaSign(keccak256(this.encode(false)), privateKeyBuffer);
 
     this.from = format.address(addressBuffer);
     this.r = format.hex(r);
@@ -77,7 +78,7 @@ class Transaction {
    * @return {string}
    */
   recover() {
-    const publicKey = ecdsaRecover(sha3(this.encode(false)), {
+    const publicKey = ecdsaRecover(keccak256(this.encode(false)), {
       r: format.hexBuffer(this.r),
       s: format.hexBuffer(this.s),
       v: format.uInt(this.v),
@@ -98,7 +99,7 @@ class Transaction {
       ? [[nonce, gasPrice, gas, to, value, storageLimit, epochHeight, chainId, data], v, r, s]
       : [nonce, gasPrice, gas, to, value, storageLimit, epochHeight, chainId, data];
 
-    return rlpEncode(raw);
+    return rlp.encode(raw);
   }
 
   /**

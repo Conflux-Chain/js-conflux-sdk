@@ -79,7 +79,7 @@ class BytesCoder extends BaseCoder {
       coder: this,
     });
 
-    return sign.sha3(value);
+    return sign.keccak256(value);
   }
 
   decodeTopic(hex) {

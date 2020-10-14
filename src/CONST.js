@@ -27,10 +27,34 @@ const EPOCH_NUMBER = {
   EARLIEST: 'earliest',
 };
 
+/**
+ * min gas price for transaction
+ *
+ * @type {number} 1
+ */
+const MIN_GAS_PRICE = 1;
+
+/**
+ * gas use for pure transfer transaction
+ *
+ * @type {number} 2100
+ */
+const TRANSACTION_GAS = 21000;
+
+/**
+ * storage limit for pure transfer transaction
+ *
+ * @type {number} 0
+ */
+const TRANSACTION_STORAGE_LIMIT = 0;
+
 module.exports = {
   WORD_BYTES,
   WORD_CHARS,
   UINT_BOUND,
   MAX_UINT,
   EPOCH_NUMBER,
+  MIN_GAS_PRICE,
+  TRANSACTION_GAS,
+  TRANSACTION_STORAGE_LIMIT,
 };
