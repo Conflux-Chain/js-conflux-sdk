@@ -151,6 +151,28 @@ test('epochNumber', () => {
   expect(() => format.epochNumber('LATEST_MINED')).toThrow('not equal latest_mined');
 });
 
+test('hex40', () => {
+  expect(format.hex40(HEX_40)).toEqual(HEX_40);
+  expect(format.hex40(HEX_40.toUpperCase())).toEqual(HEX_40);
+  expect(() => format.hex40(HEX_64)).toThrow('not match hex40');
+
+  expect(format.checksumAddress('0x1b716c51381e76900ebaa7999a488511a4e1fd0a'))
+    .toEqual('0x1B716c51381e76900EBAA7999A488511A4E1fD0a');
+  expect(format.checksumAddress('0X1B716C51381E76900EBAA7999A488511A4E1FD0A'))
+    .toEqual('0x1B716c51381e76900EBAA7999A488511A4E1fD0a');
+  expect(format.checksumAddress('0x1B716c51381e76900EBAA7999A488511A4E1fD0A'))
+    .toEqual('0x1B716c51381e76900EBAA7999A488511A4E1fD0a');
+
+  expect(format.address('0x1b716c51381e76900ebaa7999a488511a4e1fd0a'))
+    .toEqual('0x1b716c51381e76900ebaa7999a488511a4e1fd0a');
+  expect(format.address('0X1B716C51381E76900EBAA7999A488511A4E1FD0A'))
+    .toEqual('0x1b716c51381e76900ebaa7999a488511a4e1fd0a');
+  expect(format.address('0x1B716c51381e76900EBAA7999A488511A4E1fD0a'))
+    .toEqual('0x1b716c51381e76900ebaa7999a488511a4e1fd0a');
+  expect(() => format.address('0x1B716c51381e76900EBAA7999A488511A4E1fD0A'))
+    .toThrow('checksum error');
+});
+
 test('hex64', () => {
   expect(format.hex64(HEX_64)).toEqual(HEX_64);
   expect(() => format.hex64(HEX_40)).toThrow('not match hex64');
