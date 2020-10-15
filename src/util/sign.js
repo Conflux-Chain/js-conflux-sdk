@@ -21,18 +21,20 @@ function keccak256(buffer) {
 /**
  * Makes a checksum address
  *
+ * > Note: not support [RSKIP60](https://github.com/rsksmart/RSKIPs/blob/master/IPs/RSKIP60.md) yet
+ *
  * @param address {string} - Hex string
  * @return {string}
  *
  * @example
- * > checksumAddress('0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359')
- "0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359"
+ * > checksumAddress('0x1b716c51381e76900ebaa7999a488511a4e1fd0a')
+ "0x1B716c51381e76900EBAA7999A488511A4E1fD0a"
  */
 function checksumAddress(address) {
-  address = address.toLowerCase().replace('0x', '');
+  const string = address.toLowerCase().replace('0x', '');
 
-  const hash = keccak256(Buffer.from(address)).toString('hex');
-  const sequence = Object.entries(address).map(([index, char]) => {
+  const hash = keccak256(Buffer.from(string)).toString('hex');
+  const sequence = Object.entries(string).map(([index, char]) => {
     return parseInt(hash[index], 16) >= 8 ? char.toUpperCase() : char;
   });
   return `0x${sequence.join('')}`;

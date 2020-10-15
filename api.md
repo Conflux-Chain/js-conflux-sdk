@@ -116,6 +116,7 @@ keywords:
             - [(static)epochNumber](#util/format.js/format/(static)epochNumber)
             - [(static)hex](#util/format.js/format/(static)hex)
             - [(static)address](#util/format.js/format/(static)address)
+            - [(static)checksumAddress](#util/format.js/format/(static)checksumAddress)
             - [(static)blockHash](#util/format.js/format/(static)blockHash)
             - [(static)transactionHash](#util/format.js/format/(static)transactionHash)
             - [(static)privateKey](#util/format.js/format/(static)privateKey)
@@ -2098,6 +2099,9 @@ arg  | `number,JSBI,string,Buffer,boolean,null` | true     |         |
 
 #### format.address <a id="util/format.js/format/(static)address"></a>
 
+Checks if a given string is a valid address.
+It will also check the checksum, if the address has upper and lowercase letters.
+
 * **Parameters**
 
 Name | Type            | Required | Default | Description
@@ -2115,6 +2119,31 @@ arg  | `string,Buffer` | true     |         |
  "0x0123456789012345678901234567890123456789"
 > format.address('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
  Error("not match address")
+```
+
+#### format.checksumAddress <a id="util/format.js/format/(static)checksumAddress"></a>
+
+Will convert an upper or lowercase address to a checksum address.
+
+* **Parameters**
+
+Name | Type            | Required | Default | Description
+-----|-----------------|----------|---------|------------
+arg  | `string,Buffer` | true     |         |
+
+* **Returns**
+
+`string` Checksum address hex string
+
+* **Examples**
+
+```
+> format.checksumAddress('0x1b716c51381e76900ebaa7999a488511a4e1fd0a')
+ "0x1B716c51381e76900EBAA7999A488511A4E1fD0a"
+> format.checksumAddress('0X1B716C51381E76900EBAA7999A488511A4E1FD0A')
+ "0x1B716c51381e76900EBAA7999A488511A4E1fD0a"
+> format.checksumAddress('0x1B716c51381e76900EBAA7999A488511A4E1fD0A')
+ "0x1B716c51381e76900EBAA7999A488511A4E1fD0a"
 ```
 
 #### format.blockHash <a id="util/format.js/format/(static)blockHash"></a>
@@ -2315,6 +2344,8 @@ buffer | `Buffer` | true     |         |
 
 Makes a checksum address
 
+> Note: not support [RSKIP60](https://github.com/rsksmart/RSKIPs/blob/master/IPs/RSKIP60.md) yet
+
 * **Parameters**
 
 Name    | Type     | Required | Default | Description
@@ -2328,8 +2359,8 @@ address | `string` | true     |         | Hex string
 * **Examples**
 
 ```
-> checksumAddress('0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359')
- "0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359"
+> checksumAddress('0x1b716c51381e76900ebaa7999a488511a4e1fd0a')
+ "0x1B716c51381e76900EBAA7999A488511A4E1fD0a"
 ```
 
 ----------------------------------------
