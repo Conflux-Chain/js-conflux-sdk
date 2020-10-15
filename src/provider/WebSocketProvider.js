@@ -4,40 +4,38 @@ const BaseProvider = require('./BaseProvider');
 const { awaitTimeout } = require('../util');
 
 class Client extends websocket.client {
-  constructor({ url, ...options }) {
+  constructor({ url: requestUrl, ...options }) {
     super(options);
-    this.url = url;
-
-    this.once('connect', connection => {
-      connection.send = promisify(connection.send);
-      connection.on('message', ({ utf8Data, binaryData }) => this.emit('message', utf8Data || binaryData));
-      this.connection = connection;
-    });
-
-    this.once('connectFailed', e => {
-      throw e;
-    });
+    this.requestUrl = requestUrl;
+    this.connection = null;
   }
 
-  async connected() {
-    if (!this.connection) {
-      this.connect(this.url);
-      this.connection = { connected: false };
-    }
+  connect(...args) {
+    return new Promise((resolve, reject) => {
+      super.connect(...args);
 
-    if (!this.connection.connected) {
-      await new Promise(resolve => this.once('connect', resolve));
-    }
+      this.once('connect', connection => {
+        connection.send = promisify(connection.send);
+        connection.on('message', ({ utf8Data, binaryData }) => this.emit('message', utf8Data || binaryData));
+        connection.once('close', (..._args) => this.emit('close', ..._args));
+        resolve(connection);
+      });
+
+      this.once('connectFailed', reject);
+    });
   }
 
   async send(...args) {
-    await this.connected();
+    if (!this.connection) {
+      this.connection = await this.connect(this.requestUrl);
+    }
     return this.connection.send(...args);
   }
 
   close() {
-    if (this.connection && this.connection.connected) {
+    if (this.connection) {
       this.connection.close();
+      this.connection = null;
     }
   }
 }
@@ -50,6 +48,7 @@ class WebSocketProvider extends BaseProvider {
     super(options);
 
     this.client = new Client(options);
+    this.client.on('close', (...args) => this.emit('close', ...args));
     this.client.on('message', json => {
       const data = JSON.parse(json);
       if (Array.isArray(data)) {
@@ -69,19 +68,34 @@ class WebSocketProvider extends BaseProvider {
     }
   }
 
+  _awaitId(id) {
+    return new Promise((resolve, reject) => {
+      const onClose = (code, message) => {
+        this.removeAllListeners(id);
+        reject(new Error(message));
+      };
+
+      const onData = data => {
+        this.removeListener('close', onClose);
+        resolve(data);
+      };
+
+      this.once('close', onClose);
+      this.once(id, onData);
+    });
+  }
+
   async request(data) {
     await this.client.send(JSON.stringify(data));
 
-    const promise = new Promise(resolve => this.once(data.id, resolve));
-    return await awaitTimeout(promise, this.timeout) || {};
+    return await awaitTimeout(this._awaitId(data.id), this.timeout) || {};
   }
 
   async requestBatch(dataArray) {
     await this.client.send(JSON.stringify(dataArray));
 
     return Promise.all(dataArray.map(async data => {
-      const promise = new Promise(resolve => this.once(data.id, resolve));
-      return awaitTimeout(promise, this.timeout);
+      return awaitTimeout(this._awaitId(data.id), this.timeout); // timeout for each request
     }));
   }
 
