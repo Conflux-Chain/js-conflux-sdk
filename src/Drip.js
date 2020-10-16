@@ -17,7 +17,7 @@ class Drip extends String {
    [String (Drip): '171000000000000000000']
    */
   static fromCFX(value) {
-    return new this(format.big(value).times(1e18));
+    return new this(format.big(value).times(1e18).toFixed());
   }
 
   /**
@@ -33,7 +33,7 @@ class Drip extends String {
    [String (Drip): '171000000000']
    */
   static fromGDrip(value) {
-    return new this(format.big(value).times(1e9));
+    return new this(format.big(value).times(1e9).toFixed());
   }
 
   /**
@@ -47,7 +47,7 @@ class Drip extends String {
    [String (Drip): '171']
    */
   constructor(value) {
-    super(format.bigUInt(value).toString());
+    super(format.bigUInt(value).toString(10));
   }
 
   /**
