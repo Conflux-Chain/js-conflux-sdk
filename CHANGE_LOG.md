@@ -2,6 +2,16 @@
 
 ## v1.0.0-beta.0
 
+* add `defaultGasRatio` and `defaultStorageLimitRatio`
+
+```
+conflux = new Conflux({
+  defaultGasRatio: 1.1,
+  defaultStorageLimitRatio: 1.1,
+  ...
+})
+```
+
 * return string instance of JSBI
 
 return a JSBI.BigInt is not friendly struct to print and use.

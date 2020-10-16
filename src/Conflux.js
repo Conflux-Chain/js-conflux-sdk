@@ -14,8 +14,11 @@ const Subscription = require('./subscribe/Subscription');
 class Conflux {
   /**
    * @param [options] {object} - Conflux and Provider constructor options.
-   * @param [options.url] {string} - Url of Conflux node to connect.
    * @param [options.defaultGasPrice] {string|number} - The default gas price in drip to use for transactions.
+   * @param [options.defaultGasRatio=1.1] {number} - The ratio to multiply by gas.
+   * @param [options.defaultStorageRatio=1.1] {number} - The ratio to multiply by storageLimit.
+   * @param [options.url] {string} - Url of Conflux node to connect.
+   * @param [options.timeout] {number} - Request time out in ms
    * @param [options.logger] {Object} - Logger object with 'info' and 'error' method.
    * @example
    * > const { Conflux } = require('js-conflux-sdk');
@@ -28,7 +31,12 @@ class Conflux {
      logger: console,
    });
    */
-  constructor({ defaultGasPrice, ...rest } = {}) {
+  constructor({
+    defaultGasPrice,
+    defaultGasRatio = 1.1,
+    defaultStorageRatio = 1.1,
+    ...rest
+  } = {}) {
     /**
      * Provider for rpc call
      *
@@ -51,6 +59,34 @@ class Conflux {
      * @type {number|string}
      */
     this.defaultGasPrice = defaultGasPrice;
+
+    /**
+     * If transaction.gas is undefined, gas will be set by estimate,
+     * cause gas used might be change during `estimateGasAndCollateral` and `sendTransaction`,
+     * estimate value need to multiply by defaultGasRatio (>1.0) in case of gas not enough.
+     *
+     * > transaction.gas = estimate.gasUsed * defaultGasRatio
+     *
+     * Default gas price for following methods:
+     * - `Conflux.sendTransaction`
+     *
+     * @type {number}
+     */
+    this.defaultGasRatio = defaultGasRatio;
+
+    /**
+     * If transaction.storageLimit is undefined, storageLimit will be set by estimate,
+     * cause storage limit might be change during `estimateGasAndCollateral` and `sendTransaction`,
+     * estimate value need to multiply by defaultStorageRatio (>1.0) in case of storageLimit not enough.
+     *
+     * > transaction.storageLimit = estimate.storageCollateralized * defaultStorageRatio
+     *
+     * Default gas price for following methods:
+     * - `Conflux.sendTransaction`
+     *
+     * @type {number}
+     */
+    this.defaultStorageRatio = defaultStorageRatio;
 
     this.sendRawTransaction = this._decoratePendingTransaction(this.sendRawTransaction);
     this.sendTransaction = this._decoratePendingTransaction(this.sendTransaction);
@@ -662,8 +698,8 @@ class Conflux {
 
       if (options.data) {
         const { gasUsed, storageCollateralized } = await this.estimateGasAndCollateral(options);
-        gas = gasUsed;
-        storageLimit = storageCollateralized;
+        gas = format.big(gasUsed).times(this.defaultGasRatio).toFixed(0);
+        storageLimit = format.big(storageCollateralized).times(this.defaultStorageRatio).toFixed(0);
       } else {
         gas = CONST.TRANSACTION_GAS;
         storageLimit = CONST.TRANSACTION_STORAGE_LIMIT;
@@ -923,14 +959,16 @@ class Conflux {
    * Virtually call a contract, return the estimate gas used and storage collateralized.
    *
    * @param options {object} - See [format.estimateTx](#util/format.js/estimateTx)
+   * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
    * @return {Promise<object>} A estimate result object:
    * - `BigInt` gasUsed: The gas used.
    * - `BigInt` storageCollateralized: The storage collateralized in Byte.
    */
-  async estimateGasAndCollateral(options) {
+  async estimateGasAndCollateral(options, epochNumber) {
     try {
       const result = await this.provider.call('cfx_estimateGasAndCollateral',
         format.estimateTx(options),
+        format.epochNumber.$or(undefined)(epochNumber),
       );
       return format.estimate(result);
     } catch (e) {

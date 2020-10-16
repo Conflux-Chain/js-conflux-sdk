@@ -14,6 +14,8 @@ keywords:
         - [provider](#Conflux.js/Conflux/provider)
         - [wallet](#Conflux.js/Conflux/wallet)
         - [defaultGasPrice](#Conflux.js/Conflux/defaultGasPrice)
+        - [defaultGasRatio](#Conflux.js/Conflux/defaultGasRatio)
+        - [defaultStorageRatio](#Conflux.js/Conflux/defaultStorageRatio)
         - [Contract](#Conflux.js/Conflux/Contract)
         - [InternalContract](#Conflux.js/Conflux/InternalContract)
         - [close](#Conflux.js/Conflux/close)
@@ -167,12 +169,15 @@ A sdk of conflux.
 
 * **Parameters**
 
-Name                    | Type            | Required | Default | Description
-------------------------|-----------------|----------|---------|-------------------------------------------------------
-options                 | `object`        | false    |         | Conflux and Provider constructor options.
-options.url             | `string`        | false    |         | Url of Conflux node to connect.
-options.defaultGasPrice | `string,number` | false    |         | The default gas price in drip to use for transactions.
-options.logger          | `Object`        | false    |         | Logger object with 'info' and 'error' method.
+Name                        | Type            | Required | Default | Description
+----------------------------|-----------------|----------|---------|-------------------------------------------------------
+options                     | `object`        | false    |         | Conflux and Provider constructor options.
+options.defaultGasPrice     | `string,number` | false    |         | The default gas price in drip to use for transactions.
+options.defaultGasRatio     | `number`        | false    | 1.1     | The ratio to multiply by gas.
+options.defaultStorageRatio | `number`        | false    | 1.1     | The ratio to multiply by storageLimit.
+options.url                 | `string`        | false    |         | Url of Conflux node to connect.
+options.timeout             | `number`        | false    |         | Request time out in ms
+options.logger              | `Object`        | false    |         | Logger object with 'info' and 'error' method.
 
 * **Examples**
 
@@ -204,6 +209,32 @@ Wallet for `sendTransaction` to get `Account` by `from` field
 ### ~~Conflux.prototype.defaultGasPrice~~ <a id="Conflux.js/Conflux/defaultGasPrice"></a>
 
 `number,string`
+
+Default gas price for following methods:
+- `Conflux.sendTransaction`
+
+### Conflux.prototype.defaultGasRatio <a id="Conflux.js/Conflux/defaultGasRatio"></a>
+
+`number`
+
+If transaction.gas is undefined, gas will be set by estimate,
+cause gas used might be change during `estimateGasAndCollateral` and `sendTransaction`,
+estimate value need to multiply by defaultGasRatio (>1.0) in case of gas not enough.
+
+> transaction.gas = estimate.gasUsed * defaultGasRatio
+
+Default gas price for following methods:
+- `Conflux.sendTransaction`
+
+### Conflux.prototype.defaultStorageRatio <a id="Conflux.js/Conflux/defaultStorageRatio"></a>
+
+`number`
+
+If transaction.storageLimit is undefined, storageLimit will be set by estimate,
+cause storage limit might be change during `estimateGasAndCollateral` and `sendTransaction`,
+estimate value need to multiply by defaultStorageRatio (>1.0) in case of storageLimit not enough.
+
+> transaction.storageLimit = estimate.storageCollateralized * defaultStorageRatio
 
 Default gas price for following methods:
 - `Conflux.sendTransaction`
@@ -1028,9 +1059,10 @@ Virtually call a contract, return the estimate gas used and storage collateraliz
 
 * **Parameters**
 
-Name    | Type     | Required | Default | Description
---------|----------|----------|---------|----------------------------------------------------
-options | `object` | true     |         | See [format.estimateTx](#util/format.js/estimateTx)
+Name        | Type            | Required | Default        | Description
+------------|-----------------|----------|----------------|----------------------------------------------------
+options     | `object`        | true     |                | See [format.estimateTx](#util/format.js/estimateTx)
+epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](#util/format.js/epochNumber)
 
 * **Returns**
 

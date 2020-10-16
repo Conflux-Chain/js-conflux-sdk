@@ -177,10 +177,10 @@ test('sendTransaction auto', async () => {
     chainId: 1,
     epochHeight: 1000,
     from: account.address,
-    gas: format.bigUInt(1024),
+    gas: Math.round(1024 * 1.1).toString(),
     gasPrice: 10,
     nonce: 100,
-    storageLimit: format.bigUInt(2048),
+    storageLimit: Math.round(2048 * 1.1).toString(),
     data: '0xabcd',
   });
 
@@ -197,7 +197,7 @@ test('sendTransaction auto', async () => {
     gas: 1000,
     gasPrice: 10,
     nonce: 100,
-    storageLimit: format.bigUInt(2048),
+    storageLimit: Math.round(2048 * 1.1).toString(),
     data: '0xabcd',
   });
 
@@ -211,7 +211,7 @@ test('sendTransaction auto', async () => {
     chainId: 1,
     epochHeight: 1000,
     from: account.address,
-    gas: format.bigUInt(1024),
+    gas: Math.round(1024 * 1.1).toString(),
     gasPrice: 10,
     nonce: 100,
     storageLimit: 2000,
