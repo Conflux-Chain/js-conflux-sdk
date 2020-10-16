@@ -1,12 +1,12 @@
 /* eslint-disable */
-const { Conflux, Transaction } = require('../src'); // require('js-conflux-sdk');
+const { Conflux, Transaction, format } = require('../src'); // require('js-conflux-sdk');
 const { abi, bytecode } = require('./contract/miniERC20.json');
 
 const conflux = new Conflux({ url: 'http://testnet-jsonrpc.conflux-chain.org:12537' });
-const accountAlice = conflux.Account({ privateKey: '0xa816a06117e572ca7ae2f786a046d2bc478051d0717bf5cc4f5397923258d393' });
+const accountAlice = conflux.wallet.addPrivateKey('0xa816a06117e572ca7ae2f786a046d2bc478051d0717bf5cc4f5397923258d393');
 const addressBob = '0x1ead8630345121d19ee3604128e5dc54b36e8ea6';
 const miniERC20 = conflux.Contract({ abi, bytecode }); // or `conflux.Contract({ abi, bytecode, address })` for existed contract
-miniERC20.address = '0x8fad845b67532204a20bd54481a819fe6d0df02e'; // patch address from `deployContract`
+miniERC20.address = '0x8ba2e83e8d58ad37c91ad72ea35961846b16793b'; // patch address from `deployContract`
 
 function showContract() {
   console.log(miniERC20);
@@ -67,27 +67,29 @@ async function deployContract() {
   send constructor encoded transaction to deploy a contract,
   await till transaction `executed` to get receipt.
    */
-  const receipt = await accountAlice.sendTransaction(
-    miniERC20.constructor('MiniERC20', 18, 'MC', 10000),
-  ).executed();
+  const receipt = await miniERC20
+    .constructor('MiniERC20', 18, 'MC', 10000)
+    .sendTransaction({ from: accountAlice })
+    .executed();
 
   console.log('receipt', JSON.stringify(receipt, null, 2));
-  // outcomeStatus == 0 means success, got created contract address '0x8fad845b67532204a20bd54481a819fe6d0df02e'
+  // outcomeStatus == 0 means success, got created contract address '0x8ba2e83e8d58ad37c91ad72ea35961846b16793b'
   /*
   receipt {
     "index": 0,
-    "epochNumber": 1080299,
+    "epochNumber": 711763,
     "outcomeStatus": 0,
     "gasUsed": "1054467",
     "gasFee": "1054467000000000",
-    "blockHash": "0xd08a453c13b077a58cfe36b63c7664cfbef04cf98cd55e71ab355834812bc08f",
-    "contractCreated": "0x8fad845b67532204a20bd54481a819fe6d0df02e",
+    "blockHash": "0xb70ae9034ee2393f02d9afa4c5b2624f17f78ebdc06f6ec00c9421246fde1717",
+    "contractCreated": "0x8ba2e83e8d58ad37c91ad72ea35961846b16793b",
     "from": "0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b",
     "logs": [],
     "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-    "stateRoot": "0x7dab730adc3487a3948c51f402e8e61d63a8d128ab175b2b7c8a1008feb80ebb",
+    "stateRoot": "0x27ef34b1b70e3ee86d3154086c79d9ec8e391e33ffad046f232e47826079237a",
     "to": null,
-    "transactionHash": "0x46b56dcd4351eea1ed0040e8394179380e94c363dbd5679c47964ce4a2be3b3a"
+    "transactionHash": "0x0215231b0f9f108dee4fc2a7b12f32ab5e14992d59506c05f96410fe6715c1d1",
+    "txExecErrorMsg": null
   }
    */
 }
@@ -106,7 +108,7 @@ async function callMethod() {
   console.log(name); // "MiniERC20"
 
   const balance = await miniERC20.balanceOf(accountAlice); // call method with parameters
-  console.log(balance.toString()); // 10000
+  console.log(balance); // 10000
 }
 
 /*
@@ -124,7 +126,7 @@ async function callMethodWithOptions() {
    method required `from` option to check balance.
    set extra options with `.options({...})` to bind default value
    */
-  const result = await miniERC20.transfer(addressBob, 1).options({ from: accountAlice.address });
+  const result = await miniERC20.transfer(addressBob, 1).call({ from: accountAlice.address });
   console.log(result); // true
 }
 
@@ -153,54 +155,34 @@ function methodCreateReturnedTransaction() {
   }
   */
 
-  const newTx = tx.options({ from: accountAlice.address, gasPrice: 100 }); // return a new transaction instance
-  console.log(newTx instanceof Transaction); // true
-  console.log(newTx); // add `from`, `gasPrice` by `.options()`
-  /*
-  MethodTransaction {
-    from: '0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b',
-    nonce: undefined,
-    gasPrice: 100,
-    gas: undefined,
-    to: '0x8fad845b67532204a20bd54481a819fe6d0df02e',
-    value: undefined,
-    storageLimit: undefined,
-    epochHeight: undefined,
-    chainId: undefined,
-    data: '0xa9059cbb0000000000000000000000001ead8630345121d19ee3604128e5dc54b36e8ea60000000000000000000000000000000000000000000000000000000000000001',
-    v: undefined,
-    r: undefined,
-    s: undefined
-  }
-  */
-
   const { data } = miniERC20.transfer(addressBob, 1);
   console.log(data); // use method to gen encoded data only
   // 0xa9059cbb0000000000000000000000001ead8630345121d19ee3604128e5dc54b36e8ea60000000000000000000000000000000000000000000000000000000000000001
 }
 
 async function sendMethodTransaction() {
-  console.log(`${await miniERC20.balanceOf(accountAlice)}`); // 10000
-  console.log(`${await miniERC20.balanceOf(addressBob)}`); // 0
+  console.log(await miniERC20.balanceOf(accountAlice)); // 10000
+  console.log(await miniERC20.balanceOf(addressBob)); // 0
 
   // Alice sign and send transaction to give 1 MiniERC20 coin (MC) to Bob
-  const receipt = await accountAlice.sendTransaction(
-    miniERC20.transfer(addressBob, 1),
-  ).executed();
+  const receipt = await miniERC20
+    .transfer(addressBob, 1)
+    .sendTransaction({ from: accountAlice.address })
+    .executed();
   console.log('receipt', JSON.stringify(receipt, null, 2));
   /*
   receipt {
     "index": 0,
-    "epochNumber": 1084606,
+    "epochNumber": 712300,
     "outcomeStatus": 0,
     "gasUsed": "36095",
     "gasFee": "36095000000000",
-    "blockHash": "0x18c2a27de3b8254f17dc72921b670b07a494413c3dcd48a23380f3361e212563",
+    "blockHash": "0xc200d8effdaa334bd1520407c76d97f65ee262592a6cba4742a8626d631a2f90",
     "contractCreated": null,
     "from": "0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b",
     "logs": [
       {
-        "address": "0x8fad845b67532204a20bd54481a819fe6d0df02e",
+        "address": "0x8ba2e83e8d58ad37c91ad72ea35961846b16793b",
         "data": "0x0000000000000000000000000000000000000000000000000000000000000001",
         "topics": [
           "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
@@ -209,15 +191,16 @@ async function sendMethodTransaction() {
         ]
       }
     ],
-    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000080000000000000000000000200000000000020000000000000000000000000000000000000000000010000000000000000000010000000000000000000000000002000000000000000000000000000000000000000000800000000000000000000000800000000000000000020000000000000000000000000000000000",
-    "stateRoot": "0x084de4f925a12bc5af3b917a4677093f0b9a1e672d0e61f357b8f7bdfcdbe8c4",
-    "to": "0x8fad845b67532204a20bd54481a819fe6d0df02e",
-    "transactionHash": "0xf44a127d9263c018bcc6b2af7e9a58e8b437c84a2bbb9fd73dea7e9a8aec2d4f"
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000010000000000000080000000800000000000000200000000000020000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000000800000000000000000020000000000000000000000000000000000",
+    "stateRoot": "0x2e4df17d8d8acb7d227820e5bc428fd4362745037c029087f974978b8081a4d7",
+    "to": "0x8ba2e83e8d58ad37c91ad72ea35961846b16793b",
+    "transactionHash": "0xde4849d5d22e36706830f35f4b7c4b7cc8328547c297288d0cb761a49f378596",
+    "txExecErrorMsg": null
   }
    */
 
-  console.log(`${await miniERC20.balanceOf(accountAlice)}`); // 9999
-  console.log(`${await miniERC20.balanceOf(addressBob)}`); // 1
+  console.log(await miniERC20.balanceOf(accountAlice)); // 9999
+  console.log(await miniERC20.balanceOf(addressBob)); // 1
 }
 
 /*
@@ -229,19 +212,12 @@ async function sendMethodTransaction() {
 
  but user should use estimate.gasUsed here
  */
-async function sendMethodTransactionWithOptions() {
-  const tx = miniERC20.transfer(addressBob, 1);
+async function sendMethodTransactionWithEstimate() {
+  const methodTx = miniERC20.transfer(addressBob, 1);
+  console.log(methodTx.constructor.name); // "MethodTransaction"
+  console.log(methodTx instanceof Transaction); // true
 
-  const estimateWithOutFrom = await conflux.estimateGasAndCollateral(tx);
-  console.log(JSON.stringify(estimateWithOutFrom, null, 2));
-  /*
-  {
-    "gasUsed": "23650",
-    "storageCollateralized": "0"
-  }
-  */
-
-  const estimate = await conflux.estimateGasAndCollateral(tx.options({ from: accountAlice }));
+  const estimate = await methodTx.estimateGasAndCollateral({ from: accountAlice });
   console.log(JSON.stringify(estimate, null, 2));
   /*
   {
@@ -250,31 +226,28 @@ async function sendMethodTransactionWithOptions() {
   }
    */
 
-  const nonce = await conflux.getNextNonce(accountAlice);
+  const receipt = await methodTx.sendTransaction({
+    from: accountAlice.address, // but `from` is unnecessary when actual send
+    nonce: await conflux.getNextNonce(accountAlice),
+    gas: format.big(estimate.gasUsed).times(1.1).toFixed(0), // you could multiply `gas` like this
+    storageLimit: estimate.storageCollateralized,
+    gasPrice: 1,
+  }).executed();
 
-  const receipt = await accountAlice.sendTransaction(
-    tx.options({
-      from: accountAlice.address, // but `from` is unnecessary when actual send (by PrivateKeyAccount)
-      nonce,
-      gas: estimate.gasUsed,
-      storageLimit: estimate.storageCollateralized,
-      gasPrice: 1,
-    }),
-  ).executed();
   console.log('receipt', JSON.stringify(receipt, null, 2));
   /*
   receipt {
     "index": 0,
-    "epochNumber": 1088131,
+    "epochNumber": 713890,
     "outcomeStatus": 0,
     "gasUsed": "36095",
     "gasFee": "36095",
-    "blockHash": "0x7c0cb6e144c888c19c20456bf66267f3a5bb86da8c50448bef96e680e59c17ef",
+    "blockHash": "0xde7807ecd87fe88513ebb93229fc026b9048dfce7a1515e6e35928498d6d644a",
     "contractCreated": null,
     "from": "0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b",
     "logs": [
       {
-        "address": "0x8fad845b67532204a20bd54481a819fe6d0df02e",
+        "address": "0x8ba2e83e8d58ad37c91ad72ea35961846b16793b",
         "data": "0x0000000000000000000000000000000000000000000000000000000000000001",
         "topics": [
           "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
@@ -283,10 +256,11 @@ async function sendMethodTransactionWithOptions() {
         ]
       }
     ],
-    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000080000000000000000000000200000000000020000000000000000000000000000000000000000000010000000000000000000010000000000000000000000000002000000000000000000000000000000000000000000800000000000000000000000800000000000000000020000000000000000000000000000000000",
-    "stateRoot": "0x747f923bca3f9afd95ce1c734a24d27daa23c5214cd2f31da2da18a286d2e406",
-    "to": "0x8fad845b67532204a20bd54481a819fe6d0df02e",
-    "transactionHash": "0x994907ba62493b57af905b799db0f57d1a271628edeafa849497d7496102e718"
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000010000000000000080000000800000000000000200000000000020000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000000800000000000000000020000000000000000000000000000000000",
+    "stateRoot": "0x36933825d7e407dc95cb9ca997f34d039a403422e4de3431edc7bb6355e09cd6",
+    "to": "0x8ba2e83e8d58ad37c91ad72ea35961846b16793b",
+    "transactionHash": "0xc34af56110beb61067aa110fd7fa3b4c5ea21078564991977161d4efbe53b9fe",
+    "txExecErrorMsg": null
   }
    */
 }
@@ -357,6 +331,7 @@ async function signAndSendMethodTransaction() {
     "stateRoot": "0x732dd8c11326fd3a5844905cf155fc240ac1aed5a93bab2dc5587267bc40d42f",
     "to": "0x8fad845b67532204a20bd54481a819fe6d0df02e",
     "transactionHash": "0x3ca6b95d2150fd163a86fc7a5bc70f8f4f0a39f316c1193a19277b008678ee1f"
+    "txExecErrorMsg": null
   }
    */
 }
@@ -367,7 +342,7 @@ async function signAndSendMethodTransaction() {
 async function getLogsOfTransfer() {
   const { address, topics } = miniERC20.Transfer(null, null, null); // any `_from`, any `_to`, any `_value`
 
-  const logs = await conflux.getLogs({ address, topics, fromEpoch: 1084606, toEpoch: 1091590 });
+  const logs = await conflux.getLogs({ address, topics, fromEpoch: 713890, toEpoch: 713890 });
   console.log(logs);
   /*
   [
@@ -391,7 +366,7 @@ async function getLogsOfTransfer() {
    */
 
   for (const log of logs) {
-    const eventArg = miniERC20.Transfer.decodeLog(log);
+    const eventArg = miniERC20.abi.decodeLog(log);
     console.log(eventArg);
     /*
     {
@@ -402,12 +377,12 @@ async function getLogsOfTransfer() {
       array: [
         '0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b',
         '0x1ead8630345121d19ee3604128e5dc54b36e8ea6',
-        JSBI(1) [ 1, sign: false ]
+        '1'
       ],
       object: {
         _from: '0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b',
         _to: '0x1ead8630345121d19ee3604128e5dc54b36e8ea6',
-        _value: JSBI(1) [ 1, sign: false ]
+        _value: '1'
       }
     }
     */
@@ -428,7 +403,7 @@ async function main() {
   // methodCreateReturnedTransaction();
 
   // await sendMethodTransaction();
-  // await sendMethodTransactionWithOptions();
+  // await sendMethodTransactionWithEstimate();
   // await signAndSendMethodTransaction();
 
   // await getLogsOfTransfer();

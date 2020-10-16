@@ -88,20 +88,22 @@ class Contract {
     const methodArray = lodash.map(abiTable.function, fragment => new ContractMethod(fragment, this, conflux));
     lodash.forEach(lodash.groupBy(methodArray, 'name'), (array, name) => {
       this[name] = array.length === 1 ? lodash.first(array) : new ContractMethodOverride(array, this, conflux);
-    });
-    methodArray.forEach(method => {
-      this[method.type] = method;
-      this[method.signature] = method; // signature for contract abi decoder to decode
+
+      array.forEach(method => {
+        this[method.type] = method;
+        this[method.signature] = method; // signature for contract abi decoder to decode
+      });
     });
 
     // event
     const eventArray = lodash.map(abiTable.event, fragment => new ContractEvent(fragment, this, conflux));
     lodash.forEach(lodash.groupBy(eventArray, 'name'), (array, name) => {
       this[name] = array.length === 1 ? lodash.first(array) : new ContractEventOverride(array, this, conflux);
-    });
-    eventArray.forEach(event => {
-      this[event.type] = event;
-      this[event.signature] = event; // signature for contract abi decoder to decode
+
+      array.forEach(event => {
+        this[event.type] = event;
+        this[event.signature] = event; // signature for contract abi decoder to decode
+      });
     });
   }
 }

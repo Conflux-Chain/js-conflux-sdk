@@ -76,13 +76,14 @@ const { Conflux, Drip } = require('js-conflux-sdk');
 
 async function main() {
   const conflux = new Conflux({ url: 'http://testnet-jsonrpc.conflux-chain.org:12537' });
-  const account = conflux.Account({ privateKey: PRIVATE_KEY }); // create account instance
+  const account = conflux.wallet.addPrivateKey(PRIVATE_KEY); // create account instance and add to wallet
   
-  const receipt = await account.sendTransaction({
+  const receipt = await conflux.sendTransaction({
+    from: account.address, // sender address which added into conflux.wallet
     to: ADDRESS, // receiver address
     value: Drip.fromCFX(0.1), // 0.1 CFX = 100000000000000000 Drip
   }).executed(); // wait till transaction executed and get receipt
-  
+
   console.log(receipt); // outcomeStatus 0 means success
   /*
     {
@@ -115,16 +116,15 @@ const { Conflux, Drip } = require('js-conflux-sdk');
 
 async function main() {
   const conflux = new Conflux({ url: 'http://testnet-jsonrpc.conflux-chain.org:12537' });
-  const account = conflux.Account({ privateKey: PRIVATE_KEY }); // create account instance
+  const account = conflux.wallet.addPrivateKey(PRIVATE_KEY); // create account instance and add to wallet
 
-  const to = ADDRESS;
-  const value = Drip.fromGDrip(100); // 100 GDrip = 100000000000 Drip
   const estimate = await conflux.estimateGasAndCollateral({ to, value });
   const status = await conflux.getStatus();
   
-  const txHash = await account.sendTransaction({
-    to,
-    value,
+  const txHash = await conflux.sendTransaction({
+    from: account.address, // or just `from: account` 
+    to: ADDRESS,
+    value: Drip.fromGDrip(100), // 100 GDrip = 100000000000 Drip
     gas: estimate.gasUsed,
     storageLimit: estimate.storageCollateralized,
     chainId: status.chainId,
@@ -136,7 +136,7 @@ async function main() {
   console.log(txHash);
   
   // you might need wait minute here...
-  await new Promise(resolve => setTimeout(resolve, 60*1000));
+  await new Promise(resolve => setTimeout(resolve, 30*1000));
   
   const transaction = await conflux.getTransactionByHash(txHash);
   console.log(transaction);
@@ -156,19 +156,12 @@ const { abi, bytecode } = MINI_ERC20; // see https://github.com/Conflux-Chain/js
 
 async function main() {
   const conflux = new Conflux({ url: 'http://testnet-jsonrpc.conflux-chain.org:12537' });
-  const account = conflux.Account({ privateKey: PRIVATE_KEY }); // create account instance
+  const account = conflux.wallet.addPrivateKey(PRIVATE_KEY); // create account instance and add to wallet
   const contract = conflux.Contract({ abi, bytecode });
 
-  const deployTransaction = contract.constructor('MiniERC20', 18, 'MC', 10000); // return a MethodTransaction instance
-  console.log(deployTransaction);
-  /*
-  {
-    to: null,
-    data: 0x608060405234801...,
-  }
-  */
-
-  const receipt = await account.sendTransaction(deployTransaction).executed();
+  const receipt = await contract.constructor('MiniERC20', 18, 'MC', 10000)
+    .sendTransaction({ from: account })
+    .executed();
   console.log(receipt);
   /*
   {
@@ -202,20 +195,19 @@ const { abi } = MINI_ERC20; // see https://github.com/Conflux-Chain/js-conflux-s
 
 async function main() {
   const conflux = new Conflux({ url: 'http://testnet-jsonrpc.conflux-chain.org:12537' });
-  const account = conflux.Account({ privateKey: PRIVATE_KEY }); // create account instance
+  const account = conflux.wallet.addPrivateKey(PRIVATE_KEY); // create account instance and add to wallet
   const contract = conflux.Contract({ abi, address: '0x8a9c270e1a99c05ca90ef0f0008b8f6444cf1a97' });
 
   const name = await contract.name(); // call method without arguments
   console.log(name); // MiniERC20
+  // use can set options by `contract.name().call({ from: account, ... })`
 
   const balance = await contract.balanceOf(account.address); // call method with arguments
   console.log(balance); // "10000" JSBI
 
-  const txHash = await account.sendTransaction(contract.transfer(ADDRESS, 10)); // send method transaction
+  const txHash = await contract.transfer(ADDRESS, 10).sendTransaction({ from: account }); // send method transaction
   console.log(txHash); // 0xb31eb095b62bed1ef6fee6b7b4ee43d4127e4b42411e95f761b1fdab89780f1a
-
-  // contract.transfer(ADDRESS, 10) is instance of MethodTransaction
-  // use can use contract.transfer(ADDRESS, 10).options({ gasPrice: 100, ... }) to set more options
+  // use can set options by `contract.transfer(ADDRESS, 10).sendTransaction({ from: account, gasPrice: <number>, ... })`
 }
 
 main();

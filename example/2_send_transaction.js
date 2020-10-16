@@ -1,12 +1,12 @@
 /* eslint-disable */
-const { Conflux, Transaction, Drip, util } = require('../src'); // require('js-conflux-sdk');
+const { Conflux, Transaction, Drip } = require('../src'); // require('js-conflux-sdk');
 
 const conflux = new Conflux({
   url: 'http://testnet-jsonrpc.conflux-chain.org:12537',
   // logger: console, // use console to print log
 });
 
-const accountAlice = conflux.Account({ privateKey: '0xa816a06117e572ca7ae2f786a046d2bc478051d0717bf5cc4f5397923258d393' });
+const accountAlice = conflux.wallet.addPrivateKey('0xa816a06117e572ca7ae2f786a046d2bc478051d0717bf5cc4f5397923258d393');
 const addressBob = '0x1ead8630345121d19ee3604128e5dc54b36e8ea6';
 
 /*
@@ -14,11 +14,12 @@ const addressBob = '0x1ead8630345121d19ee3604128e5dc54b36e8ea6';
  user only care about sender account, receiver address and value
  */
 async function sendTransactionSimple() {
-  console.log(`${await conflux.getBalance(accountAlice)} Drip`); // 96283101378499979000 Drip
-  console.log(`${await conflux.getBalance(addressBob)} Drip`); //                      0 Drip
+  console.log(await conflux.getBalance(accountAlice)); // 96283101378499979000
+  console.log(await conflux.getBalance(addressBob)); // 0
 
   // alice send some CFX to bob
-  const txHash = await accountAlice.sendTransaction({
+  const txHash = await conflux.sendTransaction({
+    from: accountAlice.address, // `conflux.wallet.has(accountAlice.address)` must be true
     to: addressBob,
     value: Drip.fromCFX(0.1), // 0.1 CFX = 100000000000000000 Drip
   });
@@ -27,7 +28,7 @@ async function sendTransactionSimple() {
 
   // you might need wait seconds here...
   console.log('waiting...');
-  await util.sleep(30 * 1000);
+  await new Promise(resolve => setTimeout(resolve, 30 * 1000));
 
   const transaction = await conflux.getTransactionByHash(txHash);
   console.log('transaction', JSON.stringify(transaction, null, 2));
@@ -74,8 +75,8 @@ async function sendTransactionSimple() {
   }
   */
 
-  console.log(`${await conflux.getBalance(accountAlice)} Drip`); // 96183080378499979000 Drip
-  console.log(`${await conflux.getBalance(addressBob)} Drip`); //     100000000000000000 Drip
+  console.log(await conflux.getBalance(accountAlice)); // 96183080378499979000
+  console.log(await conflux.getBalance(addressBob)); // 0
 }
 
 /*
@@ -92,6 +93,7 @@ async function sendTransactionComplete() {
   const nonce = await conflux.getNextNonce(accountAlice.address);
 
   const options = {
+    from: accountAlice.address,
     nonce,
     gasPrice,
     gas: estimate.gasUsed,
@@ -106,19 +108,20 @@ async function sendTransactionComplete() {
   console.log(JSON.stringify(options, null, 2));
   /*
   {
-    "nonce": "6",
-    "gasPrice": "1000000000",
+    "from": "0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b",
+    "nonce": "20",
+    "gasPrice": "1",
     "gas": "21000",
     "to": "0x1ead8630345121d19ee3604128e5dc54b36e8ea6",
     "value": "100000000000",
     "storageLimit": "0",
-    "epochHeight": 789222,
+    "epochHeight": 710101,
     "chainId": 1,
     "data": null
   }
    */
 
-  const txHash = await accountAlice.sendTransaction(options);
+  const txHash = await conflux.sendTransaction(options);
   console.log(txHash); // 0xc9eb9cb5d6d38de141f87be36510135d569b5a3d8313b7dc365988f4af717c32
 
   let receipt = null;
@@ -130,25 +133,26 @@ async function sendTransactionComplete() {
     }
 
     console.log('tx not executed');
-    await util.sleep(1000);
+    await new Promise(resolve => setTimeout(resolve, 1000));
   }
 
   console.log('receipt', JSON.stringify(receipt, null, 2));
   /*
   receipt {
-    "index": 0,
-    "epochNumber": 789225,
+    "index": 1,
+    "epochNumber": 710106,
     "outcomeStatus": 0,
     "gasUsed": "21000",
-    "gasFee": "21000000000000",
-    "blockHash": "0x4867c9486bd5ec6e92f6b135b3245a052267d534c043f5e0875e920d22ecce71",
+    "gasFee": "21000",
+    "blockHash": "0x200369f5def036b4bc7c58bbbc9b1ea036065c73c2aa0ffe79738f1ac7e718de",
     "contractCreated": null,
     "from": "0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b",
     "logs": [],
     "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-    "stateRoot": "0xb36206277e0597e4025cc91115a0dd3caaa5557fcf11d6aac2a5948428faa374",
+    "stateRoot": "0x46f33aab3426a61c34b2e0bf3c4b512b0c6d5911f8f13885816098c77edd2184",
     "to": "0x1ead8630345121d19ee3604128e5dc54b36e8ea6",
-    "transactionHash": "0x3c13cee1caa4848d2005dbf26c4952ecf9f43908d882d4868c871ade0d34977a"
+    "transactionHash": "0xb081916702938d6957c764d91f7e4cc6537ce8883aa5dc6f572011ef54d3ad19",
+    "txExecErrorMsg": null
   }
   */
 }
@@ -286,7 +290,8 @@ function signTransactionByPrivateKey() {
  */
 async function subscribeTransaction() {
   // NO await !!!
-  const pendingTransaction = accountAlice.sendTransaction({
+  const pendingTransaction = conflux.sendTransaction({
+    from: accountAlice,
     to: accountAlice, // to self as a example
     value: 0,
   }); // not send transaction yet
@@ -398,7 +403,7 @@ async function subscribeTransaction() {
 async function main() {
   // await sendTransactionSimple();
   // await sendTransactionComplete();
-  // await signTransactionManual();
+  // await signAndSendTransactionManual();
   signTransactionByPrivateKey();
   // await subscribeTransaction();
 }

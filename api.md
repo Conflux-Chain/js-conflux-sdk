@@ -779,7 +779,7 @@ else call `cfx_sendTransaction` and sign by remote wallet
 Name     | Type     | Required | Default | Description
 ---------|----------|----------|---------|--------------------------------------------
 options  | `object` | true     |         | See [format.sendTx](#util/format.js/sendTx)
-password | `string` | true     |         | Password for remote node.
+password | `string` | false    |         | Password for remote node.
 
 * **Returns**
 
