@@ -62,3 +62,31 @@ test('function', () => {
   expect(coder.decodeData(hex)).toEqual(params);
   expect(coder.decodeOutputs('0x0000000000000000000000000000000000000000000000000000000000000001')).toEqual(`${BigInt(1)}`);
 });
+
+test('function not inputs many outputs', () => {
+  const abi = {
+    name: 'func',
+    outputs: [
+      {
+        type: 'address',
+        name: 'account',
+      },
+      {
+        type: 'uint256',
+        name: 'number',
+      },
+    ],
+  };
+
+  const coder = new FunctionCoder(abi);
+
+  const tuple = coder.decodeOutputs('0x' +
+    '0000000000000000000000000123456789012345678901234567890123456789' +
+    '0000000000000000000000000000000000000000000000000000000000000001',
+  );
+  expect([...tuple]).toEqual(['0x0123456789012345678901234567890123456789', '1']);
+  expect(tuple.toObject()).toEqual({
+    account: '0x0123456789012345678901234567890123456789',
+    number: '1',
+  });
+});

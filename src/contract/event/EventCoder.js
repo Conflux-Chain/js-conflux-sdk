@@ -118,7 +118,7 @@ class EventCoder {
       coder: this,
     });
 
-    const stream = new HexStream(data);
+    const stream = new HexStream(data || '0x');
     const notIndexedNamedTuple = this.dataCoder.decode(stream);
     assert(stream.eof(), {
       message: 'hex length to large',
@@ -134,7 +134,7 @@ class EventCoder {
         const topic = topics[offset++]; // eslint-disable-line no-plusplus
         return coder.decodeTopic(topic);
       } else {
-        return notIndexedNamedTuple[component.name];
+        return notIndexedNamedTuple[component.name || index];
       }
     });
 
