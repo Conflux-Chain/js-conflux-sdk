@@ -65,8 +65,8 @@
   },
   "scripts": {
     "eslint": "eslint ./src ./test ./mock",
-    "build": "node development/build-frontend.js",
-    "document": "node development/document.js",
+    "build": "node scripts/build-frontend.js",
+    "document": "node scripts/document.js",
     "prepublishOnly": "npm run build",
     "test": "jest --coverage"
   }
