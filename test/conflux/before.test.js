@@ -328,7 +328,7 @@ test('estimateGasAndCollateral', async () => {
     data: undefined,
     chainId: undefined,
     epochHeight: undefined,
-  });
+  }, undefined);
 
   await conflux.estimateGasAndCollateral(
     {
@@ -351,7 +351,7 @@ test('estimateGasAndCollateral', async () => {
     data: '0x',
     chainId: 1,
     epochHeight: undefined,
-  });
+  }, undefined);
 
   call.mockRestore();
 });
