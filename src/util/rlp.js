@@ -81,4 +81,6 @@ function encodeArray(array) {
   return concat(encodeLength(buffer.length, ARRAY_OFFSET), buffer);
 }
 
+// TODO decode
+
 module.exports = { encode };

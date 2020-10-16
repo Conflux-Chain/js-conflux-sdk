@@ -1034,8 +1034,6 @@ class Conflux {
     return format.logs(result);
   }
 
-  // TODO recall failed tx 0xbbf1a43d2d7d51a33c15f87af1582e2d762b669db8aef2bc657458087b0f805c
-
   // ----------------------------- subscription -------------------------------
   /**
    * Subscribe event by name and got id, and provider will emit event by id
