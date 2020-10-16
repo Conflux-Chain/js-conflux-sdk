@@ -13,21 +13,45 @@ function listConfluxPrototypes() {
   console.log(Object.getOwnPropertyNames(conflux.constructor.prototype));
   /*
   [
+    'constructor',
+    'Contract',
+    'InternalContract',
+    'close',
+    'getClientVersion',
     'getStatus',
     'getGasPrice',
+    'getInterestRate',
+    'getAccumulateInterestRate',
     'getAccount',
     'getBalance',
+    'getStakingBalance',
     'getNextNonce',
+    'getAdmin',
     'getEpochNumber',
+    'getBlockByEpochNumber',
     'getBlocksByEpochNumber',
+    'getBlockRewardInfo',
+    'getBestBlockHash',
     'getBlockByHash',
+    'getBlockByHashWithPivotAssumption',
+    'getConfirmationRiskByHash',
     'getTransactionByHash',
     'getTransactionReceipt',
     'sendRawTransaction',
+    'sendTransaction',
+    'getCode',
+    'getStorageAt',
+    'getStorageRoot',
+    'getSponsorInfo',
+    'getCollateralForStorage',
     'call',
     'estimateGasAndCollateral',
-    'getLogs'
-    ...
+    'getLogs',
+    'subscribe',
+    'subscribeEpochs',
+    'subscribeNewHeads',
+    'subscribeLogs',
+    'unsubscribe'
   ]
   */
 }

@@ -7,10 +7,7 @@
  block.epochNumber => epoch
  */
 const JSBI = require('jsbi');
-const {
-  Conflux,
-  util: { format, sign },
-} = require('../src'); // require('js-conflux-sdk');
+const { Conflux, sign, format } = require('../src'); // require('js-conflux-sdk');
 
 const conflux = new Conflux({
   url: 'http://testnet-jsonrpc.conflux-chain.org:12537',
@@ -26,27 +23,30 @@ async function getGenesisBlock() {
     "epochNumber": 0,
     "blame": 0,
     "height": 0,
-    "size": 0,
+    "size": 108,
     "timestamp": 0,
     "gasLimit": "30000000",
+    "gasUsed": null,
     "difficulty": "0",
-    "transactions": [],
+    "transactions": [
+      "0x952535c89db77abac5006cc3a5020e9c1da9a23f616e0293e94a3fa380a5d9be"
+    ],
     "adaptive": false,
     "deferredLogsBloomHash": "0xd397b3b043d87fcd6fad1291ff0bfd16401c274896d8c63a923727f077b8e0b5",
     "deferredReceiptsRoot": "0x09f8709ea9f344a810811a373b30861568f5686e649d6177fd92ea2db7477508",
-    "deferredStateRoot": "0xb0c619be7029956fe5a960d078ee7592716ecda81fe4c780691ef2e24dd944b7",
-    "hash": "0x6926086503ad161f028632172745d3579c1dd33edc341b7062b8a1907b60a3fd",
-    "miner": "0x1000000000000000000000000000000000000060",
+    "deferredStateRoot": "0x867d0d102ed7eb638e25ab718c4ac4ba3d7fa0d87748382d9580b25f608dc80a",
+    "hash": "0x2cfd947cd88b0876a0c7e696698188f8ea3b82dcdc239e32255e6f046045f595",
+    "miner": "0x1000000000000000000000000000000000000100",
     "nonce": "0x0",
     "parentHash": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470",
     "powQuality": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
     "refereeHashes": [],
-    "transactionsRoot": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"
+    "transactionsRoot": "0x835cd391da58faedec5486f31c3392ed21386b3926d3ac5301c4c8af5cf8e27f"
   }
   */
 
   // genesisBlock.parentHash is not a block, but keccak of empty
-  console.log(genesisBlock.parentHash === format.hex(sign.sha3(''))); // true
+  console.log(genesisBlock.parentHash === format.hex(sign.keccak256(''))); // true
 
   const parent = await conflux.getBlockByHash(genesisBlock.parentHash);
   console.log(parent); // null
@@ -57,7 +57,7 @@ async function getGenesisBlock() {
  this example show how to find some useful info by txHash.
  */
 async function findInformationAboutTransaction() {
-  const txHash = '0xb2ba6cca35f0af99a9601d09ee19c1949d8130312550e3f5413c520c6d828f88';
+  const txHash = '0x288243d348cf4ab60ed87b20a0442eea8672feb452a1522f6ccaeea3df1a545d';
 
   const transaction = await conflux.getTransactionByHash(txHash);
   console.log(transaction);
@@ -70,9 +70,6 @@ async function findInformationAboutTransaction() {
 
   console.log(block.epochNumber === receipt.epochNumber); // true
   console.log(transaction.status === receipt.outcomeStatus); // true
-
-  // receipt.gasFee = transaction.gasPrice * receipt.gasUsed
-  console.log(JSBI.equal(receipt.gasFee, JSBI.multiply(transaction.gasPrice, receipt.gasUsed))); // true
 }
 
 async function main() {

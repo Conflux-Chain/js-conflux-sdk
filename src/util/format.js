@@ -473,9 +473,8 @@ format.block = parser({
   size: format.uInt,
   timestamp: format.uInt,
   gasLimit: format.bigUIntDec,
-  gasUsed: format.bigUIntDec.$or(undefined), // XXX: undefined before main net upgrade
+  gasUsed: format.bigUIntDec.$or(null).$or(undefined), // XXX: undefined before main net upgrade
   difficulty: format.bigUIntDec,
-  powQuality: format.bigUIntDec,
   transactions: [(format.transaction).$or(format.transactionHash)],
 });
 

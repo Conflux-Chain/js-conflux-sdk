@@ -7,8 +7,7 @@ class ErrorCoder extends FunctionCoder {
 
   decodeError(error) {
     try {
-      const hex = JSON.parse(error.data);
-      const { message } = this.decodeData(hex);
+      const { message } = this.decodeData(error.data);
       return new Error(message);
     } catch (e) {
       return error;

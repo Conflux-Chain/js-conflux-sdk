@@ -6,18 +6,17 @@ const conflux = new Conflux({ url: 'http://testnet-jsonrpc.conflux-chain.org:125
 const contract = conflux.Contract({
   abi,
   bytecode,
-  address: '0x8b9c462016188e8cb3b897d6951589043c2d4535', // deployed contract address
+  address: '0x8f2c179069dfba596220b0d22c2542c7ba8232f1', // deployed contract address
 });
 
 function showContract() {
   console.log(contract);
   /*
   {
+    abi: ContractABI { contract: [Circular *1] },
+    address: '0x8b9c462016188e8cb3b897d6951589043c2d4535',
     constructor: [Function: bound call],
-    abi: ContractABICoder { * },
-    address: undefined,
     func: [Function: bound call],
-    Event: [Function: bound call],
     'func(uint256,string)': [Function: bound call],
     '0x1c0138e8': [Function: bound call],
     'func(string)': [Function: bound call],
@@ -34,6 +33,7 @@ function showContract() {
     '0xbff8ad84': [Function: bound call],
     'func(int256)': [Function: bound call],
     '0xce625915': [Function: bound call],
+    Event: [Function: bound call],
     'Event(bool)': [Function: bound call],
     '0x404e952466ce335bcd5dc15385d7d4710eea42951cc4681496db72c1d5d2c464': [Function: bound call],
     'Event(address)': [Function: bound call],
@@ -189,71 +189,94 @@ function eventOverride() {
    */
 }
 
+async function deployOverrideContract() {
+  const receipt = await contract.constructor()
+    .sendTransaction({ from: accountAlice })
+    .executed();
+  console.log(receipt);
+}
+
 /*
  example show how to send method of this override contact
  */
 async function sendManyTransaction() {
-  const accountAlice = conflux.Account({ privateKey: '0xa816a06117e572ca7ae2f786a046d2bc478051d0717bf5cc4f5397923258d393' });
+  const accountAlice = conflux.wallet.addPrivateKey('0xa816a06117e572ca7ae2f786a046d2bc478051d0717bf5cc4f5397923258d393');
 
   let receipt;
 
-  receipt = await accountAlice.sendTransaction(contract.func(true)).executed();
-  console.log(receipt.transactionHash); // 0x4ae0e7eb978f23298b572719205b360e45c020a4c98a15ffa2f5492b6404b1c2
+  receipt = await contract.func(true)
+    .sendTransaction({ from: accountAlice })
+    .executed();
+  console.log(receipt.transactionHash); // 0xa8232dff88ec0df10e6d825336066242587b7a5f48489c7131348326887e55f9
 
-  receipt = await accountAlice.sendTransaction(contract['func(uint256)'](1)).executed();
-  console.log(receipt.transactionHash); // 0x61119d922a5b417c7bd04197a162b3eb6185b34362316e36923a5b392fee98d3
+  receipt = await contract['func(uint256)'](1)
+    .sendTransaction({ from: accountAlice })
+    .executed();
+  console.log(receipt.transactionHash); // 0x9da801fba71d437287b2dd16302c140ecbf2e636d7d37ad8559d93ff66e591c3
 
-  receipt = await accountAlice.sendTransaction(contract['func(int256)'](1)).executed();
-  console.log(receipt.transactionHash); // 0xd31c7501e5f73c3d74c655e0ec9dc70339e03b1a409e469f495dda8770f8f403
+  receipt = await contract['func(int256)'](1)
+    .sendTransaction({ from: accountAlice })
+    .executed();
+  console.log(receipt.transactionHash); // 0xe4f9a381480852233c60484de88361e6840503d1a4d95054a593f9d91f5f6a9c
 
   // send a address
-  receipt = await accountAlice.sendTransaction(contract['func(address)']('0x0123456789012345678901234567890123456789')).executed();
-  console.log(receipt.transactionHash); // 0x0d88070c8338f8ace59b72888449d965b91c93ba67831f496821c5cdbda6e543
+  receipt = await contract['func(address)']('0x0123456789012345678901234567890123456789')
+    .sendTransaction({ from: accountAlice })
+    .executed();
+  console.log(receipt.transactionHash); // 0x3be2243ddf821877a87a40cb9dd9727d917a420b69f36c7cffb93b3804e23cce
 
   // send 20 bytes Buffer
-  receipt = await accountAlice.sendTransaction(contract.func(Buffer.from('0x0123456789012345678901234567890123456789'))).executed();
-  console.log(receipt.transactionHash); // 0xaaeaf9be17522d9307c601dbbde09d11d4a36c557b5aeda6652446bb67f41ef8
+  receipt = await contract.func(Buffer.from('0x0123456789012345678901234567890123456789'))
+    .sendTransaction({ from: accountAlice })
+    .executed();
+  console.log(receipt.transactionHash); // 0x9c731012a2605083948763bf26c07804376fca4766551c1edd444c109fb9bc4a
 
   // send 42 chars string
-  receipt = await accountAlice.sendTransaction(contract['func(string)']('0x0123456789012345678901234567890123456789')).executed();
-  console.log(receipt.transactionHash); // 0x6d3d9d6471c6438d733b5fd8ca87790384831dfef792c3ccde601b774364cb0a
+  receipt = await contract['func(string)']('0x0123456789012345678901234567890123456789')
+    .sendTransaction({ from: accountAlice })
+    .executed();
+  console.log(receipt.transactionHash); // 0x781c5058b41f09a782440b2373ec03d7522840217d0401e82d3c1401cada48b9
 
-  receipt = await accountAlice.sendTransaction(contract.func(1, 'abc')).executed();
-  console.log(receipt.transactionHash); // 0x0302df36f2bb3e21cd160d009541cc59608837f21678a0821a9efefc01c66c92
+  receipt = await contract.func(1, 'abc')
+    .sendTransaction({ from: accountAlice })
+    .executed();
+  console.log(receipt.transactionHash); // 0xf1d6df14fbb48d3ea22ef76bfb6a3f79bddd79c083717ec41152853ce8835f64
 
-  receipt = await accountAlice.sendTransaction(contract.func({ str: 'abc', num: 1 })).executed();
-  console.log(receipt.transactionHash); // 0xfc8e1753623c6e842e55d2a7a18a44eb0df80d2f80ce616cfaded0f0eb3fb249
+  receipt = await contract.func({ str: 'abc', num: 1 })
+    .sendTransaction({ from: accountAlice })
+    .executed();
+  console.log(receipt.transactionHash); // 0x03384c844ecc14fb8a667b3e7e244a122cafd35d6c3d76c1228406075e19eefa
 }
 
 /*
  for exist transaction and receipt, user could try to decode them with contract.abi
  */
 async function decodeByContract() {
-  const txHash = '0x4ae0e7eb978f23298b572719205b360e45c020a4c98a15ffa2f5492b6404b1c2'; // "func(bool)"
-  // const txHash = '0x61119d922a5b417c7bd04197a162b3eb6185b34362316e36923a5b392fee98d3'; // "func(uint256)"
-  // const txHash = '0xd31c7501e5f73c3d74c655e0ec9dc70339e03b1a409e469f495dda8770f8f403'; // "func(int256)"
-  // const txHash = '0x0d88070c8338f8ace59b72888449d965b91c93ba67831f496821c5cdbda6e543'; // "func(address)"
-  // const txHash = '0xaaeaf9be17522d9307c601dbbde09d11d4a36c557b5aeda6652446bb67f41ef8'; // "func(bytes)"
-  // const txHash = '0x6d3d9d6471c6438d733b5fd8ca87790384831dfef792c3ccde601b774364cb0a'; // "func(string)"
-  // const txHash = '0x0302df36f2bb3e21cd160d009541cc59608837f21678a0821a9efefc01c66c92'; // "func(uint256,string)"
-  // const txHash = '0xfc8e1753623c6e842e55d2a7a18a44eb0df80d2f80ce616cfaded0f0eb3fb249'; // "func((uint256,string))"
+  const txHash = '0xa8232dff88ec0df10e6d825336066242587b7a5f48489c7131348326887e55f9'; // "func(bool)"
+  // const txHash = '0x9da801fba71d437287b2dd16302c140ecbf2e636d7d37ad8559d93ff66e591c3'; // "func(uint256)"
+  // const txHash = '0xe1862521c322b8422a0f4c2edf82af71e9d46dee0046719f4fbc35888cdd9ceb'; // "func(int256)"
+  // const txHash = '0x2f90d4bec009708d9389a57fb6e2cffbe8937f8e9280db0b715cc619ae12d461'; // "func(address)"
+  // const txHash = '0x9c731012a2605083948763bf26c07804376fca4766551c1edd444c109fb9bc4a'; // "func(bytes)"
+  // const txHash = '0x781c5058b41f09a782440b2373ec03d7522840217d0401e82d3c1401cada48b9'; // "func(string)"
+  // const txHash = '0xf1d6df14fbb48d3ea22ef76bfb6a3f79bddd79c083717ec41152853ce8835f64'; // "func(uint256,string)"
+  // const txHash = '0x03384c844ecc14fb8a667b3e7e244a122cafd35d6c3d76c1228406075e19eefa'; // "func((uint256,string))"
 
   const transaction = await conflux.getTransactionByHash(txHash);
-  console.log('transaction', JSON.stringify(transaction, null, 2));
+  // console.log('transaction', JSON.stringify(transaction, null, 2));
 
   const methodArg = contract.abi.decodeData(transaction.data);
-  console.log(JSON.stringify(methodArg, null, 2)); // all int/uint will transfer to JSBI instance
+  console.log(JSON.stringify(methodArg, null, 2));
   /*
   {
     "name": "func",
-    "fullName": "func(uint256 num)",
-    "type": "func(uint256)",
-    "signature": "0x7f98a45e",
+    "fullName": "func(bool boolean)",
+    "type": "func(bool)",
+    "signature": "0x4f6db4e2",
     "array": [
-      "1"
+      true
     ],
     "object": {
-      "num": "1"
+      "boolean": true
     }
   }
   */
@@ -285,6 +308,7 @@ async function main() {
   showContract();
   argumentOverride();
   eventOverride();
+  // await deployOverrideContract();
   // await sendManyTransaction();
   await decodeByContract();
 }

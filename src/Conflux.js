@@ -687,7 +687,7 @@ class Conflux {
    * else call `cfx_sendTransaction` and sign by remote wallet
    *
    * @param options {object} - See [format.sendTx](#util/format.js/sendTx)
-   * @param password {string} - Password for remote node.
+   * @param [password] {string} - Password for remote node.
    * @return {Promise<PendingTransaction>} The PendingTransaction object.
    *
    * @example

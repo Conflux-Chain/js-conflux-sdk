@@ -6,22 +6,23 @@ const conflux = new Conflux({
   logger: console, // use console to print log
 });
 
-// create Account by privateKey
-const account = conflux.Account({ privateKey: '0x46b9e861b63d3509c88b7817275a30d22d62c8cd8fa6486ddee35ef0d8e0495f' });
-
 // ----------------------------------------------------------------------------
 async function getAccountBalance() {
-  const balance = await conflux.getBalance(account.address); // or `conflux.getBalance(account)`
+  const balance = await conflux.getBalance('0x1be45681ac6c53d5a40475f7526bac1fe7590fb8');
 
-  // returned balance is a instance of Drip
-  console.log(balance instanceof Drip); // true
-  console.log(balance); // [String (Drip): '1999999999999999999999999886753792']
-  console.log(balance.toDrip()); // 1999999999999999999999999886753792
-  console.log(balance.toGDrip()); // 1999999999999999999999999.886753792
-  console.log(balance.toCFX()); // 1999999999999999.999999999886753792
+  console.log(balance); // "4999998839889983249999999950307784"
+  console.log(Drip(balance).toGDrip()); // "4999998839889983249999999.950307784"
+  console.log(Drip(balance).toCFX()); // "4999998839889983.249999999950307784"
 }
 
 function encryptAndDecryptPrivateKeyAccount() {
+  // create Account by privateKey
+  const account = conflux.wallet.addPrivateKey('0x46b9e861b63d3509c88b7817275a30d22d62c8cd8fa6486ddee35ef0d8e0495f');
+  console.log(conflux.wallet.has(account.address)); // true
+
+  conflux.wallet.delete(account.address);
+  console.log(conflux.wallet.has(account.address)); // false
+
   const keystore = account.encrypt('password');
   console.log(keystore);
   /*
@@ -46,7 +47,7 @@ function encryptAndDecryptPrivateKeyAccount() {
   }
    */
 
-  const decryptedAccount = conflux.Account({ keystore, password: 'password' });
+  const decryptedAccount = conflux.wallet.addKeystore(keystore, 'password');
   console.log(decryptedAccount);
   /*
   PrivateKeyAccount {
@@ -62,7 +63,7 @@ function encryptAndDecryptPrivateKeyAccount() {
 }
 
 function genRandomAccount() {
-  const randomAccount = conflux.Account({ random: true });
+  const randomAccount = conflux.wallet.addRandom();
   console.log(randomAccount);
   /*
   PrivateKeyAccount {
@@ -72,7 +73,7 @@ function genRandomAccount() {
   }
    */
 
-  console.log(conflux.Account({ random: true })); // different account
+  console.log(conflux.wallet.addRandom()); // different account
   /*
   PrivateKeyAccount {
     address: '0x1dfda0eb017eac56d7fc99e696b729904e65e2c7',
@@ -83,9 +84,9 @@ function genRandomAccount() {
 }
 
 async function main() {
+  await getAccountBalance();
   encryptAndDecryptPrivateKeyAccount();
   genRandomAccount();
-  await getAccountBalance();
 }
 
 main().finally(() => conflux.close());
