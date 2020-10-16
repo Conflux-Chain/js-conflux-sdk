@@ -19,7 +19,7 @@ class Message {
   static sign(privateKey, messageHash) {
     const { r, s, v } = ecdsaSign(format.hexBuffer(messageHash), format.hexBuffer(privateKey));
     const buffer = Buffer.concat([r, s, format.hexBuffer(v)]);
-    return format.messageSignature(buffer);
+    return format.hex(buffer);
   }
 
   /**

@@ -317,12 +317,6 @@ format.privateKey = format.hex64; // alias
 format.publicKey = format.hex.$validate(v => v.length === 2 + 128, 'publicKey');
 
 /**
- * @param arg {string|Buffer}
- * @return {string} Hex string
- */
-format.messageSignature = format.hex.$validate(v => v.length === 2 + 130, 'signature');
-
-/**
  * @param arg {number|string|JSBI|Buffer|boolean|null}
  * @return {Buffer}
  *
@@ -367,6 +361,25 @@ format.bytes = parser(v => (Buffer.isBuffer(v) ? v : Buffer.from(v)));
  false
  */
 format.boolean = format.any.$validate(lodash.isBoolean, 'boolean');
+
+/**
+ * Compute the keccak256 cryptographic hash of a value, returned as a hex string.
+ *
+ * @param arg {string|Buffer}
+ * @return {string}
+ *
+ * @example
+ * > format.keccak256('Transfer(address,address,uint256)')
+ "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
+
+ * > format.keccak256(Buffer.from([0x42]))
+ "0x1f675bff07515f5df96737194ea945c36c41e7b4fcef307b7cd4d0e602a69111"
+ * > format.keccak256(format.hexBuffer('0x42'))
+ "0x1f675bff07515f5df96737194ea945c36c41e7b4fcef307b7cd4d0e602a69111"
+ * > format.keccak256('0x42') // "0x42" as string and transfer to <Buffer 30 78 34 32> by ascii
+ "0x3c1b2d38851281e9a7b59d10973b0c87c340ff1e76bde7d06bf6b9f28df2b8c0"
+ */
+format.keccak256 = format.bytes.$after(sign.keccak256).$after(format.hex);
 
 // -------------------------- format method arguments -------------------------
 format.getLogs = parser({

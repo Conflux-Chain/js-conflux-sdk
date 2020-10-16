@@ -126,7 +126,7 @@ test('contract.estimateGasAndCollateral', async () => {
   expect(call).toHaveBeenLastCalledWith('cfx_estimateGasAndCollateral', {
     to: address,
     data: '0x06661abd',
-  });
+  }, undefined);
 
   call.mockRestore();
 });

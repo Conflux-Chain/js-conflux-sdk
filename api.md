@@ -123,10 +123,10 @@ keywords:
             - [(static)transactionHash](#util/format.js/format/(static)transactionHash)
             - [(static)privateKey](#util/format.js/format/(static)privateKey)
             - [(static)publicKey](#util/format.js/format/(static)publicKey)
-            - [(static)messageSignature](#util/format.js/format/(static)messageSignature)
             - [(static)hexBuffer](#util/format.js/format/(static)hexBuffer)
             - [(static)bytes](#util/format.js/format/(static)bytes)
             - [(static)boolean](#util/format.js/format/(static)boolean)
+            - [(static)keccak256](#util/format.js/format/(static)keccak256)
     - sign.js
         - [keccak256](#util/sign.js/keccak256)
         - [checksumAddress](#util/sign.js/checksumAddress)
@@ -2262,18 +2262,6 @@ arg  | `string,Buffer` | true     |         |
  Error("not match publicKey")
 ```
 
-#### format.messageSignature <a id="util/format.js/format/(static)messageSignature"></a>
-
-* **Parameters**
-
-Name | Type            | Required | Default | Description
------|-----------------|----------|---------|------------
-arg  | `string,Buffer` | true     |         |
-
-* **Returns**
-
-`string` Hex string
-
 #### format.hexBuffer <a id="util/format.js/format/(static)hexBuffer"></a>
 
 * **Parameters**
@@ -2345,6 +2333,33 @@ arg  | `boolean` | true     |         |
  true
 > format.boolean(false)
  false
+```
+
+#### format.keccak256 <a id="util/format.js/format/(static)keccak256"></a>
+
+Compute the keccak256 cryptographic hash of a value, returned as a hex string.
+
+* **Parameters**
+
+Name | Type            | Required | Default | Description
+-----|-----------------|----------|---------|------------
+arg  | `string,Buffer` | true     |         |
+
+* **Returns**
+
+`string` 
+
+* **Examples**
+
+```
+> format.keccak256('Transfer(address,address,uint256)')
+ "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
+> format.keccak256(Buffer.from([0x42]))
+ "0x1f675bff07515f5df96737194ea945c36c41e7b4fcef307b7cd4d0e602a69111"
+> format.keccak256(format.hexBuffer('0x42'))
+ "0x1f675bff07515f5df96737194ea945c36c41e7b4fcef307b7cd4d0e602a69111"
+> format.keccak256('0x42') // "0x42" as string and transfer to <Buffer 30 78 34 32> by ascii
+ "0x3c1b2d38851281e9a7b59d10973b0c87c340ff1e76bde7d06bf6b9f28df2b8c0"
 ```
 
 ----------------------------------------

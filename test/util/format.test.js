@@ -222,3 +222,17 @@ test('boolean', () => {
   expect(format.boolean(true)).toEqual(true);
   expect(format.boolean(false)).toEqual(false);
 });
+
+test('keccak256', () => {
+  expect(() => format.keccak256(undefined)).toThrow('Received undefined');
+  expect(() => format.keccak256(null)).toThrow('Received null');
+  expect(() => format.keccak256(0)).toThrow('Received type number');
+
+  expect(format.keccak256('')).toEqual('0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470');
+  expect(format.keccak256([])).toEqual(format.keccak256(''));
+  expect(format.keccak256(Buffer.from(''))).toEqual(format.keccak256(''));
+
+  expect(format.keccak256([0x42])).toEqual('0x1f675bff07515f5df96737194ea945c36c41e7b4fcef307b7cd4d0e602a69111');
+  expect(format.keccak256([0x42])).not.toEqual(format.keccak256('0x42'));
+  expect(format.keccak256([0x42])).toEqual(format.keccak256(format.hexBuffer('0x42')));
+});

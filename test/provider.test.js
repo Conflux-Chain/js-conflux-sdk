@@ -53,4 +53,6 @@ test('WebSocketProvider', async () => {
 
   provider.close();
   provider.close();
+
+  await new Promise(resolve => setTimeout(resolve, 1000));
 }, 60 * 1000);
