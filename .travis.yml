@@ -10,7 +10,7 @@ script:
   - yarn eslint
   - yarn test
   - yarn build
-  - sh development/test-create-react-app-default-bundler.sh
+  - sh scripts/test-create-react-app-default-bundler.sh
 
 notifications:
   email:
