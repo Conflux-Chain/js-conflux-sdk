@@ -39,13 +39,17 @@ function toNumber(value) {
 }
 
 function toBigInt(value) {
-  if (lodash.isString(value)) {
-    value = value.replace(/^(-?\d+)(.0+)?$/, '$1'); // replace "number.000" to "number"
-  } else if (lodash.isBoolean(value)) {
-    throw new Error(`${value} not match BigInt`);
-  } else if (Buffer.isBuffer(value)) {
+  if (Number.isInteger(value) || (value instanceof JSBI)) {
+    return JSBI.BigInt(value);
+  }
+  if (lodash.isBoolean(value)) {
     throw new Error(`${value} not match BigInt`);
   }
+  if (Buffer.isBuffer(value)) {
+    throw new Error(`${value} not match BigInt`);
+  }
+
+  value = `${value}`.replace(/^(-?\d+)(.0+)?$/, '$1'); // replace "number.000" to "number"
   return JSBI.BigInt(value);
 }
 

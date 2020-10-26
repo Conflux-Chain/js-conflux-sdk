@@ -43,12 +43,12 @@
     "babelify": "^10.0.0",
     "browserify": "^16.5.1",
     "concurrently": "^5.1.0",
-    "eslint": "^6.3.0",
+    "eslint": "^7.12.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2",
     "exorcist": "^1.0.1",
     "fs-extra": "^8.1.0",
-    "jest": "^24.9.0",
+    "jest": "26.6.0",
     "minify-stream": "^2.0.1",
     "mold-source-map": "^0.4.0",
     "solc": "^0.6.10"
@@ -61,6 +61,7 @@
     "**/kind-of": "^6.0.3",
     "**/elliptic": "^6.5.3",
     "**/lodash": "^4.17.20",
+    "**/babel-jest": "^26.6.0",
     "jest/jest-cli/jest-config/jest-environment-jsdom/jsdom/acorn-globals/acorn": "6.4.1"
   },
   "scripts": {

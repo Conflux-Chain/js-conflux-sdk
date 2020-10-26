@@ -126,7 +126,7 @@ describe('number', () => {
     testEncode(coder, 1.0, '0x0000000000000000000000000000000000000000000000000000000000000001');
     testEncode(coder, 256, '0x0000000000000000000000000000000000000000000000000000000000000100');
     testEncodeAndDecode(coder, `${BigInt(-129)}`, '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f');
-    expect(() => coder.encode(0.1)).toThrow('cannot be converted to BigInt');
+    expect(() => coder.encode(0.1)).toThrow('Cannot');
   });
 
   test('uint', () => {

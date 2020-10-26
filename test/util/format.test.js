@@ -78,7 +78,7 @@ test('uint', () => {
 test('bigInt', () => {
   expect(() => format.bigInt(false)).toThrow('false not match BigInt');
   expect(() => format.bigInt(true)).toThrow('true not match BigInt');
-  expect(() => format.bigInt(3.14)).toThrow('cannot be converted to');
+  expect(() => format.bigInt(3.14)).toThrow('Cannot convert 3.14 to a BigInt');
   expect(() => format.bigInt('3.14')).toThrow('Cannot convert 3.14 to a BigInt');
   expect(() => format.bigInt(Buffer.from([0, 1, 2]))).toThrow('not match BigInt');
   expect(format.bigInt('')).toEqual(JSBI.BigInt(0));
@@ -88,12 +88,13 @@ test('bigInt', () => {
   expect(format.bigInt(3.00)).toEqual(JSBI.BigInt(3));
   expect(format.bigInt('3.00')).toEqual(JSBI.BigInt(3));
   expect(format.bigInt('0x10')).toEqual(JSBI.BigInt(16));
+  expect(format.bigInt(BigInt(20))).toEqual(JSBI.BigInt(20));
   expect(format.bigInt(Number.MAX_SAFE_INTEGER + 1)).toEqual(JSBI.BigInt(2 ** 53));
 });
 
 test('bigUInt', () => {
-  expect(() => format.bigUInt(3.14)).toThrow('cannot be converted to');
-  expect(() => format.bigUInt('3.14')).toThrow('Cannot convert 3.14 to a BigInt');
+  expect(() => format.bigUInt(3.14)).toThrow('Cannot');
+  expect(() => format.bigUInt('3.14')).toThrow('Cannot');
   expect(() => format.bigUInt(-1)).toThrow('not match bigUInt');
   expect(() => format.bigUInt('-1')).toThrow('not match bigUInt');
   expect(format.bigUInt('0')).toEqual(JSBI.BigInt(0));
@@ -108,8 +109,8 @@ test('bigUIntHex', () => {
   expect(format.bigUIntHex(JSBI.BigInt(10))).toEqual('0xa');
   expect(format.bigUIntHex(Number.MAX_SAFE_INTEGER)).toEqual('0x1fffffffffffff');
   expect(() => format.bigUIntHex(Buffer.from([0, 1, 2]))).toThrow('not match BigInt');
-  expect(() => format.bigUIntHex(3.50)).toThrow('cannot be converted to');
-  expect(() => format.bigUIntHex(-0.5)).toThrow('cannot be converted to');
+  expect(() => format.bigUIntHex(3.50)).toThrow('Cannot');
+  expect(() => format.bigUIntHex(-0.5)).toThrow('Cannot');
   expect(() => format.bigUIntHex(-1)).toThrow('not match bigUInt');
   expect(() => format.bigUIntHex(null)).toThrow('Cannot');
 });
@@ -121,6 +122,7 @@ test('big', () => {
   expect(format.big('0x10')).toEqual(Big(16));
   expect(format.big(3.14)).toEqual(Big(3.14));
   expect(format.big('-03.140')).toEqual(Big(-3.14));
+  expect(format.big(BigInt(10))).toEqual(Big(10));
   expect(() => format.big()).toThrow('Invalid number');
   expect(() => format.big(null)).toThrow('Invalid number');
   expect(() => format.big(true)).toThrow('Invalid number');

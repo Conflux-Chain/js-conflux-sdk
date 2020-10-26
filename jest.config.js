@@ -4,5 +4,5 @@ module.exports = {
   coverageReporters: ['html'],
 
   testEnvironment: 'node',
-  testRegex: 'test/.*/*.test.js',
+  testRegex: 'test/.*test.js',
 };
