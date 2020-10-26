@@ -1,6 +1,6 @@
+const JSBI = require('jsbi');
 const lodash = require('lodash');
 const { assert } = require('../../util');
-const format = require('../../util/format');
 const IntegerCoder = require('./IntegerCoder');
 
 class BoolCoder extends IntegerCoder {
@@ -36,7 +36,7 @@ class BoolCoder extends IntegerCoder {
    * @return {boolean}
    */
   decode(stream) {
-    return format.uInt(super.decode(stream)) !== 0;
+    return JSBI.notEqual(JSBI.BigInt(super.decode(stream)), JSBI.BigInt(0));
   }
 }
 

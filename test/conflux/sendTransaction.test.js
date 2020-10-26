@@ -137,8 +137,8 @@ test('sendTransaction auto', async () => {
 
   const estimateGasAndCollateral = jest.spyOn(conflux, 'estimateGasAndCollateral');
   estimateGasAndCollateral.mockReturnValue({
-    gasUsed: format.bigUIntDec(1024),
-    storageCollateralized: format.bigUIntDec(2048),
+    gasUsed: format.bigUInt(1024),
+    storageCollateralized: format.bigUInt(2048),
   });
 
   const call = jest.spyOn(conflux.provider, 'call');

@@ -2,32 +2,14 @@
 
 ## v1.0.0-beta.0
 
-* add `defaultGasRatio` and `defaultStorageLimitRatio`
+* add `defaultGasRatio` and `defaultStorageRatio`
 
 ```
 conflux = new Conflux({
   defaultGasRatio: 1.1,
-  defaultStorageLimitRatio: 1.1,
+  defaultStorageRatio: 1.1,
   ...
 })
-```
-
-* return string instance of JSBI
-
-return a JSBI.BigInt is not friendly struct to print and use.
-return decimal string for big number is readable, and force user to choose suitable big number lib.
-sdk still provide `format.big` to create a `Big` object from `big.js` when it is needed.
-
-```
-// old
-balance = await conflux.getBalance(ADDRESS);
-console.log(balance); // JSBI(2) [ -1, 2097151, sign: false ]
-console.log(balance.toString()); // "9007199254740991"
-
-// new
-balance = await conflux.getBalance(ADDRESS);
-console.log(balance); // "9007199254740991"
-console.log(format.big(balance)); // Big { ... }
 ```
 
 * add `BaseAccount` and `PrivateKeyAccount`

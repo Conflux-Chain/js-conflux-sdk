@@ -112,9 +112,9 @@ keywords:
             - [(static)uInt](#util/format.js/format/(static)uInt)
             - [(static)bigInt](#util/format.js/format/(static)bigInt)
             - [(static)bigUInt](#util/format.js/format/(static)bigUInt)
-            - [(static)bigUIntDec](#util/format.js/format/(static)bigUIntDec)
             - [(static)bigUIntHex](#util/format.js/format/(static)bigUIntHex)
             - [(static)big](#util/format.js/format/(static)big)
+            - [(static)fixed64](#util/format.js/format/(static)fixed64)
             - [(static)epochNumber](#util/format.js/format/(static)epochNumber)
             - [(static)hex](#util/format.js/format/(static)hex)
             - [(static)address](#util/format.js/format/(static)address)
@@ -1996,29 +1996,6 @@ arg  | `number,string,JSBI` | true     |         |
  Error("not match bigUInt")
 ```
 
-#### format.bigUIntDec <a id="util/format.js/format/(static)bigUIntDec"></a>
-
-* **Parameters**
-
-Name | Type                 | Required | Default | Description
------|----------------------|----------|---------|------------
-arg  | `number,string,JSBI` | true     |         |
-
-* **Returns**
-
-`string` decimal string
-
-* **Examples**
-
-```
-> format.bigUIntDec(100)
- "100"
-> format.bigUIntDec('0x0a')
- "10"
-> format.bigUIntDec(-1)
- Error("not match bigUInt")
-```
-
 #### format.bigUIntHex <a id="util/format.js/format/(static)bigUIntHex"></a>
 
 When encoding QUANTITIES (integers, numbers): encode as hex, prefix with "0x", the most compact representation (slight exception: zero should be represented as "0x0")
@@ -2073,6 +2050,27 @@ arg  | `number,string,JSBI` | true     |         |
  '-3.14'
 > format.big(null)
  Error('Invalid number')
+```
+
+#### format.fixed64 <a id="util/format.js/format/(static)fixed64"></a>
+
+* **Parameters**
+
+Name | Type                     | Required | Default | Description
+-----|--------------------------|----------|---------|------------
+arg  | `string,number,JSBI,Big` | true     |         |
+
+* **Returns**
+
+`Number` 
+
+* **Examples**
+
+```
+> format.fixed64('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')
+ 1
+> format.fixed64('0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')
+ 0.5
 ```
 
 #### format.epochNumber <a id="util/format.js/format/(static)epochNumber"></a>

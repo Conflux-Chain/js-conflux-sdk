@@ -132,20 +132,6 @@ format.bigInt = parser(toBigInt);
 format.bigUInt = format.bigInt.$validate(v => v >= 0, 'bigUInt');
 
 /**
- * @param arg {number|string|JSBI}
- * @return {string} decimal string
- *
- * @example
- * > format.bigUIntDec(100)
- "100"
- * > format.bigUIntDec('0x0a')
- "10"
- * > format.bigUIntDec(-1)
- Error("not match bigUInt")
- */
-format.bigUIntDec = format.bigUInt.$after(v => v.toString(10));
-
-/**
  * When encoding QUANTITIES (integers, numbers): encode as hex, prefix with "0x", the most compact representation (slight exception: zero should be represented as "0x0")
  *
  * @param arg {number|string|JSBI}
@@ -466,24 +452,24 @@ format.status = parser({
 });
 
 format.account = parser({
-  accumulatedInterestReturn: format.bigUIntDec,
-  balance: format.bigUIntDec,
-  collateralForStorage: format.bigUIntDec,
-  nonce: format.bigUIntDec,
-  stakingBalance: format.bigUIntDec,
+  accumulatedInterestReturn: format.bigUInt,
+  balance: format.bigUInt,
+  collateralForStorage: format.bigUInt,
+  nonce: format.bigUInt,
+  stakingBalance: format.bigUInt,
 });
 
 format.estimate = parser({
-  gasUsed: format.bigUIntDec,
-  storageCollateralized: format.bigUIntDec,
+  gasUsed: format.bigUInt,
+  storageCollateralized: format.bigUInt,
 });
 
 format.transaction = parser({
-  nonce: format.bigUIntDec,
-  gasPrice: format.bigUIntDec,
-  gas: format.bigUIntDec,
-  value: format.bigUIntDec,
-  storageLimit: format.bigUIntDec,
+  nonce: format.bigUInt,
+  gasPrice: format.bigUInt,
+  gas: format.bigUInt,
+  value: format.bigUInt,
+  storageLimit: format.bigUInt,
   epochHeight: format.uInt,
   chainId: format.uInt,
   v: format.uInt,
@@ -497,9 +483,9 @@ format.block = parser({
   height: format.uInt,
   size: format.uInt,
   timestamp: format.uInt,
-  gasLimit: format.bigUIntDec,
-  gasUsed: format.bigUIntDec.$or(null).$or(undefined), // XXX: undefined before main net upgrade
-  difficulty: format.bigUIntDec,
+  gasLimit: format.bigUInt,
+  gasUsed: format.bigUInt.$or(null).$or(undefined), // XXX: undefined before main net upgrade
+  difficulty: format.bigUInt,
   transactions: [(format.transaction).$or(format.transactionHash)],
 });
 
@@ -507,8 +493,8 @@ format.receipt = parser({
   index: format.uInt,
   epochNumber: format.uInt,
   outcomeStatus: format.uInt.$or(null),
-  gasUsed: format.bigUIntDec,
-  gasFee: format.bigUIntDec,
+  gasUsed: format.bigUInt,
+  gasFee: format.bigUInt,
 });
 
 format.log = parser({
@@ -521,24 +507,24 @@ format.log = parser({
 format.logs = parser([format.log]);
 
 format.sponsorInfo = parser({
-  sponsorBalanceForCollateral: format.bigUIntDec,
-  sponsorBalanceForGas: format.bigUIntDec,
-  sponsorGasBound: format.bigUIntDec,
+  sponsorBalanceForCollateral: format.bigUInt,
+  sponsorBalanceForGas: format.bigUInt,
+  sponsorGasBound: format.bigUInt,
 });
 
 format.rewardInfo = parser([
   {
-    baseReward: format.bigUIntDec,
-    totalReward: format.bigUIntDec,
-    txFee: format.bigUIntDec,
+    baseReward: format.bigUInt,
+    totalReward: format.bigUInt,
+    txFee: format.bigUInt,
   },
 ]);
 
 // ---------------------------- parse subscribe event -------------------------
 format.head = parser({
-  difficulty: format.bigUIntDec,
+  difficulty: format.bigUInt,
   epochNumber: format.uInt.$or(null),
-  gasLimit: format.bigUIntDec,
+  gasLimit: format.bigUInt,
   height: format.uInt,
   timestamp: format.uInt,
 });

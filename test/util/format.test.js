@@ -91,21 +91,6 @@ test('bigInt', () => {
   expect(format.bigInt(Number.MAX_SAFE_INTEGER + 1)).toEqual(JSBI.BigInt(2 ** 53));
 });
 
-test('bigUIntDec', () => {
-  expect(format.bigUIntDec('')).toEqual('0');
-  expect(format.bigUIntDec(100)).toEqual('100');
-  expect(format.bigUIntDec('10')).toEqual('10');
-  expect(format.bigUIntDec('0x000a')).toEqual('10');
-  expect(format.bigUIntDec(JSBI.BigInt(10))).toEqual('10');
-  expect(format.bigUIntDec(Number.MAX_SAFE_INTEGER)).toEqual('9007199254740991');
-  expect(() => format.bigUIntDec(Buffer.from([0, 1, 2]))).toThrow('not match BigInt');
-  expect(() => format.bigUIntDec(3.50)).toThrow('cannot be converted to');
-  expect(() => format.bigUIntDec(-0.5)).toThrow('cannot be converted to');
-  expect(() => format.bigUIntDec(-1)).toThrow('not match bigUInt');
-  expect(() => format.bigUIntDec('-0x1')).toThrow('Cannot');
-  expect(() => format.bigUIntDec(null)).toThrow('Cannot');
-});
-
 test('bigUInt', () => {
   expect(() => format.bigUInt(3.14)).toThrow('cannot be converted to');
   expect(() => format.bigUInt('3.14')).toThrow('Cannot convert 3.14 to a BigInt');
