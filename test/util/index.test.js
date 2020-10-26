@@ -1,5 +1,9 @@
-const { alignBuffer, awaitTimeout, sleep } = require('../../src/util');
+const { alignBuffer, awaitTimeout } = require('../../src/util');
 const format = require('../../src/util/format');
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 test('alignBuffer', () => {
   const buffer0 = alignBuffer(Buffer.alloc(0));

@@ -184,6 +184,18 @@ format.bigUIntHex = format.bigUInt.$after(v => `0x${v.toString(16)}`);
 format.big = parser(toBig);
 
 /**
+ * @param arg {string|number|JSBI|Big}
+ * @return {Number}
+ *
+ * @example
+ * > format.fixed64('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')
+ 1
+ * > format.fixed64('0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')
+ 0.5
+ */
+format.fixed64 = format.big.$after(v => Number(v.div(CONST.MAX_UINT)));
+
+/**
  * @param arg {number|string} - number or string
  * @return {string}
  *
@@ -480,7 +492,7 @@ format.transaction = parser({
 });
 
 format.block = parser({
-  epochNumber: format.uInt,
+  epochNumber: format.uInt.$or(null),
   blame: format.uInt,
   height: format.uInt,
   size: format.uInt,
@@ -528,7 +540,6 @@ format.head = parser({
   epochNumber: format.uInt.$or(null),
   gasLimit: format.bigUIntDec,
   height: format.uInt,
-  powQuality: format.bigUIntDec,
   timestamp: format.uInt,
 });
 

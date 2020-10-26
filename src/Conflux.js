@@ -543,7 +543,7 @@ class Conflux {
     const result = await this.provider.call('cfx_getConfirmationRiskByHash',
       format.blockHash(blockHash),
     );
-    return format.big.$after(v => Number(v.div(CONST.MAX_UINT))).$or(null)(result);
+    return format.fixed64.$or(null)(result);
   }
 
   // ----------------------------- transaction --------------------------------
@@ -655,9 +655,14 @@ class Conflux {
    "0xbe007c3eca92d01f3917f33ae983f40681182cf618defe75f490a65aac016914"
    */
   async sendRawTransaction(hex) {
-    return this.provider.call('cfx_sendRawTransaction',
-      format.hex(hex),
-    );
+    try {
+      return await this.provider.call('cfx_sendRawTransaction',
+        format.hex(hex),
+      );
+    } catch (e) {
+      e.message = e.data || e.message;
+      throw e;
+    }
   }
 
   /**
@@ -686,7 +691,8 @@ class Conflux {
 
     if (options.gasPrice === undefined) {
       if (this.defaultGasPrice === undefined) {
-        options.gasPrice = Math.max(await this.getGasPrice(), CONST.MIN_GAS_PRICE);
+        const gasPrice = await this.getGasPrice();
+        options.gasPrice = Number(gasPrice) === 0 ? CONST.MIN_GAS_PRICE : gasPrice;
       } else {
         options.gasPrice = this.defaultGasPrice;
       }

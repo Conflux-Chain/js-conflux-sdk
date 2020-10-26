@@ -142,6 +142,12 @@ test('big', () => {
   expect(() => format.big('-0x10')).toThrow('Invalid number');
 });
 
+test('fixed64', () => {
+  expect(format.fixed64('0x0')).toEqual(0);
+  expect(format.fixed64('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')).toEqual(1);
+  expect(format.fixed64('0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')).toEqual(0.5);
+});
+
 test('epochNumber', () => {
   expect(() => format.epochNumber(-1)).toThrow('match bigUInt');
   expect(format.epochNumber(0)).toEqual('0x0');

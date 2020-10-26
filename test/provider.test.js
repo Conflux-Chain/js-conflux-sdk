@@ -20,7 +20,7 @@ test('Invalid provider', () => {
   expect(() => providerFactory({ url: 'xxx' })).toThrow('Invalid provider options');
 });
 
-test('HttpProvider', async () => {
+test.skip('HttpProvider', async () => {
   const provider = providerFactory({ url: HTTP_URL });
   expect(provider.constructor.name).toEqual('HttpProvider');
 
@@ -37,7 +37,7 @@ test('HttpProvider', async () => {
   await provider.close();
 }, 60 * 1000);
 
-test('WebSocketProvider', async () => {
+test.skip('WebSocketProvider', async () => {
   const provider = providerFactory({ url: WS_URL });
   expect(provider.constructor.name).toEqual('WebSocketProvider');
 
@@ -51,8 +51,11 @@ test('WebSocketProvider', async () => {
   const id = await provider.call('cfx_subscribe', 'epochs');
   await new Promise(resolve => provider.once(id, resolve));
 
+  const promise = provider.call('cfx_epochNumber');
   provider.close();
   provider.close();
+  const error = await promise.catch(e => e);
+  expect(error.message).toMatch(/Normal connection closure/);
 
   await new Promise(resolve => setTimeout(resolve, 1000));
 }, 60 * 1000);

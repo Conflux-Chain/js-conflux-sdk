@@ -54,7 +54,7 @@ function unpack(coders, stream) {
 
   const array = coders.map(coder => {
     if (coder.dynamic) {
-      const offset = Number(uIntCoder.decode(stream));
+      const offset = format.uInt(uIntCoder.decode(stream));
       return new Pointer(startIndex + offset * 2);
     } else {
       return coder.decode(stream);

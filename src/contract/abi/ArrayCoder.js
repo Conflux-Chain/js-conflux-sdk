@@ -74,7 +74,7 @@ class ArrayCoder extends BaseCoder {
     let length = this.size;
 
     if (length === undefined) {
-      length = Number(uIntCoder.decode(stream));
+      length = format.uInt(uIntCoder.decode(stream));
     }
 
     const coders = lodash.range(length).map(() => this.coder);

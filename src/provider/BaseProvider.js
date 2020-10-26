@@ -99,9 +99,7 @@ class BaseProvider extends EventEmitter {
     return returnArray.map(({ result, error }) => (error ? new BaseProvider.RPCError(error) : result));
   }
 
-  close() {
-    this.removeAllListeners();
-  }
+  close() {}
 }
 
 module.exports = BaseProvider;

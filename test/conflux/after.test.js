@@ -239,7 +239,7 @@ test('sendTransaction', async () => {
   const receiptConfirmed = await promise.confirmed({ threshold: 1 });
   expect(receiptConfirmed.outcomeStatus).toEqual(0);
 
-  await expect(promise.confirmed({ timeout: 0 })).rejects.toThrow('Timeout');
+  await expect(promise.confirmed({ timeout: 0 })).rejects.toThrow('timeout');
 });
 
 // ------------------------------ contract ----------------------------------
@@ -335,7 +335,7 @@ test('subscribeNewHeads', async () => {
       epochNumber: null,
       gasLimit: '1',
       height: 10,
-      powQuality: '4095',
+      powQuality: '0xfff',
       timestamp: 1602644636,
       adaptive: false,
       blame: 0,

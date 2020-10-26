@@ -65,7 +65,7 @@ class BytesCoder extends BaseCoder {
   decode(stream) {
     let length = this.size;
     if (length === undefined) {
-      length = Number(uIntCoder.decode(stream));
+      length = format.uInt(uIntCoder.decode(stream));
     }
 
     return Buffer.from(stream.read(length * 2, true), 'hex');

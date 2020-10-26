@@ -93,7 +93,7 @@ test('sendTransaction MIN_GAS_PRICE', async () => {
   const signTransaction = jest.spyOn(account, 'signTransaction');
 
   const getGasPrice = jest.spyOn(conflux, 'getGasPrice');
-  getGasPrice.mockReturnValue(0);
+  getGasPrice.mockReturnValue('0');
 
   await conflux.sendTransaction({
     from: account,
@@ -124,7 +124,7 @@ test('sendTransaction MIN_GAS_PRICE', async () => {
 
 test('sendTransaction auto', async () => {
   const getNextNonce = jest.spyOn(conflux, 'getNextNonce');
-  getNextNonce.mockReturnValue(100);
+  getNextNonce.mockReturnValue('100');
 
   const getStatus = jest.spyOn(conflux, 'getStatus');
   getStatus.mockReturnValue({ chainId: format.uInt(1) });
@@ -133,12 +133,12 @@ test('sendTransaction auto', async () => {
   getEpochNumber.mockReturnValue(1000);
 
   const getGasPrice = jest.spyOn(conflux, 'getGasPrice');
-  getGasPrice.mockReturnValue(10);
+  getGasPrice.mockReturnValue('10');
 
   const estimateGasAndCollateral = jest.spyOn(conflux, 'estimateGasAndCollateral');
   estimateGasAndCollateral.mockReturnValue({
-    gasUsed: format.bigUInt(1024),
-    storageCollateralized: format.bigUInt(2048),
+    gasUsed: format.bigUIntDec(1024),
+    storageCollateralized: format.bigUIntDec(2048),
   });
 
   const call = jest.spyOn(conflux.provider, 'call');
@@ -159,8 +159,8 @@ test('sendTransaction auto', async () => {
     from: account.address,
     to: account.address,
     gas: CONST.TRANSACTION_GAS,
-    gasPrice: 10,
-    nonce: 100,
+    gasPrice: '10',
+    nonce: '100',
     storageLimit: CONST.TRANSACTION_STORAGE_LIMIT,
   });
 
@@ -178,8 +178,8 @@ test('sendTransaction auto', async () => {
     epochHeight: 1000,
     from: account.address,
     gas: Math.round(1024 * 1.1).toString(),
-    gasPrice: 10,
-    nonce: 100,
+    gasPrice: '10',
+    nonce: '100',
     storageLimit: Math.round(2048 * 1.1).toString(),
     data: '0xabcd',
   });
@@ -195,8 +195,8 @@ test('sendTransaction auto', async () => {
     epochHeight: 1000,
     from: account.address,
     gas: 1000,
-    gasPrice: 10,
-    nonce: 100,
+    gasPrice: '10',
+    nonce: '100',
     storageLimit: Math.round(2048 * 1.1).toString(),
     data: '0xabcd',
   });
@@ -212,8 +212,8 @@ test('sendTransaction auto', async () => {
     epochHeight: 1000,
     from: account.address,
     gas: Math.round(1024 * 1.1).toString(),
-    gasPrice: 10,
-    nonce: 100,
+    gasPrice: '10',
+    nonce: '100',
     storageLimit: 2000,
     data: '0xabcd',
   });

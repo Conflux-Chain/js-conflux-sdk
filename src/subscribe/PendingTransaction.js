@@ -1,4 +1,6 @@
-const { sleep, loop } = require('../util');
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 class PendingTransaction {
   constructor(conflux, func, args) {
@@ -55,14 +57,19 @@ class PendingTransaction {
    * @return {Promise<object>} See [Conflux.getTransactionByHash](#Conflux.js/getTransactionByHash)
    */
   async mined({ delta = 1000, timeout = 60 * 1000 } = {}) {
-    return loop({ delta, timeout }, async () => {
+    const startTime = Date.now();
+
+    const transactionHash = await this;
+    for (let lastTime = startTime; lastTime < startTime + timeout; lastTime = Date.now()) {
       const transaction = await this.get();
       if (transaction && transaction.blockHash) {
         return transaction;
       }
 
-      return undefined;
-    });
+      await sleep(lastTime + delta - Date.now());
+    }
+
+    throw new Error(`wait transaction "${transactionHash}" mined timeout after ${Date.now() - startTime} ms`);
   }
 
   /**
@@ -78,19 +85,22 @@ class PendingTransaction {
    * @return {Promise<object>} See [Conflux.getTransactionReceipt](#Conflux.js/getTransactionReceipt)
    */
   async executed({ delta = 1000, timeout = 5 * 60 * 1000 } = {}) {
+    const startTime = Date.now();
+
     const transactionHash = await this;
-    return loop({ delta, timeout }, async () => {
+    for (let lastTime = startTime; lastTime < startTime + timeout; lastTime = Date.now()) {
       const receipt = await this.conflux.getTransactionReceipt(transactionHash);
       if (receipt) {
         if (receipt.outcomeStatus !== 0) {
           throw new Error(`transaction "${transactionHash}" executed failed, outcomeStatus ${receipt.outcomeStatus}`);
         }
-
         return receipt;
       }
 
-      return undefined;
-    });
+      await sleep(lastTime + delta - Date.now());
+    }
+
+    throw new Error(`wait transaction "${transactionHash}" executed timeout after ${Date.now() - startTime} ms`);
   }
 
   /**
@@ -106,15 +116,20 @@ class PendingTransaction {
    * @return {Promise<object>} See [Conflux.getTransactionReceipt](#Conflux.js/getTransactionReceipt)
    */
   async confirmed({ delta = 1000, timeout = 30 * 60 * 1000, threshold = 1e-8 } = {}) {
-    return loop({ delta, timeout }, async () => {
-      const receipt = await this.executed({ delta, timeout });
+    const startTime = Date.now();
+
+    const transactionHash = await this;
+    for (let lastTime = startTime; lastTime < startTime + timeout; lastTime = Date.now()) {
+      const receipt = await this.executed({ delta, timeout }); // must get receipt every time, cause blockHash might change
       const risk = await this.conflux.getConfirmationRiskByHash(receipt.blockHash);
       if (risk <= threshold) {
         return receipt;
       }
 
-      return undefined;
-    });
+      await sleep(lastTime + delta - Date.now());
+    }
+
+    throw new Error(`wait transaction "${transactionHash}" confirmed timeout after ${Date.now() - startTime} ms`);
   }
 }
 
