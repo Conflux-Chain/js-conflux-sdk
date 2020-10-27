@@ -1,6 +1,6 @@
 # change log
 
-## v1.0.0-beta.0
+## v1.0.0-beta.1
 
 * add `defaultGasRatio` and `defaultStorageRatio`
 
