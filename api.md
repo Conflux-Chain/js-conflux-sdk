@@ -1068,6 +1068,7 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](
 
 `Promise.<object>` A estimate result object:
 - `BigInt` gasUsed: The gas used.
+- `BigInt` gasLimit: The gas limit.
 - `BigInt` storageCollateralized: The storage collateralized in Byte.
 
 ### Conflux.prototype.getLogs <a id="Conflux.js/Conflux/getLogs"></a>

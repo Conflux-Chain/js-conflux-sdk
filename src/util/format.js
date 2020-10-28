@@ -465,6 +465,7 @@ format.account = parser({
 
 format.estimate = parser({
   gasUsed: format.bigUInt,
+  gasLimit: format.bigUInt,
   storageCollateralized: format.bigUInt,
 });
 

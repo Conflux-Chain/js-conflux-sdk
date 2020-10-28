@@ -26,17 +26,42 @@ class Client extends websocket.client {
   }
 
   async send(...args) {
-    if (!this.connection) {
-      this.connection = await this.connect(this.requestUrl);
+    if (this.connection === null) { // init|closed
+      this.connection = false;
+      try {
+        this.connection = await this.connect(this.requestUrl);
+      } catch (e) {
+        this.connection = null;
+        throw e;
+      }
     }
+
+    if (this.connection === false) { // connecting
+      await new Promise(((resolve, reject) => {
+        this.once('connect', resolve);
+        this.once('connectFailed', reject);
+      }));
+    }
+
     return this.connection.send(...args);
   }
 
-  close() {
-    if (this.connection) {
-      this.connection.close();
-      this.connection = null;
+  async close() {
+    if (this.connection === null) { // init|closed
+      return;
     }
+
+    if (this.connection === false) { // connecting
+      await new Promise(((resolve, reject) => {
+        this.once('connect', resolve);
+        this.once('connectFailed', reject);
+      }));
+    }
+
+    this.connection.close();
+    this.connection.once('close', () => {
+      this.connection = null;
+    });
   }
 }
 

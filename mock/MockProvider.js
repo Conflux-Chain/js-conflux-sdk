@@ -366,6 +366,7 @@ class MockProvider extends EventEmitter {
   cfx_estimateGasAndCollateral() {
     return {
       gasUsed: randomHex(4),
+      gasLimit: randomHex(4),
       storageCollateralized: randomHex(4),
     };
   }

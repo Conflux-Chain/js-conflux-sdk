@@ -968,6 +968,7 @@ class Conflux {
    * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
    * @return {Promise<object>} A estimate result object:
    * - `BigInt` gasUsed: The gas used.
+   * - `BigInt` gasLimit: The gas limit.
    * - `BigInt` storageCollateralized: The storage collateralized in Byte.
    */
   async estimateGasAndCollateral(options, epochNumber) {

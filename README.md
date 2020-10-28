@@ -62,12 +62,12 @@ or
 
 ## Examples
 
-* [Create conflux instance](https://github.com/Conflux-Chain/js-conflux-sdk/blob/v1.x/example/0_create_conflux.js)
-* [Account and balance](https://github.com/Conflux-Chain/js-conflux-sdk/blob/v1.x/example/1_account_and_balance.js)
-* [Send transaction](https://github.com/Conflux-Chain/js-conflux-sdk/blob/v1.x/example/2_send_transaction.js)
-* [Query epoch block transaction](https://github.com/Conflux-Chain/js-conflux-sdk/blob/v1.x/example/3_epoch_block_transaction.js)
-* [Contract deploy and call](https://github.com/Conflux-Chain/js-conflux-sdk/blob/v1.x/example/4_contract_deploy_and_call.js)
-* [Contract override](https://github.com/Conflux-Chain/js-conflux-sdk/blob/v1.x/example/5_contract_override.js)
+* [Create conflux instance](https://github.com/Conflux-Chain/js-conflux-sdk/tree/master/example/0_create_conflux.js)
+* [Account and balance](https://github.com/Conflux-Chain/js-conflux-sdk/tree/master/example/1_account_and_balance.js)
+* [Send transaction](https://github.com/Conflux-Chain/js-conflux-sdk/tree/master/example/2_send_transaction.js)
+* [Query epoch block transaction](https://github.com/Conflux-Chain/js-conflux-sdk/tree/master/example/3_epoch_block_transaction.js)
+* [Contract deploy and call](https://github.com/Conflux-Chain/js-conflux-sdk/tree/master/example/4_contract_deploy_and_call.js)
+* [Contract override](https://github.com/Conflux-Chain/js-conflux-sdk/tree/master/example/5_contract_override.js)
 
 ### Send transaction simple
 
@@ -152,7 +152,7 @@ main();
 
 ```javascript
 const { Conflux } = require('js-conflux-sdk');
-const { abi, bytecode } = MINI_ERC20; // see https://github.com/Conflux-Chain/js-conflux-sdk/blob/v1.x/example/contract/miniERC20.json
+const { abi, bytecode } = MINI_ERC20; // see https://github.com/Conflux-Chain/js-conflux-sdk/tree/master/example/contract/miniERC20.json
 
 async function main() {
   const conflux = new Conflux({ url: 'http://testnet-jsonrpc.conflux-chain.org:12537' });
@@ -191,7 +191,7 @@ main();
 
 ```javascript
 const { Conflux } = require('js-conflux-sdk');
-const { abi } = MINI_ERC20; // see https://github.com/Conflux-Chain/js-conflux-sdk/blob/v1.x/example/contract/miniERC20.json
+const { abi } = MINI_ERC20; // see https://github.com/Conflux-Chain/js-conflux-sdk/tree/master/example/contract/miniERC20.json
 
 async function main() {
   const conflux = new Conflux({ url: 'http://testnet-jsonrpc.conflux-chain.org:12537' });
