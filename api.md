@@ -2897,13 +2897,13 @@ Wallet to manager accounts.
 
 #### Wallet.prototype.has <a id="wallet/Wallet.js/Wallet/has"></a>
 
-Check if key exist
+Check if address exist
 
 * **Parameters**
 
-Name | Type     | Required | Default | Description
------|----------|----------|---------|------------
-key  | `string` | true     |         |
+Name    | Type     | Required | Default | Description
+--------|----------|----------|---------|------------
+address | `string` | true     |         |
 
 * **Returns**
 
@@ -2911,13 +2911,13 @@ key  | `string` | true     |         |
 
 #### Wallet.prototype.delete <a id="wallet/Wallet.js/Wallet/delete"></a>
 
-Drop one account by key
+Drop one account by address
 
 * **Parameters**
 
-Name | Type     | Required | Default | Description
------|----------|----------|---------|------------
-key  | `string` | true     |         |
+Name    | Type     | Required | Default | Description
+--------|----------|----------|---------|------------
+address | `string` | true     |         |
 
 * **Returns**
 
@@ -2933,7 +2933,7 @@ Drop all account in wallet
 
 Name    | Type      | Required | Default | Description
 --------|-----------|----------|---------|-------------------------------------
-key     | `string`  | true     |         | Key of account, usually is `address`
+address | `string`  | true     |         | Key of account, usually is `address`
 account | `Account` | true     |         | Account instance
 
 * **Returns**
@@ -2944,9 +2944,9 @@ account | `Account` | true     |         | Account instance
 
 * **Parameters**
 
-Name | Type     | Required | Default | Description
------|----------|----------|---------|------------
-key  | `string` | true     |         |
+Name    | Type     | Required | Default | Description
+--------|----------|----------|---------|------------
+address | `string` | true     |         |
 
 * **Returns**
 

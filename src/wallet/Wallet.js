@@ -14,9 +14,12 @@ class Wallet extends Map {
    * @return {boolean}
    */
   has(address) {
-    address = format.address(address);
-
-    return super.has(address); // XXX: for jsdoc
+    try {
+      address = format.address(address);
+      return super.has(address);
+    } catch (e) {
+      return false;
+    }
   }
 
   /**
@@ -26,9 +29,12 @@ class Wallet extends Map {
    * @return {boolean}
    */
   delete(address) {
-    address = format.address(address);
-
-    return super.delete(address); // XXX: for jsdoc
+    try {
+      address = format.address(address);
+      return super.delete(address);
+    } catch (e) {
+      return false;
+    }
   }
 
   /**

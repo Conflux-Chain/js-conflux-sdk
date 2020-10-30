@@ -409,13 +409,13 @@ format.signTx = parser({
 }, true);
 
 format.sendTx = parser({
-  from: format.address,
+  from: format.address.$or(undefined),
   nonce: format.bigUIntHex.$or(undefined),
-  gasPrice: format.bigUIntHex,
-  gas: format.bigUIntHex,
+  gasPrice: format.bigUIntHex.$or(undefined),
+  gas: format.bigUIntHex.$or(undefined),
   to: format.address.$or(null).$or(undefined),
   value: format.bigUIntHex.$or(undefined),
-  storageLimit: format.bigUIntHex,
+  storageLimit: format.bigUIntHex.$or(undefined),
   epochHeight: format.bigUIntHex.$or(undefined),
   chainId: format.bigUIntHex.$or(undefined),
   data: format.hex.$or(undefined),

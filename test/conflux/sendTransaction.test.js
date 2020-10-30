@@ -12,13 +12,16 @@ const account = conflux.wallet.addPrivateKey(PRIVATE_KEY);
 
 test('sendTransaction error', async () => {
   await expect(conflux.sendTransaction()).rejects.toThrow('Cannot read property');
-  await expect(conflux.sendTransaction({})).rejects.toThrow('not match hex');
 });
 
 test('sendTransaction remote', async () => {
   const call = jest.spyOn(conflux.provider, 'call');
 
   expect(conflux.wallet.has(ADDRESS)).toEqual(false);
+
+  await conflux.sendTransaction({}, PASSWORD);
+  expect(call).toHaveBeenLastCalledWith('cfx_sendTransaction', {}, PASSWORD);
+
   await conflux.sendTransaction({
     from: ADDRESS,
     gasPrice: 10,
