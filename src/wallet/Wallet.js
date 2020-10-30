@@ -1,4 +1,5 @@
 const { assert } = require('../util');
+const format = require('../util/format');
 const Account = require('./Account');
 const PrivateKeyAccount = require('./PrivateKeyAccount');
 
@@ -7,23 +8,27 @@ const PrivateKeyAccount = require('./PrivateKeyAccount');
  */
 class Wallet extends Map {
   /**
-   * Check if key exist
+   * Check if address exist
    *
-   * @param key {string}
+   * @param address {string}
    * @return {boolean}
    */
-  has(key) {
-    return super.has(key); // XXX: for jsdoc
+  has(address) {
+    address = format.address(address);
+
+    return super.has(address); // XXX: for jsdoc
   }
 
   /**
-   * Drop one account by key
+   * Drop one account by address
    *
-   * @param key {string}
+   * @param address {string}
    * @return {boolean}
    */
-  delete(key) {
-    return super.delete(key); // XXX: for jsdoc
+  delete(address) {
+    address = format.address(address);
+
+    return super.delete(address); // XXX: for jsdoc
   }
 
   /**
@@ -34,23 +39,27 @@ class Wallet extends Map {
   }
 
   /**
-   * @param key {string} - Key of account, usually is `address`
+   * @param address {string} - Key of account, usually is `address`
    * @param account {Account} - Account instance
    * @return {Wallet}
    */
-  set(key, account) {
-    assert(!this.has(key), `Wallet already has account "${key}"`);
+  set(address, account) {
+    address = format.address(address);
+
+    assert(!this.has(address), `Wallet already has account "${address}"`);
     assert(account instanceof Account, `value not instance of Account, got ${account}`);
-    return super.set(key, account);
+    return super.set(address, account);
   }
 
   /**
-   * @param key {string}
+   * @param address {string}
    * @return {Account}
    */
-  get(key) {
-    const account = super.get(key);
-    assert(account instanceof Account, `can not found Account by "${key}"`);
+  get(address) {
+    address = format.address(address);
+
+    const account = super.get(address);
+    assert(account instanceof Account, `can not found Account by "${address}"`);
     return account;
   }
 

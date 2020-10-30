@@ -1,4 +1,4 @@
-const { Conflux, sign } = require('../src');
+const { Conflux, sign, format } = require('../src');
 const BaseAccount = require('../src/wallet/Account');
 
 const PRIVATE_KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
@@ -39,13 +39,8 @@ test('set', async () => {
 
   conflux.wallet.set(ADDRESS, account);
   expect(conflux.wallet.has(ADDRESS)).toEqual(true);
-});
-
-test('set by nick name', async () => {
-  const account = new BaseAccount(ADDRESS);
-
-  conflux.wallet.set('Bob', account);
-  expect(conflux.wallet.has('Bob')).toEqual(true);
+  expect(conflux.wallet.has(format.checksumAddress(ADDRESS))).toEqual(true);
+  expect(() => conflux.wallet.has(`${ADDRESS.substr(0, 20)}${ADDRESS.substr(20).toUpperCase()}`)).toThrow('checksum error');
 });
 
 test('set not BaseAccount', async () => {
@@ -60,6 +55,7 @@ test('set already exist', async () => {
 
   conflux.wallet.delete(ADDRESS);
   conflux.wallet.set(ADDRESS, account);
+  expect(conflux.wallet.has(ADDRESS)).toEqual(true);
 });
 
 test('addPrivateKey', async () => {
