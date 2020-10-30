@@ -1,7 +1,7 @@
 {
   "name": "js-conflux-sdk",
   "description": "JavaScript Conflux Software Development Kit",
-  "version": "0.13.6",
+  "version": "1.0.0-beta.3",
   "license": "LGPL-3.0",
   "author": "Haizhou@conflux-chain.org",
   "repository": "https://github.com/Conflux-Chain/js-conflux-sdk.git",
@@ -27,26 +27,28 @@
     "big.js": "^5.2.2",
     "jsbi": "^3.1.1",
     "keccak": "^2.0.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "scrypt-js": "^3.0.1",
     "secp256k1": "^3.7.1",
-    "superagent": "^5.1.0"
+    "superagent": "^5.1.0",
+    "websocket": "^1.0.31"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
     "@babel/plugin-transform-runtime": "^7.8.3",
     "@babel/preset-env": "^7.8.4",
-    "@geekberry/jsdoc-to-md": "^0.0.5",
+    "@geekberry/jsdoc-to-md": "0.0.8",
+    "@types/node": "^14.0.23",
     "babel-plugin-lodash": "^3.3.4",
     "babelify": "^10.0.0",
     "browserify": "^16.5.1",
     "concurrently": "^5.1.0",
-    "eslint": "^6.3.0",
+    "eslint": "^7.12.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2",
     "exorcist": "^1.0.1",
     "fs-extra": "^8.1.0",
-    "jest": "^24.9.0",
+    "jest": "26.6.0",
     "minify-stream": "^2.0.1",
     "mold-source-map": "^0.4.0",
     "solc": "^0.6.10"
@@ -57,13 +59,16 @@
     "tinyify/unassertify/unassert/acorn": "7.1.1",
     "**/minimist": "^1.2.3",
     "**/kind-of": "^6.0.3",
+    "**/elliptic": "^6.5.3",
+    "**/lodash": "^4.17.20",
+    "**/babel-jest": "^26.6.0",
     "jest/jest-cli/jest-config/jest-environment-jsdom/jsdom/acorn-globals/acorn": "6.4.1"
   },
   "scripts": {
-    "eslint:fix": "eslint --fix ./src ./test ./mock",
-    "build": "node development/build-frontend.js",
-    "document": "node document.js",
+    "eslint": "eslint ./src ./test ./mock",
+    "build": "node scripts/build-frontend.js",
+    "document": "node scripts/document.js",
     "prepublishOnly": "npm run build",
-    "test": "jest"
+    "test": "jest --coverage"
   }
 }

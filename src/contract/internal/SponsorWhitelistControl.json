@@ -1,0 +1,190 @@
+{
+  "address": "0x0888000000000000000000000000000000000001",
+  "abi": [
+    {
+      "type": "function",
+      "name": "addPrivilege",
+      "inputs": [
+        {
+          "type": "address[]"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "addPrivilegeByAdmin",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "contractAddr"
+        },
+        {
+          "type": "address[]",
+          "name": "addresses"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "getSponsorForCollateral",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "contractAddr"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "address"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "getSponsorForGas",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "contractAddr"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "address"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "getSponsoredBalanceForCollateral",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "contractAddr"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "getSponsoredBalanceForGas",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "contractAddr"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "getSponsoredGasFeeUpperBound",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "contractAddr"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "isAllWhitelisted",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "contractAddr"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "isWhitelisted",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "contractAddr"
+        },
+        {
+          "type": "address",
+          "name": "user"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "removePrivilege",
+      "inputs": [
+        {
+          "type": "address[]"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "removePrivilegeByAdmin",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "contractAddr"
+        },
+        {
+          "type": "address[]",
+          "name": "addresses"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "setSponsorForCollateral",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "contractAddr"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "setSponsorForGas",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "contractAddr"
+        },
+        {
+          "type": "uint256",
+          "name": "upperBound"
+        }
+      ],
+      "outputs": []
+    }
+  ]
+}

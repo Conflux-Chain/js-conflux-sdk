@@ -1,0 +1,95 @@
+{
+  "address": "0x0888000000000000000000000000000000000002",
+  "abi": [
+    {
+      "type": "function",
+      "name": "deposit",
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "amount"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "getLockedStakingBalance",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "user"
+        },
+        {
+          "type": "uint256",
+          "name": "blockNumber"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "getStakingBalance",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "user"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "getVotePower",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "user"
+        },
+        {
+          "type": "uint256",
+          "name": "blockNumber"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "voteLock",
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "amount"
+        },
+        {
+          "type": "uint256",
+          "name": "unlockBlockNumber"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "withdraw",
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "amount"
+        }
+      ],
+      "outputs": []
+    }
+  ]
+}

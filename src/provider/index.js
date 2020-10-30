@@ -1,26 +1,53 @@
+const lodash = require('lodash');
 const BaseProvider = require('./BaseProvider');
 const HttpProvider = require('./HttpProvider');
-// const WebsocketProvider = require('./WebsocketProvider');
+const WebsocketProvider = require('./WebSocketProvider');
 
-function providerFactory(url, options) {
-  let provider;
-
-  if (typeof url !== 'string') {
-    throw new Error(`url must be string, got ${url}`);
+/**
+ * @param options {object}
+ * @param options.url {string}
+ * @return {WebsocketProvider|HttpProvider|BaseProvider}
+ *
+ * @example
+ * > providerFactory()
+ BaseProvider {
+    url: undefined,
+    timeout: 300000,
+    logger: { info: [Function: info], error: [Function: error] }
+  }
+ * @example
+ * > providerFactory({ url: 'http://localhost:12537' })
+ HttpProvider {
+    url: 'http://localhost:12537',
+    timeout: 300000,
+    logger: { info: [Function: info], error: [Function: error] }
   }
 
+ * > providerFactory({
+    url: 'http://mainnet-jsonrpc.conflux-chain.org:12537',
+    timeout: 60 * 60 * 1000,
+    logger: console,
+  }
+ HttpProvider {
+    url: 'http://mainnet-jsonrpc.conflux-chain.org:12537',
+    timeout: 3600000,
+    logger: {...}
+  }
+ */
+function providerFactory({ url, ...rest }) {
   if (!url) {
-    provider = new BaseProvider(url, options); // empty provider
-  } else if (url.startsWith('http')) {
-    provider = new HttpProvider(url, options);
-  } else if (url.startsWith('ws')) {
-    throw new Error(`Invalid protocol or url "${url}"`); // FIXME: support ws in browser
-    // provider = new WebsocketProvider(url, options);
-  } else {
-    throw new Error(`Invalid protocol or url "${url}"`);
+    return new BaseProvider(rest); // empty provider
   }
 
-  return provider;
+  if (lodash.startsWith(url, 'http')) {
+    return new HttpProvider({ url, ...rest });
+  }
+
+  if (lodash.startsWith(url, 'ws')) {
+    return new WebsocketProvider({ url, ...rest }); // FIXME: support ws in browser
+  }
+
+  throw new Error('Invalid provider options');
 }
 
 module.exports = providerFactory;

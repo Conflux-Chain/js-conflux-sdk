@@ -1,5 +1,239 @@
 # change log
 
+## v1.0.0-beta.1
+
+* add `defaultGasRatio` and `defaultStorageRatio`
+
+```
+conflux = new Conflux({
+  defaultGasRatio: 1.1,
+  defaultStorageRatio: 1.1,
+  ...
+})
+```
+
+* add `BaseAccount` and `PrivateKeyAccount`
+
+Account `signTransaction` and `signMessage` to be `async`
+
+* add wallet
+
+wallet use for create and manage `Account` by address
+
+```
+account = conflux.wallet.addRandom()
+console.log(conflux.wallet.has(account.address)); // true
+
+account = conflux.wallet.addPrivateKey(PRIVATE_KEY)
+console.log(conflux.wallet.has(account.address)); // true
+
+account = conflux.wallet.addKeystore(keystore, password)
+console.log(conflux.wallet.has(account.address)); // true
+```
+
+wallet use for sendTransaction
+
+```
+// old
+account = conflux.Account(PRIVATE_KEY);
+
+conflux.sendTransaction({
+  from: account.address, // address will call `cfx_sendTranscion`
+  ...
+})
+
+conflux.sendTransaction({
+  from: account, // must be instance of `Account` to sign by sdk and call `cfx_sendRawTransaction`
+  ...
+})
+```
+
+```
+// new
+conflux.sendTransaction({
+  from: address, // if address not in `conflux.wallet`, call `cfx_sendTranscion`
+  ...
+})
+
+account = conflux.wallet.addPrivate(PRIVATE_KEY);
+
+conflux.sendTransaction({
+  from: account.address, // if account in `conflux.wallet`, sign by account and call `cfx_sendRawTransaction`
+  ...
+})
+
+conflux.sendTransaction({
+  from: account, // same as `from: account.address`, but some user think input account instance with privateKey is unsafe
+  ...
+})
+```
+
+* add Subscription
+
+```
+await conflux.subscribe(name, ...args); // => id
+await conflux.subscribeEpochs(); // => Subscription with event 'data'
+await conflux.subscribeNewHeads(); // => Subscription with event 'data'
+await conflux.subscribeLogs(); // => Subscription with event 'data', 'revert'
+await conflux.unsubscribe(id); // => boolean
+await conflux.unsubscribe(subscription); // => boolean  
+```
+
+* add internal contract
+
+```
+contract = conflux.InternalContract('AdminControl');
+console.log(contract);
+
+contract = conflux.InternalContract('SponsorWhitelistControl');
+console.log(contract);
+
+contract = conflux.InternalContract('Staking');
+console.log(contract);
+```
+
+* add checksum address
+
+```
+// old
+conflux.getBalance('0x1B716c51381e76900EBAA7999A488511A4E1fD0a'); // ok
+conflux.getBalance('0x1B716c51381e76900EBAA7999A488511A4E1fD0A'); // ok
+
+// new
+conflux.getBalance('0x1B716c51381e76900EBAA7999A488511A4E1fD0a'); // ok 
+conflux.getBalance('0x1B716c51381e76900EBAA7999A488511A4E1fD0A'); // Error('address checksum error')
+```
+
+* `providerFactory` only accept first argument as override options
+
+```
+// old
+provider = providerFactory('http://localhost:12537')
+
+// new
+provider = providerFactory({ url: 'http://localhost:12537' })
+```
+
+* add batch request
+
+```
+provider = providerFactory({ url: 'http://localhost:12537' })
+
+array = await provider.batch([
+  { method: 'cfx_epochNumber' },
+  { method: 'cfx_getBalance', params: ['0x0123456789012345678901234567890123456789'] },
+])
+/*
+[
+  '0x1381',
+  '0x0',
+]
+*/
+```
+
+* add WebSocketProvider
+
+```
+provider = providerFactory({ url: 'ws://localhost:12535' })
+
+provider.close(); // user need to close before process ternimal
+```
+
+* BaseProvider instanceof EventEmitter
+
+```
+const EventEmitter = require('events');
+
+// old
+console.log(new BaseProvider() instanceof EventEmitter); // false
+console.log(new HttpProvider() instanceof EventEmitter); // false
+
+// new
+console.log(new BaseProvider({}) instanceof EventEmitter); // true
+console.log(new HttpProvider({}) instanceof EventEmitter); // true
+console.log(new WebSocketProvider({}) instanceof EventEmitter); // true
+```
+
+* add CONST
+
+```
+const { CONST } = require('js-conflux-sdk');
+
+console.log(CONST.EPOCH_NUMBER)
+
+/*
+{
+  LATEST_MINED: 'latest_mined',
+  LATEST_STATE: 'latest_state',
+  LATEST_CONFIRMED: 'latest_confirmed',
+  LATEST_CHECKPOINT: 'latest_checkpoint',
+  EARLIEST: 'earliest'
+}
+*/
+```
+
+* export `format` and `sign` without `util`
+
+```
+// old
+const { util: {format, sign} } = require('js-conflux-sdk');
+
+// new
+const { format, sign } = require('js-conflux-sdk');
+```
+
+* add `Drip` to replace unit
+
+```
+// old
+const { util } = require('js-conflux-sdk');
+
+const balance = await conflux.getBalance(ADDRESS);
+console.log(util.unit.fromDripToCFX(balance))
+
+// new
+const { Drip } = require('js-conflux-sdk');
+
+const balance = await conflux.getBalance(ADDRESS);
+console.log(Drip(balance).toCFX())
+```
+
+for input, use `Drip.fromXXX` to get drip number string
+
+```
+// old
+const { util } = require('js-conflux-sdk');
+
+const tx = {
+  to: ADDRESS,
+  value: util.unit.fromCFXToDrip(0.1),
+  ...
+}
+
+// new
+const { Drip } = require('js-conflux-sdk');
+
+const tx = {
+  to: ADDRESS,
+  value: Drip.fromCFX(0.1),
+  ...
+}
+```
+
+* include all method from conflux JSON_RPC document
+
+[JSON_RPC](https://developer.conflux-chain.org/docs/conflux-doc/docs/json_rpc) 
+
+* friendly example code
+
+example will guide user to use SDK step by step
+
+* charming code organization
+
+split abi coder with types
+
+split contract method, event and override
+
 ## v0.13.4
 
 * rename `send_transaction` to `cfx_sendTransaction`

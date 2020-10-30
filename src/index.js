@@ -1,15 +1,21 @@
-const util = require('./util');
+const CONST = require('./CONST');
 const Conflux = require('./Conflux');
-const Account = require('./Account');
+const Wallet = require('./wallet');
 const Transaction = require('./Transaction');
 const Message = require('./Message');
-const provider = require('./provider');
+const Drip = require('./Drip');
+const providerFactory = require('./provider');
+const sign = require('./util/sign');
+const format = require('./util/format');
 
 module.exports = {
-  util,
+  CONST,
   Conflux,
-  Account,
+  Wallet,
   Transaction,
   Message,
-  provider,
+  Drip,
+  providerFactory,
+  sign,
+  format,
 };

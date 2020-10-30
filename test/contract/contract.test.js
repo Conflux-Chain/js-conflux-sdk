@@ -1,31 +1,28 @@
-const JSBI = require('jsbi');
-const { Conflux } = require('../../src');
-const sign = require('../../src/util/sign');
-const format = require('../../src/util/format');
+const { Conflux, format, sign } = require('../../src');
 const { MockProvider } = require('../../mock');
 const { abi, bytecode, address } = require('./contract.json');
-const ContractConstructor = require('../../src/contract/ContractConstructor');
+const ContractConstructor = require('../../src/contract/method/ContractConstructor');
 
 const ADDRESS = '0xfcad0b19bb29d4674531d6f115237e16afce377c';
-const HEX_64 = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
+const HEX64 = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 
-function sha3(string) {
-  return format.hex(sign.sha3(Buffer.from(string)));
+function keccak256(string) {
+  return format.hex(sign.keccak256(Buffer.from(string)));
 }
 
 // ----------------------------------------------------------------------------
-const cfx = new Conflux();
-cfx.provider = new MockProvider();
+const conflux = new Conflux();
+conflux.provider = new MockProvider();
 
-const contract = cfx.Contract({ abi, bytecode, address });
+const contract = conflux.Contract({ abi, bytecode, address });
 
 test('without code', async () => {
-  const contractWithoutCode = cfx.Contract({ abi, address });
+  const contractWithoutCode = conflux.Contract({ abi, address });
   expect(() => contractWithoutCode.constructor(100)).toThrow('bytecode is empty');
 });
 
 test('with empty abi', () => {
-  const contractWithEmptyABI = cfx.Contract({ abi: [], address });
+  const contractWithEmptyABI = conflux.Contract({ abi: [], address });
   expect(contractWithEmptyABI.constructor instanceof ContractConstructor).toEqual(true);
 });
 
@@ -35,9 +32,6 @@ test('Contract', async () => {
   expect(contract.address).toEqual(address);
   expect(contract.constructor.bytecode).toEqual(bytecode);
 
-  const { contractCreated } = await contract.constructor(100).sendTransaction({ from: ADDRESS, nonce: 0 }).executed();
-  expect(contractCreated === null || contractCreated.startsWith('0x')).toEqual(true);
-
   value = await contract.constructor(100);
   expect(value.startsWith('0x')).toEqual(true);
 
@@ -46,22 +40,23 @@ test('Contract', async () => {
 
   value = await contract.inc(0).call({ from: ADDRESS, nonce: 0 });
   expect(value.toString()).toEqual('100');
+});
 
-  value = await contract.count().estimateGasAndCollateral({ gasPrice: 101 });
-  expect(value.gasUsed.constructor).toEqual(JSBI);
-  expect(value.storageCollateralized.constructor).toEqual(JSBI);
+test('Internal Contract', async () => {
+  const adminControl = conflux.InternalContract('AdminControl');
+  expect(adminControl.address).toEqual('0x0888000000000000000000000000000000000000');
 
-  const logs = await contract.SelfEvent(ADDRESS, null).getLogs({ fromEpoch: 0 }); // `fromEpoch` for mock parse
-  expect(logs.length).toEqual(2);
+  const sponsorWhitelistControl = conflux.InternalContract('SponsorWhitelistControl');
+  expect(sponsorWhitelistControl.address).toEqual('0x0888000000000000000000000000000000000001');
 
-  const iter = contract.SelfEvent(null, null).getLogs({ toEpoch: 0x00 });
-  expect(Boolean(await iter.next({ threshold: 1 }))).toEqual(true);
-  expect(Boolean(await iter.next({ threshold: 1 }))).toEqual(true);
-  expect(Boolean(await iter.next({ threshold: 1 }))).toEqual(false);
+  const staking = conflux.InternalContract('Staking');
+  expect(staking.address).toEqual('0x0888000000000000000000000000000000000002');
+
+  expect(() => conflux.InternalContract('xxx')).toThrow('can not find internal contract');
 });
 
 test('contract.call', async () => {
-  const call = jest.spyOn(cfx.provider, 'call');
+  const call = jest.spyOn(conflux.provider, 'call');
   call.mockReturnValueOnce('0x00000000000000000000000000000000000000000000000000000000000000ff');
 
   const value = await contract.count();
@@ -86,6 +81,96 @@ test('contract.call', async () => {
   call.mockRestore();
 });
 
+test('contract.call catch', async () => {
+  const call = jest.spyOn(conflux.provider, 'call');
+
+  call.mockReturnValueOnce('0x00000000000000000000000000000000000000000000000000000000000000ff');
+  const value = await contract.count().catch(v => v);
+  expect(`${value}`).toEqual('255');
+
+  call.mockRejectedValueOnce(new Error('XXX'));
+  const error = await contract.count().catch(v => v);
+  expect(error.message).toEqual('XXX');
+
+  call.mockRestore();
+});
+
+test('contract.call finally', async () => {
+  const call = jest.spyOn(conflux.provider, 'call');
+
+  let called;
+
+  called = false;
+  await contract.count().finally(() => {
+    called = true;
+  });
+  expect(called).toEqual(true);
+
+  called = false;
+  call.mockRejectedValueOnce(new Error('XXX'));
+  await expect(
+    contract.count().finally(() => {
+      called = true;
+    }),
+  ).rejects.toThrow('XXX');
+  expect(called).toEqual(true);
+
+  call.mockRestore();
+});
+
+test('contract.estimateGasAndCollateral', async () => {
+  const call = jest.spyOn(conflux.provider, 'call');
+
+  await contract.count().estimateGasAndCollateral({});
+
+  expect(call).toHaveBeenLastCalledWith('cfx_estimateGasAndCollateral', {
+    to: address,
+    data: '0x06661abd',
+  }, undefined);
+
+  call.mockRestore();
+});
+
+test('contract.sendTransaction', async () => {
+  const call = jest.spyOn(conflux.provider, 'call');
+
+  await contract.count().sendTransaction({ from: ADDRESS, gasPrice: 0, gas: 0, storageLimit: 0 });
+
+  expect(call).toHaveBeenLastCalledWith('cfx_sendTransaction', {
+    from: ADDRESS,
+    to: address,
+    data: '0x06661abd',
+    gasPrice: '0x0',
+    gas: '0x0',
+    storageLimit: '0x0',
+  }, undefined);
+
+  call.mockRestore();
+});
+
+test('contract.getLogs', async () => {
+  const call = jest.spyOn(conflux.provider, 'call');
+
+  const topics = [keccak256('StringEvent(string)'), keccak256('string')];
+  call.mockReturnValueOnce([
+    {
+      epochNumber: '0x0',
+      logIndex: '0x0',
+      transactionIndex: '0x0',
+      transactionLogIndex: '0x0',
+      topics,
+      data: '0x',
+    },
+  ]);
+
+  const result = await contract.StringEvent('string').getLogs();
+  expect(result[0].params).toEqual([topics[1]]);
+
+  expect(call).toHaveBeenLastCalledWith('cfx_getLogs', { address, topics });
+
+  call.mockRestore();
+});
+
 test('contract.override', () => {
   expect(contract.override(Buffer.from('bytes')).method.type).toEqual('override(bytes)');
 
@@ -101,97 +186,101 @@ test('contract.override', () => {
 
   event = contract.OverrideEvent('str');
   expect(event.topics).toEqual([
-    [sha3('OverrideEvent(string)')],
-    [sha3('str')],
+    keccak256('OverrideEvent(string)'),
+    keccak256('str'),
   ]);
 
   event = contract.OverrideEvent(Buffer.from('bytes'));
   expect(event.topics).toEqual([
-    [sha3('OverrideEvent(bytes)')],
-    [sha3('bytes')],
+    keccak256('OverrideEvent(bytes)'),
+    keccak256('bytes'),
   ]);
 
   event = contract.OverrideEvent(100, null);
   expect(event.topics).toEqual([
-    [sha3('OverrideEvent(uint256,string)')],
-    ['0x0000000000000000000000000000000000000000000000000000000000000064'],
+    keccak256('OverrideEvent(uint256,string)'),
+    '0x0000000000000000000000000000000000000000000000000000000000000064',
   ]);
 
   expect(() => contract.OverrideEvent(100)).toThrow('can not match override "OverrideEvent(bytes),OverrideEvent(string),OverrideEvent(uint256,string)" with args (100)');
-
-  event = contract.OverrideEvent(null);
-  expect(event.topics).toEqual([
-    [sha3('OverrideEvent(bytes)'), sha3('OverrideEvent(string)')],
-    null,
-  ]);
+  expect(() => contract.OverrideEvent(null)).toThrow('can not determine override "OverrideEvent(bytes)|OverrideEvent(string)" with args ()');
 
   event = contract.OverrideEvent(null, null);
   expect(event.topics).toEqual([
-    [sha3('OverrideEvent(uint256,string)')],
+    keccak256('OverrideEvent(uint256,string)'),
     null,
   ]);
+
+  const result = contract.OverrideEvent.decodeLog({
+    topics: [
+      keccak256('OverrideEvent(string)'),
+      keccak256('str'),
+    ],
+    data: '0x',
+  });
+  expect(result[0]).toEqual(keccak256('str'));
 });
 
 test('contract.StringEvent', () => {
   const { topics } = contract.StringEvent('string');
   expect(topics).toEqual([
-    sha3('StringEvent(string)'),
-    sha3('string'),
+    keccak256('StringEvent(string)'),
+    keccak256('string'),
   ]);
 
-  const result = contract.StringEvent.decodeLog({ data: '0x', topics: [topics[0], topics[1]] });
+  const result = contract.abi.decodeLog({ data: '0x', topics });
   expect(result).toEqual({
     name: 'StringEvent',
     fullName: 'StringEvent(string indexed _string)',
     type: 'StringEvent(string)',
-    signature: sha3('StringEvent(string)'),
-    array: [sha3('string')],
+    signature: keccak256('StringEvent(string)'),
+    array: [keccak256('string')],
     object: {
-      _string: sha3('string'),
+      _string: keccak256('string'),
     },
   });
 });
 
 test('contract.ArrayEvent', () => {
-  const { topics } = contract.ArrayEvent(HEX_64);
+  const { topics } = contract.ArrayEvent(HEX64);
   expect(topics).toEqual([
-    sha3('ArrayEvent(string[3])'),
-    HEX_64,
+    keccak256('ArrayEvent(string[3])'),
+    HEX64,
   ]);
 
   expect(() => contract.ArrayEvent(['a', 'b', 'c'])).toThrow('not supported encode array to index');
 
-  const result = contract.ArrayEvent.decodeLog({ data: '0x', topics: [topics[0], topics[1]] });
+  const result = contract.abi.decodeLog({ data: '0x', topics });
   expect(result).toEqual({
     name: 'ArrayEvent',
     fullName: 'ArrayEvent(string[3] indexed _array)',
     type: 'ArrayEvent(string[3])',
-    signature: sha3('ArrayEvent(string[3])'),
-    array: [HEX_64],
+    signature: keccak256('ArrayEvent(string[3])'),
+    array: [HEX64],
     object: {
-      _array: HEX_64,
+      _array: HEX64,
     },
   });
 });
 
 test('contract.StructEvent', () => {
-  const { topics } = contract.StructEvent(HEX_64);
+  const { topics } = contract.StructEvent(HEX64);
   expect(topics).toEqual([
-    sha3('StructEvent((string,int32))'),
-    HEX_64,
+    keccak256('StructEvent((string,int32))'),
+    HEX64,
   ]);
 
   expect(() => contract.StructEvent(['Tom', 18])).toThrow('not supported encode tuple to index');
 
-  const result = contract.StructEvent.decodeLog({ data: '0x', topics: [topics[0], topics[1]] });
+  const result = contract.abi.decodeLog({ data: '0x', topics });
   expect(result).toEqual({
     name: 'StructEvent',
     fullName: 'StructEvent((string,int32) indexed _struct)',
     type: 'StructEvent((string,int32))',
-    signature: sha3('StructEvent((string,int32))'),
-    array: [HEX_64],
+    signature: keccak256('StructEvent((string,int32))'),
+    array: [HEX64],
     object: {
-      _struct: HEX_64,
+      _struct: HEX64,
     },
   });
 });
@@ -205,8 +294,10 @@ test('decodeData.constructor', () => {
     fullName: 'constructor(uint256 num)',
     type: 'constructor(uint256)',
     signature: contract.constructor.bytecode,
-    array: [JSBI.BigInt(50)],
-    object: { num: JSBI.BigInt(50) },
+    array: [`${BigInt(50)}`],
+    object: {
+      num: `${BigInt(50)}`,
+    },
   });
 });
 
@@ -219,13 +310,21 @@ test('decodeData.function', () => {
     fullName: 'inc(uint256 num)',
     type: 'inc(uint256)',
     signature: '0x812600df',
-    array: [JSBI.BigInt(100)],
+    array: [`${BigInt(100)}`],
     object: {
-      num: JSBI.BigInt(100),
+      num: `${BigInt(100)}`,
     },
   });
 
   expect(contract.abi.decodeData('0x')).toEqual(undefined);
+});
+
+test('decodeData.override', () => {
+  const data = contract.override(Buffer.from('bytes')).data;
+
+  const tuple = contract.override.decodeData(data);
+
+  expect(tuple[0]).toEqual(Buffer.from('bytes'));
 });
 
 test('decodeLog', () => {
@@ -243,10 +342,10 @@ test('decodeLog', () => {
     fullName: 'SelfEvent(address indexed sender, uint256 current)',
     type: 'SelfEvent(address,uint256)',
     signature: '0xc4c01f6de493c58245fb681341f3a76bba9551ce81b11cbbb5d6d297844594df',
-    array: ['0xa000000000000000000000000000000000000001', JSBI.BigInt(100)],
+    array: ['0xa000000000000000000000000000000000000001', `${BigInt(100)}`],
     object: {
       sender: '0xa000000000000000000000000000000000000001',
-      current: JSBI.BigInt(100),
+      current: `${BigInt(100)}`,
     },
   });
 

@@ -1,0 +1,46 @@
+{
+  "address": "0x0888000000000000000000000000000000000000",
+  "abi": [
+    {
+      "type": "function",
+      "name": "destroy",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "contractAddr"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "getAdmin",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "contractAddr"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "address"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "setAdmin",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "contractAddr"
+        },
+        {
+          "type": "address",
+          "name": "newAdmin"
+        }
+      ],
+      "outputs": []
+    }
+  ]
+}

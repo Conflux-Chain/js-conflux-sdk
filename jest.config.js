@@ -1,8 +1,8 @@
 module.exports = {
-  collectCoverage: true,
+  // collectCoverage: true,
   coverageDirectory: './coverage',
   coverageReporters: ['html'],
 
   testEnvironment: 'node',
-  testRegex: 'test/.*/*.test.js',
+  testRegex: 'test/.*test.js',
 };

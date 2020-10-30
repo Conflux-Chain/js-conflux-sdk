@@ -1,19 +1,19 @@
 const lodash = require('lodash');
-const format = require('../../src/util/format');
-const { encode } = require('../../src/lib/rlp');
+const { format } = require('../../src');
+const { encode } = require('../../src/util/rlp');
 
 test('zero', () => {
-  const value = format.buffer(0);
+  const value = format.hexBuffer(0);
   expect(format.hex(encode(value))).toEqual('0x80');
 });
 
 test('number', () => {
-  const value = format.buffer(1);
+  const value = format.hexBuffer(1);
   expect(format.hex(encode(value))).toEqual('0x01');
 });
 
 test('big endian', () => {
-  const value = format.buffer(1024);
+  const value = format.hexBuffer(1024);
   expect(format.hex(encode(value))).toEqual('0x820400');
 });
 

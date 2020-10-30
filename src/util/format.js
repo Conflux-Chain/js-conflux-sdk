@@ -1,14 +1,9 @@
 const JSBI = require('jsbi');
 const Big = require('big.js');
 const lodash = require('lodash');
-const Parser = require('../lib/parser');
-
-const MAX_UINT_256 = JSBI.BigInt('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
-
-// https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/BigInt
-JSBI.prototype.toJSON = function () {
-  return this.toString();
-};
+const CONST = require('../CONST');
+const parser = require('./parser');
+const sign = require('./sign');
 
 // ----------------------------------------------------------------------------
 function toHex(value) {
@@ -44,12 +39,25 @@ function toNumber(value) {
 }
 
 function toBigInt(value) {
-  if (Buffer.isBuffer(value)) {
-    value = `0x${value.toString('hex')}`;
-  } else if (lodash.isString(value)) {
-    value = value.replace(/^(-?\d+)(.0+)?$/, '$1');
+  if (Number.isInteger(value) || (value instanceof JSBI)) {
+    return JSBI.BigInt(value);
   }
+  if (lodash.isBoolean(value)) {
+    throw new Error(`${value} not match BigInt`);
+  }
+  if (Buffer.isBuffer(value)) {
+    throw new Error(`${value} not match BigInt`);
+  }
+
+  value = `${value}`.replace(/^(-?\d+)(.0+)?$/, '$1'); // replace "number.000" to "number"
   return JSBI.BigInt(value);
+}
+
+function toBig(value) {
+  if (/^0[xob]/i.test(value)) {
+    value = JSBI.BigInt(value);
+  }
+  return new Big(value);
 }
 
 // ----------------------------------------------------------------------------
@@ -63,30 +71,7 @@ const format = {};
  * > format.any(1)
  1
  */
-format.any = Parser(v => v);
-
-/**
- * When encoding UNFORMATTED DATA (byte arrays, account addresses, hashes, bytecode arrays): encode as hex, prefix with "0x", two hex digits per byte.
- *
- * @param arg {number|JSBI|string|Buffer|boolean|null}
- * @return {string} Hex string
- *
- * @example
- * > format.hex(null)
- '0x'
- * > format.hex(1)
- "0x01"
- * > format.hex(256)
- "0x0100"
- * > format.hex(true)
- "0x01"
- * > format.hex(Buffer.from([1,10,255]))
- "0x010aff"
- * > format.hex("0x0a")
- "0x0a"
- */
-format.hex = Parser(toHex);
-format.hex64 = format.hex.validate(v => v.length === 2 + 64, 'hex64');
+format.any = parser(v => v);
 
 /**
  * @param arg {number|JSBI|string|boolean}
@@ -114,10 +99,10 @@ format.hex64 = format.hex.validate(v => v.length === 2 + 64, 'hex64');
  * > format.uInt(Number.MAX_SAFE_INTEGER + 1) // unsafe integer
  Error("not match uint")
  */
-format.uInt = Parser(toNumber).validate(v => Number.isSafeInteger(v) && v >= 0, 'uint');
+format.uInt = parser(toNumber).$validate(v => Number.isSafeInteger(v) && v >= 0, 'uint');
 
 /**
- * @param arg {number|JSBI|string|boolean}
+ * @param arg {number|string|JSBI}
  * @return {JSBI}
  *
  * @example
@@ -129,17 +114,17 @@ format.uInt = Parser(toNumber).validate(v => Number.isSafeInteger(v) && v >= 0, 
  JSBI.BigInt(-1)
  * > format.bigInt(1)
  JSBI.BigInt(1)
- * > format.bigInt(JSBI(100))
+ * > format.bigInt(JSBI.BigInt(100))
  JSBI.BigInt(100)
  * > format.bigInt('0x10')
  JSBI.BigInt(16)
  * > format.bigInt(Number.MAX_SAFE_INTEGER + 1) // unsafe integer
  Error("not match uint")
  */
-format.bigInt = Parser(toBigInt);
+format.bigInt = parser(toBigInt);
 
 /**
- * @param arg {number|JSBI|string|boolean}
+ * @param arg {number|string|JSBI}
  * @return {JSBI}
  *
  * @example
@@ -148,62 +133,105 @@ format.bigInt = Parser(toBigInt);
  * > format.bigUInt('-1')
  Error("not match bigUInt")
  */
-format.bigUInt = format.bigInt.validate(v => v >= 0, 'bigUInt');
+format.bigUInt = format.bigInt.$validate(v => v >= 0, 'bigUInt');
 
 /**
  * When encoding QUANTITIES (integers, numbers): encode as hex, prefix with "0x", the most compact representation (slight exception: zero should be represented as "0x0")
  *
- * @param arg {number|string|boolean}
+ * @param arg {number|string|JSBI}
  * @return {string} Hex string
  *
  * @example
- * > format.hexUInt(100)
+ * > format.bigUIntHex(100)
  "0x64"
- * > format.hexUInt(10)
+ * > format.bigUIntHex('0x0a')
  "0xa"
- * > format.hexUInt(3.50)
- "0x4"
- * > format.hexUInt(3.49)
- "0x3"
- * > format.hexUInt(-1))
+ * > format.bigUIntHex(-1))
  Error("not match uintHex")
  */
-format.hexUInt = format.bigUInt
-  .parse(v => `0x${v.toString(16)}`)
-  .validate(v => /^0x[0-9a-f]+$/.test(v), 'hexUInt');
+format.bigUIntHex = format.bigUInt.$after(v => `0x${v.toString(16)}`);
 
 /**
- * @param hex {string}
- * @return {number}
+ * @param arg {number|string|JSBI}
+ * @return {Big} Big instance
  *
  * @example
- * > format.riskNumber('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')
- 1
- * > format.riskNumber('0xe666666666666666666666666666666666666666666666666666666666666665')
- 0.9
+ * > format.big('0b10').toString()
+ '2'
+ * > format.big('0O10').toString()
+ '8'
+ * > format.big('010').toString()
+ '10'
+ * > format.big('0x10').toString()
+ '16'
+ * > format.big(3.14).toString()
+ '3.14'
+ * > format.big('-03.140').toString()
+ '-3.14'
+ * > format.big(null)
+ Error('Invalid number')
  */
-format.riskNumber = format.bigUInt.parse(v => Number(Big(v).div(MAX_UINT_256))).or(null);
+format.big = parser(toBig);
 
 /**
- * @param arg {number|string} - number or string in ['latest_state', 'latest_mined']
+ * @param arg {string|number|JSBI|Big}
+ * @return {Number}
+ *
+ * @example
+ * > format.fixed64('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')
+ 1
+ * > format.fixed64('0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')
+ 0.5
+ */
+format.fixed64 = format.big.$after(v => Number(v.div(CONST.MAX_UINT)));
+
+/**
+ * @param arg {number|string} - number or string
  * @return {string}
  *
  * @example
  * > format.epochNumber(10)
  "0xa"
- * > format.epochNumber('latest_state')
+ * > format.epochNumber(EPOCH_NUMBER.LATEST_STATE)
  "latest_state"
  * > format.epochNumber('latest_mined')
- "latest_state"
+ "latest_mined"
  */
-format.epochNumber = format.hexUInt
-  .or('earliest')
-  .or('latest_checkpoint')
-  .or('latest_confirmed')
-  .or('latest_state')
-  .or('latest_mined');
+format.epochNumber = format.bigUIntHex
+  .$or(CONST.EPOCH_NUMBER.LATEST_MINED)
+  .$or(CONST.EPOCH_NUMBER.LATEST_STATE)
+  .$or(CONST.EPOCH_NUMBER.LATEST_CONFIRMED)
+  .$or(CONST.EPOCH_NUMBER.LATEST_CHECKPOINT)
+  .$or(CONST.EPOCH_NUMBER.EARLIEST);
 
 /**
+ * When encoding UNFORMATTED DATA (byte arrays, account addresses, hashes, bytecode arrays): encode as hex, prefix with "0x", two hex digits per byte.
+ *
+ * @param arg {number|JSBI|string|Buffer|boolean|null}
+ * @return {string} Hex string
+ *
+ * @example
+ * > format.hex(null)
+ '0x'
+ * > format.hex(1)
+ "0x01"
+ * > format.hex(256)
+ "0x0100"
+ * > format.hex(true)
+ "0x01"
+ * > format.hex(Buffer.from([1,10,255]))
+ "0x010aff"
+ * > format.hex("0x0a")
+ "0x0a"
+ */
+format.hex = parser(toHex);
+
+format.hex40 = format.hex.$validate(v => v.length === 2 + 40, 'hex40');
+
+/**
+ * Checks if a given string is a valid address.
+ * It will also check the checksum, if the address has upper and lowercase letters.
+ *
  * @param arg {string|Buffer}
  * @return {string} Hex string
  *
@@ -213,37 +241,34 @@ format.epochNumber = format.hexUInt
  * > format.address('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
  Error("not match address")
  */
-format.address = format.hex.validate(v => v.length === 2 + 40, 'address'); // alias
+format.address = format.hex40.$before(address => {
+  if (lodash.isString(address)
+    && address !== address.toLowerCase()
+    && address !== address.toUpperCase()
+    && address !== sign.checksumAddress(address)
+  ) {
+    throw new Error(`address "${address}" checksum error`);
+  }
+  return address;
+});
 
 /**
+ * Will convert an upper or lowercase address to a checksum address.
+ *
  * @param arg {string|Buffer}
- * @return {string} Hex string
+ * @return {string} Checksum address hex string
  *
  * @example
- * > format.publicKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
- "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
- * > format.publicKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
- Error("not match publicKey")
+ * > format.checksumAddress('0x1b716c51381e76900ebaa7999a488511a4e1fd0a')
+ "0x1B716c51381e76900EBAA7999A488511A4E1fD0a"
+ * > format.checksumAddress('0X1B716C51381E76900EBAA7999A488511A4E1FD0A')
+ "0x1B716c51381e76900EBAA7999A488511A4E1fD0a"
+ * > format.checksumAddress('0x1B716c51381e76900EBAA7999A488511A4E1fD0A')
+ "0x1B716c51381e76900EBAA7999A488511A4E1fD0a"
  */
-format.publicKey = format.hex.validate(v => v.length === 2 + 128, 'publicKey');
+format.checksumAddress = format.hex40.$after(sign.checksumAddress);
 
-/**
- * @param arg {string|Buffer}
- * @return {string} Hex string
- *
- * @example
- * > format.privateKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
- "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
- * > format.privateKey('0x0123456789012345678901234567890123456789')
- Error("not match hex64")
- */
-format.privateKey = format.hex64; // alias
-
-/**
- * @param arg {string|Buffer}
- * @return {string} Hex string
- */
-format.signature = format.hex.validate(v => v.length === 2 + 130, 'signature');
+format.hex64 = format.hex.$validate(v => v.length === 2 + 64, 'hex64');
 
 /**
  * @param arg {string|Buffer}
@@ -267,27 +292,51 @@ format.blockHash = format.hex64; // alias
  * > format.privateKey('0x0123456789012345678901234567890123456789')
  Error("not match hex64")
  */
-format.txHash = format.hex64; // alias
+format.transactionHash = format.hex64; // alias
 
 /**
- * @param arg {number|JSBI|string|Buffer|boolean|null}
+ * @param arg {string|Buffer}
+ * @return {string} Hex string
+ *
+ * @example
+ * > format.privateKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
+ "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+ * > format.privateKey('0x0123456789012345678901234567890123456789')
+ Error("not match hex64")
+ */
+format.privateKey = format.hex64; // alias
+
+/**
+ * @param arg {string|Buffer}
+ * @return {string} Hex string
+ *
+ * @example
+ * > format.publicKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
+ "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+ * > format.publicKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
+ Error("not match publicKey")
+ */
+format.publicKey = format.hex.$validate(v => v.length === 2 + 128, 'publicKey');
+
+/**
+ * @param arg {number|string|JSBI|Buffer|boolean|null}
  * @return {Buffer}
  *
  * @example
- * > format.buffer(Buffer.from([0, 1]))
+ * > format.hexBuffer(Buffer.from([0, 1]))
  <Buffer 00 01>
- * > format.buffer(null)
+ * > format.hexBuffer(null)
  <Buffer >
- * > format.buffer(1024)
+ * > format.hexBuffer(1024)
  <Buffer 04 00>
- * > format.buffer('0x0a')
+ * > format.hexBuffer('0x0a')
  <Buffer 0a>
- * > format.buffer(true)
+ * > format.hexBuffer(true)
  <Buffer 01>
- * > format.buffer(3.14)
+ * > format.hexBuffer(3.14)
  Error("not match hex")
  */
-format.buffer = Parser(v => (Buffer.isBuffer(v) ? v : Buffer.from(format.hex(v).substring(2), 'hex')));
+format.hexBuffer = format.hex.$after(v => Buffer.from(v.substr(2), 'hex'));
 
 /**
  * @param arg {string|Buffer|array}
@@ -296,12 +345,12 @@ format.buffer = Parser(v => (Buffer.isBuffer(v) ? v : Buffer.from(format.hex(v).
  * @example
  * > format.bytes('abcd')
  <Buffer 61 62 63 64>
- * > format.bytes(Buffer.from([0, 1]))
- <Buffer 00 01>
  * > format.bytes([0, 1])
  <Buffer 00 01>
+ * > format.bytes(Buffer.from([0, 1]))
+ <Buffer 00 01>
  */
-format.bytes = Parser(v => (Buffer.isBuffer(v) ? v : Buffer.from(v)));
+format.bytes = parser(v => (Buffer.isBuffer(v) ? v : Buffer.from(v)));
 
 /**
  * @param arg {boolean}
@@ -313,125 +362,184 @@ format.bytes = Parser(v => (Buffer.isBuffer(v) ? v : Buffer.from(v)));
  * > format.boolean(false)
  false
  */
-format.boolean = format.any.validate(lodash.isBoolean, 'boolean');
+format.boolean = format.any.$validate(lodash.isBoolean, 'boolean');
+
+/**
+ * Compute the keccak256 cryptographic hash of a value, returned as a hex string.
+ *
+ * @param arg {string|Buffer}
+ * @return {string}
+ *
+ * @example
+ * > format.keccak256('Transfer(address,address,uint256)')
+ "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
+
+ * > format.keccak256(Buffer.from([0x42]))
+ "0x1f675bff07515f5df96737194ea945c36c41e7b4fcef307b7cd4d0e602a69111"
+ * > format.keccak256(format.hexBuffer('0x42'))
+ "0x1f675bff07515f5df96737194ea945c36c41e7b4fcef307b7cd4d0e602a69111"
+ * > format.keccak256('0x42') // "0x42" as string and transfer to <Buffer 30 78 34 32> by ascii
+ "0x3c1b2d38851281e9a7b59d10973b0c87c340ff1e76bde7d06bf6b9f28df2b8c0"
+ */
+format.keccak256 = format.bytes.$after(sign.keccak256).$after(format.hex);
+
+// -------------------------- format method arguments -------------------------
+format.getLogs = parser({
+  limit: format.bigUIntHex.$or(undefined),
+  fromEpoch: format.epochNumber.$or(undefined),
+  toEpoch: format.epochNumber.$or(undefined),
+  blockHashes: format.blockHash.$or([format.blockHash]).$or(undefined),
+  address: format.address.$or([format.address]).$or(undefined),
+  topics: parser([format.hex64.$or([format.hex64]).$or(null)]).$or(undefined),
+}, true);
+
+format.signTx = parser({
+  nonce: format.bigUIntHex.$after(format.hexBuffer),
+  gasPrice: format.bigUIntHex.$after(format.hexBuffer),
+  gas: format.bigUIntHex.$after(format.hexBuffer),
+  to: parser(format.address.$or(null).$default(null)).$after(format.hexBuffer),
+  value: format.bigUIntHex.$default(0).$after(format.hexBuffer),
+  storageLimit: format.bigUIntHex.$after(format.hexBuffer),
+  epochHeight: format.uInt.$after(format.hexBuffer),
+  chainId: format.uInt.$default(0).$after(format.hexBuffer),
+  data: format.hex.$default('0x').$after(format.hexBuffer),
+  r: (format.bigUIntHex.$after(format.hexBuffer)).$or(undefined),
+  s: (format.bigUIntHex.$after(format.hexBuffer)).$or(undefined),
+  v: (format.uInt.$after(format.hexBuffer)).$or(undefined),
+}, true);
+
+format.sendTx = parser({
+  from: format.address.$or(undefined),
+  nonce: format.bigUIntHex.$or(undefined),
+  gasPrice: format.bigUIntHex.$or(undefined),
+  gas: format.bigUIntHex.$or(undefined),
+  to: format.address.$or(null).$or(undefined),
+  value: format.bigUIntHex.$or(undefined),
+  storageLimit: format.bigUIntHex.$or(undefined),
+  epochHeight: format.bigUIntHex.$or(undefined),
+  chainId: format.bigUIntHex.$or(undefined),
+  data: format.hex.$or(undefined),
+}, true);
+
+format.callTx = parser({
+  from: format.address.$or(undefined),
+  nonce: format.bigUIntHex.$or(undefined),
+  gasPrice: format.bigUIntHex.$or(undefined),
+  gas: format.bigUIntHex.$or(undefined),
+  to: format.address.$or(null),
+  value: format.bigUIntHex.$or(undefined),
+  storageLimit: format.bigUIntHex.$or(undefined),
+  epochHeight: format.uInt.$or(undefined),
+  chainId: format.uInt.$or(undefined),
+  data: format.hex.$or(undefined),
+}, true);
+
+format.estimateTx = parser({
+  from: format.address.$or(undefined),
+  nonce: format.bigUIntHex.$or(undefined),
+  gasPrice: format.bigUIntHex.$or(undefined),
+  gas: format.bigUIntHex.$or(undefined),
+  to: format.address.$or(null).$or(undefined),
+  value: format.bigUIntHex.$or(undefined),
+  storageLimit: format.bigUIntHex.$or(undefined),
+  epochHeight: format.uInt.$or(undefined),
+  chainId: format.uInt.$or(undefined),
+  data: format.hex.$or(undefined),
+}, true);
 
 // ----------------------------- parse rpc returned ---------------------------
-format.status = Parser({
+format.status = parser({
   chainId: format.uInt,
   epochNumber: format.uInt,
   blockNumber: format.uInt,
   pendingTxNumber: format.uInt,
 });
 
-format.transaction = Parser({
-  nonce: format.uInt,
-  value: format.bigUInt,
-  gasPrice: format.bigUInt,
-  gas: format.bigUInt,
-  v: format.uInt,
-  transactionIndex: format.uInt.or(null),
-  status: format.uInt.or(null), // XXX: might be remove in rpc returned
-  storageLimit: format.bigUInt,
-  chainId: format.uInt,
-  epochHeight: format.uInt,
+format.account = parser({
+  accumulatedInterestReturn: format.bigUInt,
+  balance: format.bigUInt,
+  collateralForStorage: format.bigUInt,
+  nonce: format.bigUInt,
+  stakingBalance: format.bigUInt,
 });
 
-format.estimate = Parser({
+format.estimate = parser({
   gasUsed: format.bigUInt,
+  gasLimit: format.bigUInt,
   storageCollateralized: format.bigUInt,
 });
 
-format.block = Parser({
-  epochNumber: format.uInt.or(null), // FIXME null for getBlockByEpochNumber(0)
+format.transaction = parser({
+  nonce: format.bigUInt,
+  gasPrice: format.bigUInt,
+  gas: format.bigUInt,
+  value: format.bigUInt,
+  storageLimit: format.bigUInt,
+  epochHeight: format.uInt,
+  chainId: format.uInt,
+  v: format.uInt,
+  status: format.uInt.$or(null),
+  transactionIndex: format.uInt.$or(null),
+});
+
+format.block = parser({
+  epochNumber: format.uInt.$or(null),
   blame: format.uInt,
   height: format.uInt,
   size: format.uInt,
   timestamp: format.uInt,
   gasLimit: format.bigUInt,
+  gasUsed: format.bigUInt.$or(null).$or(undefined), // XXX: undefined before main net upgrade
   difficulty: format.bigUInt,
-  transactions: [(format.transaction).or(format.txHash)],
+  transactions: [(format.transaction).$or(format.transactionHash)],
 });
 
-format.receipt = Parser({
+format.receipt = parser({
   index: format.uInt,
   epochNumber: format.uInt,
-  outcomeStatus: format.uInt.or(null),
+  outcomeStatus: format.uInt.$or(null),
   gasUsed: format.bigUInt,
   gasFee: format.bigUInt,
 });
 
-format.logs = Parser([
+format.log = parser({
+  epochNumber: format.uInt,
+  logIndex: format.uInt,
+  transactionIndex: format.uInt,
+  transactionLogIndex: format.uInt,
+});
+
+format.logs = parser([format.log]);
+
+format.sponsorInfo = parser({
+  sponsorBalanceForCollateral: format.bigUInt,
+  sponsorBalanceForGas: format.bigUInt,
+  sponsorGasBound: format.bigUInt,
+});
+
+format.rewardInfo = parser([
   {
-    epochNumber: format.uInt,
-    logIndex: format.uInt,
-    transactionIndex: format.uInt,
-    transactionLogIndex: format.uInt,
+    baseReward: format.bigUInt,
+    totalReward: format.bigUInt,
+    txFee: format.bigUInt,
   },
 ]);
 
-// -------------------------- format method arguments -------------------------
-format.getLogs = Parser({
-  limit: format.hexUInt.or(undefined),
-  fromEpoch: format.epochNumber.or(undefined),
-  toEpoch: format.epochNumber.or(undefined),
-  blockHashes: format.blockHash.or([format.blockHash]).or(undefined),
-  address: format.address.or([format.address]).or(undefined),
-  topics: Parser([format.hex64.or([format.hex64]).or(null)]).or(undefined),
+// ---------------------------- parse subscribe event -------------------------
+format.head = parser({
+  difficulty: format.bigUInt,
+  epochNumber: format.uInt.$or(null),
+  gasLimit: format.bigUInt,
+  height: format.uInt,
+  timestamp: format.uInt,
 });
 
-// FIXME: accept null ?
-format.signTx = Parser({
-  nonce: format.hexUInt.parse(format.buffer),
-  gasPrice: format.hexUInt.parse(format.buffer),
-  gas: format.hexUInt.parse(format.buffer),
-  to: Parser(format.address.or(null).default(null)).parse(format.buffer),
-  value: format.hexUInt.default(0).parse(format.buffer),
-  storageLimit: format.hexUInt.parse(format.buffer),
-  epochHeight: format.uInt.parse(format.buffer),
-  chainId: format.uInt.default(0).parse(format.buffer),
-  data: format.hex.default('0x').parse(format.buffer),
-  r: format.hexUInt.parse(format.buffer).or(undefined),
-  s: format.hexUInt.parse(format.buffer).or(undefined),
-  v: format.uInt.parse(format.buffer).or(undefined),
+format.revert = parser({
+  revertTo: format.uInt,
 });
 
-format.sendTx = Parser({
-  from: format.address,
-  nonce: format.hexUInt,
-  gasPrice: format.hexUInt,
-  gas: format.hexUInt,
-  to: format.address.or(null).or(undefined),
-  value: format.hexUInt.or(undefined),
-  storageLimit: format.hexUInt,
-  epochHeight: format.hexUInt,
-  chainId: format.hexUInt,
-  data: format.hex.or(undefined),
-});
-
-format.callTx = Parser({
-  from: format.address.or(undefined),
-  nonce: format.hexUInt.or(undefined),
-  gasPrice: format.hexUInt.or(undefined),
-  gas: format.hexUInt.or(undefined),
-  to: format.address.or(null),
-  value: format.hexUInt.or(undefined),
-  storageLimit: format.hexUInt.or(undefined),
-  epochHeight: format.uInt.or(undefined),
-  chainId: format.uInt.or(undefined),
-  data: format.hex.or(undefined),
-});
-
-format.estimateTx = Parser({
-  from: format.address.or(undefined),
-  nonce: format.hexUInt.or(undefined),
-  gasPrice: format.hexUInt.or(undefined),
-  gas: format.hexUInt.or(undefined),
-  to: format.address.or(null).or(undefined),
-  value: format.hexUInt.or(undefined),
-  storageLimit: format.hexUInt.or(undefined),
-  epochHeight: format.uInt.or(undefined),
-  chainId: format.uInt.or(undefined),
-  data: format.hex.or(undefined),
+format.epoch = parser({
+  epochNumber: format.uInt,
 });
 
 module.exports = format;

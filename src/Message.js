@@ -1,4 +1,4 @@
-const { sha3, ecdsaSign, ecdsaRecover, publicKeyToAddress } = require('./util/sign');
+const { keccak256, ecdsaSign, ecdsaRecover, publicKeyToAddress } = require('./util/sign');
 const format = require('./util/format');
 
 class Message {
@@ -17,9 +17,9 @@ class Message {
    "0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01"
    */
   static sign(privateKey, messageHash) {
-    const { r, s, v } = ecdsaSign(format.buffer(messageHash), format.buffer(privateKey));
-    const buffer = Buffer.concat([r, s, format.buffer(v)]);
-    return format.signature(buffer);
+    const { r, s, v } = ecdsaSign(format.hexBuffer(messageHash), format.hexBuffer(privateKey));
+    const buffer = Buffer.concat([r, s, format.hexBuffer(v)]);
+    return format.hex(buffer);
   }
 
   /**
@@ -37,11 +37,11 @@ class Message {
    "0x4646ae5047316b4230d0086c8acec687f00b1cd9d1dc634f6cb358ac0a9a8ffffe77b4dd0a4bfb95851f3b7355c781dd60f8418fc8a65d14907aff47c903a559"
    */
   static recover(signature, messageHash) {
-    const signatureBuffer = format.buffer(signature);
+    const signatureBuffer = format.hexBuffer(signature);
     const r = signatureBuffer.slice(0, 32);
     const s = signatureBuffer.slice(32, 64);
     const v = signatureBuffer[64];
-    const buffer = ecdsaRecover(format.buffer(messageHash), { r, s, v });
+    const buffer = ecdsaRecover(format.hexBuffer(messageHash), { r, s, v });
     return format.publicKey(buffer);
   }
 
@@ -84,7 +84,7 @@ class Message {
    * @return {string}
    */
   get hash() {
-    return format.hex(sha3(Buffer.from(this.message)));
+    return format.hex(keccak256(Buffer.from(this.message)));
   }
 
   /**
@@ -97,7 +97,7 @@ class Message {
   get from() {
     try {
       const publicKey = Message.recover(this.signature, this.hash);
-      return format.address(publicKeyToAddress(format.buffer(publicKey)));
+      return format.address(publicKeyToAddress(format.hexBuffer(publicKey)));
     } catch (e) {
       return undefined;
     }
