@@ -24,12 +24,12 @@ const WebsocketProvider = require('./WebSocketProvider');
   }
 
  * > providerFactory({
-    url: 'http://mainnet-jsonrpc.conflux-chain.org:12537',
+    url: 'http://main.confluxrpc.org',
     timeout: 60 * 60 * 1000,
     logger: console,
   }
  HttpProvider {
-    url: 'http://mainnet-jsonrpc.conflux-chain.org:12537',
+    url: 'http://main.confluxrpc.org',
     timeout: 3600000,
     logger: {...}
   }

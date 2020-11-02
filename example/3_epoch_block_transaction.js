@@ -10,7 +10,7 @@ const JSBI = require('jsbi');
 const { Conflux, sign, format } = require('../src'); // require('js-conflux-sdk');
 
 const conflux = new Conflux({
-  url: 'http://testnet-jsonrpc.conflux-chain.org:12537',
+  url: 'http://test.confluxrpc.org',
 });
 
 async function getGenesisBlock() {

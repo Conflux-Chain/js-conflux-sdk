@@ -183,7 +183,7 @@ options.logger              | `Object`        | false    |         | Logger obje
 
 ```
 > const { Conflux } = require('js-conflux-sdk');
-> const conflux = new Conflux({url:'http://testnet-jsonrpc.conflux-chain.org:12537'});
+> const conflux = new Conflux({url:'http://test.confluxrpc.org'});
 ```
 
 ```
@@ -1542,6 +1542,8 @@ Get `GDrip` number string
 
 Signs the hash with the privateKey.
 
+> TODO support [CIP 23](https://github.com/Conflux-Chain/CIPs/blob/master/CIPs/cip-23.md)
+
 * **Parameters**
 
 Name        | Type            | Required | Default | Description
@@ -1777,12 +1779,12 @@ options.url | `string` | true     |         |
     logger: { info: [Function: info], error: [Function: error] }
   }
 > providerFactory({
-    url: 'http://mainnet-jsonrpc.conflux-chain.org:12537',
+    url: 'http://main.confluxrpc.org',
     timeout: 60 * 60 * 1000,
     logger: console,
   }
  HttpProvider {
-    url: 'http://mainnet-jsonrpc.conflux-chain.org:12537',
+    url: 'http://main.confluxrpc.org',
     timeout: 3600000,
     logger: {...}
   }

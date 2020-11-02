@@ -22,7 +22,7 @@ class Conflux {
    * @param [options.logger] {Object} - Logger object with 'info' and 'error' method.
    * @example
    * > const { Conflux } = require('js-conflux-sdk');
-   * > const conflux = new Conflux({url:'http://testnet-jsonrpc.conflux-chain.org:12537'});
+   * > const conflux = new Conflux({url:'http://test.confluxrpc.org'});
    *
    * @example
    * > const conflux = new Conflux({

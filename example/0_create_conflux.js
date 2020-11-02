@@ -4,8 +4,8 @@ const { Conflux } = require('../src'); // require('js-conflux-sdk');
 // create conflux sdk instance and connect to remote node
 const conflux = new Conflux({
   // url: 'http://localhost:12537',
-  // url: 'http://mainnet-jsonrpc.conflux-chain.org:12537',
-  url: 'http://testnet-jsonrpc.conflux-chain.org:12537',
+  // url: 'http://main.confluxrpc.org',
+  url: 'http://test.confluxrpc.org',
   // logger: console, // use console to print log
 });
 

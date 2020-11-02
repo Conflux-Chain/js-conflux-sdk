@@ -2,7 +2,7 @@
 const { Conflux, Transaction, format } = require('../src'); // require('js-conflux-sdk');
 const { abi, bytecode } = require('./contract/miniERC20.json');
 
-const conflux = new Conflux({ url: 'http://testnet-jsonrpc.conflux-chain.org:12537' });
+const conflux = new Conflux({ url: 'http://test.confluxrpc.org' });
 const accountAlice = conflux.wallet.addPrivateKey('0xa816a06117e572ca7ae2f786a046d2bc478051d0717bf5cc4f5397923258d393');
 const addressBob = '0x1ead8630345121d19ee3604128e5dc54b36e8ea6';
 const miniERC20 = conflux.Contract({ abi, bytecode }); // or `conflux.Contract({ abi, bytecode, address })` for existed contract

@@ -19,7 +19,7 @@ const { Conflux } = require('js-conflux-sdk');
 async function main() {
   // initalize a Conflux object
   const conflux = new Conflux({
-    url: 'http://testnet-jsonrpc.conflux-chain.org:12537',
+    url: 'http://test.confluxrpc.org',
     logger: console, // for debug
   });
   // get balance
@@ -54,7 +54,7 @@ or
 <script type="text/javascript" src="node_modules/js-conflux-sdk/dist/js-conflux-sdk.umd.min.js"></script>
 <script type="text/javascript">
   const conflux = new window.Conflux.Conflux({
-    url: 'http://testnet-jsonrpc.conflux-chain.org:12537',
+    url: 'http://test.confluxrpc.org',
     logger: console,
   });
 </script>
@@ -75,7 +75,7 @@ or
 const { Conflux, Drip } = require('js-conflux-sdk');
 
 async function main() {
-  const conflux = new Conflux({ url: 'http://testnet-jsonrpc.conflux-chain.org:12537' });
+  const conflux = new Conflux({ url: 'http://test.confluxrpc.org' });
   const account = conflux.wallet.addPrivateKey(PRIVATE_KEY); // create account instance and add to wallet
   
   const receipt = await conflux.sendTransaction({
@@ -115,7 +115,7 @@ For the detail explanation of these fields check [official doc](https://develope
 const { Conflux, Drip } = require('js-conflux-sdk');
 
 async function main() {
-  const conflux = new Conflux({ url: 'http://testnet-jsonrpc.conflux-chain.org:12537' });
+  const conflux = new Conflux({ url: 'http://test.confluxrpc.org' });
   const account = conflux.wallet.addPrivateKey(PRIVATE_KEY); // create account instance and add to wallet
 
   const estimate = await conflux.estimateGasAndCollateral({ to, value });
@@ -155,7 +155,7 @@ const { Conflux } = require('js-conflux-sdk');
 const { abi, bytecode } = MINI_ERC20; // see https://github.com/Conflux-Chain/js-conflux-sdk/tree/master/example/contract/miniERC20.json
 
 async function main() {
-  const conflux = new Conflux({ url: 'http://testnet-jsonrpc.conflux-chain.org:12537' });
+  const conflux = new Conflux({ url: 'http://test.confluxrpc.org' });
   const account = conflux.wallet.addPrivateKey(PRIVATE_KEY); // create account instance and add to wallet
   const contract = conflux.Contract({ abi, bytecode });
 
@@ -194,7 +194,7 @@ const { Conflux } = require('js-conflux-sdk');
 const { abi } = MINI_ERC20; // see https://github.com/Conflux-Chain/js-conflux-sdk/tree/master/example/contract/miniERC20.json
 
 async function main() {
-  const conflux = new Conflux({ url: 'http://testnet-jsonrpc.conflux-chain.org:12537' });
+  const conflux = new Conflux({ url: 'http://test.confluxrpc.org' });
   const account = conflux.wallet.addPrivateKey(PRIVATE_KEY); // create account instance and add to wallet
   const contract = conflux.Contract({ abi, address: '0x8a9c270e1a99c05ca90ef0f0008b8f6444cf1a97' });
 
@@ -221,3 +221,7 @@ main();
 
 [see](https://github.com/Conflux-Chain/js-conflux-sdk/tree/master/CHANGE_LOG.md)
 
+## TODO
+
+* use native BigInt in node.js, use JSBI in browser.
+* TODO support [CIP 23](https://github.com/Conflux-Chain/CIPs/blob/master/CIPs/cip-23.md)

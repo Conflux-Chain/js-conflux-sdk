@@ -1,6 +1,6 @@
 const providerFactory = require('../src/provider');
 
-const HTTP_URL = 'http://mainnet-jsonrpc.conflux-chain.org:12537';
+const HTTP_URL = 'http://main.confluxrpc.org';
 const WS_URL = 'ws://mainnet-jsonrpc.conflux-chain.org:12535';
 
 test('BaseProvider', async () => {
