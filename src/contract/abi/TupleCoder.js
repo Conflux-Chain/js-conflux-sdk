@@ -54,7 +54,7 @@ function unpack(coders, stream) {
 
   const array = coders.map(coder => {
     if (coder.dynamic) {
-      const offset = format.uInt(uIntCoder.decode(stream));
+      const offset = format.uInt(uIntCoder.decode(stream)); // XXX: BigInt => Number, for length is enough.
       return new Pointer(startIndex + offset * 2);
     } else {
       return coder.decode(stream);
@@ -136,6 +136,7 @@ class TupleCoder extends BaseCoder {
     try {
       return format.hex64(value);
     } catch (e) {
+      // TODO https://solidity.readthedocs.io/en/v0.7.4/abi-spec.html#encoding-of-indexed-event-parameters
       throw new Error('not supported encode tuple to index');
     }
   }

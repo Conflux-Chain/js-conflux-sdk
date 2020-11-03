@@ -126,7 +126,7 @@ class WebSocketProvider extends BaseProvider {
 
   close() {
     super.close();
-    this.client.close();
+    this.client.close(); // MUST close client after super, cause provider need 'close' event to remove listener
   }
 }
 

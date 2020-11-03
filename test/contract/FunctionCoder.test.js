@@ -1,3 +1,4 @@
+const JSBI = require('jsbi');
 const FunctionCoder = require('../../src/contract/method/FunctionCoder');
 
 test('function', () => {
@@ -34,9 +35,9 @@ test('function', () => {
   };
 
   const params = [
-    `${BigInt(-1)}`,
+    JSBI.BigInt(-1),
     ['0x0123456789012345678901234567890123456789', ['Hello', 'World']],
-    [[`${BigInt(0xab)}`, `${BigInt(0xcd)}`], true],
+    [[JSBI.BigInt(0xab), JSBI.BigInt(0xcd)], true],
   ];
 
   const hex = '0x664b7e11' +
@@ -60,7 +61,7 @@ test('function', () => {
   expect(coder.type).toEqual('func(int256,(address,string[]),((int256,int256),bool))');
   expect(coder.encodeData(params)).toEqual(hex);
   expect(coder.decodeData(hex)).toEqual(params);
-  expect(coder.decodeOutputs('0x0000000000000000000000000000000000000000000000000000000000000001')).toEqual(`${BigInt(1)}`);
+  expect(coder.decodeOutputs('0x0000000000000000000000000000000000000000000000000000000000000001')).toEqual(JSBI.BigInt(1));
 });
 
 test('function not inputs many outputs', () => {
@@ -84,9 +85,9 @@ test('function not inputs many outputs', () => {
     '0000000000000000000000000123456789012345678901234567890123456789' +
     '0000000000000000000000000000000000000000000000000000000000000001',
   );
-  expect([...tuple]).toEqual(['0x0123456789012345678901234567890123456789', '1']);
+  expect([...tuple]).toEqual(['0x0123456789012345678901234567890123456789', JSBI.BigInt(1)]);
   expect(tuple.toObject()).toEqual({
     account: '0x0123456789012345678901234567890123456789',
-    number: '1',
+    number: JSBI.BigInt(1),
   });
 });

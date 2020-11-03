@@ -1,14 +1,11 @@
-const { Conflux, format, sign } = require('../../src');
+const JSBI = require('jsbi');
+const { Conflux, format } = require('../../src');
 const { MockProvider } = require('../../mock');
 const { abi, bytecode, address } = require('./contract.json');
 const ContractConstructor = require('../../src/contract/method/ContractConstructor');
 
 const ADDRESS = '0xfcad0b19bb29d4674531d6f115237e16afce377c';
 const HEX64 = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
-
-function keccak256(string) {
-  return format.hex(sign.keccak256(Buffer.from(string)));
-}
 
 // ----------------------------------------------------------------------------
 const conflux = new Conflux();
@@ -151,7 +148,7 @@ test('contract.sendTransaction', async () => {
 test('contract.getLogs', async () => {
   const call = jest.spyOn(conflux.provider, 'call');
 
-  const topics = [keccak256('StringEvent(string)'), keccak256('string')];
+  const topics = [format.keccak256('StringEvent(string)'), format.keccak256('string')];
   call.mockReturnValueOnce([
     {
       epochNumber: '0x0',
@@ -186,19 +183,19 @@ test('contract.override', () => {
 
   event = contract.OverrideEvent('str');
   expect(event.topics).toEqual([
-    keccak256('OverrideEvent(string)'),
-    keccak256('str'),
+    format.keccak256('OverrideEvent(string)'),
+    format.keccak256('str'),
   ]);
 
   event = contract.OverrideEvent(Buffer.from('bytes'));
   expect(event.topics).toEqual([
-    keccak256('OverrideEvent(bytes)'),
-    keccak256('bytes'),
+    format.keccak256('OverrideEvent(bytes)'),
+    format.keccak256('bytes'),
   ]);
 
   event = contract.OverrideEvent(100, null);
   expect(event.topics).toEqual([
-    keccak256('OverrideEvent(uint256,string)'),
+    format.keccak256('OverrideEvent(uint256,string)'),
     '0x0000000000000000000000000000000000000000000000000000000000000064',
   ]);
 
@@ -207,25 +204,25 @@ test('contract.override', () => {
 
   event = contract.OverrideEvent(null, null);
   expect(event.topics).toEqual([
-    keccak256('OverrideEvent(uint256,string)'),
+    format.keccak256('OverrideEvent(uint256,string)'),
     null,
   ]);
 
   const result = contract.OverrideEvent.decodeLog({
     topics: [
-      keccak256('OverrideEvent(string)'),
-      keccak256('str'),
+      format.keccak256('OverrideEvent(string)'),
+      format.keccak256('str'),
     ],
     data: '0x',
   });
-  expect(result[0]).toEqual(keccak256('str'));
+  expect(result[0]).toEqual(format.keccak256('str'));
 });
 
 test('contract.StringEvent', () => {
   const { topics } = contract.StringEvent('string');
   expect(topics).toEqual([
-    keccak256('StringEvent(string)'),
-    keccak256('string'),
+    format.keccak256('StringEvent(string)'),
+    format.keccak256('string'),
   ]);
 
   const result = contract.abi.decodeLog({ data: '0x', topics });
@@ -233,10 +230,10 @@ test('contract.StringEvent', () => {
     name: 'StringEvent',
     fullName: 'StringEvent(string indexed _string)',
     type: 'StringEvent(string)',
-    signature: keccak256('StringEvent(string)'),
-    array: [keccak256('string')],
+    signature: format.keccak256('StringEvent(string)'),
+    array: [format.keccak256('string')],
     object: {
-      _string: keccak256('string'),
+      _string: format.keccak256('string'),
     },
   });
 });
@@ -244,7 +241,7 @@ test('contract.StringEvent', () => {
 test('contract.ArrayEvent', () => {
   const { topics } = contract.ArrayEvent(HEX64);
   expect(topics).toEqual([
-    keccak256('ArrayEvent(string[3])'),
+    format.keccak256('ArrayEvent(string[3])'),
     HEX64,
   ]);
 
@@ -255,7 +252,7 @@ test('contract.ArrayEvent', () => {
     name: 'ArrayEvent',
     fullName: 'ArrayEvent(string[3] indexed _array)',
     type: 'ArrayEvent(string[3])',
-    signature: keccak256('ArrayEvent(string[3])'),
+    signature: format.keccak256('ArrayEvent(string[3])'),
     array: [HEX64],
     object: {
       _array: HEX64,
@@ -266,7 +263,7 @@ test('contract.ArrayEvent', () => {
 test('contract.StructEvent', () => {
   const { topics } = contract.StructEvent(HEX64);
   expect(topics).toEqual([
-    keccak256('StructEvent((string,int32))'),
+    format.keccak256('StructEvent((string,int32))'),
     HEX64,
   ]);
 
@@ -277,7 +274,7 @@ test('contract.StructEvent', () => {
     name: 'StructEvent',
     fullName: 'StructEvent((string,int32) indexed _struct)',
     type: 'StructEvent((string,int32))',
-    signature: keccak256('StructEvent((string,int32))'),
+    signature: format.keccak256('StructEvent((string,int32))'),
     array: [HEX64],
     object: {
       _struct: HEX64,
@@ -294,9 +291,9 @@ test('decodeData.constructor', () => {
     fullName: 'constructor(uint256 num)',
     type: 'constructor(uint256)',
     signature: contract.constructor.bytecode,
-    array: [`${BigInt(50)}`],
+    array: [JSBI.BigInt(50)],
     object: {
-      num: `${BigInt(50)}`,
+      num: JSBI.BigInt(50),
     },
   });
 });
@@ -310,9 +307,9 @@ test('decodeData.function', () => {
     fullName: 'inc(uint256 num)',
     type: 'inc(uint256)',
     signature: '0x812600df',
-    array: [`${BigInt(100)}`],
+    array: [JSBI.BigInt(100)],
     object: {
-      num: `${BigInt(100)}`,
+      num: JSBI.BigInt(100),
     },
   });
 
@@ -342,10 +339,10 @@ test('decodeLog', () => {
     fullName: 'SelfEvent(address indexed sender, uint256 current)',
     type: 'SelfEvent(address,uint256)',
     signature: '0xc4c01f6de493c58245fb681341f3a76bba9551ce81b11cbbb5d6d297844594df',
-    array: ['0xa000000000000000000000000000000000000001', `${BigInt(100)}`],
+    array: ['0xa000000000000000000000000000000000000001', JSBI.BigInt(100)],
     object: {
       sender: '0xa000000000000000000000000000000000000001',
-      current: `${BigInt(100)}`,
+      current: JSBI.BigInt(100),
     },
   });
 

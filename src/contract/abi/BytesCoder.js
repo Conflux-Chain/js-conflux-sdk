@@ -36,7 +36,7 @@ class BytesCoder extends BaseCoder {
   }
 
   /**
-   * @param value {ArrayLike}
+   * @param value {ArrayLike|string}
    * @return {Buffer}
    */
   encode(value) {
@@ -65,7 +65,7 @@ class BytesCoder extends BaseCoder {
   decode(stream) {
     let length = this.size;
     if (length === undefined) {
-      length = format.uInt(uIntCoder.decode(stream));
+      length = format.uInt(uIntCoder.decode(stream)); // XXX: BigInt => Number, for length is enough.
     }
 
     return Buffer.from(stream.read(length * 2, true), 'hex');

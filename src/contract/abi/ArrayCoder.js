@@ -74,7 +74,7 @@ class ArrayCoder extends BaseCoder {
     let length = this.size;
 
     if (length === undefined) {
-      length = format.uInt(uIntCoder.decode(stream));
+      length = format.uInt(uIntCoder.decode(stream)); // XXX: BigInt => Number, for length is enough.
     }
 
     const coders = lodash.range(length).map(() => this.coder);
@@ -85,6 +85,7 @@ class ArrayCoder extends BaseCoder {
     try {
       return format.hex64(value);
     } catch (e) {
+      // TODO https://solidity.readthedocs.io/en/v0.7.4/abi-spec.html#encoding-of-indexed-event-parameters
       throw new Error('not supported encode array to index');
     }
   }
