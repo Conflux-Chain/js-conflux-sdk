@@ -36,7 +36,7 @@ class BoolCoder extends IntegerCoder {
    * @return {boolean}
    */
   decode(stream) {
-    return JSBI.notEqual(JSBI.BigInt(super.decode(stream)), JSBI.BigInt(0));
+    return JSBI.notEqual(super.decode(stream), JSBI.BigInt(0));
   }
 }
 

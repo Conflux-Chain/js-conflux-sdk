@@ -36,7 +36,7 @@ class IntegerCoder extends BaseCoder {
   }
 
   /**
-   * @param value {number|JSBI|string}
+   * @param value {number|JSBI|string} - FIXME: it is not a good idea to accept string as number
    * @return {Buffer}
    */
   encode(value) {
@@ -71,7 +71,7 @@ class IntegerCoder extends BaseCoder {
       value = JSBI.subtract(value, mask);
     }
 
-    return JSBI.BigInt(value).toString();
+    return JSBI.BigInt(value);
   }
 }
 

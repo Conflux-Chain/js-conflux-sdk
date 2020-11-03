@@ -13,6 +13,7 @@ const BytesCoder = require('./BytesCoder');
 const StringCoder = require('./StringCoder');
 const TupleCoder = require('./TupleCoder');
 const ArrayCoder = require('./ArrayCoder');
+// TODO FixedCoder
 
 /**
  * Get coder by abi component.

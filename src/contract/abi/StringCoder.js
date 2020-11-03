@@ -27,7 +27,7 @@ class StringCoder extends BytesCoder {
       coder: this,
     });
 
-    return super.encode(Buffer.from(value, 'utf8'));
+    return super.encode(Buffer.from(value));
   }
 
   /**
@@ -36,7 +36,7 @@ class StringCoder extends BytesCoder {
    */
   decode(stream) {
     const bytes = super.decode(stream);
-    return bytes.toString('utf8');
+    return bytes.toString();
   }
 
   encodeTopic(value) {
@@ -47,7 +47,7 @@ class StringCoder extends BytesCoder {
       coder: this,
     });
 
-    return super.encodeTopic(Buffer.from(value, 'utf8'));
+    return super.encodeTopic(Buffer.from(value));
   }
 }
 
