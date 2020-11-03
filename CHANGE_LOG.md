@@ -1,5 +1,9 @@
 # change log
 
+## v1.0.1
+
+fix: EventCoder, FunctionCoder, valueCoder decode return string but not JSBI
+
 ## v1.0.0
 
 * add `defaultGasRatio` and `defaultStorageRatio`
