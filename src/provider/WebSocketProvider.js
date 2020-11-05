@@ -1,69 +1,6 @@
-const { promisify } = require('util');
-const websocket = require('websocket');
+const Websocket = require('websocket').w3cwebsocket;
 const BaseProvider = require('./BaseProvider');
 const { awaitTimeout } = require('../util');
-
-class Client extends websocket.client {
-  constructor({ url: requestUrl, ...options }) {
-    super(options);
-    this.requestUrl = requestUrl;
-    this.connection = null;
-  }
-
-  connect(...args) {
-    return new Promise((resolve, reject) => {
-      super.connect(...args);
-
-      this.once('connect', connection => {
-        connection.send = promisify(connection.send);
-        connection.on('message', ({ utf8Data, binaryData }) => this.emit('message', utf8Data || binaryData));
-        connection.once('close', (..._args) => this.emit('close', ..._args));
-        resolve(connection);
-      });
-
-      this.once('connectFailed', reject);
-    });
-  }
-
-  async send(...args) {
-    if (this.connection === null) { // init|closed
-      this.connection = false;
-      try {
-        this.connection = await this.connect(this.requestUrl);
-      } catch (e) {
-        this.connection = null;
-        throw e;
-      }
-    }
-
-    if (this.connection === false) { // connecting
-      await new Promise(((resolve, reject) => {
-        this.once('connect', resolve);
-        this.once('connectFailed', reject);
-      }));
-    }
-
-    return this.connection.send(...args);
-  }
-
-  async close() {
-    if (this.connection === null) { // init|closed
-      return;
-    }
-
-    if (this.connection === false) { // connecting
-      await new Promise(((resolve, reject) => {
-        this.once('connect', resolve);
-        this.once('connectFailed', reject);
-      }));
-    }
-
-    this.connection.close();
-    this.connection.once('close', () => {
-      this.connection = null;
-    });
-  }
-}
 
 /**
  * Websocket protocol json rpc provider.
@@ -72,15 +9,25 @@ class WebSocketProvider extends BaseProvider {
   constructor(options) {
     super(options);
 
-    this.client = new Client(options);
-    this.client.on('close', (...args) => this.emit('close', ...args));
-    this.client.on('message', json => {
+    this.client = null;
+
+    this.on('message', json => {
       const data = JSON.parse(json);
       if (Array.isArray(data)) {
         data.forEach(each => this._onData(each));
       } else {
         this._onData(data);
       }
+    });
+  }
+
+  _connect(url) {
+    return new Promise((resolve, reject) => {
+      const client = new Websocket(url);
+      client.onopen = () => resolve(client);
+      client.onerror = () => reject(new Error(`connect to ${url}, failed`));
+      client.onmessage = ({ data }) => this.emit('message', data);
+      client.onclose = ({ code, reason }) => this.emit('close', code, reason);
     });
   }
 
@@ -110,23 +57,52 @@ class WebSocketProvider extends BaseProvider {
     });
   }
 
+  async _send(data) {
+    if (this.client === null) { // init
+      this.client = false;
+      try {
+        this.client = await this._connect(this.url);
+      } catch (e) {
+        this.client = null;
+        throw e;
+      }
+    }
+
+    while (this.client === false) { // connecting
+      await new Promise(resolve => setTimeout(resolve, 1));
+    }
+
+    return this.client.send(data);
+  }
+
   async request(data) {
-    await this.client.send(JSON.stringify(data));
+    await this._send(JSON.stringify(data));
 
     return await awaitTimeout(this._awaitId(data.id), this.timeout) || {};
   }
 
   async requestBatch(dataArray) {
-    await this.client.send(JSON.stringify(dataArray));
+    await this._send(JSON.stringify(dataArray));
 
     return Promise.all(dataArray.map(async data => {
       return awaitTimeout(this._awaitId(data.id), this.timeout); // timeout for each request
     }));
   }
 
-  close() {
+  async close() {
     super.close();
-    this.client.close(); // MUST close client after super, cause provider need 'close' event to remove listener
+
+    if (this.client === null) { // init
+      return;
+    }
+
+    while (this.client === false) { // connecting
+      await new Promise(resolve => setTimeout(resolve, 1));
+    }
+
+    this.client.close();
+    await new Promise(resolve => this.once('close', resolve));
+    this.client = null;
   }
 }
 

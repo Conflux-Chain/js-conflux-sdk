@@ -55,7 +55,7 @@ class Drip extends String {
    * @return {string}
    *
    * @example
-   * > Drip.fromDrip(1e9).toCFX()
+   * > Drip(1e9).toCFX()
    "0.000000001"
    */
   toCFX() {
@@ -67,7 +67,7 @@ class Drip extends String {
    * @return {string}
    *
    * @example
-   * > Drip.fromDrip(1e9).toGDrip()
+   * > Drip(1e9).toGDrip()
    "1"
    */
   toGDrip() {

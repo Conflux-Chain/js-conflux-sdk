@@ -30,21 +30,29 @@ const EPOCH_NUMBER = {
 /**
  * min gas price for transaction
  *
- * @type {number} 1
+ * @type {number}
+ * @example
+ * > CONST.MIN_GAS_PRICE
+ 1
  */
 const MIN_GAS_PRICE = 1;
 
 /**
  * gas use for pure transfer transaction
  *
- * @type {number} 2100
+ * @type {number}
+ * @example
+ * > CONST.TRANSACTION_GAS
+ 2100
  */
 const TRANSACTION_GAS = 21000;
 
 /**
  * storage limit for pure transfer transaction
  *
- * @type {number} 0
+ * @type {number}
+ * > CONST.TRANSACTION_STORAGE_LIMIT
+ 0
  */
 const TRANSACTION_STORAGE_LIMIT = 0;
 
