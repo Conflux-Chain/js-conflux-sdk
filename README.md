@@ -6,6 +6,15 @@
 
 JavaScript Conflux Software Development Kit
 
+## 1.0 Key features
+
+1. Add `cfx.wallet` to manage multiple accounts, which has replace v0.13's `cfx.Account`.
+2. Add `cfx.InternalContract(name)` to interact with Conflux internal contracts.
+3. Add websocket provider, support pub/sub
+4. Provide `Drip` to easily convert unit between CFX, Drip, Gdrip
+
+Check the [complete changelog](./CHANGE_LOG.md)
+
 ## Installation
 
 `npm install js-conflux-sdk`
@@ -17,14 +26,15 @@ JavaScript Conflux Software Development Kit
 const { Conflux } = require('js-conflux-sdk');
 
 async function main() {
-  // initalize a Conflux object
+  // initialize a Conflux object
   const conflux = new Conflux({
     url: 'http://test.confluxrpc.org',
     logger: console, // for debug
   });
   // get balance
   const balance = await conflux.getBalance('0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b');
-  console.log(balance); // 10098788868004995614504
+  // Note you should console.log a JSBI's string representation, directly log a JSBI is very ugly.
+  console.log(balance.toString()); // 10098788868004995614504
 }
 
 main();
@@ -59,6 +69,14 @@ or
   });
 </script>
 ```
+
+
+## Documentation
+
+* [Quick Intro (Recommend to read)](./docs/quick_intro.md)
+* [Complete document for send transaction](./docs/how_to_send_tx.md)
+* [Interacting with contract](./docs/interact_with_contract.md)
+* [API](https://github.com/Conflux-Chain/js-conflux-sdk/blob/master/api.md)
 
 ## Examples
 
@@ -200,26 +218,31 @@ async function main() {
 
   const name = await contract.name(); // call method without arguments
   console.log(name); // MiniERC20
-  // use can set options by `contract.name().call({ from: account, ... })`
+  // user can set options by `contract.name().call({ from: account, ... })`
 
   const balance = await contract.balanceOf(account.address); // call method with arguments
   console.log(balance); // "10000" JSBI
 
   const txHash = await contract.transfer(ADDRESS, 10).sendTransaction({ from: account }); // send method transaction
   console.log(txHash); // 0xb31eb095b62bed1ef6fee6b7b4ee43d4127e4b42411e95f761b1fdab89780f1a
-  // use can set options by `contract.transfer(ADDRESS, 10).sendTransaction({ from: account, gasPrice: <number>, ... })`
+  // user can set options by `contract.transfer(ADDRESS, 10).sendTransaction({ from: account, gasPrice: <number>, ... })`
 }
 
 main();
 ```
 
-## Document
-
-* [API](https://github.com/Conflux-Chain/js-conflux-sdk/blob/master/api.md)
-
 ## Change log
 
 [see](https://github.com/Conflux-Chain/js-conflux-sdk/tree/master/CHANGE_LOG.md)
+
+
+## Conflux Docs
+
+1. [Official developer documentation](https://developer.conflux-chain.org/)
+2. [RPC](https://developer.conflux-chain.org/docs/conflux-doc/docs/json_rpc)
+3. [Subscribtion](https://developer.conflux-chain.org/docs/conflux-doc/docs/pubsub)
+4. [Conflux Portal](https://portal.conflux-chain.org/)
+
 
 ## TODO
 
