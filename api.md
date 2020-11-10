@@ -1335,6 +1335,13 @@ epochNumber label
 
 min gas price for transaction
 
+* **Examples**
+
+```
+> CONST.MIN_GAS_PRICE
+ 1
+```
+
 ----------------------------------------
 
 ## TRANSACTION_GAS <a id="CONST.js/TRANSACTION_GAS"></a>
@@ -1342,6 +1349,13 @@ min gas price for transaction
 `number`
 
 gas use for pure transfer transaction
+
+* **Examples**
+
+```
+> CONST.TRANSACTION_GAS
+ 2100
+```
 
 ----------------------------------------
 
@@ -1513,7 +1527,7 @@ Get `CFX` number string
 * **Examples**
 
 ```
-> Drip.fromDrip(1e9).toCFX()
+> Drip(1e9).toCFX()
    "0.000000001"
 ```
 
@@ -1528,7 +1542,7 @@ Get `GDrip` number string
 * **Examples**
 
 ```
-> Drip.fromDrip(1e9).toGDrip()
+> Drip(1e9).toGDrip()
    "1"
 ```
 

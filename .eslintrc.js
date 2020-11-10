@@ -33,6 +33,7 @@ module.exports = {
     'object-property-newline': 0, // for long object keys
     'operator-linebreak': 0, // for `'string' +\n`
     'prefer-destructuring': 0,
+    'quote-props': 0, // for string key
     'yoda': 0, // for `min < number && number < max`
   },
 };

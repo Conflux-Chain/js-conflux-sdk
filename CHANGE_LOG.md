@@ -1,5 +1,9 @@
 # change log
 
+## v1.0.2
+
+fix: use native websocket for front-end
+
 ## v1.0.1
 
 fix: EventCoder, FunctionCoder, valueCoder decode return string but not JSBI
