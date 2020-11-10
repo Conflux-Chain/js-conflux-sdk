@@ -19,60 +19,102 @@ class Contract {
    * @return {object}
    *
    * @example
-   * > const contract = conflux.Contract({ abi, bytecode });
+   * > const contract = conflux.Contract({ abi, bytecode, address });
    {
+      abi: ContractABI { contract: [Circular *1] },
+      address: '0x8e2f2e68eb75bb8b18caafe9607242d4748f8d98',
       constructor: [Function: bound call],
-      abi: ContractABI { * },
-      address: undefined,
-      count: [Function: bound call],
-      inc: [Function: bound call],
-      'count()': [Function: bound call],
-      '0x06661abd': [Function: bound call],
-      'inc(uint256)': [Function: bound call],
-      '0x812600df': [Function: bound call],
+      name: [Function: bound call],
+      'name()': [Function: bound call],
+      '0x06fdde03': [Function: bound call],
+      balanceOf: [Function: bound call],
+      'balanceOf(address)': [Function: bound call],
+      '0x70a08231': [Function: bound call],
+      send: [Function: bound call],
+      'send(address,uint256,bytes)': [Function: bound call],
+      '0x9bd9bbc6': [Function: bound call],
+      Transfer: [Function: bound call],
+      'Transfer(address,address,uint256)': [Function: bound call],
+      '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef': [Function: bound call]
    }
 
    * > contract.constructor.bytecode; // input code
-   "0x6080604052600080..."
+   "0x6080..."
 
    * @example
-   * > const contract = conflux.Contract({ abi, address });
-   * > contract.address
-   "0xc3ed1a06471be1d3bcd014051fbe078387ec0ad8"
-
-   * > await contract.count(); // call a method without parameter, get decoded return value.
-   "100"
-   * > await contract.inc(1); // call a method with parameters, get decoded return value.
-   "101"
-   * > await contract.count().options({ from: account }); // call a method from a account.
-   "100"
-
-   * > transaction = await conflux.getTransactionByHash('0x8a5f48c2de0f1bdacfe90443810ad650e4b327a0d19ce49a53faffb224883e42');
-   * > await contract.abi.decodeData(transaction.data)
-   {
-      name: 'inc',
-      fullName: 'inc(uint256 num)',
-      type: 'inc(uint256)',
-      signature: '0x7f98a45e',
-      array: [ JSBI.BigInt(101) ],
-      object: { num: JSBI.BigInt(101) }
-   }
-
-   * > await contract.count(); // data in block chain changed by transaction.
-   JSBI.BigInt(101)
-
-   * > receipt = await conflux.getTransactionReceipt('0x8a5f48c2de0f1bdacfe90443810ad650e4b327a0d19ce49a53faffb224883e42');
-   * > contract.abi.decodeLog(receipt.logs[0]);
-   {
-      name: 'SelfEvent',
-      fullName: 'SelfEvent(address indexed sender, uint256 current)',
-      type: 'SelfEvent(address,uint256))',
-      signature: '0xc4c01f6de493c58245fb681341f3a76bba9551ce81b11cbbb5d6d297844594df',
-      array: [ '0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b', JSBI.BigInt(100) ],
-      object: {
-        sender: '0xbbd9e9be525ab967e633bcdaeac8bd5723ed4d6b',
-        current: JSBI.BigInt(100),
+   * > const contract = conflux.Contract({
+   address: '0x8e2f2e68eb75bb8b18caafe9607242d4748f8d98',
+   abi: [
+      {
+        type: 'function',
+        name: 'name',
+        inputs: [],
+        outputs: [{ type: 'string' }],
       },
+      {
+        type: 'function',
+        name: 'balanceOf',
+        inputs: [{ type: 'address' }],
+        outputs: [{ type: 'uint256' }],
+      },
+      {
+        name: 'send',
+        type: 'function',
+        inputs: [
+          { type: 'address', name: 'recipient' },
+          { type: 'uint256', name: 'amount' },
+          { type: 'bytes', name: 'data' },
+        ],
+        outputs: [{ type: 'bool' }],
+      },
+    ]
+   });
+   * > contract.address
+   "0x8e2f2e68eb75bb8b18caafe9607242d4748f8d98"
+
+   * > await contract.name(); // call a method without parameter, get decoded return value.
+   "FansCoin"
+   * > await contract.name().call({ to: '0x8b8689c7f3014a4d86e4d1d0daaf74a47f5e0f27' }); // call a method with options
+   "conflux USDT"
+   * > await contract.balanceOf('0x19c742cec42b9e4eff3b84cdedcde2f58a36f44f'); // call a method with parameters, get decoded return value.
+   10000000000000000000n
+
+   * > transaction = await conflux.getTransactionByHash('0x2055f3287f1a6ce77d91f5dfdf7517a531b3a560fee1265f27dc1ff92314530b');
+   * > contract.abi.decodeData(transaction.data)
+   {
+      name: 'send',
+      fullName: 'send(address recipient, uint256 amount, bytes data)',
+      type: 'send(address,uint256,bytes)',
+      signature: '0x9bd9bbc6',
+      array: [
+        '0x80bb30efc5683758128b404fe5da03432eb16634',
+        60000000000000000000n,
+        <Buffer 1f 3c 6b 96 96 60 4c dc 3c e1 ca 27 7d 4c 69 a9 c2 77 0c 9f>
+      ],
+      object: {
+        recipient: '0x80bb30efc5683758128b404fe5da03432eb16634',
+        amount: 60000000000000000000n,
+        data: <Buffer 1f 3c 6b 96 96 60 4c dc 3c e1 ca 27 7d 4c 69 a9 c2 77 0c 9f>
+      }
+    }
+
+   * > receipt = await conflux.getTransactionReceipt('0x2055f3287f1a6ce77d91f5dfdf7517a531b3a560fee1265f27dc1ff92314530b');
+   * > contract.abi.decodeLog(receipt.logs[1]);
+   {
+      name: 'Transfer',
+      fullName: 'Transfer(address indexed from, address indexed to, uint256 value)',
+      type: 'Transfer(address,address,uint256)',
+      signature: '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef',
+      array: [
+        '0x1f3c6b9696604cdc3ce1ca277d4c69a9c2770c9f',
+        '0x80bb30efc5683758128b404fe5da03432eb16634',
+        60000000000000000000n
+      ],
+      object: {
+        from: '0x1f3c6b9696604cdc3ce1ca277d4c69a9c2770c9f',
+        to: '0x80bb30efc5683758128b404fe5da03432eb16634',
+        value: 60000000000000000000n
+      }
     }
    */
   constructor({ abi, address, bytecode }, conflux) {

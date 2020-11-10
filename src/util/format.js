@@ -1,7 +1,7 @@
-const JSBI = require('jsbi');
 const Big = require('big.js');
 const lodash = require('lodash');
 const CONST = require('../CONST');
+const JSBI = require('./jsbi');
 const parser = require('./parser');
 const sign = require('./sign');
 
@@ -11,7 +11,7 @@ function toHex(value) {
 
   if (lodash.isString(value)) {
     hex = value.toLowerCase(); // XXX: lower case for support checksum address
-  } else if (Number.isInteger(value) || (value instanceof JSBI)) {
+  } else if (Number.isInteger(value) || (typeof value === 'bigint') || (value instanceof JSBI)) {
     hex = `0x${value.toString(16)}`;
   } else if (Buffer.isBuffer(value)) {
     hex = `0x${value.toString('hex')}`;
@@ -39,7 +39,7 @@ function toNumber(value) {
 }
 
 function toBigInt(value) {
-  if (Number.isInteger(value) || (value instanceof JSBI)) {
+  if (Number.isInteger(value) || (typeof value === 'bigint') || (value instanceof JSBI)) {
     return JSBI.BigInt(value);
   }
   if (lodash.isBoolean(value)) {
@@ -74,19 +74,19 @@ const format = {};
 format.any = parser(v => v);
 
 /**
- * @param arg {number|JSBI|string|boolean}
+ * @param arg {number|BigInt|string|boolean}
  * @return {Number}
  *
  * @example
  * > format.uInt(-3.14)
- Error("cannot be converted to a JSBI")
+ Error("not match uint")
  * > format.uInt(null)
- Error("Cannot convert null to a JSBI")
+ Error("not match number")
  * > format.uInt('0')
  0
  * > format.uInt(1)
  1
- * > format.uInt(JSBI(100))
+ * > format.uInt(BigInt(100))
  100
  * > format.uInt('0x10')
  16
@@ -102,34 +102,34 @@ format.any = parser(v => v);
 format.uInt = parser(toNumber).$validate(v => Number.isSafeInteger(v) && v >= 0, 'uint');
 
 /**
- * @param arg {number|string|JSBI}
- * @return {JSBI}
+ * @param arg {number|string|BigInt}
+ * @return {BigInt}
  *
  * @example
  * > format.bigInt(-3.14)
- Error("not match bigInt")
+ Error("Cannot convert -3.14 to a BigInt")
  * > format.bigInt('0.0')
- JSBI.BigInt(0)
+ 0n
  * > format.bigInt('-1')
- JSBI.BigInt(-1)
+ -1n
  * > format.bigInt(1)
- JSBI.BigInt(1)
- * > format.bigInt(JSBI.BigInt(100))
- JSBI.BigInt(100)
+ 1n
+ * > format.bigInt(BigInt(100))
+ 100n
  * > format.bigInt('0x10')
- JSBI.BigInt(16)
+ 16n
  * > format.bigInt(Number.MAX_SAFE_INTEGER + 1) // unsafe integer
- Error("not match uint")
+ 9007199254740992n
  */
 format.bigInt = parser(toBigInt);
 
 /**
- * @param arg {number|string|JSBI}
- * @return {JSBI}
+ * @param arg {number|string|BigInt}
+ * @return {BigInt}
  *
  * @example
  * > format.bigUInt('0.0')
- JSBI.BigInt(0)
+ 0n
  * > format.bigUInt('-1')
  Error("not match bigUInt")
  */
@@ -138,7 +138,7 @@ format.bigUInt = format.bigInt.$validate(v => v >= 0, 'bigUInt');
 /**
  * When encoding QUANTITIES (integers, numbers): encode as hex, prefix with "0x", the most compact representation (slight exception: zero should be represented as "0x0")
  *
- * @param arg {number|string|JSBI}
+ * @param arg {number|string|BigInt}
  * @return {string} Hex string
  *
  * @example
@@ -152,7 +152,7 @@ format.bigUInt = format.bigInt.$validate(v => v >= 0, 'bigUInt');
 format.bigUIntHex = format.bigUInt.$after(v => `0x${v.toString(16)}`);
 
 /**
- * @param arg {number|string|JSBI}
+ * @param arg {number|string|BigInt}
  * @return {Big} Big instance
  *
  * @example
@@ -174,7 +174,7 @@ format.bigUIntHex = format.bigUInt.$after(v => `0x${v.toString(16)}`);
 format.big = parser(toBig);
 
 /**
- * @param arg {string|number|JSBI|Big}
+ * @param arg {string|number|BigInt|Big}
  * @return {Number}
  *
  * @example
@@ -207,7 +207,7 @@ format.epochNumber = format.bigUIntHex
 /**
  * When encoding UNFORMATTED DATA (byte arrays, account addresses, hashes, bytecode arrays): encode as hex, prefix with "0x", two hex digits per byte.
  *
- * @param arg {number|JSBI|string|Buffer|boolean|null}
+ * @param arg {number|BigInt|string|Buffer|boolean|null}
  * @return {string} Hex string
  *
  * @example
@@ -319,7 +319,7 @@ format.privateKey = format.hex64; // alias
 format.publicKey = format.hex.$validate(v => v.length === 2 + 128, 'publicKey');
 
 /**
- * @param arg {number|string|JSBI|Buffer|boolean|null}
+ * @param arg {number|string|BigInt|Buffer|boolean|null}
  * @return {Buffer}
  *
  * @example

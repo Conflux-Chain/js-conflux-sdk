@@ -9,6 +9,8 @@ Then compile it with solidity compiler, you will get `bytecode` and `abi`. With 
 const { Conflux } = require('js-conflux-sdk');
 const { abi, bytecode } = MINI_ERC20; // see https://github.com/Conflux-Chain/js-conflux-sdk/tree/master/example/contract/miniERC20.json
 
+const PRIVATE_KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'; // sender private key
+
 async function main() {
   const conflux = new Conflux({ url: 'http://test.confluxrpc.org' });
   const account = conflux.wallet.addPrivateKey(PRIVATE_KEY);
@@ -29,8 +31,8 @@ async function main() {
     "index": 0,
     "epochNumber": 318456,
     "outcomeStatus": 0,
-    "gasUsed": "1054531",
-    "gasFee": "1054531000000000",
+    "gasUsed": 1054531n,
+    "gasFee": 1054531000000000n,
     "blockHash": "0x4a8b07e2694e358af075f7a9e96e78842b77ac2d511e2ab33f6acfff34a5846c",
     "contractCreated": "0x8a9c270e1a99c05ca90ef0f0008b8f6444cf1a97",
     "from": "0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b",
@@ -70,12 +72,11 @@ async function main() {
 
   // 4. call method with arguments
   const balance = await contract.balanceOf(account.address); 
-  console.log(balance.toString()); // "10000" JSBI
+  console.log(balance); // 10000n
 
   // 4. change contract state by send a transaction
-  const txHash = await contract.transfer(ADDRESS, 10).sendTransaction({ from: account }); 
-  console.log(txHash); // 0xb31eb095b62bed1ef6fee6b7b4ee43d4127e4b42411e95f761b1fdab89780f1a
-  
+  const transactionHash = await contract.transfer(ADDRESS, 10).sendTransaction({ from: account }); 
+  console.log(transactionHash); // 0xb31eb095b62bed1ef6fee6b7b4ee43d4127e4b42411e95f761b1fdab89780f1a
 }
 
 main();
@@ -84,10 +85,14 @@ main();
 ### How to play with InternalContract
 Conflux network has provide three Internal Contract `AdminControl`, `SponsorWhitelistControl`, `Staking`, these internal contract are very helpful to contract developer, for detail documentation check [official doc](https://developer.conflux-chain.org/docs/conflux-rust/internal_contract/internal_contract). This SDK have fully support for Internal Contract, you can use them like this.
 
-```js
+```javascript
+const { Conflux } = require('js-conflux-sdk');
+
 async function main() {
+    const conflux = new Conflux({ url: 'http://test.confluxrpc.org' });
+    
     // 1. get internal contract through InternalContract method and pass the internal contract name
-    const sponsor = cfx.InternalContract('SponsorWhitelistControl')
+    const sponsor = conflux.InternalContract('SponsorWhitelistControl');
     const gasSponsor = await sponsor.getSponsorForGas('0x8dc687aef9ee127335434e1a0b6a16a5941d3b67');
 }
 main();

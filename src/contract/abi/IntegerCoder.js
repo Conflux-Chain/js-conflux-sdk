@@ -1,7 +1,7 @@
-const JSBI = require('jsbi');
 const { UINT_BOUND } = require('../../CONST');
 const { assert, alignBuffer } = require('../../util');
 const format = require('../../util/format');
+const JSBI = require('../../util/jsbi');
 const BaseCoder = require('./BaseCoder');
 
 class IntegerCoder extends BaseCoder {

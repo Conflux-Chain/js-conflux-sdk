@@ -175,11 +175,11 @@ class Conflux {
    * @example
    * > await conflux.getStatus()
    {
-      "chainId": 2,
-      "epochNumber": 324105,
-      "blockNumber": 426341,
-      "pendingTxNumber": 40,
-      "bestHash": "0xef08f2702335f149afc021607511ffae49df8bb56b2afb7f42de02d9cbbf7ef6"
+      chainId: 1029,
+      epochNumber: 1117476,
+      blockNumber: 2230973,
+      pendingTxNumber: 4531,
+      bestHash: '0x8d581f13fa0548f2751450a7dabd871777875c9ccdf0d8bd629e07a7a5a7917a'
    }
    */
   async getStatus() {
@@ -194,7 +194,7 @@ class Conflux {
    *
    * @example
    * > await conflux.getGasPrice();
-   '1'
+   1n
    */
   async getGasPrice() {
     const result = await this.provider.call('cfx_gasPrice');
@@ -209,7 +209,7 @@ class Conflux {
    *
    * @example
    * > await conflux.getInterestRate();
-   "2522880000000"
+   2522880000000n
    */
   async getInterestRate(epochNumber) {
     const result = await this.provider.call('cfx_getInterestRate',
@@ -226,7 +226,7 @@ class Conflux {
    *
    * @example
    * > await conflux.getAccumulateInterestRate()
-   "76269979767787603657181926319926"
+   76357297457647044505744908994993n
    */
   async getAccumulateInterestRate(epochNumber) {
     const result = await this.provider.call('cfx_getAccumulateInterestRate',
@@ -251,15 +251,15 @@ class Conflux {
    * admin `string`: admin of the account.
    *
    * @example
-   > await conflux.getAccount('0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b');
+   > await conflux.getAccount('0x1c1e72f0c37968557b3d85a3f32747792798bbde');
    {
-    "accumulatedInterestReturn": "0",
-    "balance": "0",
-    "collateralForStorage": "0",
-    "nonce": "0",
-    "stakingBalance": "0",
-    "admin": "0x0000000000000000000000000000000000000000",
-    "codeHash": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"
+      accumulatedInterestReturn: 0n,
+      balance: 824812401057514588670n,
+      collateralForStorage: 174187500000000000000n,
+      nonce: 1449n,
+      stakingBalance: 0n,
+      admin: '0x0000000000000000000000000000000000000000',
+      codeHash: '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'
    }
    */
   async getAccount(address, epochNumber) {
@@ -278,8 +278,8 @@ class Conflux {
    * @return {Promise<BigInt>} The balance in Drip.
    *
    * @example
-   * > await conflux.getBalance("0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b");
-   '10098788868004995614504'
+   * > await conflux.getBalance("0x1c1e72f0c37968557b3d85a3f32747792798bbde");
+   824812401057514588670n
    */
   async getBalance(address, epochNumber) {
     const result = await this.provider.call('cfx_getBalance',
@@ -297,8 +297,8 @@ class Conflux {
    * @return {Promise<BigInt>} The staking balance in Drip.
    *
    * @example
-   * > await conflux.getStakingBalance('0x194770007dda54cF92009BFF0dE90c06F603a09f', 'latest_state');
-   '6334100968004995614504'
+   * > await conflux.getStakingBalance('0x1c1e72f0c37968557b3d85a3f32747792798bbde', 'latest_state');
+   0n
    */
   async getStakingBalance(address, epochNumber) {
     const result = await this.provider.call('cfx_getStakingBalance',
@@ -316,8 +316,8 @@ class Conflux {
    * @return {Promise<BigInt>} The next nonce should be used by given address.
    *
    * @example
-   * > await conflux.getNextNonce("0x1be45681ac6c53d5a40475f7526bac1fe7590fb8");
-   "3"
+   * > await conflux.getNextNonce("0x1c1e72f0c37968557b3d85a3f32747792798bbde");
+   1449n
    */
   async getNextNonce(address, epochNumber) {
     const result = await this.provider.call('cfx_getNextNonce',
@@ -335,8 +335,8 @@ class Conflux {
    * @return {Promise<string>} Address to admin, or `null` if the contract does not exist.
    *
    * @example
-   * > conflux.getAdmin('0x8af71f222b6e05b47d8385fe437fe2f2a9ec1f1f')
-   "0x144aa8f554d2ffbc81e0aa0f533f76f5220db09c"
+   * > conflux.getAdmin('0x8e2f2e68eb75bb8b18caafe9607242d4748f8d98')
+   "0x1c1e72f0c37968557b3d85a3f32747792798bbde"
    */
   async getAdmin(address, epochNumber) {
     return this.provider.call('cfx_getAdmin',
@@ -411,21 +411,21 @@ class Conflux {
    * - txFee `BigInt`: Total gas fee of block transaction
    *
    * @example
-   * > await conflux.getBlockRewardInfo(4060000);
+   * > await conflux.getBlockRewardInfo(6);
    [
    {
-      "baseReward": "11295480000000000000",
-      "totalReward": "11295509726193823715",
-      "txFee": "0",
-      "author": "0x13bbe31525cb9ed1461d3277c4413c854d9f8355",
-      "blockHash": "0x305c0a205af135ffca55a6ffb9569cbf93451ea3b7211b8f0ae39c147f3320e8"
+      baseReward: 6993700000000000000n,
+      totalReward: 6993700031741486703n,
+      txFee: 0n,
+      author: '0x1f323dccb24606b061db9e3a1277b8db99f1c1b2',
+      blockHash: '0x73cd891aea310e2c0b8644de91746c7353cebfffb780126bc06101b20689c893'
     },
    {
-      "baseReward": "11300000000000000000",
-      "totalReward": "11300029738091185588",
-      "txFee": "2126250",
-      "author": "0x1a84009b2f981155b98bb7e10aa0965fbc169be7",
-      "blockHash": "0xfc75086a3a752d742673859d371061e8a59c85a54e90f13914b62c20364a2150"
+      baseReward: 6997200000000000000n,
+      totalReward: 6997200031760371742n,
+      txFee: 3000000n,
+      author: '0x1f323dccb24606b061db9e3a1277b8db99f1c1b2',
+      blockHash: '0xaf4136d04e9e2cc470703251ec46f5913ab7955d526feed43771705e89c77390'
     }
    ]
    */
@@ -477,29 +477,33 @@ class Conflux {
    * - transactionsRoot `string`: The hash of the transactions of the block.
    *
    * @example
-   * > await conflux.getBlockByHash('0x0909bdb39910d743e7e9b68f24afbbf187349447b161c4716bfd278fd7a0cbc7');
+   * > await conflux.getBlockByHash('0xaf4136d04e9e2cc470703251ec46f5913ab7955d526feed43771705e89c77390');
    {
-      "epochNumber": 455,
-      "blame": 0,
-      "height": 455,
-      "size": 122,
-      "timestamp": 1594912954,
-      "gasLimit": "30000000",
-      "difficulty": "30000",
-      "transactions": [
-        "0xe6b56ef6a2be1987b0353a316cb02c78493673c31adb847b947d47c3936d89a8"
+      epochNumber: 6,
+      blame: 0,
+      height: 6,
+      size: 352,
+      timestamp: 1603901780,
+      gasLimit: 30000000n,
+      gasUsed: 61118n,
+      difficulty: 20000000000n,
+      transactions: [
+        '0xaad69c8c814aec3e418b68f60917c607920a531e7082dd2c642323b43ecadb94',
+        '0xbf7110474779ba2404433ef39a24cb5b277186ef1e6cb199b0b60907b029a1ce'
       ],
-      "adaptive": false,
-      "deferredLogsBloomHash": "0xd397b3b043d87fcd6fad1291ff0bfd16401c274896d8c63a923727f077b8e0b5",
-      "deferredReceiptsRoot": "0x09f8709ea9f344a810811a373b30861568f5686e649d6177fd92ea2db7477508",
-      "deferredStateRoot": "0x2124f4f35df1abeb01a43ed25c6b7ea5a56bbc2bdb3ab3feb096e3911e522181",
-      "hash": "0x0909bdb39910d743e7e9b68f24afbbf187349447b161c4716bfd278fd7a0cbc7",
-      "miner": "0x100000000000000000000000000000000000007c",
-      "nonce": "0xcc2eadd8c5c369ff",
-      "parentHash": "0x9ced22205ac0fe96ad27be9c0add073ce49582220b8fd1006edf16a402aef9b4",
-      "powQuality": "0x167d3",
-      "refereeHashes": [],
-      "transactionsRoot": "0x5a31184b86d8b88a3860649c17a4b7b4d3c7ef35fea971afb1f44081feff5b60"
+      adaptive: false,
+      deferredLogsBloomHash: '0xd397b3b043d87fcd6fad1291ff0bfd16401c274896d8c63a923727f077b8e0b5',
+      deferredReceiptsRoot: '0x09f8709ea9f344a810811a373b30861568f5686e649d6177fd92ea2db7477508',
+      deferredStateRoot: '0x50c0fcbc5bafa7d1dba7b19c87629830106a6be8d0adf505cdc656bb43535d69',
+      hash: '0xaf4136d04e9e2cc470703251ec46f5913ab7955d526feed43771705e89c77390',
+      miner: '0x1f323dccb24606b061db9e3a1277b8db99f1c1b2',
+      nonce: '0x17d86f2f6',
+      parentHash: '0xc8a412b4b77b48d61f694975f032d109f26bb0f9fc02e4b221d67a382fab386b',
+      powQuality: '0x5a0f86a6f4',
+      refereeHashes: [
+        '0x73cd891aea310e2c0b8644de91746c7353cebfffb780126bc06101b20689c893'
+      ],
+      transactionsRoot: '0xd2f08676484ba2a3738194f44542eb29fb290b8ed74bf007f132fe51d89b2e7c'
     }
    */
   async getBlockByHash(blockHash, detail = false) {
@@ -536,7 +540,7 @@ class Conflux {
    * @return {Promise<number|null>} Number >0 and <1
    *
    * @example
-   * > await conflux.getConfirmationRiskByHash('0x24dcc768132dc7f651d7cb35c52e7bba632eda073d8743f81cfe905ff7e4157a')
+   * > await conflux.getConfirmationRiskByHash('0xaf4136d04e9e2cc470703251ec46f5913ab7955d526feed43771705e89c77390')
    1e-8
    */
   async getConfirmationRiskByHash(blockHash) {
@@ -555,7 +559,7 @@ class Conflux {
    * - blockHash `string`: hash of the block where this transaction was in and got executed. `null` when its pending.
    * - contractCreated `string|null`: address of created contract. `null` when it's not a contract creating transaction
    * - data `string`: the data send along with the transaction.
-   * - epochHeight `number`: TODO
+   * - epochHeight `number`: epoch height
    * - from `string`: address of the sender.
    * - gas `BigInt`: gas provided by the sender.
    * - gasPrice `number`: gas price provided by the sender in Drip.
@@ -564,35 +568,35 @@ class Conflux {
    * - r `string`: ECDSA signature r
    * - s `string`: ECDSA signature s
    * - status `number`: 0 for success, 1 for error occured, `null` when the transaction is skipped or not packed.
-   * - storageLimit `BigInt`: TODO
-   * - chainId `number`: TODO
+   * - storageLimit `BigInt`: storage limit in bytes
+   * - chainId `number`: chain id
    * - to `string`: address of the receiver. null when its a contract creation transaction.
    * - transactionIndex `number`: integer of the transactions's index position in the block. `null` when its pending.
    * - v `string`: ECDSA recovery id
    * - value `BigInt`: value transferred in Drip.
    *
    * @example
-   * > await conflux.getTransactionByHash('0xe6b56ef6a2be1987b0353a316cb02c78493673c31adb847b947d47c3936d89a8');
+   * > await conflux.getTransactionByHash('0xbf7110474779ba2404433ef39a24cb5b277186ef1e6cb199b0b60907b029a1ce');
    {
-      "nonce": "0",
-      "value": "1000000000000000000000000000000000",
-      "gasPrice": "3",
-      "gas": "16777216",
-      "v": 1,
-      "transactionIndex": 0,
-      "status": 0,
-      "storageLimit": "65536",
-      "chainId": 2,
-      "epochHeight": 454,
-      "blockHash": "0x0909bdb39910d743e7e9b68f24afbbf187349447b161c4716bfd278fd7a0cbc7",
-      "contractCreated": null,
-      "data": "0x",
-      "from": "0x1be45681ac6c53d5a40475f7526bac1fe7590fb8",
-      "hash": "0xe6b56ef6a2be1987b0353a316cb02c78493673c31adb847b947d47c3936d89a8",
-      "r": "0x85f6729aa1e709202318bd6746c4a232a379eaa4cd9c2ea24c7babdbd09085cd",
-      "s": "0x7101e1e2ee4ddfcef8879358df0cb0792f34712116f100b76c8e9582625acd2f",
-      "to": "0x144aa8f554d2ffbc81e0aa0f533f76f5220db09c"
-   }
+      nonce: 0n,
+      gasPrice: 10n,
+      gas: 200000n,
+      value: 0n,
+      storageLimit: 1024n,
+      epochHeight: 0,
+      chainId: 1029,
+      v: 1,
+      status: 0,
+      transactionIndex: 1,
+      blockHash: '0xaf4136d04e9e2cc470703251ec46f5913ab7955d526feed43771705e89c77390',
+      contractCreated: null,
+      data: '0xfebe49090000000000000000000000000000000000000000000000000000000000000000000000000000000000000000162788589c8e386863f217faef78840919fb2854',
+      from: '0x108b8b1333523a79ac363d8f41805e81b085d55d',
+      hash: '0xbf7110474779ba2404433ef39a24cb5b277186ef1e6cb199b0b60907b029a1ce',
+      r: '0x495da01ae9f445847022a8bc7df0198577ba75f88b26699f61afb435bb9c50bc',
+      s: '0x2291051b1c53db1d6bfe2fb29be1bf512d063e726dc6b98aaf0f2259b7456be0',
+      to: '0x83bf953c8b687f0d1b8d2243a3e0654ec1f70d1b'
+    }
    */
   async getTransactionByHash(transactionHash) {
     const result = await this.provider.call('cfx_getTransactionByHash',
@@ -620,21 +624,22 @@ class Conflux {
    * - logs `object[]`: Array of log objects, which this transaction generated.
    *
    * @example
-   * > await conflux.getTransactionReceipt('0xe6b56ef6a2be1987b0353a316cb02c78493673c31adb847b947d47c3936d89a8');
+   * > await conflux.getTransactionReceipt('0xbf7110474779ba2404433ef39a24cb5b277186ef1e6cb199b0b60907b029a1ce');
    {
-      "index": 0,
-      "epochNumber": 455,
-      "outcomeStatus": 0,
-      "gasUsed": "21000",
-      "gasFee": "37748736",
-      "blockHash": "0x0909bdb39910d743e7e9b68f24afbbf187349447b161c4716bfd278fd7a0cbc7",
-      "contractCreated": null,
-      "from": "0x1be45681ac6c53d5a40475f7526bac1fe7590fb8",
-      "logs": [],
-      "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-      "stateRoot": "0x19d109e6fe9f5a75cc54543af4beab08c0f23fdf95eea33b1afe5a9ef8b770dc",
-      "to": "0x144aa8f554d2ffbc81e0aa0f533f76f5220db09c",
-      "transactionHash": "0xe6b56ef6a2be1987b0353a316cb02c78493673c31adb847b947d47c3936d89a8"
+      index: 1,
+      epochNumber: 6,
+      outcomeStatus: 0,
+      gasUsed: 30559n,
+      gasFee: 1500000n,
+      blockHash: '0xaf4136d04e9e2cc470703251ec46f5913ab7955d526feed43771705e89c77390',
+      contractCreated: null,
+      from: '0x108b8b1333523a79ac363d8f41805e81b085d55d',
+      logs: [],
+      logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+      stateRoot: '0xd6a7c2c14cb0d1233010acca98e114db5a10e0b94803d23b01a6777b7fd3b2fd',
+      to: '0x83bf953c8b687f0d1b8d2243a3e0654ec1f70d1b',
+      transactionHash: '0xbf7110474779ba2404433ef39a24cb5b277186ef1e6cb199b0b60907b029a1ce',
+      txExecErrorMsg: null
     }
    */
   async getTransactionReceipt(transactionHash) {
@@ -739,14 +744,14 @@ class Conflux {
    * @example
    * > packedTx = await conflux.sendTransaction({from:account, to:address, value:0}).get(); // await till transaction packed
    {
-    "nonce": "8",
-    "value": "0",
-    "gasPrice": "1000000000",
-    "gas": "21000",
+    "nonce": 8n,
+    "value": 0n,
+    "gasPrice": 1000000000n,
+    "gas": 21000n,
     "v": 0,
     "transactionIndex": null,
     "status": null,
-    "storageLimit": "0",
+    "storageLimit": 0n,
     "chainId": 1,
     "epochHeight": 791394,
     "blockHash": null,
@@ -762,14 +767,14 @@ class Conflux {
    * @example
    * > minedTx = await conflux.sendTransaction({from:account, to:address, value:0}).mined(); // await till transaction mined
    {
-    "nonce": "8",
-    "value": "0",
-    "gasPrice": "1000000000",
-    "gas": "21000",
+    "nonce": 8n,
+    "value": 0n,
+    "gasPrice": 1000000000n,
+    "gas": 21000n,
     "v": 0,
     "transactionIndex": 0,
     "status": 0,
-    "storageLimit": "0",
+    "storageLimit": 0n,
     "chainId": 1,
     "epochHeight": 791394,
     "blockHash": "0xdb2d2d438dcdee8d61c6f495bd363b1afb68cb0fdff16582c08450a9ca487852",
@@ -788,8 +793,8 @@ class Conflux {
     "index": 0,
     "epochNumber": 791402,
     "outcomeStatus": 0,
-    "gasUsed": "21000",
-    "gasFee": "21000000000000",
+    "gasUsed": 21000n,
+    "gasFee": 21000000000000n,
     "blockHash": "0xdb2d2d438dcdee8d61c6f495bd363b1afb68cb0fdff16582c08450a9ca487852",
     "contractCreated": null,
     "from": "0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b",
@@ -806,8 +811,8 @@ class Conflux {
     "index": 0,
     "epochNumber": 791402,
     "outcomeStatus": 0,
-    "gasUsed": "21000",
-    "gasFee": "21000000000000",
+    "gasUsed": 21000n,
+    "gasFee": 21000000000000n,
     "blockHash": "0xdb2d2d438dcdee8d61c6f495bd363b1afb68cb0fdff16582c08450a9ca487852",
     "contractCreated": null,
     "from": "0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b",
@@ -907,13 +912,13 @@ class Conflux {
    * - sponsorForGas `string`: the address of the gas sponsor.
    *
    * @example
-   * > await conflux.getSponsorInfo('0x866aca87ff33a0ae05d2164b3d999a804f583222')
+   * > await conflux.getSponsorInfo('0x8e2f2e68eb75bb8b18caafe9607242d4748f8d98')
    {
-      "sponsorBalanceForCollateral": "0",
-      "sponsorBalanceForGas": "0",
-      "sponsorGasBound": "0",
-      "sponsorForCollateral": "0x0000000000000000000000000000000000000000",
-      "sponsorForGas": "0x0000000000000000000000000000000000000000"
+      sponsorBalanceForCollateral: 410625000000000000000n,
+      sponsorBalanceForGas: 9999999993626232440n,
+      sponsorGasBound: 10000000000n,
+      sponsorForCollateral: '0x8d5adbcaf5714924830591586f05302bf87f74bd',
+      sponsorForGas: '0x8d5adbcaf5714924830591586f05302bf87f74bd'
    }
    */
   async getSponsorInfo(address, epochNumber) {
@@ -932,8 +937,8 @@ class Conflux {
    * @return {Promise<BigInt>} - The collateral storage in Byte.
    *
    * @example
-   * > await conflux.getCollateralForStorage('0xc94770007dda54cf92009bff0de90c06f603a09f')
-   "158972490234375000"
+   * > await conflux.getCollateralForStorage('0x8e2f2e68eb75bb8b18caafe9607242d4748f8d98')
+   89375000000000000000n
    */
   async getCollateralForStorage(address, epochNumber) {
     const result = await this.provider.call('cfx_getCollateralForStorage',
@@ -1006,29 +1011,29 @@ class Conflux {
    *
    * @example
    * > await conflux.getLogs({
-      address: '0x866aca87ff33a0ae05d2164b3d999a804f583222',
-      fromEpoch: 0,
-      toEpoch: 'latest_mined',
+      address: '0x8e2f2e68eb75bb8b18caafe9607242d4748f8d98',
+      fromEpoch: 39802,
+      toEpoch: 39802,
       limit: 1,
-      topics: ['0x93baa6efbd2244243bfee6ce4cfdd1d04fc4c0e9a786abd3a41313bd352db153']
+      topics: ['0x2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d'],
     });
    [
-   {
-        "address": "0x866aca87ff33a0ae05d2164b3d999a804f583222",
-        "blockHash": "0x0ecbc75aca22cd1566a18c6a7a55f235ae12684c2749b40ac91262d6e8783b0b",
-        "data": "0x",
-        "epochNumber": 1504,
-        "logIndex": 2,
-        "topics": [
-          "0x93baa6efbd2244243bfee6ce4cfdd1d04fc4c0e9a786abd3a41313bd352db153",
-          "0x000000000000000000000000873c4bd4d847bcf7dc066bf4a7cd31dcf182258c",
-          "0xb281fc8c12954d22544db45de3159a39272895b169a852b314f9cc762e44c53b",
-          "0x000000000000000000000000873c4bd4d847bcf7dc066bf4a7cd31dcf182258c"
-        ],
-        "transactionHash": "0x2a696f7be50c364333bc145f082e79da3a6e730318b7f7822e3e1fe22e42560b",
-        "transactionIndex": 0,
-        "transactionLogIndex": 2
-      }
+     {
+      epochNumber: 39802,
+      logIndex: 2,
+      transactionIndex: 0,
+      transactionLogIndex: 2,
+      address: '0x8e2f2e68eb75bb8b18caafe9607242d4748f8d98',
+      blockHash: '0xca00158a2a508170278d5bdc5ca258b6698306dd8c30fdba32266222c79e57e6',
+      data: '0x',
+      topics: [
+        '0x2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d',
+        '0x0000000000000000000000000000000000000000000000000000000000000000',
+        '0x0000000000000000000000001c1e72f0c37968557b3d85a3f32747792798bbde',
+        '0x0000000000000000000000001c1e72f0c37968557b3d85a3f32747792798bbde'
+      ],
+      transactionHash: '0xeb75f47002720311f1709e36d7f7e9a91ee4aaa469a1de892839cb1ef66a9939'
+    }
    ]
    */
   async getLogs(options) {
@@ -1119,25 +1124,23 @@ class Conflux {
    * > subscription = await conflux.subscribeNewHeads()
    * > subscription.on('data', data=>console.log(data))
    {
-     difficulty: '19874410',
-     epochNumber: null,
-     gasLimit: '30000000',
-     height: 566239,
-     powQuality: '39637224',
-     timestamp: 1602644636,
-     adaptive: false,
-     blame: 0,
-     deferredLogsBloomHash: '0xd397b3b043d87fcd6fad1291ff0bfd16401c274896d8c63a923727f077b8e0b5',
-     deferredReceiptsRoot: '0x35182c1c5f1fbb0864758585d94cefcb794619ba8ef4a7adc2e3d48e85a2d4b0',
-     deferredStateRoot: '0x2cf6ee27ed82e76c585ca46838746907512b86aab04f9f27cb04047939ec056f',
-     hash: '0x9454515ccd8493d2121e60549efd321de96a7322a95e8d537f7b2d0504a03f21',
-     miner: '0x10f9db11bb1509041909b35be6a3546fe65d22d0',
-     nonce: '0x611a95000001fe98',
-     parentHash: '0xf7edf9f6c11ebd4e9c1aa0a2c03203932c0ad79c3fd92cb7540bcf351aa90376',
-     refereeHashes: [
-       '0x4d69e1b945ec2c819bc20bcb0e128e4b161ed28355d42b6d05a6f7cac9ab91f9'
-     ],
-     transactionsRoot: '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'
+      difficulty: 368178587115n,
+      epochNumber: null,
+      gasLimit: 30000000n,
+      height: 1118247,
+      timestamp: 1605005752,
+      adaptive: false,
+      blame: 0,
+      deferredLogsBloomHash: '0xd397b3b043d87fcd6fad1291ff0bfd16401c274896d8c63a923727f077b8e0b5',
+      deferredReceiptsRoot: '0x7ae0d5716513206755b6f7c95272b79dbc225759b6e17727e19c2f15c3166bda',
+      deferredStateRoot: '0x3cf5deba77c8aa9072f1e972d6a97db487a0ce88455f371eb8ac8fa77321cb9d',
+      hash: '0x194675173abbc5aab50326136008774eea1a289e6722c973dfed12b703ee5f2a',
+      miner: '0x189121b8f0cdfef0b56eb22d9cb76c97b9c7cfbc',
+      nonce: '0x799d35f695950fd6',
+      parentHash: '0x4af3cf8cb358e75acad282ffa4b578b6211ea9eeb7cf87c282f120d8a1c809df',
+      powQuality: '0xe7ac17feab',
+      refereeHashes: [],
+      transactionsRoot: '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'
     }
    */
   async subscribeNewHeads() {

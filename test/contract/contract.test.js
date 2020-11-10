@@ -1,4 +1,4 @@
-const JSBI = require('jsbi');
+const JSBI = require('../../src/util/jsbi');
 const { Conflux, format } = require('../../src');
 const { MockProvider } = require('../../mock');
 const { abi, bytecode, address } = require('./contract.json');
