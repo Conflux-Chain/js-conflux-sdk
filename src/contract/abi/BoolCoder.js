@@ -1,6 +1,6 @@
-const JSBI = require('jsbi');
 const lodash = require('lodash');
 const { assert } = require('../../util');
+const JSBI = require('../../util/jsbi');
 const IntegerCoder = require('./IntegerCoder');
 
 class BoolCoder extends IntegerCoder {

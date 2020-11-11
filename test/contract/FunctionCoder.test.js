@@ -1,4 +1,4 @@
-const JSBI = require('jsbi');
+const JSBI = require('../../src/util/jsbi');
 const FunctionCoder = require('../../src/contract/method/FunctionCoder');
 
 test('function', () => {

@@ -1,4 +1,4 @@
-const JSBI = require('jsbi');
+const JSBI = require('../../src/util/jsbi');
 const EventCoder = require('../../src/contract/event/EventCoder');
 
 test('event', () => {

@@ -1,4 +1,4 @@
-const JSBI = require('jsbi');
+const JSBI = require('./util/jsbi');
 
 JSBI.prototype.toJSON = function () {
   // https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/BigInt

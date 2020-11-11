@@ -1,69 +1,74 @@
 # How to send a Conflux Transaction
 
-### A simple CFX transfer
+## Send transaction simple
 It can be very easy to send a simple transaction(transfer some CFX to another address), all you need is `from`, `to`, `value` and `from`'s privateKey.
 
-```javascript
-const { Drip } = require('js-conflux-sdk');
+```js
+const { Conflux, Drip } = require('js-conflux-sdk');
+
+const PRIVATE_KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'; // sender private key
+const ADDRESS = '0x0123456789012345678901234567890123456789';
 
 async function main() {
-  // Note: first you need initialize a Conflux object
-  // create account instance and add to wallet
-  const PRIVATE_KEY = "";
-  const ADDRESS = "";
-  const account = cfx.wallet.addPrivateKey(PRIVATE_KEY); 
+  const conflux = new Conflux({ url: 'http://test.confluxrpc.org' });
   
-  // This will send a CFX transfer transaction to a RPC endpoint, it will return the tx hash
-  const txHash = await cfx.sendTransaction({
-    from: account.address, // sender address which added into conflux.wallet
+  const sender = conflux.wallet.addPrivateKey(PRIVATE_KEY); // add private to local wallet
+  const transactionHash = await conflux.sendTransaction({
+    from: sender.address, // account address or instance which added into conflux.wallet
     to: ADDRESS, // receiver address
     value: Drip.fromCFX(0.1), // 0.1 CFX = 100000000000000000 Drip
-  }); 
-  console.log(txHash);
+  });
+  
+  console.log(transactionHash); // suggest store transactionHash in disk !!!
+  // 0x22e5ffefe4da995ebcb2847762b7acb1c03fd17c9ab010272965fa63c9590d6e
+  
+  // you might need wait seconds here...
+  await new Promise(resolve => setTimeout(resolve, 60 * 1000));
 
-  // You can get the tx info 
-  const tx = await cfx.getTransactionByHash(txHash);
-  /*
-    {
-      "nonce": "0",
-      "value": "1000000000000000000000000000000000",
-      "gasPrice": "3",
-      "gas": "16777216",
-      "v": 1,
-      "transactionIndex": 0,
-      "status": 0,
-      "storageLimit": "65536",
-      "chainId": 1,
-      "epochHeight": 454,
-      "blockHash": "0x0909bdb39910d743e7e9b68f24afbbf187349447b161c4716bfd278fd7a0cbc7",
-      "contractCreated": null,
-      "data": "0x",
-      "from": "0x1be45681ac6c53d5a40475f7526bac1fe7590fb8",
-      "hash": "0xe6b56ef6a2be1987b0353a316cb02c78493673c31adb847b947d47c3936d89a8",
-      "r": "0x85f6729aa1e709202318bd6746c4a232a379eaa4cd9c2ea24c7babdbd09085cd",
-      "s": "0x7101e1e2ee4ddfcef8879358df0cb0792f34712116f100b76c8e9582625acd2f",
-      "to": "0x144aa8f554d2ffbc81e0aa0f533f76f5220db09c"
-   }
-  */
-
-  // the receipt will not generate immediately, so wait a while maybe 5s
-  const receipt = await cfx.getTransactionReceipt(txHash);
+  const transaction = await conflux.getTransactionByHash(txHash);
+  console.log(transaction); // get transaction from remote
   /*
   {
-      "index": 0,
-      "epochNumber": 455,
-      "outcomeStatus": 0,
-      "gasUsed": "21000",
-      "gasFee": "37748736",
-      "blockHash": "0x0909bdb39910d743e7e9b68f24afbbf187349447b161c4716bfd278fd7a0cbc7",
-      "contractCreated": null,
-      "from": "0x1be45681ac6c53d5a40475f7526bac1fe7590fb8",
-      "logs": [],
-      "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-      "stateRoot": "0x19d109e6fe9f5a75cc54543af4beab08c0f23fdf95eea33b1afe5a9ef8b770dc",
-      "to": "0x144aa8f554d2ffbc81e0aa0f533f76f5220db09c",
-      "transactionHash": "0xe6b56ef6a2be1987b0353a316cb02c78493673c31adb847b947d47c3936d89a8"
-    }
+    nonce: 13584n,
+    gasPrice: 1n,
+    gas: 75000n,
+    value: 100000000000000000n,
+    storageLimit: 2048n,
+    epochHeight: 1344622,
+    chainId: 1,
+    v: 1,
+    status: 0,
+    transactionIndex: 3,
+    blockHash: '0x4ee16b530f6b6951122c1305b262eef5251ebff03498bc510610ed45fb72a014',
+    contractCreated: null,
+    data: '0x',
+    from: '0x1cad0b19bb29d4674531d6f115237e16afce377c',
+    hash: '0x22e5ffefe4da995ebcb2847762b7acb1c03fd17c9ab010272965fa63c9590d6e',
+    r: '0x162f2b49022528ba65fa35be2b93b8554d1910f7993201f1e755e5a29c7f8a53',
+    s: '0x2106ce156aea46ffe8438b8a4057e116b4d1c8551158ae2cf1e4679924e433d8',
+    to: '0x0123456789012345678901234567890123456789'
+  }
+  */
+
+  const receipt = await conflux.getTransactionReceipt(txHash);
+  console.log(receipt); // get receipt from remote
+  /*
+  {
+    index: 3,
+    epochNumber: 1344628,
+    outcomeStatus: 0,
+    gasUsed: 54349n,
+    gasFee: 56250n,
+    blockHash: '0x4ee16b530f6b6951122c1305b262eef5251ebff03498bc510610ed45fb72a014',
+    contractCreated: null,
+    from: '0x1cad0b19bb29d4674531d6f115237e16afce377c',
+    logs: [],
+    logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+    stateRoot: '0xf8d93f9f783605572fb48beb81e7450b25eae2eeb28310429c862a5c1956bd71',
+    to: '0x0123456789012345678901234567890123456789',
+    transactionHash: '0x22e5ffefe4da995ebcb2847762b7acb1c03fd17c9ab010272965fa63c9590d6e',
+    txExecErrorMsg: null
+  }
   */
 }
 
@@ -71,7 +76,6 @@ main();
 ```
 
 If you can get the transaction receipt and it's `outcomeStatus` is `0`, congratulate you have send a transaction successfully.
-
 
 ### Transaction's stage
 After sending, a transaction could be in several different states, [here](https://developer.conflux-chain.org/docs/conflux-doc/docs/send_transaction#track-my-transaction) is a detail explanation of transaction life cycle.
@@ -90,22 +94,49 @@ Only after a transaction executed, you can get it's receipt. The `receipt.outcom
 Correspond to transaction stages, the SDK has provide several advanced `sendTransaction` usage:
 
 ```js
-let txParameters = {
-  from: account,
-  to: "0x-a-address",
-  value: "0x100"
-};
-const txHash = await cfx.sendTransaction(txParameters);  // send the tx and return a hash
-const tx = await cfx.sendTransaction(txParameters).get();  // send the tx and return the tx
-const tx = await cfx.sendTransaction(txParameters).mined();  // wait tx mined and return the tx
-const receipt = await cfx.sendTransaction(txParameters).executed();  // wait tx executed and return receipt
-const receipt = await cfx.sendTransaction(txParameters).confirmed();  // wait tx confirmed and return receipt
+const { Conflux, Drip } = require('js-conflux-sdk');
+
+const PRIVATE_KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'; // sender private key
+const ADDRESS = '0x0123456789012345678901234567890123456789';
+
+async function main() {
+  const conflux = new Conflux({ url: 'http://test.confluxrpc.org' });
+  
+  const sender = conflux.wallet.addPrivateKey(PRIVATE_KEY);
+  
+  const pendingTransaction = conflux.sendTransaction({
+    from: sender.address, // account address or instance which added into conflux.wallet
+    to: ADDRESS, // receiver address
+    value: Drip.fromCFX(0.1), // 0.1 CFX = 100000000000000000 Drip
+  }); // NOTE: without await, transaction not send yet
+
+  const transactionHash = await pendingTransaction; // send and await endpoint return transaction hash
+  console.log(transactionHash);
+
+  // usually wait about 2 seconds
+  const packedTransaction = await pendingTransaction.get(); // await endpoint packed transaction
+  console.log(packedTransaction); // `blockHash` might still be `null`
+
+  // usually wait about 5 seconds
+  const minedTransaction = await pendingTransaction.mined(); // await transaction mined
+  console.log(minedTransaction); // already have `blockHash`
+  
+  // usually wait about 10 seconds
+  const executedReceipt = await pendingTransaction.executed(); // await transaction executed
+  console.log(executedReceipt); // if `outcomeStatus` equal 0, return receipt, else throw error
+
+  // usually wait about 50 seconds
+  const confirmedReceipt = await pendingTransaction.confirmed(); // await transaction confirmed
+  console.log(confirmedReceipt); // usually same as executedReceipt, but transaction block risk is <= 1e-8
+}
+
+main();
 ```
 
-Note: the `mined`, `executed`, `confirmed` methods maybe will take a long time, and will be timeout, these methods are not recommended in production.
+Note: the `mined`, `executed`, `confirmed` methods maybe will take a long time, and will be timeout.
 
 
-### A complete transaction
+## Send transaction complete
 
 Besides `from`, `to`, `value` there are several other fields could be filled with:
 
@@ -124,64 +155,96 @@ Compare with ethereum Conflux transaction have three new field: `storageLimit`, 
 
 
 ```js
-const txHash = await cfx.sendTransaction({
+const { Conflux, Drip } = require('js-conflux-sdk');
+
+const PRIVATE_KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'; // sender private key
+const ADDRESS = '0x0123456789012345678901234567890123456789';
+
+async function main() {
+  const conflux = new Conflux({ url: 'http://test.confluxrpc.org' });
+  const account = conflux.wallet.addPrivateKey(PRIVATE_KEY); // create account instance and add to wallet
+  
+  const estimate = await conflux.estimateGasAndCollateral({ to, value });
+  const status = await conflux.getStatus();
+
+  const transactionHash = await conflux.sendTransaction({
     from: account.address, // sender address which added into conflux.wallet
     to: ADDRESS, // receiver address
     value: Drip.fromCFX(0.1), // 0.1 CFX = 100000000000000000 Drip
-    nonce: 100,
-    gas: 21000,
-    gasPrice: new Drip(1),
-    storageLimit: 0,
-    epochHeight: await cfx.getEpochNumber(),
     data: null,
-    chainId: 1,
-}); 
-console.log(txHash);
+    gas: estimate.gasUsed,
+    storageLimit: 0,
+    chainId: status.chainId,
+    nonce: await conflux.getNextNonce(account.address),
+    gasPrice: await conflux.getGasPrice(),
+    epochHeight: await conflux.getEpochNumber(),
+  }); 
+  
+  console.log(transactionHash);
+}
+
+main();
 ```
 
-### How much `gas` and `storageLimit` a transaction need
+## How much `gas` and `storageLimit` a transaction need
 If you are just transfer CFX, the gas should be `21000`, if you are interact with a contract it's a little complicated.
 Normally you can estimate it by call `estimateGasAndCollateral`.
 
-##### `gasPrice`
-When sending transaction if you specify the `gasPrice` it will be used, if not it will try to use `cfx.defaultGasPrice` you can specify it when you initiallize the cfx object.
-
 ```js
-const cfx = new Conflux({
+const conflux = new Conflux({
     url: 'http://test.confluxrpc.org',
     logger: console, // for debug
-    defaultGasPrice: 1
-});
-```
-If both `gasPrice` and `defaultGasPrice` is not specified, the SDK will fill the result of `getGasPrice()` to it.
-
-Currentlly set the gasPrice to `1 Drip` will enough to send most transactions.
-
-##### `gas`
-First you can specify the tx.`gas`, if you don't it will use the result of `estimateGasAndCollateral.gasUsed`, and this value will be multiply a ratio `defaultGasRatio` (default 1.1), because the estimate result sometimes are not accurate, normally estimated `gasUsed` will not enough.
-
-```js
-const cfx = new Conflux({
-    url: 'http://test.confluxrpc.org',
-    logger: console, // for debug
-    defaultGasRatio: 1.1
-});
-```
-
-##### `storageLimit`
-Same as `gas` you can specify `storageLimit` when you send transaction (unit is Byte), if not
-
-```js
-const cfx = new Conflux({
-    url: 'http://test.confluxrpc.org',
-    logger: console, // for debug
+    defaultGasPrice: 1,
+    defaultGasRatio: 1.1,
     defaultStorageRatio: 1.1
 });
 ```
 
-### SendRawTransaction
+### `gasPrice`
+When sending transaction if you specify the `gasPrice` it will be used, if not it will try to use `cfx.defaultGasPrice` you can specify it when you initiallize the cfx object.
+
+If both `gasPrice` and `defaultGasPrice` is not specified, the SDK will fill the result of `getGasPrice()` to it.
+
+Currentlly set the gasPrice to `1 Drip` will enough to send most transactions.
+
+### `gas`
+First you can specify the tx.`gas`, if you don't it will use the result of `estimateGasAndCollateral.gasUsed`, and this value will be multiply a ratio `defaultGasRatio` (default 1.1), because the estimate result sometimes are not accurate, normally estimated `gasUsed` will not enough.
+
+### `storageLimit`
+Same as `gas` you can specify `storageLimit` when you send transaction (unit is Byte), if not
+
+## SendRawTransaction
 The `sendTransaction` will use get `from`'s privateKey from wallet, use it sign transaction and invoke `sendRawTransaction` method, if you have a raw transaction you can use it directly. the `sendRawTransaction` method also can use `get`, `mined`, `executed`, `confirmed` method.
 
+```js
+const { Conflux, Transaction } = require('js-conflux-sdk');
+
+const PRIVATE_KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'; // sender private key
+const ADDRESS = '0x0123456789012345678901234567890123456789';
+
+async function main() {
+  const conflux = new Conflux({ url: 'http://test.confluxrpc.org' });
+
+  const transaction = new Transaction({
+    to: ADDRESS, // receiver address
+    nonce: 1, // sender next nonce
+    value: 1,
+    gas: 21000,
+    gasPrice: 1,
+    storageLimit: 0,
+    epochHeight: 100,
+    chainId: 1, // endpoint status.chainId
+    data: '0x'
+  });
+
+  transaction.sign(PRIVATE_KEY); // sender privateKey
+
+  const transactionHash = await conflux.sendRawTransaction(transaction.serialize());
+  console.log(transactionHash)
+}
+
+main();
+```
 
 ### Why my transaction is always pending ?
 If your transaction alway pending in the pool, normally you have use a incorrect `nonce` or your `balance` is not enough. You can get the transaction info by it's hash, and check it's nonce with your account's nonce, and check your balance is enough to cover the value + gasPrice * gas + storageLimit.
@@ -197,35 +260,21 @@ If your transaction is failed, you can find reason in below ways:
 If you want send a transaction with a note, you can specify it through `data`, the tricky is you need convert your message to a hex string.
 
 ```js
-const hex = require('string-hex');
-let hexString = '0x' + hex("This is the transaction note");
+const { Conflux, format } = require('js-conflux-sdk');
 
-let result = await cfx.sendTransaction({
-    from: address,
-    to: '0x1292d4955bb47F5153B88Ca12C7A9E4048f09839',
-    value: Drip.fromGDrip(0.001),
-    data: hexString
-});
-```
+const PRIVATE_KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'; // sender private key
 
-### How to build a raw transaction
-Build a `Transaction`, sign it with privateKey, then you can get a raw transaction.
+async function main() {
+  const conflux = new Conflux({ url: 'http://test.confluxrpc.org' });
+  const account = conflux.wallet.addPrivateKey(PRIVATE_KEY); // create account instance and add to wallet
+ 
+  const transactionHash = await conflux.sendTransaction({
+    from: account.address,
+    to: account.address, // if data is not contract bytecode, must have `to` address
+    data: format.bytes('Hello World')
+  });
+  console.log(transactionHash); 
+}
 
-```js
-import {Transaction} from 'js-conflux-sdk';
-let tx = new Transaction({
-    from: '0x1be45681ac6c53d5a40475f7526bac1fe7590fb8',
-    nonce: 1,
-    to: '0x1be45681ac6c53d5a40475f7526bac1fe7590fb8',
-    value: 1,
-    gas: 21000,
-    gasPrice: 1,
-    storageLimit: 0,
-    epochHeight: 100,
-    chainId: 1,
-    data: "0x"
-});
-const privateKey = "....";
-tx.sign(privateKey);
-let rawTx = tx.serialize();
+main()
 ```

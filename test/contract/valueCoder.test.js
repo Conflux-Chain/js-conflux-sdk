@@ -1,10 +1,10 @@
 /* eslint-disable no-bitwise */
 
-const JSBI = require('jsbi');
 const lodash = require('lodash');
 const { format, CONST } = require('../../src');
 const BaseCoder = require('../../src/contract/abi/BaseCoder');
 const { valueCoder } = require('../../src/contract/abi');
+const JSBI = require('../../src/util/jsbi');
 const HexStream = require('../../src/util/HexStream');
 
 function testEncode(coder, value, string) {

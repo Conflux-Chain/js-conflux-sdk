@@ -25,7 +25,7 @@ class WebSocketProvider extends BaseProvider {
     return new Promise((resolve, reject) => {
       const client = new Websocket(url);
       client.onopen = () => resolve(client);
-      client.onerror = () => reject(new Error(`connect to ${url}, failed`));
+      client.onerror = () => reject(new Error(`connect to "${url}" failed`));
       client.onmessage = ({ data }) => this.emit('message', data);
       client.onclose = ({ code, reason }) => this.emit('close', code, reason);
     });
