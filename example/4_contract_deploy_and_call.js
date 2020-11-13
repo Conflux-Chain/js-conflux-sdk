@@ -390,7 +390,7 @@ async function getLogsOfTransfer() {
 }
 
 /*
- Warning! some example might send a transaction. please test them ont by one
+ Warning! some example might send a transaction. please test them one by one
  */
 async function main() {
   showContract();
