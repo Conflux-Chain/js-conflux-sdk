@@ -63,7 +63,7 @@ or
 * [Quick Intro (Recommend to read)](./docs/quick_intro.md)
 * [Complete document for send transaction](./docs/how_to_send_tx.md)
 * [Interacting with contract](./docs/interact_with_contract.md)
-* [API](./api.md)
+* [API](./docs/api.md)
 
 ## TODO
 
