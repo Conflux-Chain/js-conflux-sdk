@@ -1,7 +1,7 @@
 ---
 id: javascript_sdk
 title: Javascript SDK
-custom_edit_url: https://github.com/Conflux-Chain/js-conflux-sdk/edit/master/api.md
+custom_edit_url: https://github.com/Conflux-Chain/js-conflux-sdk/edit/master/docs/api.md
 keywords:
   - conflux
   - javascript
@@ -398,13 +398,13 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](
 * **Returns**
 
 `Promise.<object>` Return the states of the given account:
-balance `BigInt`: the balance of the account.
-nonce `BigInt`: the nonce of the account's next transaction.
-codeHash `string`: the code hash of the account.
-stakingBalance `BigInt`: the staking balance of the account.
-collateralForStorage `BigInt`: the collateral storage of the account.
-accumulatedInterestReturn `BigInt`: accumulated unterest return of the account.
-admin `string`: admin of the account.
+- balance `BigInt`: the balance of the account.
+- nonce `BigInt`: the nonce of the account's next transaction.
+- codeHash `string`: the code hash of the account.
+- stakingBalance `BigInt`: the staking balance of the account.
+- collateralForStorage `BigInt`: the collateral storage of the account.
+- accumulatedInterestReturn `BigInt`: accumulated unterest return of the account.
+- admin `string`: admin of the account.
 
 * **Examples**
 
