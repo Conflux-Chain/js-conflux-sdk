@@ -242,13 +242,13 @@ class Conflux {
    * @param address {string} - address to get account.
    * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
    * @return {Promise<object>} Return the states of the given account:
-   * balance `BigInt`: the balance of the account.
-   * nonce `BigInt`: the nonce of the account's next transaction.
-   * codeHash `string`: the code hash of the account.
-   * stakingBalance `BigInt`: the staking balance of the account.
-   * collateralForStorage `BigInt`: the collateral storage of the account.
-   * accumulatedInterestReturn `BigInt`: accumulated unterest return of the account.
-   * admin `string`: admin of the account.
+   * - balance `BigInt`: the balance of the account.
+   * - nonce `BigInt`: the nonce of the account's next transaction.
+   * - codeHash `string`: the code hash of the account.
+   * - stakingBalance `BigInt`: the staking balance of the account.
+   * - collateralForStorage `BigInt`: the collateral storage of the account.
+   * - accumulatedInterestReturn `BigInt`: accumulated unterest return of the account.
+   * - admin `string`: admin of the account.
    *
    * @example
    > await conflux.getAccount('0x1c1e72f0c37968557b3d85a3f32747792798bbde');
