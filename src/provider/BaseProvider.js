@@ -33,7 +33,7 @@ class BaseProvider extends EventEmitter {
    * @return {string}
    */
   requestId() {
-    return `${Math.floor((Date.now() + Math.random()) * 10000)}`;
+    return `${Date.now().toString(16)}${Math.random().toString(16).slice(2)}`;
   }
 
   request() {
