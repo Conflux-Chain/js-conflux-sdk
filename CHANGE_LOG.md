@@ -1,8 +1,32 @@
 # change log
 
+## v1.1.1
+
+fix: update request id avoid repeat
+
+```
+// old
+conflux.provider.requestId(); // "16055917399420726"
+
+// new
+conflux.provider.requestId(); // "175d4b91862001f4f81eb443"
+```
+
 ## v1.1.0
 
 fix: use native websocket for front-end
+
+* use BigInt for nodejs, JSBI for browser
+
+```
+// for nodejs
+
+// old
+conflux.getBalance(ADDRESS); // JSBI(1) [ -1153374696, sign: false ]
+
+// new
+conflux.getBalance(ADDRESS); // 3141592600n
+```
 
 ## v1.0.1
 
