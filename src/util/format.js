@@ -500,6 +500,10 @@ format.receipt = parser({
   outcomeStatus: format.uInt.$or(null),
   gasUsed: format.bigUInt,
   gasFee: format.bigUInt,
+  storageCollateralized: format.bigUInt,
+  storageReleased: [{
+    collaterals: format.bigUInt,
+  }],
 });
 
 format.log = parser({

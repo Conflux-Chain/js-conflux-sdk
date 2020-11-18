@@ -1,5 +1,13 @@
 # change log
 
+## v1.1.2
+
+* add `conflux.getVoteList`
+
+* add `conflux.getDepositList`
+
+* update `conflux.getTransactionReceipt`
+
 ## v1.1.1
 
 fix: update request id avoid repeat

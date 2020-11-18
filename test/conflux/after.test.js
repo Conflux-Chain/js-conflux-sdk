@@ -230,6 +230,13 @@ test('getTransactionReceipt', async () => {
   expect(typeof receipt.gasUsed).toEqual('bigint');
   expect(typeof receipt.gasFee).toEqual('bigint');
   expect(Array.isArray(receipt.logs)).toEqual(true);
+  expect(receipt.txExecErrorMsg).not.toBeUndefined();
+  expect(lodash.isBoolean(receipt.gasCoveredBySponsor)).toEqual(true);
+  expect(lodash.isBoolean(receipt.storageCoveredBySponsor)).toEqual(true);
+  expect(typeof receipt.storageCollateralized).toEqual('bigint');
+  expect(Array.isArray(receipt.storageReleased)).toEqual(true);
+  expect(receipt.storageReleased[0].address).toMatch(/^0x[0-9a-f]{40}$/);
+  expect(typeof receipt.storageReleased[0].collaterals).toEqual('bigint');
 });
 
 test('sendTransaction', async () => {

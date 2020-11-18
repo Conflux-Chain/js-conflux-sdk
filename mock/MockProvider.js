@@ -332,6 +332,16 @@ class MockProvider extends EventEmitter {
       stateRoot: randomHex(64),
       to,
       transactionHash,
+      txExecErrorMsg: status === null ? null : 'mock error message',
+      gasCoveredBySponsor: false,
+      storageCoveredBySponsor: true,
+      storageCollateralized: randomHex(4),
+      storageReleased: [
+        {
+          address: from,
+          collaterals: randomHex(4),
+        },
+      ],
     };
   }
 
