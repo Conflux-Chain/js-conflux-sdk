@@ -525,6 +525,11 @@ format.rewardInfo = parser([
   },
 ]);
 
+format.voteList = parser([
+  {
+    amount: format.bigUInt,
+  },
+]);
 // ---------------------------- parse subscribe event -------------------------
 format.head = parser({
   difficulty: format.bigUInt,

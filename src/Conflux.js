@@ -345,6 +345,24 @@ class Conflux {
     );
   }
 
+  /**
+   * Get vote list
+   *
+   * @param address {string} - Address to contract.
+   * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
+   * @return {Promise<object[]>} Vote list
+   * - `array`:
+   *   - amount `BigInt`: This is the number of tokens should be locked before
+   *   - unlockBlockNumber `number`: This is the timestamp when the vote right will be invalid, measured in, the number of past blocks.
+   */
+  async getVoteList(address, epochNumber) {
+    const result = await this.provider.call('cfx_getVoteList',
+      format.address(address),
+      format.epochNumber.$or(undefined)(epochNumber),
+    );
+    return format.voteList(result);
+  }
+
   // -------------------------------- epoch -----------------------------------
   /**
    * Returns the epoch number of given parameter.

@@ -28,6 +28,7 @@ keywords:
         - [getStakingBalance](#Conflux.js/Conflux/getStakingBalance)
         - [getNextNonce](#Conflux.js/Conflux/getNextNonce)
         - [getAdmin](#Conflux.js/Conflux/getAdmin)
+        - [getVoteList](#Conflux.js/Conflux/getVoteList)
         - [getEpochNumber](#Conflux.js/Conflux/getEpochNumber)
         - [getBlockByEpochNumber](#Conflux.js/Conflux/getBlockByEpochNumber)
         - [getBlocksByEpochNumber](#Conflux.js/Conflux/getBlocksByEpochNumber)
@@ -508,6 +509,24 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](
 > conflux.getAdmin('0x8e2f2e68eb75bb8b18caafe9607242d4748f8d98')
    "0x1c1e72f0c37968557b3d85a3f32747792798bbde"
 ```
+
+### Conflux.prototype.getVoteList <a id="Conflux.js/Conflux/getVoteList"></a>
+
+Get vote list
+
+* **Parameters**
+
+Name        | Type            | Required | Default        | Description
+------------|-----------------|----------|----------------|-------------------------------------------------
+address     | `string`        | true     |                | Address to contract.
+epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](#util/format.js/epochNumber)
+
+* **Returns**
+
+`Promise.<Array.<object>>` Vote list
+- `array`:
+  - amount `BigInt`: This is the number of tokens should be locked before
+  - unlockBlockNumber `number`: This is the timestamp when the vote right will be invalid, measured in, the number of past blocks.
 
 ### Conflux.prototype.getEpochNumber <a id="Conflux.js/Conflux/getEpochNumber"></a>
 

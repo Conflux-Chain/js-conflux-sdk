@@ -82,6 +82,14 @@ test('getAdmin', async () => {
   expect(admin.startsWith('0x')).toEqual(true);
 });
 
+test('getVoteList', async () => {
+  const array = await conflux.getVoteList(ADDRESS);
+
+  expect(Array.isArray(array)).toEqual(true);
+  expect(typeof array[0].amount).toEqual('bigint');
+  expect(Number.isFinite(array[0].unlockBlockNumber)).toEqual(true);
+});
+
 // -------------------------------- epoch -----------------------------------
 test('getEpochNumber', async () => {
   const epochNumber = await conflux.getEpochNumber();
