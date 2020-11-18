@@ -346,7 +346,7 @@ class Conflux {
   }
 
   /**
-   * Get vote list
+   * Returns vote list of the given account.
    *
    * @param address {string} - Address to contract.
    * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
@@ -361,6 +361,24 @@ class Conflux {
       format.epochNumber.$or(undefined)(epochNumber),
     );
     return format.voteList(result);
+  }
+
+  /**
+   * Returns deposit list of the given account.
+   * @param address {string} - Address to contract.
+   * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
+   * @return {Promise<object[]>} Deposit list
+   * - `array`:
+   *   - amount `BigInt`: TODO
+   *   - accumulatedInterestRate: `BigInt`: TODO
+   *   - depositTime `number`: TODO
+   */
+  async getDepositList(address, epochNumber) {
+    const result = await this.provider.call('cfx_getDepositList',
+      format.address(address),
+      format.epochNumber.$or(undefined)(epochNumber),
+    );
+    return format.depositList(result);
   }
 
   // -------------------------------- epoch -----------------------------------
@@ -1036,7 +1054,7 @@ class Conflux {
       topics: ['0x2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d'],
     });
    [
-     {
+   {
       epochNumber: 39802,
       logIndex: 2,
       transactionIndex: 0,

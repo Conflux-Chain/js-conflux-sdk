@@ -83,6 +83,23 @@ test('getVoteList', async () => {
   call.mockRestore();
 });
 
+test('getDepositList', async () => {
+  await expect(conflux.getDepositList()).rejects.toThrow('not match hex');
+
+  const call = jest.spyOn(conflux.provider, 'call');
+
+  await conflux.getDepositList(ADDRESS);
+  expect(call).toHaveBeenLastCalledWith('cfx_getDepositList', ADDRESS, undefined);
+
+  await conflux.getDepositList(ADDRESS, 'latest_state');
+  expect(call).toHaveBeenLastCalledWith('cfx_getDepositList', ADDRESS, 'latest_state');
+
+  await conflux.getDepositList(ADDRESS, 0);
+  expect(call).toHaveBeenLastCalledWith('cfx_getDepositList', ADDRESS, '0x0');
+
+  call.mockRestore();
+});
+
 // -------------------------------- epoch -----------------------------------
 test('getEpochNumber', async () => {
   await expect(conflux.getEpochNumber(null)).rejects.toThrow('not equal');

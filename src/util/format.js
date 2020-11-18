@@ -530,6 +530,14 @@ format.voteList = parser([
     amount: format.bigUInt,
   },
 ]);
+
+format.depositList = parser([
+  {
+    amount: format.bigUInt,
+    accumulatedInterestRate: format.bigUInt,
+  },
+]);
+
 // ---------------------------- parse subscribe event -------------------------
 format.head = parser({
   difficulty: format.bigUInt,

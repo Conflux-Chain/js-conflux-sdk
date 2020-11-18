@@ -29,6 +29,7 @@ keywords:
         - [getNextNonce](#Conflux.js/Conflux/getNextNonce)
         - [getAdmin](#Conflux.js/Conflux/getAdmin)
         - [getVoteList](#Conflux.js/Conflux/getVoteList)
+        - [getDepositList](#Conflux.js/Conflux/getDepositList)
         - [getEpochNumber](#Conflux.js/Conflux/getEpochNumber)
         - [getBlockByEpochNumber](#Conflux.js/Conflux/getBlockByEpochNumber)
         - [getBlocksByEpochNumber](#Conflux.js/Conflux/getBlocksByEpochNumber)
@@ -512,7 +513,7 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](
 
 ### Conflux.prototype.getVoteList <a id="Conflux.js/Conflux/getVoteList"></a>
 
-Get vote list
+Returns vote list of the given account.
 
 * **Parameters**
 
@@ -527,6 +528,25 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](
 - `array`:
   - amount `BigInt`: This is the number of tokens should be locked before
   - unlockBlockNumber `number`: This is the timestamp when the vote right will be invalid, measured in, the number of past blocks.
+
+### Conflux.prototype.getDepositList <a id="Conflux.js/Conflux/getDepositList"></a>
+
+Returns deposit list of the given account.
+
+* **Parameters**
+
+Name        | Type            | Required | Default        | Description
+------------|-----------------|----------|----------------|-------------------------------------------------
+address     | `string`        | true     |                | Address to contract.
+epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](#util/format.js/epochNumber)
+
+* **Returns**
+
+`Promise.<Array.<object>>` Deposit list
+- `array`:
+  - amount `BigInt`: TODO
+  - accumulatedInterestRate: `BigInt`: TODO
+  - depositTime `number`: TODO
 
 ### Conflux.prototype.getEpochNumber <a id="Conflux.js/Conflux/getEpochNumber"></a>
 
@@ -1135,7 +1155,7 @@ options.limit       | `number`                | false    |                     |
       topics: ['0x2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d'],
     });
    [
-     {
+   {
       epochNumber: 39802,
       logIndex: 2,
       transactionIndex: 0,

@@ -90,6 +90,15 @@ test('getVoteList', async () => {
   expect(Number.isFinite(array[0].unlockBlockNumber)).toEqual(true);
 });
 
+test('getDepositList', async () => {
+  const array = await conflux.getDepositList(ADDRESS);
+
+  expect(Array.isArray(array)).toEqual(true);
+  expect(typeof array[0].amount).toEqual('bigint');
+  expect(typeof array[0].accumulatedInterestRate).toEqual('bigint');
+  expect(Number.isFinite(array[0].depositTime)).toEqual(true);
+});
+
 // -------------------------------- epoch -----------------------------------
 test('getEpochNumber', async () => {
   const epochNumber = await conflux.getEpochNumber();

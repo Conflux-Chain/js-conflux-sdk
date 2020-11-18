@@ -198,6 +198,14 @@ class MockProvider extends EventEmitter {
     }));
   }
 
+  cfx_getDepositList(address, epochNumber) {
+    return lodash.range(2).map(() => ({
+      amount: randomHex(8),
+      accumulatedInterestRate: randomHex(16),
+      depositTime: epochNumber === undefined ? lodash.random(100000, 999999) : epochNumber,
+    }));
+  }
+
   // -------------------------------- epoch -----------------------------------
   cfx_epochNumber() {
     return toHex(Number.MAX_SAFE_INTEGER);
