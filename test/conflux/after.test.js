@@ -82,6 +82,23 @@ test('getAdmin', async () => {
   expect(admin.startsWith('0x')).toEqual(true);
 });
 
+test('getVoteList', async () => {
+  const array = await conflux.getVoteList(ADDRESS);
+
+  expect(Array.isArray(array)).toEqual(true);
+  expect(typeof array[0].amount).toEqual('bigint');
+  expect(Number.isFinite(array[0].unlockBlockNumber)).toEqual(true);
+});
+
+test('getDepositList', async () => {
+  const array = await conflux.getDepositList(ADDRESS);
+
+  expect(Array.isArray(array)).toEqual(true);
+  expect(typeof array[0].amount).toEqual('bigint');
+  expect(typeof array[0].accumulatedInterestRate).toEqual('bigint');
+  expect(Number.isFinite(array[0].depositTime)).toEqual(true);
+});
+
 // -------------------------------- epoch -----------------------------------
 test('getEpochNumber', async () => {
   const epochNumber = await conflux.getEpochNumber();
@@ -213,6 +230,13 @@ test('getTransactionReceipt', async () => {
   expect(typeof receipt.gasUsed).toEqual('bigint');
   expect(typeof receipt.gasFee).toEqual('bigint');
   expect(Array.isArray(receipt.logs)).toEqual(true);
+  expect(receipt.txExecErrorMsg).not.toBeUndefined();
+  expect(lodash.isBoolean(receipt.gasCoveredBySponsor)).toEqual(true);
+  expect(lodash.isBoolean(receipt.storageCoveredBySponsor)).toEqual(true);
+  expect(typeof receipt.storageCollateralized).toEqual('bigint');
+  expect(Array.isArray(receipt.storageReleased)).toEqual(true);
+  expect(receipt.storageReleased[0].address).toMatch(/^0x[0-9a-f]{40}$/);
+  expect(typeof receipt.storageReleased[0].collaterals).toEqual('bigint');
 });
 
 test('sendTransaction', async () => {

@@ -345,6 +345,42 @@ class Conflux {
     );
   }
 
+  /**
+   * Returns vote list of the given account.
+   *
+   * @param address {string} - Address to contract.
+   * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
+   * @return {Promise<object[]>} Vote list
+   * - `array`:
+   *   - amount `BigInt`: This is the number of tokens should be locked before
+   *   - unlockBlockNumber `number`: This is the timestamp when the vote right will be invalid, measured in, the number of past blocks.
+   */
+  async getVoteList(address, epochNumber) {
+    const result = await this.provider.call('cfx_getVoteList',
+      format.address(address),
+      format.epochNumber.$or(undefined)(epochNumber),
+    );
+    return format.voteList(result);
+  }
+
+  /**
+   * Returns deposit list of the given account.
+   * @param address {string} - Address to contract.
+   * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
+   * @return {Promise<object[]>} Deposit list
+   * - `array`:
+   *   - amount `BigInt`: TODO
+   *   - accumulatedInterestRate: `BigInt`: TODO
+   *   - depositTime `number`: TODO
+   */
+  async getDepositList(address, epochNumber) {
+    const result = await this.provider.call('cfx_getDepositList',
+      format.address(address),
+      format.epochNumber.$or(undefined)(epochNumber),
+    );
+    return format.depositList(result);
+  }
+
   // -------------------------------- epoch -----------------------------------
   /**
    * Returns the epoch number of given parameter.
@@ -622,6 +658,12 @@ class Conflux {
    * - outcomeStatus `number`:  the outcome status code, 0 was successful, 1 for an error occurred in the execution.
    * - logsBloom `string`: Bloom filter for light clients to quickly retrieve related logs.
    * - logs `object[]`: Array of log objects, which this transaction generated.
+   * - gasCoveredBySponsor `boolean`: `true` if this transaction's gas fee was covered by the sponsor.
+   * - storageCoveredBySponsor `boolean`: `true` if this transaction's storage collateral was covered by the sponsor.
+   * - storageCollateralized `BigInt`: the amount of storage collateral this transaction required.
+   * - storageReleased `array`: array of storage change objects, each specifying an address and the corresponding amount of storage collateral released
+   *   - address `string`: address released
+   *   - collaterals `BigInt`: corresponding amount of storage collateral released
    *
    * @example
    * > await conflux.getTransactionReceipt('0xbf7110474779ba2404433ef39a24cb5b277186ef1e6cb199b0b60907b029a1ce');
@@ -639,7 +681,14 @@ class Conflux {
       stateRoot: '0xd6a7c2c14cb0d1233010acca98e114db5a10e0b94803d23b01a6777b7fd3b2fd',
       to: '0x83bf953c8b687f0d1b8d2243a3e0654ec1f70d1b',
       transactionHash: '0xbf7110474779ba2404433ef39a24cb5b277186ef1e6cb199b0b60907b029a1ce',
-      txExecErrorMsg: null
+      txExecErrorMsg: null,
+      gasCoveredBySponsor: false,
+      storageCoveredBySponsor: false,
+      storageCollateralized: 0n,
+      storageReleased: [
+        address: '0x0000000000000000000000000000000000000001',
+        collaterals: 640n,
+      ],
     }
    */
   async getTransactionReceipt(transactionHash) {
@@ -1018,7 +1067,7 @@ class Conflux {
       topics: ['0x2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d'],
     });
    [
-     {
+   {
       epochNumber: 39802,
       logIndex: 2,
       transactionIndex: 0,

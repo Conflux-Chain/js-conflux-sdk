@@ -191,6 +191,21 @@ class MockProvider extends EventEmitter {
     return randomHex(40);
   }
 
+  cfx_getVoteList(address, epochNumber) {
+    return lodash.range(2).map(() => ({
+      amount: randomHex(8),
+      unlockBlockNumber: epochNumber === undefined ? lodash.random(0, 1000) : epochNumber * 2,
+    }));
+  }
+
+  cfx_getDepositList(address, epochNumber) {
+    return lodash.range(2).map(() => ({
+      amount: randomHex(8),
+      accumulatedInterestRate: randomHex(16),
+      depositTime: epochNumber === undefined ? lodash.random(100000, 999999) : epochNumber,
+    }));
+  }
+
   // -------------------------------- epoch -----------------------------------
   cfx_epochNumber() {
     return toHex(Number.MAX_SAFE_INTEGER);
@@ -317,6 +332,16 @@ class MockProvider extends EventEmitter {
       stateRoot: randomHex(64),
       to,
       transactionHash,
+      txExecErrorMsg: status === null ? null : 'mock error message',
+      gasCoveredBySponsor: false,
+      storageCoveredBySponsor: true,
+      storageCollateralized: randomHex(4),
+      storageReleased: [
+        {
+          address: from,
+          collaterals: randomHex(4),
+        },
+      ],
     };
   }
 
