@@ -1,6 +1,18 @@
 # Interact with contract
 In Conflux world you may often need to interact with contracts, with JS SDK this can be done very easy.
 
+
+>Note: when interacting with contract and if your parameter is bigger than `Number.MAX_SAFE_INTEGER`, you should use string represention of the number or BigInt.
+
+```js
+// use string
+await contract.deposit('90071992547409910');
+// or use hex string
+await contract.deposit('0x13ffffffffffff0');
+// not use number
+// await contract.deposit(Number.MAX_SAFE_INTEGER * 10);
+```
+
 ### How to deploy a contract
 One contract must be created before interacting with it. To create a contract you can write it with `solidity`.
 Then compile it with solidity compiler, you will get `bytecode` and `abi`. With `bytecode`, `abi` you can deploy it by send transaction.

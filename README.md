@@ -60,10 +60,11 @@ or
 
 ## Documentation
 
-* [Quick Intro (Recommend to read)](./docs/quick_intro.md)
+* [Overview](./docs/overview.md)
 * [Complete document for send transaction](./docs/how_to_send_tx.md)
 * [Interacting with contract](./docs/interact_with_contract.md)
 * [API](./docs/api.md)
+* [Conflux Official document](https://developer.conflux-chain.org/docs/introduction/en/conflux_overview)
 
 ## TODO
 

@@ -1,22 +1,19 @@
-# Quick intro
-This is the javascript SDK for Conflux network. You can use it interact with Conflux node.
-Here is a quick introduction for how to use it.
+# Overview
+The purpose of this page is to give you a sense of everything js-conflux-sdk can do and to serve as a quick reference guide
 
-### Pre-requisite
-Here are some pre requisite to use this SDK.
+## Pre-requisites
 
 1. Node.js environment to install this SDK
-2. Conflux account with some CFX (Use Conflux Portal to create account and get testnet CFX)
-3. Conflux RPC endpoint, for example http://test.confluxrpc.org is a testnet RPC endpoint
+2. Conflux account with some CFX (Use Conflux Portal to create account and get testnet CFX from faucet)
+3. Conflux RPC endpoint, for example `http://test.confluxrpc.org` is a testnet RPC endpoint
 
 
-### Install
+## Initialize
+After installing `js-conflux-sdk` (via npm), you’ll need to specify the provider url. You can use the 
+mainnet(https://main.confluxrpc.org), or testnet(https://test.confluxrpc.org), or [run your own Conflux node](https://developer.conflux-chain.org/docs/conflux-doc/docs/independent_chain).
 
-```sh
-$ npm install js-conflux-sdk
-```
+### Testnet
 
-### Initialize
 With a RPC endpoint we can initialize a Conflux object, which can be used to send JSON RPC request.
 
 ```javascript
@@ -31,7 +28,17 @@ const conflux = new Conflux({
 Besides `url` and `logger` you can pass [other options](../api.md) to initialize a Conflux object
 
 
-### Send JSON-RPC request
+## Add account
+Private keys are required to approve any transaction made on your behalf, `conflux.wallet` provide utility help you manage your accounts
+
+```js
+conflux.wallet.addPrivateKey('your-private-key');
+```
+
+Only after you add your account to wallet, then you can use them send transactions.
+
+
+## Send JSON-RPC request
 There are a lot methods on cfx object which are one-to-one with Conflux node RPC methods. 
 All conflux methods will return a promise, so you can use it with `async/await` syntax.
 
@@ -68,15 +75,20 @@ For detail explanation of send transaction check [here](./how_to_send_tx.md)
 ### chainId
 `chainId` is used to distinguish different network and prevent replay attack, currently:
 
-* mainnet is `1029`
-* testnet is `1`
+* mainnet: `1029`
+* testnet: `1`
+
+
+### RPC endpoint
+1. `mainnet`: https://main.confluxrpc.org
+2. `testnet`: https://test.confluxrpc.org
 
 ### Hex value and epochNumber and tags
 You can find the epochNumber doc at official developer [RPC doc](https://developer.conflux-chain.org/docs/conflux-doc/docs/json_rpc#hex-value-encoding)
 
 
 ### JSBI
-Because in blockchain world there are a lot big numbers (uint256), Javascript's native number cann't work with them, so we use JSBI to handle these big number.
+Because in blockchain world there are a lot big numbers (uint256), only modern JS VM and Node.js support `BigInt`, so we use JSBI in browser environment to handle these big number.
 For how to use [JSBI](https://www.npmjs.com/package/jsbi) check it's documentation
 
 Note: jsbi currently cann't pretty log, you need convert it to string before log.
@@ -87,6 +99,24 @@ console.log(String(max));
 // → '9007199254740991'
 console.log(max.toString()); // directly log a jsbi is very ugly
 // JSBI(2) [ -1, 2097151, sign: false ]
+```
+
+Note: When a js integer is bigger than `Number.MAX_SAFE_INTEGER` (2^53 - 1 or 9,007,199,254,740,991) you should use [`BigInt`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt) to contain it.
+
+```js
+const previouslyMaxSafeInteger = 9007199254740991n
+
+const alsoHuge = BigInt(9007199254740991)
+// ↪ 9007199254740991n
+
+const hugeString = BigInt("9007199254740991")
+// ↪ 9007199254740991n
+
+const hugeHex = BigInt("0x1fffffffffffff")
+// ↪ 9007199254740991n
+
+const hugeBin = BigInt("0b11111111111111111111111111111111111111111111111111111")
+// ↪ 9007199254740991n
 ```
 
 
