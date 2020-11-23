@@ -1,168 +1,183 @@
+/* copy from koaflow@0.6.2/lib/parser */
 const lodash = require('lodash');
 
-// ============================================================================
 class ParserError extends Error {
-  constructor() {
+  constructor(message, options = {}) {
     super();
-    this.msg = '';
+    this.message = message;
+    Object.assign(this, options);
+  }
+}
+
+class ParserContext {
+  constructor(origin) {
+    this.arguments = origin;
     this.path = [];
-    this.origin = undefined;
   }
 
-  set(error, key, origin) {
-    if (error instanceof ParserError) { // include ParserError
-      this.msg = error.msg;
-      this.path = error.path;
-    } else if (error instanceof Error) {
-      this.msg = error.message;
-    } else {
-      this.msg = `${error}`;
-    }
-
-    if (key !== undefined) {
-      this.path.unshift(key);
-    }
-
-    this.origin = origin;
-    return this;
+  child(key) {
+    const context = new ParserContext(this.arguments);
+    context.path = [...this.path, key];
+    return context;
   }
 
-  get message() {
-    return JSON.stringify({
-      msg: this.msg,
-      path: this.path.join(''),
-      origin: this.origin,
-    });
+  error(message, options = {}) {
+    return new ParserError(`path="${this.path.join('.')}", ${message}`, { ...this, ...options });
   }
 }
 
 // ----------------------------------------------------------------------------
-function valueParser(schema) {
-  return asParser(value => {
-    if (!(value === schema)) {
-      throw new Error(`${value} not equal ${schema}`);
+function Parser(func) {
+  function parser(...args) {
+    // eslint-disable-next-line prefer-rest-params
+    const context = (this instanceof ParserContext) ? this : new ParserContext(arguments);
+    try {
+      return func.call(context, ...args);
+    } catch (e) {
+      throw new ParserError(e.message, e); // create Error here for shallow stack
     }
-    return value;
-  });
-}
+  }
 
-function functionParser(func) {
-  return asParser(value => func(value));
-}
-
-function arrayParser(schema) {
-  const func = schema.length ? parser(schema[0]) : v => v;
-
-  return asParser(array => {
-    if (!Array.isArray(array)) {
-      throw new Error(`expected array, got ${typeof array}`);
-    }
-
-    const error = new ParserError(); // create Error here for shallow stack
-    return array.map((v, i) => {
-      try {
-        return func(v);
-      } catch (e) {
-        throw error.set(e, `[${i}]`, array);
-      }
-    });
-  });
-}
-
-function objectParser(schema, pick = false) {
-  const keyToFunc = lodash.mapValues(schema, parser);
-
-  return asParser(object => {
-    if (!lodash.isObject(object)) {
-      throw new Error(`expected plain object, got ${typeof object}`);
-    }
-
-    const error = new ParserError(); // create Error here for shallow stack
-    const picked = lodash.mapValues(keyToFunc, (func, key) => {
-      try {
-        return func(object[key]);
-      } catch (e) {
-        throw error.set(e, `.${key}`, object);
-      }
-    });
-
-    return pick ? picked : lodash.defaults(picked, object);
-  });
+  parser.constructor = Parser;
+  parser.$before = $before;
+  parser.$parse = $parse;
+  parser.$default = $default;
+  parser.$after = $after;
+  parser.$validate = $validate;
+  parser.$or = $or;
+  return parser;
 }
 
 function $before(func) {
-  return asParser(value => {
-    return this(func(value));
+  const parser = this;
+  return Parser(function (...args) {
+    let value;
+    try {
+      value = func(...args);
+    } catch (e) {
+      throw this.error(e.message);
+    }
+    return parser.call(this, value);
   });
+}
+
+function $default(data) {
+  return $before.call(this, value => (value === undefined ? data : value));
+}
+
+function $parse(func, condition = lodash.isString) {
+  return $before.call(this, value => (condition(value) ? func(value) : value));
 }
 
 function $after(func) {
-  return asParser(value => {
-    return func(this(value));
-  });
-}
-
-function $default(defaultValue) {
-  return asParser(value => {
-    if (value === undefined) {
-      value = defaultValue;
+  const parser = this;
+  return Parser(function (...args) {
+    const value = parser.call(this, ...args);
+    try {
+      return func(value);
+    } catch (e) {
+      throw this.error(e.message);
     }
-    return this(value);
   });
 }
 
-function $validate(func, name = func.name) {
-  return asParser(value => {
-    value = this(value);
+function $validate(func, name) {
+  return $after.call(this, value => {
     if (!func(value)) {
-      throw new Error(`${value} not match ${name}`);
+      throw new Error(`${value} do not match "${name || func.name || '$validate'}"`);
     }
     return value;
   });
 }
 
 function $or(schema) {
-  const other = parser(schema);
+  const parserArray = [this, Parser.from(schema)];
 
-  return asParser(value => {
-    const funcArray = [this, other];
-
+  return Parser(function (value) {
     const errorArray = [];
-    for (const func of funcArray) {
+    for (const parser of parserArray) {
       try {
-        return func(value);
+        return parser.call(this, value);
       } catch (e) {
-        errorArray.push(e instanceof ParserError ? e.msg : e.message);
+        errorArray.push(e);
       }
     }
 
-    throw new Error(errorArray.map(e => `(${e})`).join(' && '));
+    const or = errorArray.map(e => (e.or ? e.or : e));
+    const message = lodash.flattenDeep(or).map(e => `(${e.message})`).join(' or ');
+    throw new ParserError(`not match any ${message}`, { or });
   });
 }
 
-function asParser(func) {
-  func.$before = $before;
-  func.$after = $after;
-  func.$default = $default;
-  func.$validate = $validate;
-  func.$or = $or;
-  return func;
-}
+// ----------------------------------------------------------------------------
+Parser.fromArray = function (schema, options) {
+  const parser = Parser.from(schema.length ? schema[0] : v => v, options);
 
-function parser(arg, ...args) {
-  if (Array.isArray(arg)) {
-    return arrayParser(arg, ...args);
+  return Parser(function (array) {
+    if (!Array.isArray(array)) {
+      throw this.error(`expected array, got ${typeof array}`);
+    }
+
+    return array.map((v, i) => parser.call(this.child(i), v));
+  });
+};
+
+Parser.fromObject = function (schema, options) {
+  const { strict, pick } = options;
+
+  const keyToParser = lodash.mapValues(schema, s => Parser.from(s, options));
+
+  return Parser(function (object) {
+    if (!lodash.isObject(object)) {
+      throw this.error(`expected plain object, got ${typeof object}`);
+    }
+
+    const result = lodash.mapValues(keyToParser, (parser, k) => {
+      const v = lodash.get(object, k);
+      if (v === undefined && !strict) {
+        return undefined;
+      }
+      return parser.call(this.child(k), v);
+    });
+
+    return pick ? lodash.pickBy(result, v => v !== undefined) : { ...object, ...result };
+  });
+};
+
+Parser.fromFunction = function (func) {
+  if (func.constructor === Parser) {
+    return func;
   }
 
-  if (lodash.isPlainObject(arg)) {
-    return objectParser(arg, ...args);
+  return Parser(function (...args) {
+    try {
+      return func(...args);
+    } catch (e) {
+      throw this.error(`${func.name}(${args.join(',')}), ${e.message}`);
+    }
+  });
+};
+
+Parser.fromValue = function (schema) {
+  return Parser(function (value) {
+    if (value !== schema) {
+      throw this.error(`expected to be ${schema}, got ${value}`);
+    }
+    return value;
+  });
+};
+
+Parser.from = function (schema, options = {}) {
+  if (Array.isArray(schema)) {
+    return Parser.fromArray(schema, options);
   }
-
-  if (lodash.isFunction(arg)) {
-    return functionParser(arg, ...args);
+  if (lodash.isPlainObject(schema)) {
+    return Parser.fromObject(schema, options);
   }
+  if (lodash.isFunction(schema)) {
+    return Parser.fromFunction(schema);
+  }
+  return Parser.fromValue(schema);
+};
 
-  return valueParser(arg, ...args);
-}
-
-module.exports = parser;
+module.exports = Parser.from;
