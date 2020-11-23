@@ -2,7 +2,7 @@ const { Drip } = require('../src');
 
 test('Drip.fromCFX', () => {
   expect(() => Drip.fromCFX(null)).toThrow('Invalid number');
-  expect(() => Drip.fromCFX(-1)).toThrow('not match bigUInt');
+  expect(() => Drip.fromCFX(-1)).toThrow('not match "bigUInt"');
   expect(Drip.fromCFX(3.14).toString()).toEqual('3140000000000000000');
   expect(Drip.fromCFX(1e-18).toString()).toEqual('1');
   expect(() => Drip.fromCFX(1e-19)).toThrow('Cannot');
@@ -16,7 +16,7 @@ test('Drip.fromCFX', () => {
 
 test('Drip.fromGDrip', () => {
   expect(() => Drip.fromGDrip(null)).toThrow('Invalid number');
-  expect(() => Drip.fromGDrip(-1)).toThrow('not match bigUInt');
+  expect(() => Drip.fromGDrip(-1)).toThrow('not match "bigUInt"');
   expect(Drip.fromGDrip(3.14).toString()).toEqual('3140000000');
   expect(Drip.fromGDrip(1e-9).toString()).toEqual('1');
   expect(() => Drip.fromGDrip(1e-10)).toThrow('Cannot');
@@ -37,7 +37,7 @@ test('Drip', () => {
 
   expect(() => Drip()).toThrow('Cannot');
   expect(() => Drip(null)).toThrow('Cannot');
-  expect(() => Drip(-1)).toThrow('not match bigUInt');
+  expect(() => Drip(-1)).toThrow('not match "bigUInt"');
   expect(() => Drip(3.14)).toThrow('Cannot');
 });
 

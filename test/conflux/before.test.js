@@ -16,7 +16,7 @@ conflux.provider = new MockProvider();
 
 // ------------------------------- address ----------------------------------
 test('getBalance', async () => {
-  await expect(conflux.getBalance()).rejects.toThrow('not match hex');
+  await expect(conflux.getBalance()).rejects.toThrow('not match "hex"');
 
   const call = jest.spyOn(conflux.provider, 'call');
 
@@ -33,7 +33,7 @@ test('getBalance', async () => {
 });
 
 test('getNextNonce', async () => {
-  await expect(conflux.getNextNonce()).rejects.toThrow('not match hex');
+  await expect(conflux.getNextNonce()).rejects.toThrow('not match "hex"');
 
   const call = jest.spyOn(conflux.provider, 'call');
 
@@ -50,7 +50,7 @@ test('getNextNonce', async () => {
 });
 
 test('getAdmin', async () => {
-  await expect(conflux.getAdmin()).rejects.toThrow('not match hex');
+  await expect(conflux.getAdmin()).rejects.toThrow('not match "hex"');
 
   const call = jest.spyOn(conflux.provider, 'call');
 
@@ -67,7 +67,7 @@ test('getAdmin', async () => {
 });
 
 test('getVoteList', async () => {
-  await expect(conflux.getVoteList()).rejects.toThrow('not match hex');
+  await expect(conflux.getVoteList()).rejects.toThrow('not match "hex"');
 
   const call = jest.spyOn(conflux.provider, 'call');
 
@@ -84,7 +84,7 @@ test('getVoteList', async () => {
 });
 
 test('getDepositList', async () => {
-  await expect(conflux.getDepositList()).rejects.toThrow('not match hex');
+  await expect(conflux.getDepositList()).rejects.toThrow('not match "hex"');
 
   const call = jest.spyOn(conflux.provider, 'call');
 
@@ -102,9 +102,9 @@ test('getDepositList', async () => {
 
 // -------------------------------- epoch -----------------------------------
 test('getEpochNumber', async () => {
-  await expect(conflux.getEpochNumber(null)).rejects.toThrow('not equal');
-  await expect(conflux.getEpochNumber('xxx')).rejects.toThrow('not equal');
-  await expect(conflux.getEpochNumber('EARLIEST')).rejects.toThrow('not equal earliest');
+  await expect(conflux.getEpochNumber(null)).rejects.toThrow('not match any');
+  await expect(conflux.getEpochNumber('xxx')).rejects.toThrow('not match any');
+  await expect(conflux.getEpochNumber('EARLIEST')).rejects.toThrow('not match any');
 
   const call = jest.spyOn(conflux.provider, 'call');
 
@@ -140,7 +140,7 @@ test('getEpochNumber', async () => {
 
 test('getBlockByEpochNumber', async () => {
   await expect(conflux.getBlockByEpochNumber()).rejects.toThrow('Cannot convert undefined to a BigInt');
-  await expect(conflux.getBlockByEpochNumber(0, 1)).rejects.toThrow('not match boolean');
+  await expect(conflux.getBlockByEpochNumber(0, 1)).rejects.toThrow('not match "boolean"');
 
   const call = jest.spyOn(conflux.provider, 'call');
   call.mockReturnValue(null);
@@ -178,9 +178,9 @@ test('getBlockRewardInfo', async () => {
 
 // -------------------------------- block -----------------------------------
 test('getBlockByHash', async () => {
-  await expect(conflux.getBlockByHash()).rejects.toThrow('not match hex');
-  await expect(conflux.getBlockByHash(ADDRESS)).rejects.toThrow('not match hex');
-  await expect(conflux.getBlockByHash(BLOCK_HASH, 0)).rejects.toThrow('not match boolean');
+  await expect(conflux.getBlockByHash()).rejects.toThrow('not match "hex"');
+  await expect(conflux.getBlockByHash(ADDRESS)).rejects.toThrow('not match "hex64"');
+  await expect(conflux.getBlockByHash(BLOCK_HASH, 0)).rejects.toThrow('not match "boolean"');
 
   const call = jest.spyOn(conflux.provider, 'call');
 
@@ -197,8 +197,8 @@ test('getBlockByHash', async () => {
 });
 
 test('getBlockByHashWithPivotAssumption', async () => {
-  await expect(conflux.getBlockByHashWithPivotAssumption()).rejects.toThrow('undefined not match hex');
-  await expect(conflux.getBlockByHashWithPivotAssumption(BLOCK_HASH)).rejects.toThrow('undefined not match hex');
+  await expect(conflux.getBlockByHashWithPivotAssumption()).rejects.toThrow('undefined not match "hex"');
+  await expect(conflux.getBlockByHashWithPivotAssumption(BLOCK_HASH)).rejects.toThrow('undefined not match "hex"');
   await expect(conflux.getBlockByHashWithPivotAssumption(BLOCK_HASH, BLOCK_HASH)).rejects.toThrow('Cannot convert undefined to a BigInt');
 
   const epochNumber = 100;
@@ -215,7 +215,7 @@ test('getBlockByHashWithPivotAssumption', async () => {
 });
 
 test('getConfirmationRiskByHash', async () => {
-  await expect(conflux.getConfirmationRiskByHash()).rejects.toThrow('not match hex');
+  await expect(conflux.getConfirmationRiskByHash()).rejects.toThrow('not match "hex"');
 
   const call = jest.spyOn(conflux.provider, 'call');
 
@@ -227,8 +227,8 @@ test('getConfirmationRiskByHash', async () => {
 
 // ----------------------------- transaction --------------------------------
 test('getTransactionByHash', async () => {
-  await expect(conflux.getTransactionByHash()).rejects.toThrow('not match hex');
-  await expect(conflux.getTransactionByHash(ADDRESS)).rejects.toThrow('not match hex');
+  await expect(conflux.getTransactionByHash()).rejects.toThrow('not match "hex"');
+  await expect(conflux.getTransactionByHash(ADDRESS)).rejects.toThrow('not match "hex64"');
 
   const call = jest.spyOn(conflux.provider, 'call');
 
@@ -239,8 +239,8 @@ test('getTransactionByHash', async () => {
 });
 
 test('getTransactionReceipt', async () => {
-  await expect(conflux.getTransactionReceipt()).rejects.toThrow('not match hex');
-  await expect(conflux.getTransactionReceipt(ADDRESS)).rejects.toThrow('not match hex');
+  await expect(conflux.getTransactionReceipt()).rejects.toThrow('not match "hex"');
+  await expect(conflux.getTransactionReceipt(ADDRESS)).rejects.toThrow('not match "hex64"');
 
   const call = jest.spyOn(conflux.provider, 'call');
 
@@ -251,7 +251,7 @@ test('getTransactionReceipt', async () => {
 });
 
 test('sendRawTransaction', async () => {
-  await expect(conflux.sendRawTransaction()).rejects.toThrow('not match hex');
+  await expect(conflux.sendRawTransaction()).rejects.toThrow('not match "hex"');
 
   const call = jest.spyOn(conflux.provider, 'call');
 
@@ -297,7 +297,7 @@ test('sendTransaction', async () => {
 
 // ------------------------------ contract ----------------------------------
 test('getCode', async () => {
-  await expect(conflux.getCode()).rejects.toThrow('not match hex');
+  await expect(conflux.getCode()).rejects.toThrow('not match "hex"');
 
   const call = jest.spyOn(conflux.provider, 'call');
 
@@ -311,7 +311,7 @@ test('getCode', async () => {
 });
 
 test('getCollateralForStorage', async () => {
-  await expect(conflux.getCollateralForStorage()).rejects.toThrow('not match hex');
+  await expect(conflux.getCollateralForStorage()).rejects.toThrow('not match "hex"');
 
   const call = jest.spyOn(conflux.provider, 'call');
 
@@ -326,7 +326,7 @@ test('getCollateralForStorage', async () => {
 
 test('call', async () => {
   await expect(conflux.call()).rejects.toThrow('undefined');
-  await expect(conflux.call({ nonce: 0 })).rejects.toThrow('not match hex'); // miss to
+  await expect(conflux.call({ nonce: 0 })).rejects.toThrow('not match "hex"'); // miss to
 
   const call = jest.spyOn(conflux.provider, 'call');
   await conflux.call({ from: ADDRESS, to: ADDRESS });
@@ -393,7 +393,7 @@ test('estimateGasAndCollateral', async () => {
 test('getLogs', async () => {
   await expect(conflux.getLogs()).rejects.toThrow('Cannot read property');
   await expect(conflux.getLogs({ blockHashes: [], fromEpoch: 0 })).rejects.toThrow('OverrideError');
-  await expect(conflux.getLogs({ topics: [[null]] })).rejects.toThrow('not match hex');
+  await expect(conflux.getLogs({ topics: [[null]] })).rejects.toThrow('not match "hex"');
 
   const call = jest.spyOn(conflux.provider, 'call');
 

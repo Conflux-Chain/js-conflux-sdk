@@ -89,7 +89,8 @@ keywords:
     - index.js
         - [providerFactory](#provider/index.js/providerFactory)
     - WebSocketProvider.js
-        - [WebSocketProvider](#provider/WebSocketProvider.js/WebSocketProvider)
+        - WebSocketProvider
+            - [**constructor**](#provider/WebSocketProvider.js/WebSocketProvider/**constructor**)
 - subscribe
     - PendingTransaction.js
         - PendingTransaction
@@ -1907,6 +1908,29 @@ options.url | `string` | true     |         |
 ### WebSocketProvider <a id="provider/WebSocketProvider.js/WebSocketProvider"></a>
 
 Websocket protocol json rpc provider.
+
+#### WebSocketProvider.prototype.**constructor** <a id="provider/WebSocketProvider.js/WebSocketProvider/**constructor**"></a>
+
+* **Parameters**
+
+Name                                        | Type             | Required | Default  | Description
+--------------------------------------------|------------------|----------|----------|---------------------------------------------------------------------------------------------------------------------------------------------------------
+options                                     | `object`         | false    |          | See [W3CWebSocket](https://github.com/theturtle32/WebSocket-Node/blob/c91a6cb8f0cf896edf0d2d49faa0c9e0a9985172/docs/W3CWebSocket.md)
+options.url                                 | `string`         | true     |          | Full json rpc http url
+options.timeout                             | `number`         | false    | 60*1000  | Request time out in ms
+options.logger                              | `object`         | false    |          | Logger with `info` and `error`
+options.protocols                           | `Array.<string>` | false    |          | See [w3](https://www.w3.org/TR/websockets/)
+options.origin                              | `string`         | false    |          |
+options.headers                             | `object`         | false    |          |
+options.requestOptions                      | `object`         | false    |          |
+options.clientConfig                        | `object`         | false    |          | See [websocket/lib/WebSocketClient](https://github.com/theturtle32/WebSocket-Node/blob/c91a6cb8f0cf896edf0d2d49faa0c9e0a9985172/docs/WebSocketClient.md)
+options.clientConfig.maxReceivedFrameSize   | `number`         | false    | 0x100000 | 1MiB max frame size.
+options.clientConfig.maxReceivedMessageSize | `number`         | false    | 0x800000 | 8MiB max message size, only applicable if assembleFragments is true
+options.clientConfig.closeTimeout           | `number`         | false    | 5000     | The number of milliseconds to wait after sending a close frame for an acknowledgement to come back before giving up and just closing the socket.
+
+* **Returns**
+
+`WebSocketProvider` 
 
 ----------------------------------------
 

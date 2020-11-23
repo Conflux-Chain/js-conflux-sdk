@@ -6,8 +6,24 @@ const { awaitTimeout } = require('../util');
  * Websocket protocol json rpc provider.
  */
 class WebSocketProvider extends BaseProvider {
+  /**
+   * @param [options] {object} - See [W3CWebSocket](https://github.com/theturtle32/WebSocket-Node/blob/c91a6cb8f0cf896edf0d2d49faa0c9e0a9985172/docs/W3CWebSocket.md)
+   * @param options.url {string} - Full json rpc http url
+   * @param [options.timeout=60*1000] {number} - Request time out in ms
+   * @param [options.logger] {object} - Logger with `info` and `error`
+   * @param [options.protocols] {string[]} - See [w3](https://www.w3.org/TR/websockets/)
+   * @param [options.origin] {string}
+   * @param [options.headers] {object}
+   * @param [options.requestOptions] {object}
+   * @param [options.clientConfig] {object} - See [websocket/lib/WebSocketClient](https://github.com/theturtle32/WebSocket-Node/blob/c91a6cb8f0cf896edf0d2d49faa0c9e0a9985172/docs/WebSocketClient.md)
+   * @param [options.clientConfig.maxReceivedFrameSize=0x100000] {number} - 1MiB max frame size.
+   * @param [options.clientConfig.maxReceivedMessageSize=0x800000] {number} - 8MiB max message size, only applicable if assembleFragments is true
+   * @param [options.clientConfig.closeTimeout=5000] {number} - The number of milliseconds to wait after sending a close frame for an acknowledgement to come back before giving up and just closing the socket.
+   * @return {WebSocketProvider}
+   */
   constructor(options) {
     super(options);
+    this.websocketOptions = options;
 
     this.client = null;
 
@@ -21,9 +37,9 @@ class WebSocketProvider extends BaseProvider {
     });
   }
 
-  _connect(url) {
+  _connect({ url, protocols, origin, headers, requestOptions, clientConfig }) {
     return new Promise((resolve, reject) => {
-      const client = new Websocket(url);
+      const client = new Websocket(url, protocols, origin, headers, requestOptions, clientConfig);
       client.onopen = () => resolve(client);
       client.onerror = () => reject(new Error(`connect to "${url}" failed`));
       client.onmessage = ({ data }) => this.emit('message', data);
@@ -61,7 +77,7 @@ class WebSocketProvider extends BaseProvider {
     if (this.client === null) { // init
       this.client = false;
       try {
-        this.client = await this._connect(this.url);
+        this.client = await this._connect(this.websocketOptions);
       } catch (e) {
         this.client = null;
         throw e;

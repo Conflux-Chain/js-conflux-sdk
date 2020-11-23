@@ -24,14 +24,14 @@ function toHex(value) {
   }
 
   if (!/^0x[0-9a-f]*$/.test(hex)) {
-    throw new Error(`${value} not match hex`);
+    throw new Error(`${value} not match "hex"`);
   }
   return hex.length % 2 ? `0x0${hex.slice(2)}` : hex;
 }
 
 function toNumber(value) {
   if (value === null) {
-    throw new Error(`${value} not match number`);
+    throw new Error(`${value} not match "number"`);
   } else if (Buffer.isBuffer(value)) {
     value = `0x${value.toString('hex')}`;
   }
@@ -43,10 +43,10 @@ function toBigInt(value) {
     return JSBI.BigInt(value);
   }
   if (lodash.isBoolean(value)) {
-    throw new Error(`${value} not match BigInt`);
+    throw new Error(`${value} not match "BigInt"`);
   }
   if (Buffer.isBuffer(value)) {
-    throw new Error(`${value} not match BigInt`);
+    throw new Error(`${value} not match "BigInt"`);
   }
 
   value = `${value}`.replace(/^(-?\d+)(.0+)?$/, '$1'); // replace "number.000" to "number"
@@ -391,7 +391,7 @@ format.getLogs = parser({
   blockHashes: format.blockHash.$or([format.blockHash]).$or(undefined),
   address: format.address.$or([format.address]).$or(undefined),
   topics: parser([format.hex64.$or([format.hex64]).$or(null)]).$or(undefined),
-}, true);
+}, { strict: true, pick: true });
 
 format.signTx = parser({
   nonce: format.bigUIntHex.$after(format.hexBuffer),
@@ -406,7 +406,7 @@ format.signTx = parser({
   r: (format.bigUIntHex.$after(format.hexBuffer)).$or(undefined),
   s: (format.bigUIntHex.$after(format.hexBuffer)).$or(undefined),
   v: (format.uInt.$after(format.hexBuffer)).$or(undefined),
-}, true);
+}, { strict: true, pick: true });
 
 format.sendTx = parser({
   from: format.address.$or(undefined),
@@ -419,7 +419,7 @@ format.sendTx = parser({
   epochHeight: format.bigUIntHex.$or(undefined),
   chainId: format.bigUIntHex.$or(undefined),
   data: format.hex.$or(undefined),
-}, true);
+}, { strict: true, pick: true });
 
 format.callTx = parser({
   from: format.address.$or(undefined),
@@ -432,7 +432,7 @@ format.callTx = parser({
   epochHeight: format.uInt.$or(undefined),
   chainId: format.uInt.$or(undefined),
   data: format.hex.$or(undefined),
-}, true);
+}, { strict: true, pick: true });
 
 format.estimateTx = parser({
   from: format.address.$or(undefined),
@@ -445,7 +445,7 @@ format.estimateTx = parser({
   epochHeight: format.uInt.$or(undefined),
   chainId: format.uInt.$or(undefined),
   data: format.hex.$or(undefined),
-}, true);
+}, { strict: true, pick: true });
 
 // ----------------------------- parse rpc returned ---------------------------
 format.status = parser({
