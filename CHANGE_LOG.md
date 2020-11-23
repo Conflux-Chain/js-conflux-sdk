@@ -1,5 +1,7 @@
 # change log
 
+# v1.1.3
+
 * WebsocketProvider with Websocket options
 
 ```
