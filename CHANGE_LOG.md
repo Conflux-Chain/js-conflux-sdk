@@ -1,5 +1,16 @@
 # change log
 
+* WebsocketProvider with Websocket options
+
+```
+new Conflux({
+  url: 'ws://127.0.0.1',
+  clientConfig: {
+    maxReceivedFrameSize: 10*1000*1000, // 10 MB
+  }
+})
+```
+
 ## v1.1.2
 
 * add `conflux.getVoteList`
