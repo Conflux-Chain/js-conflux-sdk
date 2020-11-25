@@ -164,13 +164,29 @@ class Conflux {
   }
 
   /**
+   * Get supply info
+   *
+   * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
+   * @return {Promise<object>} Return supply info
+   * - totalIssued `BigInt`: Total issued balance in `Drip`
+   * - totalStaking `BigInt`: Total staking balance in `Drip`
+   * - totalCollateral `BigInt`: Total collateral balance in `Drip`
+   */
+  async getSupplyInfo(epochNumber) {
+    const result = await this.provider.call('cfx_getSupplyInfo',
+      format.epochNumber.$or(undefined)(epochNumber),
+    );
+    return format.supplyInfo(result);
+  }
+
+  /**
    * Get status
    * @return {Promise<object>} Status information object
-   * - `number` chainId: Chain id
-   * - `number` epochNumber: Epoch number
-   * - `number` blockNumber: Block number
-   * - `number` pendingTxNumber: Pending transaction number
-   * - `string` bestHash: The block hash of best pivot block
+   * - chainId `number`: Chain id
+   * - epochNumber `number`: Epoch number
+   * - blockNumber `number`: Block number
+   * - pendingTxNumber `number`: Pending transaction number
+   * - bestHash `string`: The block hash of best pivot block
    *
    * @example
    * > await conflux.getStatus()

@@ -19,6 +19,7 @@ keywords:
         - [Contract](#Conflux.js/Conflux/Contract)
         - [InternalContract](#Conflux.js/Conflux/InternalContract)
         - [close](#Conflux.js/Conflux/close)
+        - [getSupplyInfo](#Conflux.js/Conflux/getSupplyInfo)
         - [getStatus](#Conflux.js/Conflux/getStatus)
         - [getGasPrice](#Conflux.js/Conflux/getGasPrice)
         - [getInterestRate](#Conflux.js/Conflux/getInterestRate)
@@ -304,6 +305,23 @@ close connection.
 > conflux.close();
 ```
 
+### Conflux.prototype.getSupplyInfo <a id="Conflux.js/Conflux/getSupplyInfo"></a>
+
+Get supply info
+
+* **Parameters**
+
+Name        | Type            | Required | Default        | Description
+------------|-----------------|----------|----------------|-------------------------------------------------
+epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](#util/format.js/epochNumber)
+
+* **Returns**
+
+`Promise.<object>` Return supply info
+- totalIssued `BigInt`: Total issued balance in `Drip`
+- totalStaking `BigInt`: Total staking balance in `Drip`
+- totalCollateral `BigInt`: Total collateral balance in `Drip`
+
 ### Conflux.prototype.getStatus <a id="Conflux.js/Conflux/getStatus"></a>
 
 Get status
@@ -311,11 +329,11 @@ Get status
 * **Returns**
 
 `Promise.<object>` Status information object
-- `number` chainId: Chain id
-- `number` epochNumber: Epoch number
-- `number` blockNumber: Block number
-- `number` pendingTxNumber: Pending transaction number
-- `string` bestHash: The block hash of best pivot block
+- chainId `number`: Chain id
+- epochNumber `number`: Epoch number
+- blockNumber `number`: Block number
+- pendingTxNumber `number`: Pending transaction number
+- bestHash `string`: The block hash of best pivot block
 
 * **Examples**
 

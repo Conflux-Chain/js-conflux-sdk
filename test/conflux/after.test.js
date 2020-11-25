@@ -17,6 +17,14 @@ test('getClientVersion', async () => {
   expect(lodash.isString(version)).toEqual(true);
 });
 
+test('getSupplyInfo', async () => {
+  const info = await conflux.getSupplyInfo(1);
+
+  expect(typeof info.totalIssued).toEqual('bigint');
+  expect(typeof info.totalStaking).toEqual('bigint');
+  expect(typeof info.totalCollateral).toEqual('bigint');
+});
+
 test('getStatus', async () => {
   const status = await conflux.getStatus();
 
