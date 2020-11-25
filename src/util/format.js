@@ -515,6 +515,12 @@ format.log = parser({
 
 format.logs = parser([format.log]);
 
+format.supplyInfo = parser({
+  totalIssued: format.bigUInt,
+  totalStaking: format.bigUInt,
+  totalCollateral: format.bigUInt,
+});
+
 format.sponsorInfo = parser({
   sponsorBalanceForCollateral: format.bigUInt,
   sponsorBalanceForGas: format.bigUInt,

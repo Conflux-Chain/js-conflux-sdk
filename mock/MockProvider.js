@@ -135,6 +135,14 @@ class MockProvider extends EventEmitter {
     return 'mock';
   }
 
+  cfx_getSupplyInfo() {
+    return {
+      totalIssued: randomHex(20),
+      totalStaking: randomHex(18),
+      totalCollateral: randomHex(18),
+    };
+  }
+
   cfx_getStatus() {
     return {
       chainId: toHex(1),
