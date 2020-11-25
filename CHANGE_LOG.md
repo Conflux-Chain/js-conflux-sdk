@@ -1,5 +1,9 @@
 # change log
 
+# v1.1.4
+
+* add `conflux.getSupplyInfo`
+
 # v1.1.3
 
 * WebsocketProvider with Websocket options

@@ -171,6 +171,14 @@ class Conflux {
    * - totalIssued `BigInt`: Total issued balance in `Drip`
    * - totalStaking `BigInt`: Total staking balance in `Drip`
    * - totalCollateral `BigInt`: Total collateral balance in `Drip`
+   *
+   * @example
+   * > await conflux.getSupplyInfo()
+   {
+     totalCollateral: 28953062500000000000000n,
+     totalIssued: 5033319899279074765657343554n,
+     totalStaking: 25026010834970490328077641n
+   }
    */
   async getSupplyInfo(epochNumber) {
     const result = await this.provider.call('cfx_getSupplyInfo',
