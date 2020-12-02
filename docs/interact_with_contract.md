@@ -1,9 +1,20 @@
 # Interact with contract
 In Conflux world you may often need to interact with contracts, with JS SDK this can be done very easy.
 
+>Note: when interacting with contract and if your parameter is bigger than `Number.MAX_SAFE_INTEGER`, you should use string represention of the number or BigInt.
+
+```js
+// use string
+await contract.deposit('90071992547409910').sendTransaction({from: '0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b'});
+// or use hex string
+await contract.deposit('0x13ffffffffffff0').sendTransaction(from: '0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b');
+// not use number
+// await contract.deposit(Number.MAX_SAFE_INTEGER * 10);
+```
+
 ### How to deploy a contract
 One contract must be created before interacting with it. To create a contract you can write it with `solidity`.
-Then compile it with solidity compiler, you will get `bytecode` and `abi`. With `bytecode`, `abi` you can deploy it by send transaction.
+Then compile it with solidity compiler or [cfxtruffle](http://github.com/conflux-chain/truffle), you will get `bytecode` and `abi`. With `bytecode`, `abi` you can deploy it by send transaction.
 
 ```js
 const { Conflux } = require('js-conflux-sdk');
@@ -47,7 +58,7 @@ async function main() {
   // create contract address "0x8a9c270e1a99c05ca90ef0f0008b8f6444cf1a97"
 }
 
-main();
+main().catch(console.log);
 ```
 
 Check the transaction you will find the tx data is the contract bytecode and constructor's encoded signature.
