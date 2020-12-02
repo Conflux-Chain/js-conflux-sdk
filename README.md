@@ -64,6 +64,7 @@ or
 * [Complete document for send transaction](./docs/how_to_send_tx.md)
 * [Interacting with contract](./docs/interact_with_contract.md)
 * [API](./docs/api.md)
+* [Internal Contract API](./docs/internal_contracts.md)
 
 ## TODO
 
