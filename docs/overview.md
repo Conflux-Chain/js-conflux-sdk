@@ -103,22 +103,6 @@ console.log(max.toString()); // directly log a jsbi is very ugly
 
 Note: When a js integer is bigger than `Number.MAX_SAFE_INTEGER` (2^53 - 1 or 9,007,199,254,740,991) you should use [`BigInt`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt) to contain it.
 
-```js
-const previouslyMaxSafeInteger = 9007199254740991n
-
-const alsoHuge = BigInt(9007199254740991)
-// ↪ 9007199254740991n
-
-const hugeString = BigInt("9007199254740991")
-// ↪ 9007199254740991n
-
-const hugeHex = BigInt("0x1fffffffffffff")
-// ↪ 9007199254740991n
-
-const hugeBin = BigInt("0b11111111111111111111111111111111111111111111111111111")
-// ↪ 9007199254740991n
-```
-
 
 ### Drip
 In Conflux network there are there unit: CFX, Drip, Gdrip. Drip is the minimum unit in Conflux  1 CFX=10^18Drip, 1Gdrip=10^9Drip. When getting account's balance, send transaction, specify gasPrice, all unit will be Drip. 

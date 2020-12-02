@@ -43,7 +43,7 @@ const MIN_GAS_PRICE = 1;
  * @type {number}
  * @example
  * > CONST.TRANSACTION_GAS
- 2100
+ 21000
  */
 const TRANSACTION_GAS = 21000;
 
