@@ -12,7 +12,7 @@ JavaScript Conflux Software Development Kit
 2. Add `cfx.InternalContract(name)` to interact with Conflux internal contracts.
 3. Add websocket provider, support pub/sub
 4. Provide `Drip` to easily convert unit between CFX, Drip, Gdrip
-5. Use `JSBI` for front-end, native `BigInt` for back-end
+5. Use `JSBI` for browser, native `BigInt` for Node.js
 
 Check the [complete changelog](./CHANGE_LOG.md)
 

@@ -32,7 +32,7 @@ Besides `url` and `logger` you can pass [other options](../api.md) to initialize
 Private keys are required to approve any transaction made on your behalf, `conflux.wallet` provide utility help you manage your accounts
 
 ```js
-conflux.wallet.addPrivateKey('your-private-key');
+conflux.wallet.addPrivateKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef');
 ```
 
 Only after you add your account to wallet, then you can use them send transactions.
