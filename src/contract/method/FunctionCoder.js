@@ -73,7 +73,7 @@ class FunctionCoder {
       message: 'decodeData unexpected signature',
       expect: this.signature,
       got: prefix,
-      coder: this,
+      coder: this.fullName,
     });
 
     const data = hex.slice(this.signature.length);
@@ -83,7 +83,7 @@ class FunctionCoder {
       message: 'hex length to large',
       expect: `${stream.string.length}`,
       got: stream.index,
-      coder: this,
+      coder: this.fullName,
     });
 
     return tuple;
@@ -113,7 +113,7 @@ class FunctionCoder {
       message: 'hex length to large',
       expect: `${stream.string.length}`,
       got: stream.index,
-      coder: this,
+      coder: this.fullName,
     });
 
     return tuple.length <= 1 ? tuple[0] : tuple;
