@@ -14,6 +14,16 @@ class LogFilter {
 
     return logs;
   }
+
+  async subscribeLogs(options = {}) {
+    const subscription = await this.event.conflux.subscribeLogs({ ...this, ...options });
+
+    subscription.on('data', log => {
+      log.params = this.event.decodeLog(log);
+    });
+
+    return subscription;
+  }
 }
 
 module.exports = LogFilter;

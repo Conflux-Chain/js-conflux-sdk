@@ -14,10 +14,11 @@ class MethodTransaction extends Transaction {
    * > Note: This can alter the smart contract state.
    *
    * @param options {object} - See [format.sendTx](#util/format.js/sendTx)
+   * @param [password] {string} - See [conflux.sendTransaction](#Conflux.js/Conflux/sendTransaction)
    * @return {Promise<PendingTransaction>} The PendingTransaction object.
    */
-  sendTransaction(options) {
-    return this.method.conflux.sendTransaction({ ...this, ...options });
+  sendTransaction(options, password) {
+    return this.method.conflux.sendTransaction({ ...this, ...options }, password);
   }
 
   /**
