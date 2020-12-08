@@ -3005,7 +3005,7 @@ Sign a transaction.
 
 Name    | Type     | Required | Default | Description
 --------|----------|----------|---------|----------------------------------------------
-options | `object` | true     |         | See [Transaction](#Transaction.js/Transaction/**constructor**)
+options | `object` | true     |         | See [Transaction](Transaction.js/constructor)
 
 * **Returns**
 

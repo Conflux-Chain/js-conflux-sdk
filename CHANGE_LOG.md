@@ -2,6 +2,13 @@
 
 ## v1.1.5
 
+* add `stateMutability` for method from abi
+
+```
+console.log(contract.symbol.stateMutability) // "view"
+console.log(contract.transfer.stateMutability) // "nonpayable"
+```
+
 * rename EventLog.params to EventLog.arguments
 ```
 await conflux.contract.Transfer(null, null, null).getLogs({

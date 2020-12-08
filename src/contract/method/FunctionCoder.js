@@ -10,6 +10,7 @@ class FunctionCoder {
    * @param name {string}
    * @param [inputs] {array}
    * @param [outputs] {array}
+   * @param [stateMutability='nonpayable'] {string}
    *
    * @example
    * > abi = { name: 'func', inputs: [{ type: 'int' }, { type: 'bool' }], outputs: [{ type: 'int' }] }
@@ -22,11 +23,12 @@ class FunctionCoder {
       type: 'func(int256,bool)'
     }
    */
-  constructor({ name, inputs = [], outputs = [] }) {
+  constructor({ name, inputs = [], outputs = [], stateMutability = 'nonpayable' }) {
     this.name = name; // example: "add"
     this.fullName = formatFullName({ name, inputs }); // example: "add(uint number, uint count)"
     this.type = formatType({ name, inputs }); // example: "add(uint,uint)"
     this.signature = format.keccak256(this.type).slice(0, 10); // example: "0xb8966352"
+    this.stateMutability = stateMutability;
 
     this.inputCoder = valueCoder({ type: 'tuple', components: inputs });
     this.outputCoder = valueCoder({ type: 'tuple', components: outputs });
