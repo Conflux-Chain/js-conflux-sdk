@@ -326,7 +326,6 @@ test('getCollateralForStorage', async () => {
 
 test('call', async () => {
   await expect(conflux.call()).rejects.toThrow('undefined');
-  await expect(conflux.call({ nonce: 0 })).rejects.toThrow('not match "hex"'); // miss to
 
   const call = jest.spyOn(conflux.provider, 'call');
   await conflux.call({ from: ADDRESS, to: ADDRESS });
@@ -383,7 +382,7 @@ test('estimateGasAndCollateral', async () => {
     to: ADDRESS,
     value: '0x64',
     data: '0x',
-    chainId: 1,
+    chainId: '0x1',
     epochHeight: undefined,
   }, undefined);
 

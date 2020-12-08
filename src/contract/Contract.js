@@ -11,6 +11,15 @@ const ContractEventOverride = require('./event/ContractEventOverride');
  */
 class Contract {
   /**
+   * > contract "code" definition:
+   * ```
+   * 6080................6080.................a264.........0033...............................
+   * | <-                     create contract transaction `data`                          -> |
+   * | <- deploy code -> | <- runtime code -> | <- metadata -> | <- constructor arguments -> |
+   * | <-                contract `bytecode`                -> |
+   *                     | <-       code as `getCode`       -> |
+   * ```
+   *
    * @param options {object}
    * @param options.abi {array} - The json interface for the contract to instantiate
    * @param [options.address] {string} - The address of the smart contract to call, can be added later using `contract.address = '0x1234...'`

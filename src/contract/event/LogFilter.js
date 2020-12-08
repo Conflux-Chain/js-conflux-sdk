@@ -9,10 +9,20 @@ class LogFilter {
     const logs = await this.event.conflux.getLogs({ ...this, ...options });
 
     logs.forEach(log => {
-      log.params = this.event.decodeLog(log);
+      log.arguments = this.event.decodeLog(log);
     });
 
     return logs;
+  }
+
+  async subscribeLogs(options = {}) {
+    const subscription = await this.event.conflux.subscribeLogs({ ...this, ...options });
+
+    subscription.on('data', log => {
+      log.arguments = this.event.decodeLog(log);
+    });
+
+    return subscription;
   }
 }
 

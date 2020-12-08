@@ -4,15 +4,13 @@ class ContractABI {
   }
 
   decodeData(data) {
-    let method = this.contract[data.slice(0, 10)];
-    if (!method && data.startsWith(this.contract.constructor.bytecode)) {
-      method = this.contract.constructor;
-    }
-    if (!method) {
+    const method = this.contract[data.slice(0, 10)] || this.contract.constructor;
+
+    const tuple = method.decodeData(data);
+    if (!tuple) {
       return undefined;
     }
 
-    const tuple = method.decodeData(data);
     return {
       name: method.name,
       fullName: method.fullName,

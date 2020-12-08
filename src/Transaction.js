@@ -7,16 +7,16 @@ class Transaction {
    * Create a transaction.
    *
    * @param options {object}
-   * @param options.from {string} - The sender address.
-   * @param options.nonce {string|number} - This allows to overwrite your own pending transactions that use the same nonce.
-   * @param options.gasPrice {string|number} - The price of gas for this transaction in drip.
-   * @param options.gas {string|number} - The amount of gas to use for the transaction (unused gas is refunded).
-   * @param [options.to=null] {string} - The destination address of the message, left undefined for a contract-creation transaction.
-   * @param [options.value=0] {string|number} - The value transferred for the transaction in drip, also the endowment if it’s a contract-creation transaction.
-   * @param options.storageLimit {string|number} - TODO
-   * @param options.epochHeight {string|number} - TODO
-   * @param [options.chainId=0] {string|number} - TODO
-   * @param [options.data='0x'] {string|Buffer} - Either a ABI byte string containing the data of the function call on a contract, or in the case of a contract-creation transaction the initialisation code.
+   * @param [options.from] {string} - The sender address.
+   * @param [options.nonce] {string|number} - This allows to overwrite your own pending transactions that use the same nonce.
+   * @param [options.gasPrice] {string|number} - The price of gas for this transaction in drip.
+   * @param [options.gas] {string|number} - The amount of gas to use for the transaction (unused gas is refunded).
+   * @param [options.to] {string} - The destination address of the message, left undefined for a contract-creation transaction.
+   * @param [options.value] {string|number} - The value transferred for the transaction in drip, also the endowment if it’s a contract-creation transaction.
+   * @param [options.storageLimit] {string|number} - The storage limit specified by the sender.
+   * @param [options.epochHeight] {string|number} - The epoch proposed by the sender. Note that this is NOT the epoch of the block containing this transaction.
+   * @param [options.chainId] {string|number} - The chain ID specified by the sender.
+   * @param [options.data] {string|Buffer} - Either a ABI byte string containing the data of the function call on a contract, or in the case of a contract-creation transaction the initialisation code.
    * @param [options.r] {string|Buffer} - ECDSA signature r
    * @param [options.s] {string|Buffer} - ECDSA signature s
    * @param [options.v] {number} - ECDSA recovery id

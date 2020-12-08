@@ -71,7 +71,7 @@ class EventCoder {
       message: 'length not match',
       expect: this.inputs.length,
       got: args.length,
-      coder: this,
+      coder: this.fullName,
     });
 
     const topics = [];
@@ -115,7 +115,7 @@ class EventCoder {
       message: 'decodeLog unexpected topic',
       expect: this.signature,
       got: topics[0],
-      coder: this,
+      coder: this.fullName,
     });
 
     const stream = new HexStream(data || '0x');
@@ -124,7 +124,7 @@ class EventCoder {
       message: 'hex length to large',
       expect: `${stream.string.length}`,
       got: stream.index,
-      coder: this,
+      coder: this.fullName,
     });
 
     let offset = this.anonymous ? 0 : 1;
