@@ -2,6 +2,42 @@
 
 ## v1.1.5
 
+* rename EventLog.params to EventLog.arguments
+```
+await conflux.contract.Transfer(null, null, null).getLogs({
+  fromEpoch: 2868400,
+  toEpoch: 2868500,
+})
+
+/*
+[
+  {
+    data: '0x0000000000000000000000000000000000000000000000000001184b321b4e44',
+    topics: [
+      '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef',
+      '0x0000000000000000000000001dc05200485776b79f195a1e617dbccb6826f1c4',
+      '0x000000000000000000000000882c4ddb1d3210b5ae778360729c04cd3242df70'
+    ],
+    ...
+    arguments: NamedTuple(from,to,value)(3) [
+      '0x1dc05200485776b79f195a1e617dbccb6826f1c4',
+      '0x882c4ddb1d3210b5ae778360729c04cd3242df70',
+      308186218974788n
+    ]
+  }
+]
+*/
+```
+
+* add `subscribeLogs` for EventLog
+```
+subscription = await contract.Transfer(null, null, null).subscribeLogs();
+
+subscription.on('data', data => {
+  console.log(data);
+});
+``` 
+
 * contract decode constructor data with out bytecode 
 
 ## v1.1.4
