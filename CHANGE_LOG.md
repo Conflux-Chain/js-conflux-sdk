@@ -1,5 +1,17 @@
 # change log
 
+## v1.1.6
+
+* export `Contract`
+```
+// nodejs
+const { Contract } = require('js-conflux-sdk');
+```
+
+```
+import { Contract } from 'js-conflux-sdk'
+```
+
 ## v1.1.5
 
 * add `stateMutability` for method from abi

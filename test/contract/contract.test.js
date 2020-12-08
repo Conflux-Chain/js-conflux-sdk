@@ -1,5 +1,5 @@
 const JSBI = require('../../src/util/jsbi');
-const { Conflux, format } = require('../../src');
+const { Conflux, Contract, format } = require('../../src');
 const { MockProvider } = require('../../mock');
 const { abi, bytecode, address } = require('./contract.json');
 const ContractConstructor = require('../../src/contract/method/ContractConstructor');
@@ -14,12 +14,12 @@ conflux.provider = new MockProvider();
 const contract = conflux.Contract({ abi, bytecode, address });
 
 test('without code', async () => {
-  const contractWithoutCode = conflux.Contract({ abi, address });
+  const contractWithoutCode = new Contract({ abi, address });
   expect(() => contractWithoutCode.constructor(100)).toThrow('bytecode is empty');
 });
 
 test('with empty abi', () => {
-  const contractWithEmptyABI = conflux.Contract({ abi: [], address });
+  const contractWithEmptyABI = new Contract({ abi: [], address });
   expect(contractWithEmptyABI.constructor instanceof ContractConstructor).toEqual(true);
 });
 
