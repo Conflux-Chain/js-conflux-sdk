@@ -61,7 +61,11 @@ function toBig(value) {
 }
 
 // ----------------------------------------------------------------------------
-const format = {};
+const format = new Proxy(() => undefined, {
+  apply(target, thisArg, argArray) {
+    return parser(...argArray);
+  },
+});
 
 /**
  * @param arg {any}
@@ -71,7 +75,7 @@ const format = {};
  * > format.any(1)
  1
  */
-format.any = parser(v => v);
+format.any = format(v => v);
 
 /**
  * @param arg {number|BigInt|string|boolean}
@@ -99,7 +103,7 @@ format.any = parser(v => v);
  * > format.uInt(Number.MAX_SAFE_INTEGER + 1) // unsafe integer
  Error("not match uint")
  */
-format.uInt = parser(toNumber).$validate(v => Number.isSafeInteger(v) && v >= 0, 'uint');
+format.uInt = format(toNumber).$validate(v => Number.isSafeInteger(v) && v >= 0, 'uint');
 
 /**
  * @param arg {number|string|BigInt}
@@ -121,7 +125,7 @@ format.uInt = parser(toNumber).$validate(v => Number.isSafeInteger(v) && v >= 0,
  * > format.bigInt(Number.MAX_SAFE_INTEGER + 1) // unsafe integer
  9007199254740992n
  */
-format.bigInt = parser(toBigInt);
+format.bigInt = format(toBigInt);
 
 /**
  * @param arg {number|string|BigInt}
@@ -171,7 +175,7 @@ format.bigUIntHex = format.bigUInt.$after(v => `0x${v.toString(16)}`);
  * > format.big(null)
  Error('Invalid number')
  */
-format.big = parser(toBig);
+format.big = format(toBig);
 
 /**
  * @param arg {string|number|BigInt|Big}
@@ -224,7 +228,7 @@ format.epochNumber = format.bigUIntHex
  * > format.hex("0x0a")
  "0x0a"
  */
-format.hex = parser(toHex);
+format.hex = format(toHex);
 
 format.hex40 = format.hex.$validate(v => v.length === 2 + 40, 'hex40');
 
@@ -350,7 +354,7 @@ format.hexBuffer = format.hex.$after(v => Buffer.from(v.substr(2), 'hex'));
  * > format.bytes(Buffer.from([0, 1]))
  <Buffer 00 01>
  */
-format.bytes = parser(v => (Buffer.isBuffer(v) ? v : Buffer.from(v)));
+format.bytes = format(v => (Buffer.isBuffer(v) ? v : Buffer.from(v)));
 
 /**
  * @param arg {boolean}
@@ -384,20 +388,20 @@ format.boolean = format.any.$validate(lodash.isBoolean, 'boolean');
 format.keccak256 = format.bytes.$after(sign.keccak256).$after(format.hex);
 
 // -------------------------- format method arguments -------------------------
-format.getLogs = parser({
+format.getLogs = format({
   limit: format.bigUIntHex.$or(undefined),
   fromEpoch: format.epochNumber.$or(undefined),
   toEpoch: format.epochNumber.$or(undefined),
   blockHashes: format.blockHash.$or([format.blockHash]).$or(undefined),
   address: format.address.$or([format.address]).$or(undefined),
-  topics: parser([format.hex64.$or([format.hex64]).$or(null)]).$or(undefined),
+  topics: format([format.hex64.$or([format.hex64]).$or(null)]).$or(undefined),
 }, { strict: true, pick: true });
 
-format.signTx = parser({
+format.signTx = format({
   nonce: format.bigUIntHex.$after(format.hexBuffer),
   gasPrice: format.bigUIntHex.$after(format.hexBuffer),
   gas: format.bigUIntHex.$after(format.hexBuffer),
-  to: parser(format.address.$or(null).$default(null)).$after(format.hexBuffer),
+  to: format(format.address.$or(null).$default(null)).$after(format.hexBuffer),
   value: format.bigUIntHex.$default(0).$after(format.hexBuffer),
   storageLimit: format.bigUIntHex.$after(format.hexBuffer),
   epochHeight: format.uInt.$after(format.hexBuffer),
@@ -408,7 +412,7 @@ format.signTx = parser({
   v: (format.uInt.$after(format.hexBuffer)).$or(undefined),
 }, { strict: true, pick: true });
 
-format.sendTx = parser({
+format.sendTx = format({
   from: format.address.$or(undefined),
   nonce: format.bigUIntHex.$or(undefined),
   gasPrice: format.bigUIntHex.$or(undefined),
@@ -421,7 +425,7 @@ format.sendTx = parser({
   data: format.hex.$or(undefined),
 }, { strict: true, pick: true });
 
-format.callTx = parser({
+format.callTx = format({
   from: format.address.$or(undefined),
   nonce: format.bigUIntHex.$or(undefined),
   gasPrice: format.bigUIntHex.$or(undefined),
@@ -434,7 +438,7 @@ format.callTx = parser({
   data: format.hex.$or(undefined),
 }, { strict: true, pick: true });
 
-format.estimateTx = parser({
+format.estimateTx = format({
   from: format.address.$or(undefined),
   nonce: format.bigUIntHex.$or(undefined),
   gasPrice: format.bigUIntHex.$or(undefined),
@@ -448,14 +452,14 @@ format.estimateTx = parser({
 }, { strict: true, pick: true });
 
 // ----------------------------- parse rpc returned ---------------------------
-format.status = parser({
+format.status = format({
   chainId: format.uInt,
   epochNumber: format.uInt,
   blockNumber: format.uInt,
   pendingTxNumber: format.uInt,
 });
 
-format.account = parser({
+format.account = format({
   accumulatedInterestReturn: format.bigUInt,
   balance: format.bigUInt,
   collateralForStorage: format.bigUInt,
@@ -463,13 +467,13 @@ format.account = parser({
   stakingBalance: format.bigUInt,
 });
 
-format.estimate = parser({
+format.estimate = format({
   gasUsed: format.bigUInt,
   gasLimit: format.bigUInt,
   storageCollateralized: format.bigUInt,
 });
 
-format.transaction = parser({
+format.transaction = format({
   nonce: format.bigUInt,
   gasPrice: format.bigUInt,
   gas: format.bigUInt,
@@ -482,7 +486,7 @@ format.transaction = parser({
   transactionIndex: format.uInt.$or(null),
 });
 
-format.block = parser({
+format.block = format({
   epochNumber: format.uInt.$or(null),
   blame: format.uInt,
   height: format.uInt,
@@ -494,7 +498,7 @@ format.block = parser({
   transactions: [(format.transaction).$or(format.transactionHash)],
 });
 
-format.receipt = parser({
+format.receipt = format({
   index: format.uInt,
   epochNumber: format.uInt,
   outcomeStatus: format.uInt.$or(null),
@@ -506,28 +510,28 @@ format.receipt = parser({
   }],
 });
 
-format.log = parser({
+format.log = format({
   epochNumber: format.uInt,
   logIndex: format.uInt,
   transactionIndex: format.uInt,
   transactionLogIndex: format.uInt,
 });
 
-format.logs = parser([format.log]);
+format.logs = format([format.log]);
 
-format.supplyInfo = parser({
+format.supplyInfo = format({
   totalIssued: format.bigUInt,
   totalStaking: format.bigUInt,
   totalCollateral: format.bigUInt,
 });
 
-format.sponsorInfo = parser({
+format.sponsorInfo = format({
   sponsorBalanceForCollateral: format.bigUInt,
   sponsorBalanceForGas: format.bigUInt,
   sponsorGasBound: format.bigUInt,
 });
 
-format.rewardInfo = parser([
+format.rewardInfo = format([
   {
     baseReward: format.bigUInt,
     totalReward: format.bigUInt,
@@ -535,13 +539,13 @@ format.rewardInfo = parser([
   },
 ]);
 
-format.voteList = parser([
+format.voteList = format([
   {
     amount: format.bigUInt,
   },
 ]);
 
-format.depositList = parser([
+format.depositList = format([
   {
     amount: format.bigUInt,
     accumulatedInterestRate: format.bigUInt,
@@ -549,7 +553,7 @@ format.depositList = parser([
 ]);
 
 // ---------------------------- parse subscribe event -------------------------
-format.head = parser({
+format.head = format({
   difficulty: format.bigUInt,
   epochNumber: format.uInt.$or(null),
   gasLimit: format.bigUInt,
@@ -557,11 +561,11 @@ format.head = parser({
   timestamp: format.uInt,
 });
 
-format.revert = parser({
+format.revert = format({
   revertTo: format.uInt,
 });
 
-format.epoch = parser({
+format.epoch = format({
   epochNumber: format.uInt,
 });
 
