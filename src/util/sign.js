@@ -21,6 +21,7 @@ function keccak256(buffer) {
 /**
  * Makes a checksum address
  *
+ * > Note: support [EIP-55](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-55.md)
  * > Note: not support [RSKIP60](https://github.com/rsksmart/RSKIPs/blob/master/IPs/RSKIP60.md) yet
  *
  * @param address {string} - Hex string

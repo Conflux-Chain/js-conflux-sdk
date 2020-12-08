@@ -312,8 +312,8 @@ Get supply info
 * **Parameters**
 
 Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|-------------------------------------------------
-epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](#util/format.js/epochNumber)
+------------|-----------------|----------|----------------|---------------------------------------------------------------------
+epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
@@ -381,8 +381,8 @@ Returns the interest rate of given parameter.
 * **Parameters**
 
 Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|-------------------------------------------------
-epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](#util/format.js/epochNumber)
+------------|-----------------|----------|----------------|---------------------------------------------------------------------
+epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
@@ -402,8 +402,8 @@ Returns the accumulate interest rate of given parameter.
 * **Parameters**
 
 Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|-------------------------------------------------
-epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](#util/format.js/epochNumber)
+------------|-----------------|----------|----------------|---------------------------------------------------------------------
+epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
@@ -423,9 +423,9 @@ Return account related states of the given account
 * **Parameters**
 
 Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|-------------------------------------------------
+------------|-----------------|----------|----------------|---------------------------------------------------------------------
 address     | `string`        | true     |                | address to get account.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](#util/format.js/epochNumber)
+epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
@@ -460,9 +460,9 @@ Returns the balance of the account of given address.
 * **Parameters**
 
 Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|-------------------------------------------------
+------------|-----------------|----------|----------------|---------------------------------------------------------------------
 address     | `string`        | true     |                | The address to get the balance of.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](#util/format.js/epochNumber)
+epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
@@ -482,9 +482,9 @@ Returns the balance of the staking account of given address.
 * **Parameters**
 
 Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|-------------------------------------------------
+------------|-----------------|----------|----------------|---------------------------------------------------------------------
 address     | `string`        | true     |                | Address to check for staking balance.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](#util/format.js/epochNumber)
+epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
@@ -504,9 +504,9 @@ Returns the next nonce should be used by given address.
 * **Parameters**
 
 Name        | Type            | Required | Default | Description
-------------|-----------------|----------|---------|-----------------------------------------------------
+------------|-----------------|----------|---------|---------------------------------------------------------------------
 address     | `string`        | true     |         | The address to get the numbers of transactions from.
-epochNumber | `string,number` | false    |         | See [format.sendTx](#util/format.js/epochNumber)
+epochNumber | `string,number` | false    |         | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
@@ -526,9 +526,9 @@ Returns the admin of given contract.
 * **Parameters**
 
 Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|-------------------------------------------------
+------------|-----------------|----------|----------------|---------------------------------------------------------------------
 address     | `string`        | true     |                | Address to contract.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](#util/format.js/epochNumber)
+epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
@@ -548,9 +548,9 @@ Returns vote list of the given account.
 * **Parameters**
 
 Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|-------------------------------------------------
+------------|-----------------|----------|----------------|---------------------------------------------------------------------
 address     | `string`        | true     |                | Address to contract.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](#util/format.js/epochNumber)
+epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
@@ -566,17 +566,17 @@ Returns deposit list of the given account.
 * **Parameters**
 
 Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|-------------------------------------------------
+------------|-----------------|----------|----------------|---------------------------------------------------------------------
 address     | `string`        | true     |                | Address to contract.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](#util/format.js/epochNumber)
+epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
 `Promise.<Array.<object>>` Deposit list
 - `array`:
-  - amount `BigInt`: TODO
-  - accumulatedInterestRate: `BigInt`: TODO
-  - depositTime `number`: TODO
+  - amount `BigInt`: the number of tokens deposited
+  - accumulatedInterestRate: `BigInt`: the accumulated interest rate at the time of the deposit
+  - depositTime `number`: the time of the deposit
 
 ### Conflux.prototype.getEpochNumber <a id="Conflux.js/Conflux/getEpochNumber"></a>
 
@@ -585,8 +585,8 @@ Returns the epoch number of given parameter.
 * **Parameters**
 
 Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|-------------------------------------------------
-epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](#util/format.js/epochNumber)
+------------|-----------------|----------|----------------|---------------------------------------------------------------------
+epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
@@ -607,7 +607,7 @@ Returns information about a block by epoch number.
 
 Name        | Type            | Required | Default | Description
 ------------|-----------------|----------|---------|---------------------------------------------------------------------------------------------------
-epochNumber | `string,number` | true     |         | See [format.sendTx](#util/format.js/epochNumber)
+epochNumber | `string,number` | true     |         | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
 detail      | `boolean`       | false    | false   | If `true` it returns the full transaction objects, if `false` only the hashes of the transactions.
 
 * **Returns**
@@ -628,8 +628,8 @@ Returns hashes of blocks located in some epoch.
 * **Parameters**
 
 Name        | Type            | Required | Default | Description
-------------|-----------------|----------|---------|-------------------------------------------------
-epochNumber | `string,number` | true     |         | See [format.sendTx](#util/format.js/epochNumber)
+------------|-----------------|----------|---------|---------------------------------------------------------------------
+epochNumber | `string,number` | true     |         | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
@@ -895,8 +895,8 @@ else call `cfx_sendTransaction` and sign by remote wallet
 * **Parameters**
 
 Name     | Type     | Required | Default | Description
----------|----------|----------|---------|--------------------------------------------
-options  | `object` | true     |         | See [format.sendTx](#util/format.js/sendTx)
+---------|----------|----------|---------|---------------------------------------------------------------
+options  | `object` | true     |         | See [Transaction](#Transaction.js/Transaction/**constructor**)
 password | `string` | false    |         | Password for remote node.
 
 * **Returns**
@@ -1003,9 +1003,9 @@ Returns the code of given contract.
 * **Parameters**
 
 Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|-------------------------------------------------
+------------|-----------------|----------|----------------|---------------------------------------------------------------------
 address     | `string`        | true     |                | Address to contract.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](#util/format.js/epochNumber)
+epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
@@ -1025,10 +1025,10 @@ Returns storage entries from a given contract.
 * **Parameters**
 
 Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|-------------------------------------------------
+------------|-----------------|----------|----------------|---------------------------------------------------------------------
 address     | `string`        | true     |                | Address to contract.
 position    | `string`        | true     |                | The given position.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](#util/format.js/epochNumber)
+epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
@@ -1048,9 +1048,9 @@ Returns the storage root of a given contract.
 * **Parameters**
 
 Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|-------------------------------------------------
+------------|-----------------|----------|----------------|---------------------------------------------------------------------
 address     | `string`        | true     |                | Address to contract.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](#util/format.js/epochNumber)
+epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
@@ -1077,9 +1077,9 @@ Returns the sponsor info of given contract.
 * **Parameters**
 
 Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|-------------------------------------------------
+------------|-----------------|----------|----------------|---------------------------------------------------------------------
 address     | `string`        | true     |                | Address to contract.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](#util/format.js/epochNumber)
+epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
@@ -1110,9 +1110,9 @@ Returns the size of the collateral storage of given address, in Byte.
 * **Parameters**
 
 Name        | Type     | Required | Default        | Description
-------------|----------|----------|----------------|-------------------------------------------------
+------------|----------|----------|----------------|---------------------------------------------------------------------
 address     | `string` | true     |                | Address to check for collateral storage.
-epochNumber |          | false    | 'latest_state' | See [format.sendTx](#util/format.js/epochNumber)
+epochNumber |          | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
@@ -1132,9 +1132,9 @@ Virtually call a contract, return the output data.
 * **Parameters**
 
 Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|-------------------------------------------------
-options     | `object`        | true     |                | See [format.sendTx](#util/format.js/sendTx)
-epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](#util/format.js/epochNumber)
+------------|-----------------|----------|----------------|---------------------------------------------------------------------
+options     | `object`        | true     |                | See [Transaction](#Transaction.js/Transaction/**constructor**)
+epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
@@ -1147,9 +1147,9 @@ Virtually call a contract, return the estimate gas used and storage collateraliz
 * **Parameters**
 
 Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|----------------------------------------------------
-options     | `object`        | true     |                | See [format.estimateTx](#util/format.js/estimateTx)
-epochNumber | `string,number` | false    | 'latest_state' | See [format.sendTx](#util/format.js/epochNumber)
+------------|-----------------|----------|----------------|---------------------------------------------------------------------
+options     | `object`        | true     |                | See [Transaction](#Transaction.js/Transaction/**constructor**)
+epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
@@ -1167,8 +1167,8 @@ Returns logs matching the filter provided.
 Name                | Type                    | Required | Default             | Description
 --------------------|-------------------------|----------|---------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 options             | `object`                | false    |                     |
-options.fromEpoch   | `string,number`         | false    | 'latest_checkpoint' | See [format.sendTx](#util/format.js/epochNumber). Search will be applied from this epoch number.
-options.toEpoch     | `string,number`         | false    | 'latest_state'      | See [format.sendTx](#util/format.js/epochNumber). Search will be applied up until (and including) this epoch number.
+options.fromEpoch   | `string,number`         | false    | 'latest_checkpoint' | See [format.epochNumber](#util/format.js/format/(static)epochNumber). Search will be applied from this epoch number.
+options.toEpoch     | `string,number`         | false    | 'latest_state'      | See [format.epochNumber](#util/format.js/format/(static)epochNumber). Search will be applied up until (and including) this epoch number.
 options.blockHashes | `Array.<string>`        | false    |                     | Array of up to 128 block hashes that the search will be applied to. This will override from/to epoch fields if it's not null
 options.address     | `string,Array.<string>` | false    |                     | Search contract addresses. If null, match all. If specified, log must be produced by one of these addresses.
 options.topics      | `array`                 | false    |                     | Search topics. Logs can have 4 topics: the function signature and up to 3 indexed event arguments. The elements of topics match the corresponding log topics. Example: ["0xA", null, ["0xB", "0xC"], null] matches logs with "0xA" as the 1st topic AND ("0xB" OR "0xC") as the 3rd topic. If null, match all.
@@ -1439,7 +1439,7 @@ gas use for pure transfer transaction
 
 ```
 > CONST.TRANSACTION_GAS
- 2100
+ 21000
 ```
 
 ----------------------------------------
@@ -1457,6 +1457,15 @@ storage limit for pure transfer transaction
 Contract with all its methods and events defined in its abi.
 
 #### Contract.prototype.**constructor** <a id="contract/Contract.js/Contract/**constructor**"></a>
+
+> contract "code" definition:
+```
+6080................6080.................a264.........0033...............................
+| <-                     create contract transaction `data`                          -> |
+| <- deploy code -> | <- runtime code -> | <- metadata -> | <- constructor arguments -> |
+| <-                contract `bytecode`                -> |
+                    | <-       code as `getCode`       -> |
+```
 
 * **Parameters**
 
@@ -1982,16 +1991,16 @@ Create a transaction.
 Name                 | Type            | Required | Default | Description
 ---------------------|-----------------|----------|---------|------------------------------------------------------------------------------------------------------------------------------------------------------------
 options              | `object`        | true     |         |
-options.from         | `string`        | true     |         | The sender address.
-options.nonce        | `string,number` | true     |         | This allows to overwrite your own pending transactions that use the same nonce.
-options.gasPrice     | `string,number` | true     |         | The price of gas for this transaction in drip.
-options.gas          | `string,number` | true     |         | The amount of gas to use for the transaction (unused gas is refunded).
+options.from         | `string`        | false    |         | The sender address.
+options.nonce        | `string,number` | false    |         | This allows to overwrite your own pending transactions that use the same nonce.
+options.gasPrice     | `string,number` | false    |         | The price of gas for this transaction in drip.
+options.gas          | `string,number` | false    |         | The amount of gas to use for the transaction (unused gas is refunded).
 options.to           | `string`        | false    |         | The destination address of the message, left undefined for a contract-creation transaction.
-options.value        | `string,number` | false    | 0       | The value transferred for the transaction in drip, also the endowment if it’s a contract-creation transaction.
-options.storageLimit | `string,number` | true     |         | TODO
-options.epochHeight  | `string,number` | true     |         | TODO
-options.chainId      | `string,number` | false    | 0       | TODO
-options.data         | `string,Buffer` | false    | '0x'    | Either a ABI byte string containing the data of the function call on a contract, or in the case of a contract-creation transaction the initialisation code.
+options.value        | `string,number` | false    |         | The value transferred for the transaction in drip, also the endowment if it’s a contract-creation transaction.
+options.storageLimit | `string,number` | false    |         | The storage limit specified by the sender.
+options.epochHeight  | `string,number` | false    |         | The epoch proposed by the sender. Note that this is NOT the epoch of the block containing this transaction.
+options.chainId      | `string,number` | false    |         | The chain ID specified by the sender.
+options.data         | `string,Buffer` | false    |         | Either a ABI byte string containing the data of the function call on a contract, or in the case of a contract-creation transaction the initialisation code.
 options.r            | `string,Buffer` | false    |         | ECDSA signature r
 options.s            | `string,Buffer` | false    |         | ECDSA signature s
 options.v            | `number`        | false    |         | ECDSA recovery id
@@ -2246,8 +2255,8 @@ arg  | `string,number,BigInt,Big` | true     |         |
 * **Parameters**
 
 Name | Type            | Required | Default | Description
------|-----------------|----------|---------|-----------------
-arg  | `number,string` | true     |         | number or string
+-----|-----------------|----------|---------|------------------------------------------------------------
+arg  | `number,string` | true     |         | number or label, See [EPOCH_NUMBER](#CONST.js/EPOCH_NUMBER)
 
 * **Returns**
 
@@ -2557,6 +2566,7 @@ buffer | `Buffer` | true     |         |
 
 Makes a checksum address
 
+> Note: support [EIP-55](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-55.md)
 > Note: not support [RSKIP60](https://github.com/rsksmart/RSKIPs/blob/master/IPs/RSKIP60.md) yet
 
 * **Parameters**
@@ -2995,7 +3005,7 @@ Sign a transaction.
 
 Name    | Type     | Required | Default | Description
 --------|----------|----------|---------|----------------------------------------------
-options | `object` | true     |         | See [Transaction](Transaction.js/constructor)
+options | `object` | true     |         | See [Transaction](#Transaction.js/Transaction/**constructor**)
 
 * **Returns**
 

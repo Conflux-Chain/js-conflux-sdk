@@ -1,10 +1,14 @@
 # change log
 
-# v1.1.4
+## v1.1.5
+
+* contract decode constructor data with out bytecode 
+
+## v1.1.4
 
 * add `conflux.getSupplyInfo`
 
-# v1.1.3
+## v1.1.3
 
 * WebsocketProvider with Websocket options
 

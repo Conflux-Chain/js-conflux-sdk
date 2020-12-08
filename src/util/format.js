@@ -190,7 +190,7 @@ format.big = format(toBig);
 format.fixed64 = format.big.$after(v => Number(v.div(CONST.MAX_UINT)));
 
 /**
- * @param arg {number|string} - number or string
+ * @param arg {number|string} - number or label, See [EPOCH_NUMBER](#CONST.js/EPOCH_NUMBER)
  * @return {string}
  *
  * @example
@@ -389,67 +389,41 @@ format.keccak256 = format.bytes.$after(sign.keccak256).$after(format.hex);
 
 // -------------------------- format method arguments -------------------------
 format.getLogs = format({
-  limit: format.bigUIntHex.$or(undefined),
-  fromEpoch: format.epochNumber.$or(undefined),
-  toEpoch: format.epochNumber.$or(undefined),
-  blockHashes: format.blockHash.$or([format.blockHash]).$or(undefined),
-  address: format.address.$or([format.address]).$or(undefined),
-  topics: format([format.hex64.$or([format.hex64]).$or(null)]).$or(undefined),
-}, { strict: true, pick: true });
+  limit: format.bigUIntHex,
+  fromEpoch: format.epochNumber,
+  toEpoch: format.epochNumber,
+  blockHashes: format.blockHash.$or([format.blockHash]),
+  address: format.address.$or([format.address]),
+  topics: format([format.hex64.$or([format.hex64]).$or(null)]),
+}, { pick: true });
 
 format.signTx = format({
-  nonce: format.bigUIntHex.$after(format.hexBuffer),
-  gasPrice: format.bigUIntHex.$after(format.hexBuffer),
-  gas: format.bigUIntHex.$after(format.hexBuffer),
+  nonce: format.bigUInt.$after(format.hexBuffer),
+  gasPrice: format.bigUInt.$after(format.hexBuffer),
+  gas: format.bigUInt.$after(format.hexBuffer),
   to: format(format.address.$or(null).$default(null)).$after(format.hexBuffer),
-  value: format.bigUIntHex.$default(0).$after(format.hexBuffer),
-  storageLimit: format.bigUIntHex.$after(format.hexBuffer),
+  value: format.bigUInt.$default(0).$after(format.hexBuffer),
+  storageLimit: format.bigUInt.$after(format.hexBuffer),
   epochHeight: format.uInt.$after(format.hexBuffer),
   chainId: format.uInt.$default(0).$after(format.hexBuffer),
   data: format.hex.$default('0x').$after(format.hexBuffer),
-  r: (format.bigUIntHex.$after(format.hexBuffer)).$or(undefined),
-  s: (format.bigUIntHex.$after(format.hexBuffer)).$or(undefined),
+  r: (format.bigUInt.$after(format.hexBuffer)).$or(undefined),
+  s: (format.bigUInt.$after(format.hexBuffer)).$or(undefined),
   v: (format.uInt.$after(format.hexBuffer)).$or(undefined),
 }, { strict: true, pick: true });
 
-format.sendTx = format({
-  from: format.address.$or(undefined),
-  nonce: format.bigUIntHex.$or(undefined),
-  gasPrice: format.bigUIntHex.$or(undefined),
-  gas: format.bigUIntHex.$or(undefined),
-  to: format.address.$or(null).$or(undefined),
-  value: format.bigUIntHex.$or(undefined),
-  storageLimit: format.bigUIntHex.$or(undefined),
-  epochHeight: format.bigUIntHex.$or(undefined),
-  chainId: format.bigUIntHex.$or(undefined),
-  data: format.hex.$or(undefined),
-}, { strict: true, pick: true });
-
 format.callTx = format({
-  from: format.address.$or(undefined),
-  nonce: format.bigUIntHex.$or(undefined),
-  gasPrice: format.bigUIntHex.$or(undefined),
-  gas: format.bigUIntHex.$or(undefined),
+  from: format.address,
+  nonce: format.bigUIntHex,
+  gasPrice: format.bigUIntHex,
+  gas: format.bigUIntHex,
   to: format.address.$or(null),
-  value: format.bigUIntHex.$or(undefined),
-  storageLimit: format.bigUIntHex.$or(undefined),
-  epochHeight: format.uInt.$or(undefined),
-  chainId: format.uInt.$or(undefined),
-  data: format.hex.$or(undefined),
-}, { strict: true, pick: true });
-
-format.estimateTx = format({
-  from: format.address.$or(undefined),
-  nonce: format.bigUIntHex.$or(undefined),
-  gasPrice: format.bigUIntHex.$or(undefined),
-  gas: format.bigUIntHex.$or(undefined),
-  to: format.address.$or(null).$or(undefined),
-  value: format.bigUIntHex.$or(undefined),
-  storageLimit: format.bigUIntHex.$or(undefined),
-  epochHeight: format.uInt.$or(undefined),
-  chainId: format.uInt.$or(undefined),
-  data: format.hex.$or(undefined),
-}, { strict: true, pick: true });
+  value: format.bigUIntHex,
+  storageLimit: format.bigUIntHex,
+  epochHeight: format.bigUIntHex,
+  chainId: format.bigUIntHex,
+  data: format.hex,
+}, { pick: true });
 
 // ----------------------------- parse rpc returned ---------------------------
 format.status = format({

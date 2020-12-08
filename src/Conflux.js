@@ -166,7 +166,7 @@ class Conflux {
   /**
    * Get supply info
    *
-   * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
+   * @param [epochNumber='latest_state'] {string|number} - See [format.epochNumber](#util/format.js/format/(static)epochNumber)
    * @return {Promise<object>} Return supply info
    * - totalIssued `BigInt`: Total issued balance in `Drip`
    * - totalStaking `BigInt`: Total staking balance in `Drip`
@@ -228,7 +228,7 @@ class Conflux {
   /**
    * Returns the interest rate of given parameter.
    *
-   * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
+   * @param [epochNumber='latest_state'] {string|number} - See [format.epochNumber](#util/format.js/format/(static)epochNumber)
    * @return {Promise<BigInt>} The interest rate of given parameter.
    *
    * @example
@@ -245,7 +245,7 @@ class Conflux {
   /**
    * Returns the accumulate interest rate of given parameter.
    *
-   * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
+   * @param [epochNumber='latest_state'] {string|number} - See [format.epochNumber](#util/format.js/format/(static)epochNumber)
    * @return {Promise<BigInt>} The accumulate interest rate of given parameter.
    *
    * @example
@@ -264,7 +264,7 @@ class Conflux {
    * Return account related states of the given account
    *
    * @param address {string} - address to get account.
-   * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
+   * @param [epochNumber='latest_state'] {string|number} - See [format.epochNumber](#util/format.js/format/(static)epochNumber)
    * @return {Promise<object>} Return the states of the given account:
    * - balance `BigInt`: the balance of the account.
    * - nonce `BigInt`: the nonce of the account's next transaction.
@@ -298,7 +298,7 @@ class Conflux {
    * Returns the balance of the account of given address.
    *
    * @param address {string} - The address to get the balance of.
-   * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
+   * @param [epochNumber='latest_state'] {string|number} - See [format.epochNumber](#util/format.js/format/(static)epochNumber)
    * @return {Promise<BigInt>} The balance in Drip.
    *
    * @example
@@ -317,7 +317,7 @@ class Conflux {
    * Returns the balance of the staking account of given address.
    *
    * @param address {string} - Address to check for staking balance.
-   * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
+   * @param [epochNumber='latest_state'] {string|number} - See [format.epochNumber](#util/format.js/format/(static)epochNumber)
    * @return {Promise<BigInt>} The staking balance in Drip.
    *
    * @example
@@ -336,7 +336,7 @@ class Conflux {
    * Returns the next nonce should be used by given address.
    *
    * @param address {string} - The address to get the numbers of transactions from.
-   * @param [epochNumber] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
+   * @param [epochNumber] {string|number} - See [format.epochNumber](#util/format.js/format/(static)epochNumber)
    * @return {Promise<BigInt>} The next nonce should be used by given address.
    *
    * @example
@@ -355,7 +355,7 @@ class Conflux {
    * Returns the admin of given contract.
    *
    * @param address {string} - Address to contract.
-   * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
+   * @param [epochNumber='latest_state'] {string|number} - See [format.epochNumber](#util/format.js/format/(static)epochNumber)
    * @return {Promise<string>} Address to admin, or `null` if the contract does not exist.
    *
    * @example
@@ -373,7 +373,7 @@ class Conflux {
    * Returns vote list of the given account.
    *
    * @param address {string} - Address to contract.
-   * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
+   * @param [epochNumber='latest_state'] {string|number} - See [format.epochNumber](#util/format.js/format/(static)epochNumber)
    * @return {Promise<object[]>} Vote list
    * - `array`:
    *   - amount `BigInt`: This is the number of tokens should be locked before
@@ -390,12 +390,12 @@ class Conflux {
   /**
    * Returns deposit list of the given account.
    * @param address {string} - Address to contract.
-   * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
+   * @param [epochNumber='latest_state'] {string|number} - See [format.epochNumber](#util/format.js/format/(static)epochNumber)
    * @return {Promise<object[]>} Deposit list
    * - `array`:
-   *   - amount `BigInt`: TODO
-   *   - accumulatedInterestRate: `BigInt`: TODO
-   *   - depositTime `number`: TODO
+   *   - amount `BigInt`: the number of tokens deposited
+   *   - accumulatedInterestRate: `BigInt`: the accumulated interest rate at the time of the deposit
+   *   - depositTime `number`: the time of the deposit
    */
   async getDepositList(address, epochNumber) {
     const result = await this.provider.call('cfx_getDepositList',
@@ -409,7 +409,7 @@ class Conflux {
   /**
    * Returns the epoch number of given parameter.
    *
-   * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
+   * @param [epochNumber='latest_state'] {string|number} - See [format.epochNumber](#util/format.js/format/(static)epochNumber)
    * @return {Promise<number>} integer of the current epoch number of given parameter.
    *
    * @example
@@ -426,7 +426,7 @@ class Conflux {
   /**
    * Returns information about a block by epoch number.
    *
-   * @param epochNumber {string|number} - See [format.sendTx](#util/format.js/epochNumber)
+   * @param epochNumber {string|number} - See [format.epochNumber](#util/format.js/format/(static)epochNumber)
    * @param [detail=false] {boolean} - If `true` it returns the full transaction objects, if `false` only the hashes of the transactions.
    * @return {Promise<object|null>} See `getBlockByHash`
    *
@@ -445,7 +445,7 @@ class Conflux {
   /**
    * Returns hashes of blocks located in some epoch.
    *
-   * @param epochNumber {string|number} - See [format.sendTx](#util/format.js/epochNumber)
+   * @param epochNumber {string|number} - See [format.epochNumber](#util/format.js/format/(static)epochNumber)
    * @return {Promise<string[]>} Array of block hashes, sorted by execution(topological) order.
    *
    * @example
@@ -462,7 +462,7 @@ class Conflux {
    * Get epoch blocks reward info
    *
    * @private
-   * @param epochNumber {string|number} - See [format.sendTx](#util/format.js/epochNumber)
+   * @param epochNumber {string|number} - See [format.epochNumber](#util/format.js/format/(static)epochNumber)
    * @return {Promise<object[]>} List of block reward info
    * - blockHash `string`: Hash of the block.
    * - author `string`: The address of the beneficiary to whom the mining rewards were given.
@@ -806,7 +806,7 @@ class Conflux {
    * if `from` field in `conflux.wallet`, sign by local account and send raw transaction,
    * else call `cfx_sendTransaction` and sign by remote wallet
    *
-   * @param options {object} - See [format.sendTx](#util/format.js/sendTx)
+   * @param options {object} - See [Transaction](#Transaction.js/Transaction/**constructor**)
    * @param [password] {string} - Password for remote node.
    * @return {Promise<PendingTransaction>} The PendingTransaction object.
    *
@@ -903,7 +903,7 @@ class Conflux {
     }
 
     return this.provider.call('cfx_sendTransaction',
-      format.sendTx(options),
+      format.callTx(options),
       password,
     );
   }
@@ -913,7 +913,7 @@ class Conflux {
    * Returns the code of given contract.
    *
    * @param address {string} - Address to contract.
-   * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
+   * @param [epochNumber='latest_state'] {string|number} - See [format.epochNumber](#util/format.js/format/(static)epochNumber)
    * @return {Promise<string>} Byte code of contract, or 0x if the contract does not exist.
    *
    * @example
@@ -932,7 +932,7 @@ class Conflux {
    *
    * @param address {string} - Address to contract.
    * @param position {string} - The given position.
-   * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
+   * @param [epochNumber='latest_state'] {string|number} - See [format.epochNumber](#util/format.js/format/(static)epochNumber)
    * @return {Promise<string|null>} Storage entry of given query, or null if the it does not exist.
    *
    * @example
@@ -951,7 +951,7 @@ class Conflux {
    * Returns the storage root of a given contract.
    *
    * @param address {string} - Address to contract.
-   * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
+   * @param [epochNumber='latest_state'] {string|number} - See [format.epochNumber](#util/format.js/format/(static)epochNumber)
    * @return {Promise<object>} A storage root object, or `null` if the contract does not exist
    * - delta `string`: storage root in the delta trie.
    * - intermediate `string`: storage root in the intermediate trie.
@@ -976,7 +976,7 @@ class Conflux {
    * Returns the sponsor info of given contract.
    *
    * @param address {string} - Address to contract.
-   * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
+   * @param [epochNumber='latest_state'] {string|number} - See [format.epochNumber](#util/format.js/format/(static)epochNumber)
    * @return {Promise<object>} A sponsor info object, if the contract doesn't have a sponsor, then the all fields in returned object will be 0:
    * - sponsorBalanceForCollateral `BigInt`: the sponsored balance for storage.
    * - sponsorBalanceForGas `BigInt`: the sponsored balance for gas.
@@ -1006,7 +1006,7 @@ class Conflux {
    * Returns the size of the collateral storage of given address, in Byte.
    *
    * @param address {string} - Address to check for collateral storage.
-   * @param [epochNumber='latest_state'] - See [format.sendTx](#util/format.js/epochNumber)
+   * @param [epochNumber='latest_state'] - See [format.epochNumber](#util/format.js/format/(static)epochNumber)
    * @return {Promise<BigInt>} - The collateral storage in Byte.
    *
    * @example
@@ -1024,8 +1024,8 @@ class Conflux {
   /**
    * Virtually call a contract, return the output data.
    *
-   * @param options {object} - See [format.sendTx](#util/format.js/sendTx)
-   * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
+   * @param options {object} - See [Transaction](#Transaction.js/Transaction/**constructor**)
+   * @param [epochNumber='latest_state'] {string|number} - See [format.epochNumber](#util/format.js/format/(static)epochNumber)
    * @return {Promise<string>} The output data.
    */
   async call(options, epochNumber) {
@@ -1042,8 +1042,8 @@ class Conflux {
   /**
    * Virtually call a contract, return the estimate gas used and storage collateralized.
    *
-   * @param options {object} - See [format.estimateTx](#util/format.js/estimateTx)
-   * @param [epochNumber='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber)
+   * @param options {object} - See [Transaction](#Transaction.js/Transaction/**constructor**)
+   * @param [epochNumber='latest_state'] {string|number} - See [format.epochNumber](#util/format.js/format/(static)epochNumber)
    * @return {Promise<object>} A estimate result object:
    * - `BigInt` gasUsed: The gas used.
    * - `BigInt` gasLimit: The gas limit.
@@ -1052,7 +1052,7 @@ class Conflux {
   async estimateGasAndCollateral(options, epochNumber) {
     try {
       const result = await this.provider.call('cfx_estimateGasAndCollateral',
-        format.estimateTx(options),
+        format.callTx(options),
         format.epochNumber.$or(undefined)(epochNumber),
       );
       return format.estimate(result);
@@ -1065,8 +1065,8 @@ class Conflux {
    * Returns logs matching the filter provided.
    *
    * @param [options] {object}
-   * @param [options.fromEpoch='latest_checkpoint'] {string|number} - See [format.sendTx](#util/format.js/epochNumber). Search will be applied from this epoch number.
-   * @param [options.toEpoch='latest_state'] {string|number} - See [format.sendTx](#util/format.js/epochNumber). Search will be applied up until (and including) this epoch number.
+   * @param [options.fromEpoch='latest_checkpoint'] {string|number} - See [format.epochNumber](#util/format.js/format/(static)epochNumber). Search will be applied from this epoch number.
+   * @param [options.toEpoch='latest_state'] {string|number} - See [format.epochNumber](#util/format.js/format/(static)epochNumber). Search will be applied up until (and including) this epoch number.
    * @param [options.blockHashes] {string[]} -  Array of up to 128 block hashes that the search will be applied to. This will override from/to epoch fields if it's not null
    * @param [options.address] {string|string[]} - Search contract addresses. If null, match all. If specified, log must be produced by one of these addresses.
    * @param [options.topics] {array} - Search topics. Logs can have 4 topics: the function signature and up to 3 indexed event arguments. The elements of topics match the corresponding log topics. Example: ["0xA", null, ["0xB", "0xC"], null] matches logs with "0xA" as the 1st topic AND ("0xB" OR "0xC") as the 3rd topic. If null, match all.
