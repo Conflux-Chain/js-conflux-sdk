@@ -1,5 +1,10 @@
 # change log
 
+## v1.1.7
+
+* Add RPC method `traceBlock`  to `Conflux` which can used to get block's execution trace
+
+
 ## v1.1.6
 
 * export `Contract`

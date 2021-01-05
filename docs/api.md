@@ -8,6 +8,11 @@ keywords:
   - sdk
 ---
 
+- CONST.js
+    - [EPOCH_NUMBER](#CONST.js/EPOCH_NUMBER)
+    - [MIN_GAS_PRICE](#CONST.js/MIN_GAS_PRICE)
+    - [TRANSACTION_GAS](#CONST.js/TRANSACTION_GAS)
+    - [TRANSACTION_STORAGE_LIMIT](#CONST.js/TRANSACTION_STORAGE_LIMIT)
 - Conflux.js
     - Conflux
         - [**constructor**](#Conflux.js/Conflux/**constructor**)
@@ -49,20 +54,12 @@ keywords:
         - [call](#Conflux.js/Conflux/call)
         - [estimateGasAndCollateral](#Conflux.js/Conflux/estimateGasAndCollateral)
         - [getLogs](#Conflux.js/Conflux/getLogs)
+        - [traceBlock](#Conflux.js/Conflux/traceBlock)
         - [subscribe](#Conflux.js/Conflux/subscribe)
         - [subscribeEpochs](#Conflux.js/Conflux/subscribeEpochs)
         - [subscribeNewHeads](#Conflux.js/Conflux/subscribeNewHeads)
         - [subscribeLogs](#Conflux.js/Conflux/subscribeLogs)
         - [unsubscribe](#Conflux.js/Conflux/unsubscribe)
-- CONST.js
-    - [EPOCH_NUMBER](#CONST.js/EPOCH_NUMBER)
-    - [MIN_GAS_PRICE](#CONST.js/MIN_GAS_PRICE)
-    - [TRANSACTION_GAS](#CONST.js/TRANSACTION_GAS)
-    - [TRANSACTION_STORAGE_LIMIT](#CONST.js/TRANSACTION_STORAGE_LIMIT)
-- contract
-    - Contract.js
-        - Contract
-            - [**constructor**](#contract/Contract.js/Contract/**constructor**)
 - Drip.js
     - Drip
         - [(static)fromCFX](#Drip.js/Drip/(static)fromCFX)
@@ -78,6 +75,18 @@ keywords:
         - [hash(getter)](#Message.js/Message/hash(getter))
         - [from(getter)](#Message.js/Message/from(getter))
         - [sign](#Message.js/Message/sign)
+- Transaction.js
+    - Transaction
+        - [**constructor**](#Transaction.js/Transaction/**constructor**)
+        - [hash(getter)](#Transaction.js/Transaction/hash(getter))
+        - [sign](#Transaction.js/Transaction/sign)
+        - [recover](#Transaction.js/Transaction/recover)
+        - [encode](#Transaction.js/Transaction/encode)
+        - [serialize](#Transaction.js/Transaction/serialize)
+- contract
+    - Contract.js
+        - Contract
+            - [**constructor**](#contract/Contract.js/Contract/**constructor**)
 - provider
     - BaseProvider.js
         - BaseProvider
@@ -87,11 +96,11 @@ keywords:
             - [batch](#provider/BaseProvider.js/BaseProvider/batch)
     - HttpProvider.js
         - [HttpProvider](#provider/HttpProvider.js/HttpProvider)
-    - index.js
-        - [providerFactory](#provider/index.js/providerFactory)
     - WebSocketProvider.js
         - WebSocketProvider
             - [**constructor**](#provider/WebSocketProvider.js/WebSocketProvider/**constructor**)
+    - index.js
+        - [providerFactory](#provider/index.js/providerFactory)
 - subscribe
     - PendingTransaction.js
         - PendingTransaction
@@ -101,14 +110,6 @@ keywords:
             - [confirmed](#subscribe/PendingTransaction.js/PendingTransaction/confirmed)
     - Subscription.js
         - [Subscription](#subscribe/Subscription.js/Subscription)
-- Transaction.js
-    - Transaction
-        - [**constructor**](#Transaction.js/Transaction/**constructor**)
-        - [hash(getter)](#Transaction.js/Transaction/hash(getter))
-        - [sign](#Transaction.js/Transaction/sign)
-        - [recover](#Transaction.js/Transaction/recover)
-        - [encode](#Transaction.js/Transaction/encode)
-        - [serialize](#Transaction.js/Transaction/serialize)
 - util
     - format.js
         - format
@@ -162,6 +163,56 @@ keywords:
             - [addPrivateKey](#wallet/Wallet.js/Wallet/addPrivateKey)
             - [addRandom](#wallet/Wallet.js/Wallet/addRandom)
             - [addKeystore](#wallet/Wallet.js/Wallet/addKeystore)
+
+----------------------------------------
+
+## EPOCH_NUMBER <a id="CONST.js/EPOCH_NUMBER"></a>
+
+epochNumber label
+
+- `LATEST_MINED` 'latest_mined': latest epoch.
+- `LATEST_STATE` 'latest_state': latest state, about 5 epoch less then `LATEST_MINED`
+- `LATEST_CONFIRMED` 'latest_confirmed': latest epoch which confirmation risk less 1e-8.
+- `LATEST_CHECKPOINT` 'latest_checkpoint': latest check point epoch.
+- `EARLIEST` 'earliest': earliest epoch number, same as 0.
+
+----------------------------------------
+
+## MIN_GAS_PRICE <a id="CONST.js/MIN_GAS_PRICE"></a>
+
+`number`
+
+min gas price for transaction
+
+* **Examples**
+
+```
+> CONST.MIN_GAS_PRICE
+ 1
+```
+
+----------------------------------------
+
+## TRANSACTION_GAS <a id="CONST.js/TRANSACTION_GAS"></a>
+
+`number`
+
+gas use for pure transfer transaction
+
+* **Examples**
+
+```
+> CONST.TRANSACTION_GAS
+ 21000
+```
+
+----------------------------------------
+
+## TRANSACTION_STORAGE_LIMIT <a id="CONST.js/TRANSACTION_STORAGE_LIMIT"></a>
+
+`number`
+
+storage limit for pure transfer transaction
 
 ----------------------------------------
 
@@ -1217,6 +1268,60 @@ options.limit       | `number`                | false    |                     |
    ]
 ```
 
+### Conflux.prototype.traceBlock <a id="Conflux.js/Conflux/traceBlock"></a>
+
+Return block's execution trace.
+
+> Note: need RPC server open trace_block method
+
+* **Parameters**
+
+Name      | Type     | Required | Default | Description
+----------|----------|----------|---------|------------
+blockHash | `string` | true     |         | block hash
+
+* **Returns**
+
+`Promise.<Array.<object>>` Array of transaction traces.
+
+* **Examples**
+
+```
+> await conflux.traceBlock('0xaf0e1d773dee28c95bcfa5480ed663fcc695b32c8c1dd81f57ff61ff09f55f88')
+   {
+        "transactionTraces": [
+            {
+                "traces": [
+                    {
+                        "action": {
+                            "callType": "call",
+                            "from": "0x19c742cec42b9e4eff3b84cdedcde2f58a36f44f",
+                            "gas": "311592",
+                            "input": "0x",
+                            "to": "0x84980a94d94f54ac335109393c08c866a21b1b0e",
+                            "value": "0"
+                        },
+                        "type": "call"
+                    }
+                ]
+            },
+            {
+                "traces": [
+                    {
+                        "action": {
+                            "from": "0x1bdd8e198e78a36a1819c06d683ab1f89d2b006d",
+                            "gas": "83962",
+                            "init": "0x",
+                            "value": "0"
+                        },
+                        "type": "create"
+                    }
+                ]
+            }
+        ]
+    }
+```
+
 ### Conflux.prototype.subscribe <a id="Conflux.js/Conflux/subscribe"></a>
 
 Subscribe event by name and got id, and provider will emit event by id
@@ -1398,186 +1503,6 @@ id   | `string,Subscription` | true     |         | Subscription id
 > subscription = await conflux.subscribeLogs();
 > await conflux.unsubscribe(subscription);
    true
-```
-
-----------------------------------------
-
-## EPOCH_NUMBER <a id="CONST.js/EPOCH_NUMBER"></a>
-
-epochNumber label
-
-- `LATEST_MINED` 'latest_mined': latest epoch.
-- `LATEST_STATE` 'latest_state': latest state, about 5 epoch less then `LATEST_MINED`
-- `LATEST_CONFIRMED` 'latest_confirmed': latest epoch which confirmation risk less 1e-8.
-- `LATEST_CHECKPOINT` 'latest_checkpoint': latest check point epoch.
-- `EARLIEST` 'earliest': earliest epoch number, same as 0.
-
-----------------------------------------
-
-## MIN_GAS_PRICE <a id="CONST.js/MIN_GAS_PRICE"></a>
-
-`number`
-
-min gas price for transaction
-
-* **Examples**
-
-```
-> CONST.MIN_GAS_PRICE
- 1
-```
-
-----------------------------------------
-
-## TRANSACTION_GAS <a id="CONST.js/TRANSACTION_GAS"></a>
-
-`number`
-
-gas use for pure transfer transaction
-
-* **Examples**
-
-```
-> CONST.TRANSACTION_GAS
- 21000
-```
-
-----------------------------------------
-
-## TRANSACTION_STORAGE_LIMIT <a id="CONST.js/TRANSACTION_STORAGE_LIMIT"></a>
-
-`number`
-
-storage limit for pure transfer transaction
-
-----------------------------------------
-
-### Contract <a id="contract/Contract.js/Contract"></a>
-
-Contract with all its methods and events defined in its abi.
-
-#### Contract.prototype.**constructor** <a id="contract/Contract.js/Contract/**constructor**"></a>
-
-> contract "code" definition:
-```
-6080................6080.................a264.........0033...............................
-| <-                     create contract transaction `data`                          -> |
-| <- deploy code -> | <- runtime code -> | <- metadata -> | <- constructor arguments -> |
-| <-                contract `bytecode`                -> |
-                    | <-       code as `getCode`       -> |
-```
-
-* **Parameters**
-
-Name             | Type      | Required | Default | Description
------------------|-----------|----------|---------|-----------------------------------------------------------------------------------------------------
-options          | `object`  | true     |         |
-options.abi      | `array`   | true     |         | The json interface for the contract to instantiate
-options.address  | `string`  | false    |         | The address of the smart contract to call, can be added later using `contract.address = '0x1234...'`
-options.bytecode | `string`  | false    |         | The byte code of the contract, can be added later using `contract.constructor.code = '0x1234...'`
-conflux          | `Conflux` | true     |         | Conflux instance.
-
-* **Returns**
-
-`object` 
-
-* **Examples**
-
-```
-> const contract = conflux.Contract({ abi, bytecode, address });
-   {
-      abi: ContractABI { contract: [Circular *1] },
-      address: '0x8e2f2e68eb75bb8b18caafe9607242d4748f8d98',
-      constructor: [Function: bound call],
-      name: [Function: bound call],
-      'name()': [Function: bound call],
-      '0x06fdde03': [Function: bound call],
-      balanceOf: [Function: bound call],
-      'balanceOf(address)': [Function: bound call],
-      '0x70a08231': [Function: bound call],
-      send: [Function: bound call],
-      'send(address,uint256,bytes)': [Function: bound call],
-      '0x9bd9bbc6': [Function: bound call],
-      Transfer: [Function: bound call],
-      'Transfer(address,address,uint256)': [Function: bound call],
-      '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef': [Function: bound call]
-   }
-> contract.constructor.bytecode; // input code
-   "0x6080..."
-```
-
-```
-> const contract = conflux.Contract({
-   address: '0x8e2f2e68eb75bb8b18caafe9607242d4748f8d98',
-   abi: [
-      {
-        type: 'function',
-        name: 'name',
-        inputs: [],
-        outputs: [{ type: 'string' }],
-      },
-      {
-        type: 'function',
-        name: 'balanceOf',
-        inputs: [{ type: 'address' }],
-        outputs: [{ type: 'uint256' }],
-      },
-      {
-        name: 'send',
-        type: 'function',
-        inputs: [
-          { type: 'address', name: 'recipient' },
-          { type: 'uint256', name: 'amount' },
-          { type: 'bytes', name: 'data' },
-        ],
-        outputs: [{ type: 'bool' }],
-      },
-    ]
-   });
-> contract.address
-   "0x8e2f2e68eb75bb8b18caafe9607242d4748f8d98"
-> await contract.name(); // call a method without parameter, get decoded return value.
-   "FansCoin"
-> await contract.name().call({ to: '0x8b8689c7f3014a4d86e4d1d0daaf74a47f5e0f27' }); // call a method with options
-   "conflux USDT"
-> await contract.balanceOf('0x19c742cec42b9e4eff3b84cdedcde2f58a36f44f'); // call a method with parameters, get decoded return value.
-   10000000000000000000n
-> transaction = await conflux.getTransactionByHash('0x2055f3287f1a6ce77d91f5dfdf7517a531b3a560fee1265f27dc1ff92314530b');
-> contract.abi.decodeData(transaction.data)
-   {
-      name: 'send',
-      fullName: 'send(address recipient, uint256 amount, bytes data)',
-      type: 'send(address,uint256,bytes)',
-      signature: '0x9bd9bbc6',
-      array: [
-        '0x80bb30efc5683758128b404fe5da03432eb16634',
-        60000000000000000000n,
-        <Buffer 1f 3c 6b 96 96 60 4c dc 3c e1 ca 27 7d 4c 69 a9 c2 77 0c 9f>
-      ],
-      object: {
-        recipient: '0x80bb30efc5683758128b404fe5da03432eb16634',
-        amount: 60000000000000000000n,
-        data: <Buffer 1f 3c 6b 96 96 60 4c dc 3c e1 ca 27 7d 4c 69 a9 c2 77 0c 9f>
-      }
-    }
-> receipt = await conflux.getTransactionReceipt('0x2055f3287f1a6ce77d91f5dfdf7517a531b3a560fee1265f27dc1ff92314530b');
-> contract.abi.decodeLog(receipt.logs[1]);
-   {
-      name: 'Transfer',
-      fullName: 'Transfer(address indexed from, address indexed to, uint256 value)',
-      type: 'Transfer(address,address,uint256)',
-      signature: '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef',
-      array: [
-        '0x1f3c6b9696604cdc3ce1ca277d4c69a9c2770c9f',
-        '0x80bb30efc5683758128b404fe5da03432eb16634',
-        60000000000000000000n
-      ],
-      object: {
-        from: '0x1f3c6b9696604cdc3ce1ca277d4c69a9c2770c9f',
-        to: '0x80bb30efc5683758128b404fe5da03432eb16634',
-        value: 60000000000000000000n
-      }
-    }
 ```
 
 ----------------------------------------
@@ -1815,169 +1740,6 @@ privateKey | `string` | true     |         | Private key hex string.
 
 ----------------------------------------
 
-### BaseProvider <a id="provider/BaseProvider.js/BaseProvider"></a>
-
-
-
-#### BaseProvider.prototype.**constructor** <a id="provider/BaseProvider.js/BaseProvider/**constructor**"></a>
-
-* **Parameters**
-
-Name            | Type     | Required | Default | Description
-----------------|----------|----------|---------|-------------------------------
-options         | `object` | false    |         |
-options.url     | `string` | true     |         | Full json rpc http url
-options.timeout | `number` | false    | 60*1000 | Request time out in ms
-options.logger  | `object` | false    |         | Logger with `info` and `error`
-
-* **Returns**
-
-`BaseProvider` 
-
-#### BaseProvider.prototype.requestId <a id="provider/BaseProvider.js/BaseProvider/requestId"></a>
-
-Gen a random json rpc id.
-It is used in `call` method, overwrite it to gen your own id.
-
-* **Returns**
-
-`string` 
-
-#### BaseProvider.prototype.call <a id="provider/BaseProvider.js/BaseProvider/call"></a>
-
-Call a json rpc method with params
-
-* **Parameters**
-
-Name      | Type     | Required | Default | Description
-----------|----------|----------|---------|------------------------
-method    | `string` | true     |         | Json rpc method name.
-...params | `array`  | false    |         | Json rpc method params.
-
-* **Returns**
-
-`Promise.<*>` Json rpc method return value.
-
-* **Examples**
-
-```
-> await provider.call('cfx_epochNumber');
-> await provider.call('cfx_getBlockByHash', blockHash);
-```
-
-#### BaseProvider.prototype.batch <a id="provider/BaseProvider.js/BaseProvider/batch"></a>
-
-Batch call json rpc methods with params
-
-* **Parameters**
-
-Name  | Type             | Required | Default | Description
-------|------------------|----------|---------|-------------------------------------------
-array | `Array.<object>` | true     |         | Array of object with "method" and "params"
-
-* **Returns**
-
-`Promise.<Array>` 
-
-* **Examples**
-
-```
-> await provider.batch([
-  { method: 'cfx_epochNumber' },
-  { method: 'cfx_getBalance', params: ['0x0123456789012345678901234567890123456789'] },
-  { method: 'InValidInput' },
-])
-   [ '0x3b734d', '0x22374d959c622f74728', RPCError: Method not found ]
-```
-
-----------------------------------------
-
-### HttpProvider <a id="provider/HttpProvider.js/HttpProvider"></a>
-
-Http protocol json rpc provider.
-
-----------------------------------------
-
-### providerFactory <a id="provider/index.js/providerFactory"></a>
-
-* **Parameters**
-
-Name        | Type     | Required | Default | Description
-------------|----------|----------|---------|------------
-options     | `object` | true     |         |
-options.url | `string` | true     |         |
-
-* **Returns**
-
-`WebsocketProvider,HttpProvider,BaseProvider` 
-
-* **Examples**
-
-```
-> providerFactory()
- BaseProvider {
-    url: undefined,
-    timeout: 300000,
-    logger: { info: [Function: info], error: [Function: error] }
-  }
-```
-
-```
-> providerFactory({ url: 'http://localhost:12537' })
- HttpProvider {
-    url: 'http://localhost:12537',
-    timeout: 300000,
-    logger: { info: [Function: info], error: [Function: error] }
-  }
-> providerFactory({
-    url: 'http://main.confluxrpc.org',
-    timeout: 60 * 60 * 1000,
-    logger: console,
-  }
- HttpProvider {
-    url: 'http://main.confluxrpc.org',
-    timeout: 3600000,
-    logger: {...}
-  }
-```
-
-----------------------------------------
-
-### WebSocketProvider <a id="provider/WebSocketProvider.js/WebSocketProvider"></a>
-
-Websocket protocol json rpc provider.
-
-#### WebSocketProvider.prototype.**constructor** <a id="provider/WebSocketProvider.js/WebSocketProvider/**constructor**"></a>
-
-* **Parameters**
-
-Name                                        | Type             | Required | Default  | Description
---------------------------------------------|------------------|----------|----------|---------------------------------------------------------------------------------------------------------------------------------------------------------
-options                                     | `object`         | false    |          | See [W3CWebSocket](https://github.com/theturtle32/WebSocket-Node/blob/c91a6cb8f0cf896edf0d2d49faa0c9e0a9985172/docs/W3CWebSocket.md)
-options.url                                 | `string`         | true     |          | Full json rpc http url
-options.timeout                             | `number`         | false    | 60*1000  | Request time out in ms
-options.logger                              | `object`         | false    |          | Logger with `info` and `error`
-options.protocols                           | `Array.<string>` | false    |          | See [w3](https://www.w3.org/TR/websockets/)
-options.origin                              | `string`         | false    |          |
-options.headers                             | `object`         | false    |          |
-options.requestOptions                      | `object`         | false    |          |
-options.clientConfig                        | `object`         | false    |          | See [websocket/lib/WebSocketClient](https://github.com/theturtle32/WebSocket-Node/blob/c91a6cb8f0cf896edf0d2d49faa0c9e0a9985172/docs/WebSocketClient.md)
-options.clientConfig.maxReceivedFrameSize   | `number`         | false    | 0x100000 | 1MiB max frame size.
-options.clientConfig.maxReceivedMessageSize | `number`         | false    | 0x800000 | 8MiB max message size, only applicable if assembleFragments is true
-options.clientConfig.closeTimeout           | `number`         | false    | 5000     | The number of milliseconds to wait after sending a close frame for an acknowledgement to come back before giving up and just closing the socket.
-
-* **Returns**
-
-`WebSocketProvider` 
-
-----------------------------------------
-
-### Subscription <a id="subscribe/Subscription.js/Subscription"></a>
-
-Subscription event emitter
-
-----------------------------------------
-
 ## Transaction <a id="Transaction.js/Transaction"></a>
 
 
@@ -2062,6 +1824,299 @@ Get the raw transaction hex string.
 * **Returns**
 
 `string` Hex string
+
+----------------------------------------
+
+### Contract <a id="contract/Contract.js/Contract"></a>
+
+Contract with all its methods and events defined in its abi.
+
+#### Contract.prototype.**constructor** <a id="contract/Contract.js/Contract/**constructor**"></a>
+
+> contract "code" definition:
+```
+6080................6080.................a264.........0033...............................
+| <-                     create contract transaction `data`                          -> |
+| <- deploy code -> | <- runtime code -> | <- metadata -> | <- constructor arguments -> |
+| <-                contract `bytecode`                -> |
+                    | <-       code as `getCode`       -> |
+```
+
+* **Parameters**
+
+Name             | Type      | Required | Default | Description
+-----------------|-----------|----------|---------|-----------------------------------------------------------------------------------------------------
+options          | `object`  | true     |         |
+options.abi      | `array`   | true     |         | The json interface for the contract to instantiate
+options.address  | `string`  | false    |         | The address of the smart contract to call, can be added later using `contract.address = '0x1234...'`
+options.bytecode | `string`  | false    |         | The byte code of the contract, can be added later using `contract.constructor.code = '0x1234...'`
+conflux          | `Conflux` | true     |         | Conflux instance.
+
+* **Returns**
+
+`object` 
+
+* **Examples**
+
+```
+> const contract = conflux.Contract({ abi, bytecode, address });
+   {
+      abi: ContractABI { contract: [Circular *1] },
+      address: '0x8e2f2e68eb75bb8b18caafe9607242d4748f8d98',
+      constructor: [Function: bound call],
+      name: [Function: bound call],
+      'name()': [Function: bound call],
+      '0x06fdde03': [Function: bound call],
+      balanceOf: [Function: bound call],
+      'balanceOf(address)': [Function: bound call],
+      '0x70a08231': [Function: bound call],
+      send: [Function: bound call],
+      'send(address,uint256,bytes)': [Function: bound call],
+      '0x9bd9bbc6': [Function: bound call],
+      Transfer: [Function: bound call],
+      'Transfer(address,address,uint256)': [Function: bound call],
+      '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef': [Function: bound call]
+   }
+> contract.constructor.bytecode; // input code
+   "0x6080..."
+```
+
+```
+> const contract = conflux.Contract({
+   address: '0x8e2f2e68eb75bb8b18caafe9607242d4748f8d98',
+   abi: [
+      {
+        type: 'function',
+        name: 'name',
+        inputs: [],
+        outputs: [{ type: 'string' }],
+      },
+      {
+        type: 'function',
+        name: 'balanceOf',
+        inputs: [{ type: 'address' }],
+        outputs: [{ type: 'uint256' }],
+      },
+      {
+        name: 'send',
+        type: 'function',
+        inputs: [
+          { type: 'address', name: 'recipient' },
+          { type: 'uint256', name: 'amount' },
+          { type: 'bytes', name: 'data' },
+        ],
+        outputs: [{ type: 'bool' }],
+      },
+    ]
+   });
+> contract.address
+   "0x8e2f2e68eb75bb8b18caafe9607242d4748f8d98"
+> await contract.name(); // call a method without parameter, get decoded return value.
+   "FansCoin"
+> await contract.name().call({ to: '0x8b8689c7f3014a4d86e4d1d0daaf74a47f5e0f27' }); // call a method with options
+   "conflux USDT"
+> await contract.balanceOf('0x19c742cec42b9e4eff3b84cdedcde2f58a36f44f'); // call a method with parameters, get decoded return value.
+   10000000000000000000n
+> transaction = await conflux.getTransactionByHash('0x2055f3287f1a6ce77d91f5dfdf7517a531b3a560fee1265f27dc1ff92314530b');
+> contract.abi.decodeData(transaction.data)
+   {
+      name: 'send',
+      fullName: 'send(address recipient, uint256 amount, bytes data)',
+      type: 'send(address,uint256,bytes)',
+      signature: '0x9bd9bbc6',
+      array: [
+        '0x80bb30efc5683758128b404fe5da03432eb16634',
+        60000000000000000000n,
+        <Buffer 1f 3c 6b 96 96 60 4c dc 3c e1 ca 27 7d 4c 69 a9 c2 77 0c 9f>
+      ],
+      object: {
+        recipient: '0x80bb30efc5683758128b404fe5da03432eb16634',
+        amount: 60000000000000000000n,
+        data: <Buffer 1f 3c 6b 96 96 60 4c dc 3c e1 ca 27 7d 4c 69 a9 c2 77 0c 9f>
+      }
+    }
+> receipt = await conflux.getTransactionReceipt('0x2055f3287f1a6ce77d91f5dfdf7517a531b3a560fee1265f27dc1ff92314530b');
+> contract.abi.decodeLog(receipt.logs[1]);
+   {
+      name: 'Transfer',
+      fullName: 'Transfer(address indexed from, address indexed to, uint256 value)',
+      type: 'Transfer(address,address,uint256)',
+      signature: '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef',
+      array: [
+        '0x1f3c6b9696604cdc3ce1ca277d4c69a9c2770c9f',
+        '0x80bb30efc5683758128b404fe5da03432eb16634',
+        60000000000000000000n
+      ],
+      object: {
+        from: '0x1f3c6b9696604cdc3ce1ca277d4c69a9c2770c9f',
+        to: '0x80bb30efc5683758128b404fe5da03432eb16634',
+        value: 60000000000000000000n
+      }
+    }
+```
+
+----------------------------------------
+
+### BaseProvider <a id="provider/BaseProvider.js/BaseProvider"></a>
+
+
+
+#### BaseProvider.prototype.**constructor** <a id="provider/BaseProvider.js/BaseProvider/**constructor**"></a>
+
+* **Parameters**
+
+Name            | Type     | Required | Default | Description
+----------------|----------|----------|---------|-------------------------------
+options         | `object` | false    |         |
+options.url     | `string` | true     |         | Full json rpc http url
+options.timeout | `number` | false    | 60*1000 | Request time out in ms
+options.logger  | `object` | false    |         | Logger with `info` and `error`
+
+* **Returns**
+
+`BaseProvider` 
+
+#### BaseProvider.prototype.requestId <a id="provider/BaseProvider.js/BaseProvider/requestId"></a>
+
+Gen a random json rpc id.
+It is used in `call` method, overwrite it to gen your own id.
+
+* **Returns**
+
+`string` 
+
+#### BaseProvider.prototype.call <a id="provider/BaseProvider.js/BaseProvider/call"></a>
+
+Call a json rpc method with params
+
+* **Parameters**
+
+Name      | Type     | Required | Default | Description
+----------|----------|----------|---------|------------------------
+method    | `string` | true     |         | Json rpc method name.
+...params | `array`  | false    |         | Json rpc method params.
+
+* **Returns**
+
+`Promise.<*>` Json rpc method return value.
+
+* **Examples**
+
+```
+> await provider.call('cfx_epochNumber');
+> await provider.call('cfx_getBlockByHash', blockHash);
+```
+
+#### BaseProvider.prototype.batch <a id="provider/BaseProvider.js/BaseProvider/batch"></a>
+
+Batch call json rpc methods with params
+
+* **Parameters**
+
+Name  | Type             | Required | Default | Description
+------|------------------|----------|---------|-------------------------------------------
+array | `Array.<object>` | true     |         | Array of object with "method" and "params"
+
+* **Returns**
+
+`Promise.<Array>` 
+
+* **Examples**
+
+```
+> await provider.batch([
+  { method: 'cfx_epochNumber' },
+  { method: 'cfx_getBalance', params: ['0x0123456789012345678901234567890123456789'] },
+  { method: 'InValidInput' },
+])
+   [ '0x3b734d', '0x22374d959c622f74728', RPCError: Method not found ]
+```
+
+----------------------------------------
+
+### HttpProvider <a id="provider/HttpProvider.js/HttpProvider"></a>
+
+Http protocol json rpc provider.
+
+----------------------------------------
+
+### WebSocketProvider <a id="provider/WebSocketProvider.js/WebSocketProvider"></a>
+
+Websocket protocol json rpc provider.
+
+#### WebSocketProvider.prototype.**constructor** <a id="provider/WebSocketProvider.js/WebSocketProvider/**constructor**"></a>
+
+* **Parameters**
+
+Name                                        | Type             | Required | Default  | Description
+--------------------------------------------|------------------|----------|----------|---------------------------------------------------------------------------------------------------------------------------------------------------------
+options                                     | `object`         | false    |          | See [W3CWebSocket](https://github.com/theturtle32/WebSocket-Node/blob/c91a6cb8f0cf896edf0d2d49faa0c9e0a9985172/docs/W3CWebSocket.md)
+options.url                                 | `string`         | true     |          | Full json rpc http url
+options.timeout                             | `number`         | false    | 60*1000  | Request time out in ms
+options.logger                              | `object`         | false    |          | Logger with `info` and `error`
+options.protocols                           | `Array.<string>` | false    |          | See [w3](https://www.w3.org/TR/websockets/)
+options.origin                              | `string`         | false    |          |
+options.headers                             | `object`         | false    |          |
+options.requestOptions                      | `object`         | false    |          |
+options.clientConfig                        | `object`         | false    |          | See [websocket/lib/WebSocketClient](https://github.com/theturtle32/WebSocket-Node/blob/c91a6cb8f0cf896edf0d2d49faa0c9e0a9985172/docs/WebSocketClient.md)
+options.clientConfig.maxReceivedFrameSize   | `number`         | false    | 0x100000 | 1MiB max frame size.
+options.clientConfig.maxReceivedMessageSize | `number`         | false    | 0x800000 | 8MiB max message size, only applicable if assembleFragments is true
+options.clientConfig.closeTimeout           | `number`         | false    | 5000     | The number of milliseconds to wait after sending a close frame for an acknowledgement to come back before giving up and just closing the socket.
+
+* **Returns**
+
+`WebSocketProvider` 
+
+----------------------------------------
+
+### providerFactory <a id="provider/index.js/providerFactory"></a>
+
+* **Parameters**
+
+Name        | Type     | Required | Default | Description
+------------|----------|----------|---------|------------
+options     | `object` | true     |         |
+options.url | `string` | true     |         |
+
+* **Returns**
+
+`WebsocketProvider,HttpProvider,BaseProvider` 
+
+* **Examples**
+
+```
+> providerFactory()
+ BaseProvider {
+    url: undefined,
+    timeout: 300000,
+    logger: { info: [Function: info], error: [Function: error] }
+  }
+```
+
+```
+> providerFactory({ url: 'http://localhost:12537' })
+ HttpProvider {
+    url: 'http://localhost:12537',
+    timeout: 300000,
+    logger: { info: [Function: info], error: [Function: error] }
+  }
+> providerFactory({
+    url: 'http://main.confluxrpc.org',
+    timeout: 60 * 60 * 1000,
+    logger: console,
+  }
+ HttpProvider {
+    url: 'http://main.confluxrpc.org',
+    timeout: 3600000,
+    logger: {...}
+  }
+```
+
+----------------------------------------
+
+### Subscription <a id="subscribe/Subscription.js/Subscription"></a>
+
+Subscription event emitter
 
 ----------------------------------------
 

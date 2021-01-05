@@ -1119,6 +1119,55 @@ class Conflux {
     return format.logs(result);
   }
 
+  /**
+   * Return block's execution trace.
+   *
+   * > Note: need RPC server open trace_block method
+   *
+   * @param blockHash {string} block hash
+   * @return {Promise<object[]>} Array of transaction traces.
+   *
+   * @example
+   * > await conflux.traceBlock('0xaf0e1d773dee28c95bcfa5480ed663fcc695b32c8c1dd81f57ff61ff09f55f88')
+   {
+        "transactionTraces": [
+            {
+                "traces": [
+                    {
+                        "action": {
+                            "callType": "call",
+                            "from": "0x19c742cec42b9e4eff3b84cdedcde2f58a36f44f",
+                            "gas": "311592",
+                            "input": "0x",
+                            "to": "0x84980a94d94f54ac335109393c08c866a21b1b0e",
+                            "value": "0"
+                        },
+                        "type": "call"
+                    }
+                ]
+            },
+            {
+                "traces": [
+                    {
+                        "action": {
+                            "from": "0x1bdd8e198e78a36a1819c06d683ab1f89d2b006d",
+                            "gas": "83962",
+                            "init": "0x",
+                            "value": "0"
+                        },
+                        "type": "create"
+                    }
+                ]
+            }
+        ]
+    }
+   *
+   */
+  async traceBlock(blockHash) {
+    const result = await this.provider.call('trace_block', format.blockHash(blockHash));
+    return format.blockTraces(result);
+  }
+
   // ----------------------------- subscription -------------------------------
   /**
    * Subscribe event by name and got id, and provider will emit event by id
