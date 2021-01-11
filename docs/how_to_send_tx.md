@@ -77,6 +77,8 @@ main();
 
 If you can get the transaction receipt and it's `outcomeStatus` is `0`, congratulate you have send a transaction successfully.
 
+> Note: before sending transaction, you should add an account to wallet with `conflux.wallet.addPrivateKey(PRIVATE_KEY)`
+
 ### Transaction's stage
 After sending, a transaction could be in several different states, [here](https://developer.conflux-chain.org/docs/conflux-doc/docs/send_transaction#track-my-transaction) is a detail explanation of transaction life cycle.
 
@@ -214,7 +216,7 @@ First you can specify the tx.`gas`, if you don't it will use the result of `esti
 Same as `gas` you can specify `storageLimit` when you send transaction (unit is Byte), if not
 
 ## SendRawTransaction
-The `sendTransaction` will use get `from`'s privateKey from wallet, use it sign transaction and invoke `sendRawTransaction` method, if you have a raw transaction you can use it directly. the `sendRawTransaction` method also can use `get`, `mined`, `executed`, `confirmed` method.
+The `sendTransaction` will get `from`'s privateKey from wallet, use it sign transaction and invoke `sendRawTransaction` method, if you have a raw transaction you can use it directly. the `sendRawTransaction` method also can use `get`, `mined`, `executed`, `confirmed` method.
 
 ```js
 const { Conflux, Transaction } = require('js-conflux-sdk');
