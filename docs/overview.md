@@ -181,7 +181,7 @@ You can use this SDK get and update contract state, we have a complete [document
 
 
 ### Type conversion
-If you want convert a hex to number, or uInt, you can use `format`
+If you want convert a hex to number, or uint, you can use `format`, for example:
 
 ```js
 const { format } = require('js-conflux-sdk');
