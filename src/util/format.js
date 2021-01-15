@@ -543,4 +543,22 @@ format.epoch = format({
   epochNumber: format.uInt,
 });
 
+// ---------------------------- parse block traces -------------------------
+format.action = format({
+  action: {
+    input: format.hex.$before(Buffer.from),
+    init: format.hex.$before(Buffer.from),
+    gas: format.bigUInt,
+    value: format.bigUInt,
+  },
+});
+
+format.traces = format({
+  traces: [format.action],
+});
+
+format.blockTraces = format({
+  transactionTraces: [format.traces],
+});
+
 module.exports = format;

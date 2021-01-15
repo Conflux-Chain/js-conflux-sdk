@@ -1,5 +1,5 @@
 # Overview
-The purpose of this page is to give you a sense of everything js-conflux-sdk can do and to serve as a quick reference guide
+The purpose of this page is to give you a sense of everything js-conflux-sdk can do and serve as a quick reference guide
 
 ## Pre-requisites
 
@@ -180,5 +180,36 @@ main();
 You can use this SDK get and update contract state, we have a complete [documentation](./interact_with_contract.md) for you.
 
 
+### Type conversion
+If you want convert a hex to number, or uint, you can use `format`, for example:
 
+```js
+const { format } = require('js-conflux-sdk');
+format.uInt('0x10');
+// 16
+format.bigUInt('0.0')
+// 0n
+format.hex(1)
+// "0x01"
+```
 
+### Sign
+The SDK also provide most common used crypto utilities in `sign`
+
+```js
+const { sign } = require('js-conflux-sdk');
+// generate a random buffer
+let buf = sign.randomBuffer(0);
+// 
+let keccakHash = sign.keccak256(buf);
+// random generate a private key
+let privateKey = sign.randomPrivateKey(buf);
+// get public key from private key
+let pubKey = sign.privateKeyToPublicKey(privateKey);
+// get address from public key
+let address = sign.publicKeyToAddress(pubKey);
+// use private key sign (ecdsa) a buffer
+let signResult = sign.ecdsaSign(buf, privateKey);
+// recover public key from signature and buf, then convert it to address
+sign.publicKeyToAddress(sign.ecdsaRecover(buf, sign.ecdsaSign(signResult, privateKey)))
+```

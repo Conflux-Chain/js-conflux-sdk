@@ -7,14 +7,14 @@ In Conflux world you may often need to interact with contracts, with JS SDK this
 // use string
 await contract.deposit('90071992547409910').sendTransaction({from: '0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b'});
 // or use hex string
-await contract.deposit('0x13ffffffffffff0').sendTransaction(from: '0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b');
+await contract.deposit('0x13ffffffffffff0').sendTransaction({from: '0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b'});
 // not use number
 // await contract.deposit(Number.MAX_SAFE_INTEGER * 10);
 ```
 
 ### How to deploy a contract
 One contract must be created before interacting with it. To create a contract you can write it with `solidity`.
-Then compile it with solidity compiler or [cfxtruffle](http://github.com/conflux-chain/truffle), you will get `bytecode` and `abi`. With `bytecode`, `abi` you can deploy it by send transaction.
+Then compile it with solidity compiler or [cfxtruffle](http://github.com/conflux-chain/truffle), you will get `bytecode` and `abi`. With `bytecode`, `abi` you can deploy it by send a transaction.
 
 ```js
 const { Conflux } = require('js-conflux-sdk');
@@ -29,7 +29,7 @@ async function main() {
   // 1. initialize a contract with abi and bytecode
   const contract = conflux.Contract({ abi, bytecode });
 
-  // 2. specify constructor's parameter 
+  // 2. specify constructor's parameter, if constructor need no parameter leave it empty
   const receipt = await contract.constructor('MiniERC20', 18, 'MC', 10000)
   // 3. send transaction to deploy the contract, you can specify any transaction parameter here  
     .sendTransaction({ from: account })   
@@ -55,7 +55,7 @@ async function main() {
   }
   */
 
-  // create contract address "0x8a9c270e1a99c05ca90ef0f0008b8f6444cf1a97"
+  // created contract address: "0x8a9c270e1a99c05ca90ef0f0008b8f6444cf1a97"
 }
 
 main().catch(console.log);
@@ -63,7 +63,7 @@ main().catch(console.log);
 
 Check the transaction you will find the tx data is the contract bytecode and constructor's encoded signature.
 
-### How to get and update contract status
+### How to get and update contract's state
 
 After you got the contract address, you can interact with it. The Conflux network makes a distinction between writing data to the network and reading data from it, and this distinction plays a significant part in how you write your application, and this behavior is very like Ethereum network. In general, writing data is called a transaction whereas reading data is called a call. Transactions and calls are treated very differently, and have the [following characteristics](https://www.trufflesuite.com/docs/truffle/getting-started/interacting-with-your-contracts#reading-and-writing-data).
 
