@@ -2,45 +2,54 @@
   "address": "0x0888000000000000000000000000000000000000",
   "abi": [
     {
-      "type": "function",
-      "name": "destroy",
-      "inputs": [
-        {
-          "type": "address",
-          "name": "contractAddr"
-        }
-      ],
-      "outputs": []
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "contractAddr",
+                "type": "address"
+            }
+        ],
+        "name": "destroy",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
     },
     {
-      "type": "function",
-      "name": "getAdmin",
-      "inputs": [
-        {
-          "type": "address",
-          "name": "contractAddr"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "address"
-        }
-      ]
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "contractAddr",
+                "type": "address"
+            }
+        ],
+        "name": "getAdmin",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
     },
     {
-      "type": "function",
-      "name": "setAdmin",
-      "inputs": [
-        {
-          "type": "address",
-          "name": "contractAddr"
-        },
-        {
-          "type": "address",
-          "name": "newAdmin"
-        }
-      ],
-      "outputs": []
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "contractAddr",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "newAdmin",
+                "type": "address"
+            }
+        ],
+        "name": "setAdmin",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
     }
   ]
 }

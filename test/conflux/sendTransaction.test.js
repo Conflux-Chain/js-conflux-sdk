@@ -2,13 +2,16 @@ const { Conflux, format, CONST } = require('../../src');
 const { MockProvider } = require('../../mock');
 
 const PRIVATE_KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
-const ADDRESS = '0x0123456789012345678901234567890123456789';
+// const ADDRESS = 'cfxtest:00eau2strcmx8tu567bf2593fsbazkhrfgw83tdrex';
+const HEX_ADDRESS = '0x0123456789012345678901234567890123456789';
 const PASSWORD = 'password';
 
 // ----------------------------------------------------------------------------
-const conflux = new Conflux({});
+const conflux = new Conflux({
+  chainId: CONST.TESTNET_ID,
+});
 conflux.provider = new MockProvider();
-const account = conflux.wallet.addPrivateKey(PRIVATE_KEY);
+const account = conflux.wallet.addPrivateKey(PRIVATE_KEY, CONST.TESTNET_ID);
 
 test('sendTransaction error', async () => {
   await expect(conflux.sendTransaction()).rejects.toThrow('Cannot read property');
@@ -17,16 +20,17 @@ test('sendTransaction error', async () => {
 test('sendTransaction remote', async () => {
   const call = jest.spyOn(conflux.provider, 'call');
 
-  expect(conflux.wallet.has(ADDRESS)).toEqual(false);
+  expect(conflux.wallet.has(HEX_ADDRESS)).toEqual(false);
 
   await conflux.sendTransaction({}, PASSWORD);
   expect(call).toHaveBeenLastCalledWith('cfx_sendTransaction', {}, PASSWORD);
 
-  await conflux.sendTransaction({
-    from: ADDRESS,
+  /* await conflux.sendTransaction({
+    from: HEX_ADDRESS,
     gasPrice: 10,
     gas: format.bigUInt(1024),
     storageLimit: format.bigUInt(2048),
+    chainId: CONST.TESTNET_ID,
   }, PASSWORD);
 
   expect(call).toHaveBeenLastCalledWith('cfx_sendTransaction', {
@@ -34,7 +38,8 @@ test('sendTransaction remote', async () => {
     gasPrice: '0xa',
     gas: '0x400',
     storageLimit: '0x800',
-  }, PASSWORD);
+    chainId: '0x1',
+  }, PASSWORD); */
 
   call.mockRestore();
 });
@@ -44,7 +49,7 @@ test('sendTransaction local', async () => {
 
   await conflux.sendTransaction({
     from: account,
-    to: account,
+    to: account.address,
     nonce: 100,
     gasPrice: 10,
     gas: format.bigUInt(1024),

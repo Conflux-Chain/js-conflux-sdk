@@ -1,9 +1,10 @@
 const lodash = require('lodash');
-const { Conflux } = require('../../src');
+const { Conflux, CONST } = require('../../src');
 const { MockProvider } = require('../../mock');
 const format = require('../../src/util/format');
 
-const ADDRESS = '0x1cad0b19bb29d4674531d6f115237e16afce377c';
+const HEX_ADDRESS = '0x1cad0b19bb29d4674531d6f115237e16afce377c';
+const ADDRESS = 'cfxtest:00eau2strcmx8tu567bf2593fsbazkhrfgw83tdrex';
 const BLOCK_HASH = '0xe0b0000000000000000000000000000000000000000000000000000000000000';
 const TX_HASH = '0xb0a0000000000000000000000000000000000000000000000000000000000000';
 const PASSWORD = '123456';
@@ -11,6 +12,7 @@ const PASSWORD = '123456';
 // ----------------------------------------------------------------------------
 const conflux = new Conflux({
   defaultGasPrice: lodash.random(0, 1000),
+  chainId: CONST.TESTNET_ID,
 });
 conflux.provider = new MockProvider();
 
@@ -179,7 +181,7 @@ test('getBlockRewardInfo', async () => {
 // -------------------------------- block -----------------------------------
 test('getBlockByHash', async () => {
   await expect(conflux.getBlockByHash()).rejects.toThrow('not match "hex"');
-  await expect(conflux.getBlockByHash(ADDRESS)).rejects.toThrow('not match "hex64"');
+  await expect(conflux.getBlockByHash(HEX_ADDRESS)).rejects.toThrow('not match "hex64"');
   await expect(conflux.getBlockByHash(BLOCK_HASH, 0)).rejects.toThrow('not match "boolean"');
 
   const call = jest.spyOn(conflux.provider, 'call');
@@ -228,7 +230,7 @@ test('getConfirmationRiskByHash', async () => {
 // ----------------------------- transaction --------------------------------
 test('getTransactionByHash', async () => {
   await expect(conflux.getTransactionByHash()).rejects.toThrow('not match "hex"');
-  await expect(conflux.getTransactionByHash(ADDRESS)).rejects.toThrow('not match "hex64"');
+  await expect(conflux.getTransactionByHash(HEX_ADDRESS)).rejects.toThrow('not match "hex64"');
 
   const call = jest.spyOn(conflux.provider, 'call');
 
@@ -240,7 +242,7 @@ test('getTransactionByHash', async () => {
 
 test('getTransactionReceipt', async () => {
   await expect(conflux.getTransactionReceipt()).rejects.toThrow('not match "hex"');
-  await expect(conflux.getTransactionReceipt(ADDRESS)).rejects.toThrow('not match "hex64"');
+  await expect(conflux.getTransactionReceipt(HEX_ADDRESS)).rejects.toThrow('not match "hex64"');
 
   const call = jest.spyOn(conflux.provider, 'call');
 
@@ -366,7 +368,7 @@ test('estimateGasAndCollateral', async () => {
   await conflux.estimateGasAndCollateral(
     {
       from: ADDRESS,
-      to: format.hexBuffer(ADDRESS),
+      to: format.address(ADDRESS),
       gas: '0x01',
       chainId: '0x01',
       value: 100,

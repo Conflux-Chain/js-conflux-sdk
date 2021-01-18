@@ -1,8 +1,8 @@
-const { Message, sign } = require('../src');
+const { Message, sign, CONST } = require('../src');
 
 const KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 const PUBLIC = '0x4646ae5047316b4230d0086c8acec687f00b1cd9d1dc634f6cb358ac0a9a8ffffe77b4dd0a4bfb95851f3b7355c781dd60f8418fc8a65d14907aff47c903a559';
-const ADDRESS = '0x1cad0b19bb29d4674531d6f115237e16afce377c';
+const ADDRESS = 'cfxtest:00eau2strcmx8tu567bf2593fsbazkhrfgw83tdrex';
 
 test('new Message(string)', () => {
   const msg = new Message('Hello World');
@@ -15,7 +15,7 @@ test('new Message(string)', () => {
   expect(msg.from).toEqual(undefined); // virtual attribute
   expect(msg.signature).toEqual(undefined);
 
-  msg.sign(KEY);
+  msg.sign(KEY, CONST.TESTNET_ID);
 
   expect(msg.message).toEqual('Hello World');
   expect(msg.hash).toEqual('0x592fa743889fc7f92ac2a37bb1f5ba1daf2a5c84741ca0e0061d243a2e6707ba'); // virtual attribute

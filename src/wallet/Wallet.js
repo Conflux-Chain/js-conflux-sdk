@@ -7,6 +7,15 @@ const PrivateKeyAccount = require('./PrivateKeyAccount');
  * Wallet to manager accounts.
  */
 class Wallet extends Map {
+  constructor(netId) {
+    super();
+    this.netId = netId;
+  }
+
+  setNetId(netId) {
+    this.netId = netId;
+  }
+
   /**
    * Check if address exist
    *
@@ -15,7 +24,7 @@ class Wallet extends Map {
    */
   has(address) {
     try {
-      address = format.address(address);
+      address = format.address(address, this.netId);
       return super.has(address);
     } catch (e) {
       return false;
@@ -30,7 +39,7 @@ class Wallet extends Map {
    */
   delete(address) {
     try {
-      address = format.address(address);
+      address = format.address(address, this.netId);
       return super.delete(address);
     } catch (e) {
       return false;
@@ -50,7 +59,7 @@ class Wallet extends Map {
    * @return {Wallet}
    */
   set(address, account) {
-    address = format.address(address);
+    address = format.address(address, this.netId);
 
     assert(!this.has(address), `Wallet already has account "${address}"`);
     assert(account instanceof Account, `value not instance of Account, got ${account}`);
@@ -62,7 +71,7 @@ class Wallet extends Map {
    * @return {Account}
    */
   get(address) {
-    address = format.address(address);
+    address = format.address(address, this.netId);
 
     const account = super.get(address);
     assert(account instanceof Account, `can not found Account by "${address}"`);
@@ -74,7 +83,10 @@ class Wallet extends Map {
    * @return {PrivateKeyAccount}
    */
   addPrivateKey(privateKey) {
-    const account = new PrivateKeyAccount(privateKey);
+    if (!this.netId) {
+      console.warn('wallet.addPrivateKey: netId is not set properly, please set it');
+    }
+    const account = new PrivateKeyAccount(privateKey, this.netId);
     this.set(account.address, account);
     return account;
   }
@@ -84,7 +96,7 @@ class Wallet extends Map {
    * @return {PrivateKeyAccount}
    */
   addRandom(entropy) {
-    const account = PrivateKeyAccount.random(entropy);
+    const account = PrivateKeyAccount.random(entropy, this.netId);
     this.set(account.address, account);
     return account;
   }
@@ -95,7 +107,7 @@ class Wallet extends Map {
    * @return {PrivateKeyAccount}
    */
   addKeystore(keystore, password) {
-    const account = PrivateKeyAccount.decrypt(keystore, password);
+    const account = PrivateKeyAccount.decrypt(keystore, password, this.netId);
     this.set(account.address, account);
     return account;
   }

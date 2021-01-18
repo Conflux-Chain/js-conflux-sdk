@@ -1,14 +1,17 @@
 const lodash = require('lodash');
-const { Conflux, format } = require('../../src');
+const { Conflux, format, CONST } = require('../../src');
 const { MockProvider } = require('../../mock');
 
-const ADDRESS = '0xfcad0b19bb29d4674531d6f115237e16afce377c';
+// const HEX_ADDRESS = '0x1cad0b19bb29d4674531d6f115237e16afce377c';
+const ADDRESS = 'cfxtest:00eau2strcmx8tu567bf2593fsbazkhrfgw83tdrex';
 const BLOCK_HASH = '0xe1b0000000000000000000000000000000000000000000000000000000000001';
 const TX_HASH = '0xb0a0000000000000000000000000000000000000000000000000000000000000';
 const HEX64 = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 
 // ----------------------------------------------------------------------------
-const conflux = new Conflux();
+const conflux = new Conflux({
+  chainId: CONST.TESTNET_ID,
+});
 conflux.provider = new MockProvider();
 
 test('getClientVersion', async () => {

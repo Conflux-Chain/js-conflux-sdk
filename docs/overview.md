@@ -22,6 +22,7 @@ const { Conflux } = require('js-conflux-sdk');
 const conflux = new Conflux({
     url: 'http://test.confluxrpc.org',
     logger: console, // for debug
+    chainId: 1,
 });
 ```
 
@@ -46,7 +47,7 @@ All conflux methods will return a promise, so you can use it with `async/await` 
 
 async function main() {
   // get balance
-  const balance = await conflux.getBalance('0x1386B4185A223EF49592233b69291bbe5a80C527');
+  const balance = await conflux.getBalance('cfxtest:009sdd0sb8h3xx4nj8hkpu993ez5n0654w3vdy4zvx');
   console.log(balance.toString()); // 10098788868004995614504
 }
 
@@ -139,7 +140,7 @@ async function main() {
       logger: console, // for debug
   });
   // get balance
-  const balance = await cfx.getBalance('0x1386B4185A223EF49592233b69291bbe5a80C527');
+  const balance = await cfx.getBalance('cfxtest:009sdd0sb8h3xx4nj8hkpu993ez5n0654w3vdy4zvx');
   console.log(balance.toString()); // 10098788868004995614504
 
   // you need manual close the websocket connection

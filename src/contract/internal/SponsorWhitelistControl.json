@@ -2,189 +2,235 @@
   "address": "0x0888000000000000000000000000000000000001",
   "abi": [
     {
-      "type": "function",
-      "name": "addPrivilege",
-      "inputs": [
-        {
-          "type": "address[]"
-        }
-      ],
-      "outputs": []
+        "inputs": [
+            {
+                "internalType": "address[]",
+                "name": "",
+                "type": "address[]"
+            }
+        ],
+        "name": "addPrivilege",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
     },
     {
-      "type": "function",
-      "name": "addPrivilegeByAdmin",
-      "inputs": [
-        {
-          "type": "address",
-          "name": "contractAddr"
-        },
-        {
-          "type": "address[]",
-          "name": "addresses"
-        }
-      ],
-      "outputs": []
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "contractAddr",
+                "type": "address"
+            },
+            {
+                "internalType": "address[]",
+                "name": "addresses",
+                "type": "address[]"
+            }
+        ],
+        "name": "addPrivilegeByAdmin",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
     },
     {
-      "type": "function",
-      "name": "getSponsorForCollateral",
-      "inputs": [
-        {
-          "type": "address",
-          "name": "contractAddr"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "address"
-        }
-      ]
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "contractAddr",
+                "type": "address"
+            }
+        ],
+        "name": "getSponsorForCollateral",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
     },
     {
-      "type": "function",
-      "name": "getSponsorForGas",
-      "inputs": [
-        {
-          "type": "address",
-          "name": "contractAddr"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "address"
-        }
-      ]
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "contractAddr",
+                "type": "address"
+            }
+        ],
+        "name": "getSponsorForGas",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
     },
     {
-      "type": "function",
-      "name": "getSponsoredBalanceForCollateral",
-      "inputs": [
-        {
-          "type": "address",
-          "name": "contractAddr"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "uint256"
-        }
-      ]
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "contractAddr",
+                "type": "address"
+            }
+        ],
+        "name": "getSponsoredBalanceForCollateral",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
     },
     {
-      "type": "function",
-      "name": "getSponsoredBalanceForGas",
-      "inputs": [
-        {
-          "type": "address",
-          "name": "contractAddr"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "uint256"
-        }
-      ]
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "contractAddr",
+                "type": "address"
+            }
+        ],
+        "name": "getSponsoredBalanceForGas",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
     },
     {
-      "type": "function",
-      "name": "getSponsoredGasFeeUpperBound",
-      "inputs": [
-        {
-          "type": "address",
-          "name": "contractAddr"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "uint256"
-        }
-      ]
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "contractAddr",
+                "type": "address"
+            }
+        ],
+        "name": "getSponsoredGasFeeUpperBound",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
     },
     {
-      "type": "function",
-      "name": "isAllWhitelisted",
-      "inputs": [
-        {
-          "type": "address",
-          "name": "contractAddr"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "bool"
-        }
-      ]
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "contractAddr",
+                "type": "address"
+            }
+        ],
+        "name": "isAllWhitelisted",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
     },
     {
-      "type": "function",
-      "name": "isWhitelisted",
-      "inputs": [
-        {
-          "type": "address",
-          "name": "contractAddr"
-        },
-        {
-          "type": "address",
-          "name": "user"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "bool"
-        }
-      ]
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "contractAddr",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "user",
+                "type": "address"
+            }
+        ],
+        "name": "isWhitelisted",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
     },
     {
-      "type": "function",
-      "name": "removePrivilege",
-      "inputs": [
-        {
-          "type": "address[]"
-        }
-      ],
-      "outputs": []
+        "inputs": [
+            {
+                "internalType": "address[]",
+                "name": "",
+                "type": "address[]"
+            }
+        ],
+        "name": "removePrivilege",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
     },
     {
-      "type": "function",
-      "name": "removePrivilegeByAdmin",
-      "inputs": [
-        {
-          "type": "address",
-          "name": "contractAddr"
-        },
-        {
-          "type": "address[]",
-          "name": "addresses"
-        }
-      ],
-      "outputs": []
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "contractAddr",
+                "type": "address"
+            },
+            {
+                "internalType": "address[]",
+                "name": "addresses",
+                "type": "address[]"
+            }
+        ],
+        "name": "removePrivilegeByAdmin",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
     },
     {
-      "type": "function",
-      "name": "setSponsorForCollateral",
-      "inputs": [
-        {
-          "type": "address",
-          "name": "contractAddr"
-        }
-      ],
-      "outputs": []
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "contractAddr",
+                "type": "address"
+            }
+        ],
+        "name": "setSponsorForCollateral",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function"
     },
     {
-      "type": "function",
-      "name": "setSponsorForGas",
-      "inputs": [
-        {
-          "type": "address",
-          "name": "contractAddr"
-        },
-        {
-          "type": "uint256",
-          "name": "upperBound"
-        }
-      ],
-      "outputs": []
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "contractAddr",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "upperBound",
+                "type": "uint256"
+            }
+        ],
+        "name": "setSponsorForGas",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function"
     }
   ]
 }

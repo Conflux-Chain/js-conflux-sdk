@@ -1,5 +1,17 @@
 # change log
 
+## v1.5.0
+
+* `Conflux`'s option can pass `chainId` now, and add a new method `updateChainId` to sync chainId from RPC.
+* `format.address` will return new CIP37 addresses, if you pass a hex address, `netId` should also be passed as second parameter
+* add new method `format.hexAddress` to format hex address
+* Wallet's constructor add a parameter `netId`
+* PrivateKeyAccount `constructor`, `decrypt`, `random` need one more parameter `netId`
+* `Transaction`, `Message` `sign` method need one more parameter `netId`
+* Conflux's get methods will return new address, and same to contract method returned address.
+* When Initialize the `Conflux`, if the configured RPC endpoint is v1.1.0 or below, `useHexAddressInParameter` should set to `true`.
+
+
 ## v1.1.7
 
 * Add RPC method `traceBlock`  to `Conflux` which can used to get block's execution trace

@@ -57,14 +57,15 @@ class Transaction {
    * Sign transaction and set 'r','s','v'.
    *
    * @param privateKey {string} - Private key hex string.
+   * @param netId {number} - fullnode's network id.
    * @return {Transaction}
    */
-  sign(privateKey) {
+  sign(privateKey, netId) {
     const privateKeyBuffer = format.hexBuffer(privateKey);
     const addressBuffer = privateKeyToAddress(privateKeyBuffer);
     const { r, s, v } = ecdsaSign(keccak256(this.encode(false)), privateKeyBuffer);
 
-    this.from = format.address(addressBuffer);
+    this.from = format.address(addressBuffer, netId || this.chainId);
     this.r = format.hex(r);
     this.s = format.hex(s);
     this.v = v;

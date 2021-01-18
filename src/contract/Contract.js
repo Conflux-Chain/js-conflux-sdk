@@ -31,7 +31,7 @@ class Contract {
    * > const contract = conflux.Contract({ abi, bytecode, address });
    {
       abi: ContractABI { contract: [Circular *1] },
-      address: '0x8e2f2e68eb75bb8b18caafe9607242d4748f8d98',
+      address: 'cfxtest:0272ybk8xduvr2sstaryjs3j8ba793wdk0s62tr4gj',
       constructor: [Function: bound call],
       name: [Function: bound call],
       'name()': [Function: bound call],
@@ -52,7 +52,7 @@ class Contract {
 
    * @example
    * > const contract = conflux.Contract({
-   address: '0x8e2f2e68eb75bb8b18caafe9607242d4748f8d98',
+   address: 'cfxtest:0272ybk8xduvr2sstaryjs3j8ba793wdk0s62tr4gj',
    abi: [
       {
         type: 'function',
@@ -79,7 +79,7 @@ class Contract {
     ]
    });
    * > contract.address
-   "0x8e2f2e68eb75bb8b18caafe9607242d4748f8d98"
+   "cfxtest:0272ybk8xduvr2sstaryjs3j8ba793wdk0s62tr4gj"
 
    * > await contract.name(); // call a method without parameter, get decoded return value.
    "FansCoin"
@@ -127,6 +127,7 @@ class Contract {
     }
    */
   constructor({ abi, address, bytecode }, conflux) {
+    this._feedAddressNetId(abi, conflux);
     const abiTable = lodash.groupBy(abi, 'type');
     this.abi = new ContractABI(this); // XXX: Create a method named `abi` in solidity is a `Warning`.
 
@@ -156,6 +157,32 @@ class Contract {
         this[event.signature] = event; // signature for contract abi decoder to decode
       });
     });
+  }
+
+  _feedAddressNetId(abi, conflux) {
+    if (!abi || !conflux || !conflux.chainId) return;
+
+    for (const item of abi) {
+      if (['function', 'event', 'constructor'].indexOf(item.type) >= 0) {
+        if (item.inputs) {
+          feedInfo(item.inputs);
+        }
+        if (item.outputs) {
+          feedInfo(item.outputs);
+        }
+      }
+    }
+
+    function feedInfo(items) {
+      for (const meta of items) {
+        if (meta.type === 'address') {
+          meta.netId = conflux.chainId;
+        }
+        if (meta.type === 'tuple') {
+          feedInfo(meta.components);
+        }
+      }
+    }
   }
 }
 

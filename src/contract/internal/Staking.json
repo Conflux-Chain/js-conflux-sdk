@@ -2,94 +2,115 @@
   "address": "0x0888000000000000000000000000000000000002",
   "abi": [
     {
-      "type": "function",
-      "name": "deposit",
-      "inputs": [
-        {
-          "type": "uint256",
-          "name": "amount"
-        }
-      ],
-      "outputs": []
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "deposit",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
     },
     {
-      "type": "function",
-      "name": "getLockedStakingBalance",
-      "inputs": [
-        {
-          "type": "address",
-          "name": "user"
-        },
-        {
-          "type": "uint256",
-          "name": "blockNumber"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "uint256"
-        }
-      ]
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "user",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "blockNumber",
+                "type": "uint256"
+            }
+        ],
+        "name": "getLockedStakingBalance",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
     },
     {
-      "type": "function",
-      "name": "getStakingBalance",
-      "inputs": [
-        {
-          "type": "address",
-          "name": "user"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "uint256"
-        }
-      ]
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "user",
+                "type": "address"
+            }
+        ],
+        "name": "getStakingBalance",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
     },
     {
-      "type": "function",
-      "name": "getVotePower",
-      "inputs": [
-        {
-          "type": "address",
-          "name": "user"
-        },
-        {
-          "type": "uint256",
-          "name": "blockNumber"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "uint256"
-        }
-      ]
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "user",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "blockNumber",
+                "type": "uint256"
+            }
+        ],
+        "name": "getVotePower",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
     },
     {
-      "type": "function",
-      "name": "voteLock",
-      "inputs": [
-        {
-          "type": "uint256",
-          "name": "amount"
-        },
-        {
-          "type": "uint256",
-          "name": "unlockBlockNumber"
-        }
-      ],
-      "outputs": []
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "unlockBlockNumber",
+                "type": "uint256"
+            }
+        ],
+        "name": "voteLock",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
     },
     {
-      "type": "function",
-      "name": "withdraw",
-      "inputs": [
-        {
-          "type": "uint256",
-          "name": "amount"
-        }
-      ],
-      "outputs": []
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "withdraw",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
     }
   ]
 }

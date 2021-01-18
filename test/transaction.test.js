@@ -1,7 +1,7 @@
 const { Transaction } = require('../src');
 
 const KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
-const ADDRESS = '0x1cad0b19bb29d4674531d6f115237e16afce377c';
+const ADDRESS = 'cfxtest:00eau2strcmx8tu567bf2593fsbazkhrfgw83tdrex';
 
 test('Transaction', () => {
   const transaction = new Transaction({
@@ -12,7 +12,7 @@ test('Transaction', () => {
     value: 0,
     storageLimit: 0,
     epochHeight: 0,
-    chainId: 0,
+    chainId: 1,
   });
 
   expect(transaction.nonce).toEqual(0);
@@ -22,7 +22,7 @@ test('Transaction', () => {
   expect(transaction.value).toEqual(0);
   expect(transaction.storageLimit).toEqual(0);
   expect(transaction.epochHeight).toEqual(0);
-  expect(transaction.chainId).toEqual(0);
+  expect(transaction.chainId).toEqual(1);
   expect(transaction.data).toEqual(undefined);
   expect(transaction.r).toEqual(undefined);
   expect(transaction.s).toEqual(undefined);
@@ -32,13 +32,13 @@ test('Transaction', () => {
 
   transaction.sign(KEY);
 
-  expect(transaction.r).toEqual('0xa370e3562713fb50513ff5d77f18a7dffe7588d3d05413d28211e300a262c7ee');
-  expect(transaction.s).toEqual('0x784961a41aba10dfd5d97193d6c35bfc50a15030254bc91ae5a85df6d79d77b1');
-  expect(transaction.v).toEqual(0);
+  expect(transaction.r).toEqual('0xef53e4af065905cb5134f7de4e9434e71656f824e3e268a9babb4f14ff808113');
+  expect(transaction.s).toEqual('0x407f05f44f79c1fd19262665d3efc29368e317fe5e77be27c0c1314b6a242a1e');
+  expect(transaction.v).toEqual(1);
   expect(transaction.from).toEqual(ADDRESS);
-  expect(transaction.hash).toEqual('0x42bed0d43b492261eee4b1c59a4fcd3a2fa7bc7cc1cd208469d0075f0f0a2e7d');
+  expect(transaction.hash).toEqual('0x9e463f32428c7c4026575d132e8c4e5d6fe387322fce5234103e52f4ab39b053');
   expect(transaction.recover()).toEqual('0x4646ae5047316b4230d0086c8acec687f00b1cd9d1dc634f6cb358ac0a9a8ffffe77b4dd0a4bfb95851f3b7355c781dd60f8418fc8a65d14907aff47c903a559');
-  expect(transaction.serialize()).toEqual('0xf863df8001825208940123456789012345678901234567890123456789808080808080a0a370e3562713fb50513ff5d77f18a7dffe7588d3d05413d28211e300a262c7eea0784961a41aba10dfd5d97193d6c35bfc50a15030254bc91ae5a85df6d79d77b1');
+  expect(transaction.serialize()).toEqual('0xf863df8001825208940123456789012345678901234567890123456789808080018001a0ef53e4af065905cb5134f7de4e9434e71656f824e3e268a9babb4f14ff808113a0407f05f44f79c1fd19262665d3efc29368e317fe5e77be27c0c1314b6a242a1e');
 });
 
 test('s starts with 0x00', () => {
@@ -50,11 +50,11 @@ test('s starts with 0x00', () => {
     value: 0,
     storageLimit: 0,
     epochHeight: 0,
-    chainId: 0,
+    chainId: 1,
   });
 
   transaction.sign(KEY);
 
-  expect(transaction.s).toEqual('0x004a7de333450a596f51dcdc67272f0005ead211645af2dc6d0a9be4688b26c1');
-  expect(transaction.serialize()).toEqual('0xf862df7f01825208940123456789012345678901234567890123456789808080808001a07eab45f2aa3366c28b78f206fac37aac9549a92fa53e7e773be7b73d882d134f9f4a7de333450a596f51dcdc67272f0005ead211645af2dc6d0a9be4688b26c1');
+  expect(transaction.s).toEqual('0x233f41b647de5846856106a8bc0fb67ba4dc3c184d328e565547928adedc8f3c');
+  expect(transaction.serialize()).toEqual('0xf863df7f01825208940123456789012345678901234567890123456789808080018001a0bde07fe87c58cf83c50a4787c637a05a521d5f8372bd8acb207504e8af2daee4a0233f41b647de5846856106a8bc0fb67ba4dc3c184d328e565547928adedc8f3c');
 });

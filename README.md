@@ -6,15 +6,30 @@
 
 JavaScript Conflux Software Development Kit
 
-## 1.0 Key features
+## 1.5 Key features
+v1.5 add support for [CIP37](https://github.com/Conflux-Chain/CIPs/blob/master/CIPs/cip-37.md) address.
 
-1. Add `cfx.wallet` to manage multiple accounts, which has replace v0.13's `cfx.Account`.
-2. Add `cfx.InternalContract(name)` to interact with Conflux internal contracts.
-3. Add websocket provider, support pub/sub
-4. Provide `Drip` to easily convert unit between CFX, Drip, Gdrip
-5. Use `JSBI` for browser, native `BigInt` for Node.js
+The biggest difference you `must to know` is conflux object need chainId to figure out right CIP37 address. There are two way you can set it.
 
-Check the [complete changelog](./CHANGE_LOG.md)
+You can specify chainId when initiate the conflux object
+```js
+const conflux = new Conflux({
+    url: 'http://test.confluxrpc.org',
+    chainId: 1
+});
+```
+
+Or you can update it after conflux initiate by invoke `updateChainId` method
+```js
+const conflux = new Conflux({
+    url: 'http://test.confluxrpc.org',
+});
+await conflux.updateChainId();  // this line should be in a async function
+```
+
+If you forgot to set chainId, you will see warning about it.
+
+Check detail in the [complete changelog](./CHANGE_LOG.md)
 
 ## Quick Usage
 
@@ -24,6 +39,7 @@ const { Conflux } = require('js-conflux-sdk');
 
 const conflux = new Conflux({
   url: 'http://test.confluxrpc.org',
+  chainId: 1,
   logger: console, // for debug
 });
 ```
@@ -54,6 +70,7 @@ or
   const conflux = new window.Conflux.Conflux({
     url: 'http://test.confluxrpc.org',
     logger: console,
+    chainId: 1,
   });
 </script>
 ```

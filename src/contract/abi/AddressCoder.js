@@ -10,12 +10,17 @@ class AddressCoder extends BaseCoder {
     return new this({ ...options, type });
   }
 
+  constructor({ type, ...options }) {
+    super({ ...options, type });
+    this.netId = options.netId;
+  }
+
   /**
    * @param address {string}
    * @return {Buffer}
    */
   encode(address) {
-    return alignBuffer(format.hexBuffer(format.address(address)));
+    return alignBuffer(format.hexBuffer(format.hexAddress(address)));
   }
 
   /**
@@ -23,7 +28,9 @@ class AddressCoder extends BaseCoder {
    * @return {string}
    */
   decode(stream) {
-    return format.address(`0x${stream.read(40)}`);
+    const hexAddress = stream.read(40);
+    const isConfluxAddress = hexAddress.startsWith('1') || hexAddress.startsWith('0') || hexAddress.startsWith('8');
+    return (isConfluxAddress && this.netId) ? format.address(`0x${hexAddress}`, this.netId) : format.hexAddress(`0x${hexAddress}`);
   }
 }
 

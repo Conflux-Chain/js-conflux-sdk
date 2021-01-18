@@ -4,6 +4,7 @@ const CONST = require('../CONST');
 const JSBI = require('./jsbi');
 const parser = require('./parser');
 const sign = require('./sign');
+const addressUtil = require('./address');
 
 // ----------------------------------------------------------------------------
 function toHex(value) {
@@ -232,20 +233,61 @@ format.hex = format(toHex);
 
 format.hex40 = format.hex.$validate(v => v.length === 2 + 40, 'hex40');
 
+function toAddress(address, netId) {
+  // convert Account instance to string
+  if (lodash.isObject(address) && addressUtil.haveCfxAddressPrefix(address.toString())) {
+    address = address.toString();
+  }
+  if (lodash.isString(address) && addressUtil.verifyCfxAddress(address)) {
+    return address.toLowerCase();
+  }
+  const buffer = format.hexBuffer(address);
+  if (buffer.length !== 20) {
+    throw new Error('not match "hex40"');
+  }
+  if (!netId) {
+    throw new Error('expected parameter: netId');
+  }
+  return addressUtil.encodeCfxAddress(buffer, netId);
+}
+
 /**
  * Checks if a given string is a valid address.
- * It will also check the checksum, if the address has upper and lowercase letters.
  *
- * @param arg {string|Buffer}
+ * @param address {string|Buffer}
+ * @param netId {integer}
  * @return {string} Hex string
  *
  * @example
- * > format.address('0x0123456789012345678901234567890123456789')
- "0x0123456789012345678901234567890123456789"
+ * > format.address('0x0123456789012345678901234567890123456789', 1)
+ "cfxtest:000j6hb7h40j6hb7h40j6hb7h40j6hb7h4mrga5njc"
  * > format.address('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
  Error("not match address")
  */
-format.address = format.hex40.$before(address => {
+format.address = format(toAddress);
+
+format.netAddress = netId => format(address => toAddress(address, netId));
+
+/**
+ * Checks if a given string is a valid hex address.
+ * It will also check the checksum, if the address has upper and lowercase letters.
+ *
+ * @param address {string|Buffer}
+ * @return {string} Hex string
+ *
+ * @example
+ * > format.hexAddress('0x0123456789012345678901234567890123456789')
+ "0x0123456789012345678901234567890123456789"
+ * > format.hexAddress('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
+ Error("not match address")
+ * > format.hexAddress('cfxtest:000j6hb7h40j6hb7h40j6hb7h40j6hb7h4mrga5njc')
+ 0x0123456789012345678901234567890123456789
+ */
+format.hexAddress = format.hex40.$before(address => {
+  if (lodash.isString(address) && addressUtil.haveCfxAddressPrefix(address)) {
+    address = addressUtil.decodeCfxAddress(address).hexAddress;
+  }
+
   if (lodash.isString(address)
     && address !== address.toLowerCase()
     && address !== address.toUpperCase()
@@ -253,12 +295,14 @@ format.address = format.hex40.$before(address => {
   ) {
     throw new Error(`address "${address}" checksum error`);
   }
+
   return address;
 });
 
 /**
  * Will convert an upper or lowercase address to a checksum address.
  *
+ * @deprecated
  * @param arg {string|Buffer}
  * @return {string} Checksum address hex string
  *
@@ -397,11 +441,23 @@ format.getLogs = format({
   topics: format([format.hex64.$or([format.hex64]).$or(null)]),
 }, { pick: true });
 
+format.getLogsAdvance = function (netId, toHexAddress = false) {
+  const fromatAddress = toHexAddress ? format.hexAddress : format.netAddress(netId);
+  return format({
+    limit: format.bigUIntHex,
+    fromEpoch: format.epochNumber,
+    toEpoch: format.epochNumber,
+    blockHashes: format.blockHash.$or([format.blockHash]),
+    address: fromatAddress.$or([fromatAddress]),
+    topics: format([format.hex64.$or([format.hex64]).$or(null)]),
+  }, { pick: true });
+};
+
 format.signTx = format({
   nonce: format.bigUInt.$after(format.hexBuffer),
   gasPrice: format.bigUInt.$after(format.hexBuffer),
   gas: format.bigUInt.$after(format.hexBuffer),
-  to: format(format.address.$or(null).$default(null)).$after(format.hexBuffer),
+  to: format(format.hexAddress.$or(null).$default(null)).$after(format.hexBuffer),
   value: format.bigUInt.$default(0).$after(format.hexBuffer),
   storageLimit: format.bigUInt.$after(format.hexBuffer),
   epochHeight: format.uInt.$after(format.hexBuffer),
@@ -424,6 +480,22 @@ format.callTx = format({
   chainId: format.bigUIntHex,
   data: format.hex,
 }, { pick: true });
+
+format.callTxAdvance = function (netId, toHexAddress = false) {
+  const fromatAddress = toHexAddress ? format.hexAddress : format.netAddress(netId);
+  return format({
+    from: fromatAddress,
+    nonce: format.bigUIntHex,
+    gasPrice: format.bigUIntHex,
+    gas: format.bigUIntHex,
+    to: fromatAddress.$or(null),
+    value: format.bigUIntHex,
+    storageLimit: format.bigUIntHex,
+    epochHeight: format.bigUIntHex,
+    chainId: format.bigUIntHex,
+    data: format.hex,
+  }, { pick: true });
+};
 
 // ----------------------------- parse rpc returned ---------------------------
 format.status = format({
