@@ -233,9 +233,9 @@ format.hex = format(toHex);
 
 format.hex40 = format.hex.$validate(v => v.length === 2 + 40, 'hex40');
 
-function toAddress(address, netId) {
+function toAddress(address, networkId) {
   // convert Account instance to string
-  if (lodash.isObject(address) && addressUtil.haveCfxAddressPrefix(address.toString())) {
+  if (lodash.isObject(address) && addressUtil.hasNetworkPrefix(address.toString())) {
     address = address.toString();
   }
   if (lodash.isString(address) && addressUtil.verifyCfxAddress(address)) {
@@ -245,28 +245,28 @@ function toAddress(address, netId) {
   if (buffer.length !== 20) {
     throw new Error('not match "hex40"');
   }
-  if (!netId) {
-    throw new Error('expected parameter: netId');
+  if (!networkId) {
+    throw new Error('expected parameter: networkId');
   }
-  return addressUtil.encodeCfxAddress(buffer, netId);
+  return addressUtil.encodeCfxAddress(buffer, networkId);
 }
 
 /**
  * Checks if a given string is a valid address.
  *
  * @param address {string|Buffer}
- * @param netId {integer}
+ * @param networkId {integer}
  * @return {string} Hex string
  *
  * @example
  * > format.address('0x0123456789012345678901234567890123456789', 1)
- "cfxtest:000j6hb7h40j6hb7h40j6hb7h40j6hb7h4mrga5njc"
+ "cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp"
  * > format.address('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
  Error("not match address")
  */
 format.address = format(toAddress);
 
-format.netAddress = netId => format(address => toAddress(address, netId));
+format.netAddress = networkId => format(address => toAddress(address, networkId));
 
 /**
  * Checks if a given string is a valid hex address.
@@ -280,11 +280,11 @@ format.netAddress = netId => format(address => toAddress(address, netId));
  "0x0123456789012345678901234567890123456789"
  * > format.hexAddress('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
  Error("not match address")
- * > format.hexAddress('cfxtest:000j6hb7h40j6hb7h40j6hb7h40j6hb7h4mrga5njc')
+ * > format.hexAddress('cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp')
  0x0123456789012345678901234567890123456789
  */
 format.hexAddress = format.hex40.$before(address => {
-  if (lodash.isString(address) && addressUtil.haveCfxAddressPrefix(address)) {
+  if (lodash.isString(address) && addressUtil.hasNetworkPrefix(address)) {
     address = addressUtil.decodeCfxAddress(address).hexAddress;
   }
 
@@ -441,8 +441,8 @@ format.getLogs = format({
   topics: format([format.hex64.$or([format.hex64]).$or(null)]),
 }, { pick: true });
 
-format.getLogsAdvance = function (netId, toHexAddress = false) {
-  const fromatAddress = toHexAddress ? format.hexAddress : format.netAddress(netId);
+format.getLogsAdvance = function (networkId, toHexAddress = false) {
+  const fromatAddress = toHexAddress ? format.hexAddress : format.netAddress(networkId);
   return format({
     limit: format.bigUIntHex,
     fromEpoch: format.epochNumber,
@@ -481,8 +481,8 @@ format.callTx = format({
   data: format.hex,
 }, { pick: true });
 
-format.callTxAdvance = function (netId, toHexAddress = false) {
-  const fromatAddress = toHexAddress ? format.hexAddress : format.netAddress(netId);
+format.callTxAdvance = function (networkId, toHexAddress = false) {
+  const fromatAddress = toHexAddress ? format.hexAddress : format.netAddress(networkId);
   return format({
     from: fromatAddress,
     nonce: format.bigUIntHex,
@@ -499,6 +499,7 @@ format.callTxAdvance = function (netId, toHexAddress = false) {
 
 // ----------------------------- parse rpc returned ---------------------------
 format.status = format({
+  networkId: format.uInt,
   chainId: format.uInt,
   epochNumber: format.uInt,
   blockNumber: format.uInt,
@@ -566,6 +567,7 @@ format.log = format({
 format.logs = format([format.log]);
 
 format.supplyInfo = format({
+  totalCirculating: format.bigUInt,
   totalIssued: format.bigUInt,
   totalStaking: format.bigUInt,
   totalCollateral: format.bigUInt,

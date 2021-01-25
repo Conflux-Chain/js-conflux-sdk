@@ -4,7 +4,7 @@ const { MockProvider } = require('../../mock');
 const format = require('../../src/util/format');
 
 const HEX_ADDRESS = '0x1cad0b19bb29d4674531d6f115237e16afce377c';
-const ADDRESS = 'cfxtest:00eau2strcmx8tu567bf2593fsbazkhrfgw83tdrex';
+const ADDRESS = 'cfxtest:aasm4c231py7j34fghntcfkdt2nm9xv1tu6jd3r1s7';
 const BLOCK_HASH = '0xe0b0000000000000000000000000000000000000000000000000000000000000';
 const TX_HASH = '0xb0a0000000000000000000000000000000000000000000000000000000000000';
 const PASSWORD = '123456';
@@ -12,7 +12,7 @@ const PASSWORD = '123456';
 // ----------------------------------------------------------------------------
 const conflux = new Conflux({
   defaultGasPrice: lodash.random(0, 1000),
-  chainId: CONST.TESTNET_ID,
+  networkId: CONST.TESTNET_ID,
 });
 conflux.provider = new MockProvider();
 

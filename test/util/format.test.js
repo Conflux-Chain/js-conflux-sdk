@@ -157,11 +157,11 @@ test('hex40', () => {
     .toEqual('0x1B716c51381e76900EBAA7999A488511A4E1fD0a');
 
   expect(format.address('0x1b716c51381e76900ebaa7999a488511a4e1fd0a', CONST.TESTNET_ID))
-    .toEqual('cfxtest:00dr2v2h70f7d40eraktk6j8gm8u9sfx185y4xy1w1');
+    .toEqual('cfxtest:aar1c5cvhathreas1mx3xgwjuyj4k2t7bjf8e78b6b');
   expect(format.address('0X1B716C51381E76900EBAA7999A488511A4E1FD0A', CONST.TESTNET_ID))
-    .toEqual('cfxtest:00dr2v2h70f7d40eraktk6j8gm8u9sfx185y4xy1w1');
+    .toEqual('cfxtest:aar1c5cvhathreas1mx3xgwjuyj4k2t7bjf8e78b6b');
   expect(format.address('0x1B716c51381e76900EBAA7999A488511A4E1fD0a', CONST.TESTNET_ID))
-    .toEqual('cfxtest:00dr2v2h70f7d40eraktk6j8gm8u9sfx185y4xy1w1');
+    .toEqual('cfxtest:aar1c5cvhathreas1mx3xgwjuyj4k2t7bjf8e78b6b');
 //   expect(() => format.address('0x1B716c51381e76900EBAA7999A488511A4E1fD0A'))
 //     .toThrow('checksum error');
 });
@@ -234,9 +234,9 @@ test('address', () => {
   expect(() => format.address(undefined)).toThrow('not match "hex"');
   expect(() => format.address()).toThrow('not match "hex"');
   expect(() => format.address(null)).toThrow('not match "hex40"');
-  expect(format.address('0x0123456789012345678901234567890123456789', 1)).toEqual('cfxtest:000j6hb7h40j6hb7h40j6hb7h40j6hb7h4mrga5njc');
-  expect(format.address('cfxtest:000j6hb7h40j6hb7h40j6hb7h40j6hb7h4mrga5njc')).toEqual('cfxtest:000j6hb7h40j6hb7h40j6hb7h40j6hb7h4mrga5njc');
-  expect(format.address(Buffer.from('0123456789012345678901234567890123456789', 'hex'), 1)).toEqual('cfxtest:000j6hb7h40j6hb7h40j6hb7h40j6hb7h4mrga5njc');
+  expect(format.address('0x0123456789012345678901234567890123456789', 1)).toEqual('cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp');
+  expect(format.address('cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp')).toEqual('cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp');
+  expect(format.address(Buffer.from('0123456789012345678901234567890123456789', 'hex'), 1)).toEqual('cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp');
 
   expect(() => format.address('0x0123456789012345678')).toThrow('not match "hex40"');
   expect(() => format.address('cfx:123')).toThrow('not match "hex"');

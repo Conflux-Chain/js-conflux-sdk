@@ -26,7 +26,7 @@ keywords:
         - [Contract](#Conflux.js/Conflux/Contract)
         - [InternalContract](#Conflux.js/Conflux/InternalContract)
         - [close](#Conflux.js/Conflux/close)
-        - [updateChainId](#Conflux.js/Conflux/updateChainId)
+        - [updateNetworkId](#Conflux.js/Conflux/updateNetworkId)
         - [getSupplyInfo](#Conflux.js/Conflux/getSupplyInfo)
         - [getStatus](#Conflux.js/Conflux/getStatus)
         - [getGasPrice](#Conflux.js/Conflux/getGasPrice)
@@ -258,7 +258,7 @@ options.logger              | `Object`        | false    |         | Logger obje
 
 ```
 > const { Conflux } = require('js-conflux-sdk');
-> const conflux = new Conflux({url:'http://test.confluxrpc.org', chainId: 1});
+> const conflux = new Conflux({url:'http://test.confluxrpc.org', networkId: 1});
 ```
 
 ```
@@ -376,9 +376,9 @@ close connection.
 > conflux.close();
 ```
 
-### Conflux.prototype.updateChainId <a id="Conflux.js/Conflux/updateChainId"></a>
+### Conflux.prototype.updateNetworkId <a id="Conflux.js/Conflux/updateNetworkId"></a>
 
-Update conflux chainId from RPC
+Update conflux networkId from RPC
 
 ### Conflux.prototype.getSupplyInfo <a id="Conflux.js/Conflux/getSupplyInfo"></a>
 
@@ -402,6 +402,7 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNum
 ```
 > await conflux.getSupplyInfo()
    {
+     totalCirculating: 28953062500000000000000n,  
      totalCollateral: 28953062500000000000000n,
      totalIssued: 5033319899279074765657343554n,
      totalStaking: 25026010834970490328077641n
@@ -427,6 +428,7 @@ Get status
 > await conflux.getStatus()
    {
       chainId: 1029,
+      networkId: 1029,
       epochNumber: 1117476,
       blockNumber: 2230973,
       pendingTxNumber: 4531,
@@ -516,14 +518,14 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNum
 * **Examples**
 
 ```
-> await conflux.getAccount('cfxtest:00e1wwrgsdwpgnbv7p2u7wt78xwjf65vvsdz67gx0u');
+> await conflux.getAccount('cfxtest:aasb661u2r60uzn5h0c4h63hj76wtgf552r9ghu7a4');
    {
       accumulatedInterestReturn: 0n,
       balance: 824812401057514588670n,
       collateralForStorage: 174187500000000000000n,
       nonce: 1449n,
       stakingBalance: 0n,
-      admin: 'CFXTEST:TYPE.NULL:0000000000000000000000000000000000W5PHD2EJ',
+      admin: 'CFXTEST:TYPE.NULL:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA6F0VRCSW',
       codeHash: '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'
    }
 ```
@@ -546,7 +548,7 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNum
 * **Examples**
 
 ```
-> await conflux.getBalance("cfxtest:00e1wwrgsdwpgnbv7p2u7wt78xwjf65vvsdz67gx0u");
+> await conflux.getBalance("cfxtest:aasb661u2r60uzn5h0c4h63hj76wtgf552r9ghu7a4");
    824812401057514588670n
 ```
 
@@ -568,7 +570,7 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNum
 * **Examples**
 
 ```
-> await conflux.getStakingBalance('cfxtest:00e1wwrgsdwpgnbv7p2u7wt78xwjf65vvsdz67gx0u', 'latest_state');
+> await conflux.getStakingBalance('cfxtest:aasb661u2r60uzn5h0c4h63hj76wtgf552r9ghu7a4', 'latest_state');
    0n
 ```
 
@@ -590,7 +592,7 @@ epochNumber | `string,number` | false    |         | See [format.epochNumber](#u
 * **Examples**
 
 ```
-> await conflux.getNextNonce("cfxtest:00e1wwrgsdwpgnbv7p2u7wt78xwjf65vvsdz67gx0u");
+> await conflux.getNextNonce("cfxtest:aasb661u2r60uzn5h0c4h63hj76wtgf552r9ghu7a4");
    1449n
 ```
 
@@ -612,8 +614,8 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNum
 * **Examples**
 
 ```
-> conflux.getAdmin('cfxtest:0272ybk8xduvr2sstaryjs3j8ba793wdk0s62tr4gj')
-   "CFXTEST:TYPE.USER:00E1WWRGSDWPGNBV7P2U7WT78XWJF65VVSDZ67GX0U"
+> conflux.getAdmin('cfxtest:achc8nxj7r451c223m18w2dwjnmhkd6rxa2gc31euw')
+   "CFXTEST:TYPE.USER:AASB661U2R60UZN5H0C4H63HJ76WTGF552R9GHU7A4"
 ```
 
 ### Conflux.prototype.getVoteList <a id="Conflux.js/Conflux/getVoteList"></a>
@@ -788,7 +790,7 @@ detail    | `boolean` | false    | false   | If `true` it returns the full trans
       deferredReceiptsRoot: '0x09f8709ea9f344a810811a373b30861568f5686e649d6177fd92ea2db7477508',
       deferredStateRoot: '0x50c0fcbc5bafa7d1dba7b19c87629830106a6be8d0adf505cdc656bb43535d69',
       hash: '0xaf4136d04e9e2cc470703251ec46f5913ab7955d526feed43771705e89c77390',
-      miner: 'CFXTEST:TYPE.USER:00FK4FECP930DC31VEF3M4KRR3DTKWE1P8SKN4FE6W',
+      miner: 'CFXTEST:TYPE.USER:AATXETSP0KDARPDB5STDYEX11DR3X6SB0J2XZETSG6',
       nonce: '0x17d86f2f6',
       parentHash: '0xc8a412b4b77b48d61f694975f032d109f26bb0f9fc02e4b221d67a382fab386b',
       powQuality: '0x5a0f86a6f4',
@@ -871,11 +873,11 @@ transactionHash | `string` | true     |         | hash of a transaction
       blockHash: '0xaf4136d04e9e2cc470703251ec46f5913ab7955d526feed43771705e89c77390',
       contractCreated: null,
       data: '0xfebe49090000000000000000000000000000000000000000000000000000000000000000000000000000000000000000162788589c8e386863f217faef78840919fb2854',
-      from: 'CFXTEST:TYPE.USER:00FK4FECP930DC31VEF3M4KRR3DTKWE1P8SKN4FE6W',
+      from: 'CFXTEST:TYPE.USER:AATXETSP0KDARPDB5STDYEX11DR3X6SB0J2XZETSG6',
       hash: '0xbf7110474779ba2404433ef39a24cb5b277186ef1e6cb199b0b60907b029a1ce',
       r: '0x495da01ae9f445847022a8bc7df0198577ba75f88b26699f61afb435bb9c50bc',
       s: '0x2291051b1c53db1d6bfe2fb29be1bf512d063e726dc6b98aaf0f2259b7456be0',
-      to: 'CFXTEST:TYPE.USER:00FK4FECP930DC31VEF3M4KRR3DTKWE1P8SKN4FE6W'
+      to: 'CFXTEST:TYPE.USER:AATXETSP0KDARPDB5STDYEX11DR3X6SB0J2XZETSG6'
     }
 ```
 
@@ -923,11 +925,11 @@ transactionHash | `string` | true     |         | Hash of a transaction
       gasFee: 1500000n,
       blockHash: '0xaf4136d04e9e2cc470703251ec46f5913ab7955d526feed43771705e89c77390',
       contractCreated: null,
-      from: 'CFXTEST:TYPE.USER:0088R2SK6D93MYDC6SYSYGC0BU0V11ENBM1SY9PC7E',
+      from: 'CFXTEST:TYPE.USER:AAJJ1C2XGRKDY8RPG2828UPAN4A5BBSZNYB28K0PHS',
       logs: [],
       logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
       stateRoot: '0xd6a7c2c14cb0d1233010acca98e114db5a10e0b94803d23b01a6777b7fd3b2fd',
-      to: 'CFXTEST:TYPE.CONTRACT:021VZ59WHDM7Y38VHMH478Z0CN7C3XSD3CS5HCXXDZ',
+      to: 'CFXTEST:TYPE.CONTRACT:ACB59FK6VRYH8DJ5VYVEHJ9APZHPD72RDP2FVP77R9',
       transactionHash: '0xbf7110474779ba2404433ef39a24cb5b277186ef1e6cb199b0b60907b029a1ce',
       txExecErrorMsg: null,
       gasCoveredBySponsor: false,
@@ -1001,11 +1003,11 @@ password | `string` | false    |         | Password for remote node.
     "blockHash": null,
     "contractCreated": null,
     "data": "0x",
-    "from": "CFXTEST:TYPE.USER:00DXKUDYA9DBJTZ66EYDNUP8RNBJ7VADDCG5CDSGXW",
+    "from": "CFXTEST:TYPE.USER:AAR7X4R8MKRNW39GGS8RZ40J1ZNWH5MRRPUFPR2U76",
     "hash": "0xb2ba6cca35f0af99a9601d09ee19c1949d8130312550e3f5413c520c6d828f88",
     "r": "0x245a1a86ae405eb72c1eaf98f5e22baa326fcf8262abad2c4a3e5bdcf2e912b5",
     "s": "0x4df8058887a4dd8aaf60208accb3e57292a50ff06a117df6e54f7f56176248c0",
-    "to": "CFXTEST:TYPE.USER:00DXKUDYA9DBJTZ66EYDNUP8RNBJ7VADDCG5CDSGXW"
+    "to": "CFXTEST:TYPE.USER:AAR7X4R8MKRNW39GGS8RZ40J1ZNWH5MRRPUFPR2U76"
    }
 ```
 
@@ -1025,11 +1027,11 @@ password | `string` | false    |         | Password for remote node.
     "blockHash": "0xdb2d2d438dcdee8d61c6f495bd363b1afb68cb0fdff16582c08450a9ca487852",
     "contractCreated": null,
     "data": "0x",
-    "from": "CFXTEST:TYPE.USER:00DXKUDYA9DBJTZ66EYDNUP8RNBJ7VADDCG5CDSGXW",
+    "from": "CFXTEST:TYPE.USER:AAR7X4R8MKRNW39GGS8RZ40J1ZNWH5MRRPUFPR2U76",
     "hash": "0xb2ba6cca35f0af99a9601d09ee19c1949d8130312550e3f5413c520c6d828f88",
     "r": "0x245a1a86ae405eb72c1eaf98f5e22baa326fcf8262abad2c4a3e5bdcf2e912b5",
     "s": "0x4df8058887a4dd8aaf60208accb3e57292a50ff06a117df6e54f7f56176248c0",
-    "to": "CFXTEST:TYPE.USER:00DXKUDYA9DBJTZ66EYDNUP8RNBJ7VADDCG5CDSGXW"
+    "to": "CFXTEST:TYPE.USER:AAR7X4R8MKRNW39GGS8RZ40J1ZNWH5MRRPUFPR2U76"
    }
 ```
 
@@ -1043,11 +1045,11 @@ password | `string` | false    |         | Password for remote node.
     "gasFee": 21000000000000n,
     "blockHash": "0xdb2d2d438dcdee8d61c6f495bd363b1afb68cb0fdff16582c08450a9ca487852",
     "contractCreated": null,
-    "from": "CFXTEST:TYPE.USER:00DXKUDYA9DBJTZ66EYDNUP8RNBJ7VADDCG5CDSGXW",
+    "from": "CFXTEST:TYPE.USER:AAR7X4R8MKRNW39GGS8RZ40J1ZNWH5MRRPUFPR2U76",
     "logs": [],
     "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
     "stateRoot": "0x510d680cdbf60d34bcd987b3bf9925449c0839a7381dc8fd8222d2c7ee96122d",
-    "to": "CFXTEST:TYPE.USER:00DXKUDYA9DBJTZ66EYDNUP8RNBJ7VADDCG5CDSGXW",
+    "to": "CFXTEST:TYPE.USER:AAR7X4R8MKRNW39GGS8RZ40J1ZNWH5MRRPUFPR2U76",
     "transactionHash": "0xb2ba6cca35f0af99a9601d09ee19c1949d8130312550e3f5413c520c6d828f88"
    }
 ```
@@ -1062,11 +1064,11 @@ password | `string` | false    |         | Password for remote node.
     "gasFee": 21000000000000n,
     "blockHash": "0xdb2d2d438dcdee8d61c6f495bd363b1afb68cb0fdff16582c08450a9ca487852",
     "contractCreated": null,
-    "from": "CFXTEST:TYPE.USER:00DXKUDYA9DBJTZ66EYDNUP8RNBJ7VADDCG5CDSGXW",
+    "from": "CFXTEST:TYPE.USER:AAR7X4R8MKRNW39GGS8RZ40J1ZNWH5MRRPUFPR2U76",
     "logs": [],
     "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
     "stateRoot": "0x510d680cdbf60d34bcd987b3bf9925449c0839a7381dc8fd8222d2c7ee96122d",
-    "to": "CFXTEST:TYPE.USER:00DXKUDYA9DBJTZ66EYDNUP8RNBJ7VADDCG5CDSGXW",
+    "to": "CFXTEST:TYPE.USER:AAR7X4R8MKRNW39GGS8RZ40J1ZNWH5MRRPUFPR2U76",
     "transactionHash": "0xb2ba6cca35f0af99a9601d09ee19c1949d8130312550e3f5413c520c6d828f88"
    }
 ```
@@ -1089,7 +1091,7 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNum
 * **Examples**
 
 ```
-> await conflux.getCode('cfxtest:021sbe2f10b1z4n1jpakr60ch4wpf7mgd8ak9064p5');
+> await conflux.getCode('cfxtest:acb2nsctbanb9ezbw0mx1gapve60thyurjmxkage0f');
    "0x6080604052348015600f57600080fd5b506004361060325760003560e01c806306661abd1460375780638..."
 ```
 
@@ -1112,7 +1114,7 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNum
 * **Examples**
 
 ```
-> await conflux.getStorageAt('cfxtest:0236njm7zwtu1bg5u8b4pfctka04yp1j48rju7dww2', '0x6661e9d6d8b923d5bbaab1b96e1dd51ff6ea2a93520fdc9eb75d059238b8c5e9')
+> await conflux.getStorageAt('cfxtest:acdgzwyh9634bnuf4jne0tp3xmae80bwej1w4hr66c', '0x6661e9d6d8b923d5bbaab1b96e1dd51ff6ea2a93520fdc9eb75d059238b8c5e9')
    "0x000000000000000000000000000000000000000000000000000000000000162e"
 ```
 
@@ -1137,7 +1139,7 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNum
 * **Examples**
 
 ```
-> await conflux.getStorageRoot('cfxtest:0236njm7zwtu1bg5u8b4pfctka04yp1j48rju7dww2')
+> await conflux.getStorageRoot('cfxtest:acdgzwyh9634bnuf4jne0tp3xmae80bwej1w4hr66c')
    {
       "delta": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470",
       "intermediate": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470",
@@ -1168,13 +1170,13 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNum
 * **Examples**
 
 ```
-> await conflux.getSponsorInfo('cfxtest:0272ybk8xduvr2sstaryjs3j8ba793wdk0s62tr4gj')
+> await conflux.getSponsorInfo('cfxtest:achc8nxj7r451c223m18w2dwjnmhkd6rxa2gc31euw')
    {
       sponsorBalanceForCollateral: 410625000000000000000n,
       sponsorBalanceForGas: 9999999993626232440n,
       sponsorGasBound: 10000000000n,
-      sponsorForCollateral: 'CFXTEST:TYPE.CONTRACT:026NNPYAYNSMJ9430P8NGVS560NZGZVMRMHXYVM0BK',
-      sponsorForGas: 'CFXTEST:TYPE.CONTRACT:026NNPYAYNSMJ9430P8NGVS560NZGZVMRMHXYVM0BK'
+      sponsorForCollateral: 'CFXTEST:TYPE.CONTRACT:ACGZZ08M8Z2YWKEDA0JZU52FGAZ9U95Y1YV785YANX',
+      sponsorForGas: 'CFXTEST:TYPE.CONTRACT:ACGZZ08M8Z2YWKEDA0JZU52FGAZ9U95Y1YV785YANX'
    }
 ```
 
@@ -1196,7 +1198,7 @@ epochNumber |          | false    | 'latest_state' | See [format.epochNumber](#u
 * **Examples**
 
 ```
-> await conflux.getCollateralForStorage('cfxtest:0272ybk8xduvr2sstaryjs3j8ba793wdk0s62tr4gj')
+> await conflux.getCollateralForStorage('cfxtest:achc8nxj7r451c223m18w2dwjnmhkd6rxa2gc31euw')
    89375000000000000000n
 ```
 
@@ -1266,7 +1268,7 @@ options.limit       | `number`                | false    |                     |
 
 ```
 > await conflux.getLogs({
-      address: 'cfxtest:0272ybk8xduvr2sstaryjs3j8ba793wdk0s62tr4gj',
+      address: 'cfxtest:achc8nxj7r451c223m18w2dwjnmhkd6rxa2gc31euw',
       fromEpoch: 39802,
       toEpoch: 39802,
       limit: 1,
@@ -1278,7 +1280,7 @@ options.limit       | `number`                | false    |                     |
       logIndex: 2,
       transactionIndex: 0,
       transactionLogIndex: 2,
-      address: 'CFXTEST:TYPE.CONTRACT:0272YBK8XDUVR2SSTARYJS3J8BA793WDK0S62TR4GJ',
+      address: 'CFXTEST:TYPE.CONTRACT:ACHC8NXJ7R451C223M18W2DWJNMHKD6RXA2GC31EUW',
       blockHash: '0xca00158a2a508170278d5bdc5ca258b6698306dd8c30fdba32266222c79e57e6',
       data: '0x',
       topics: [
@@ -1319,10 +1321,10 @@ blockHash | `string` | true     |         | block hash
                     {
                         "action": {
                             "callType": "call",
-                            "from": "CFXTEST:TYPE.USER:00CWEGPESGNTWKRZ7E2CVVEDWBUSMDRM9W7KY3YE3R",
+                            "from": "CFXTEST:TYPE.USER:AAP6SU0S2UZ36X19HSCP55SR6N42YR1YK6HX8D8SD1",
                             "gas": "311592",
                             "input": "0x",
-                            "to": "CFXTEST:TYPE.CONTRACT:0229G2MMV57N9B1KA44KJF08T1KA46SV1SBG5W9ASV",
+                            "to": "CFXTEST:TYPE.CONTRACT:ACCKUCYY5FHZKNBXMEEXWTAJ3BXMEG25B2NUF6KM25",
                             "value": "0"
                         },
                         "type": "call"
@@ -1333,7 +1335,7 @@ blockHash | `string` | true     |         | block hash
                 "traces": [
                     {
                         "action": {
-                            "from": "CFXTEST:TYPE.USER:00DXV3GTHTWA6UGS3706UU1UP7W9UAS0DMUW6P42A1",
+                            "from": "CFXTEST:TYPE.USER:AAR75DU3V36MG4U2DHAG44B40H6K4M2ARY46G0ECMB",
                             "gas": "83962",
                             "init": "0x",
                             "value": "0"
@@ -1441,7 +1443,7 @@ The newHeads topic streams all new block headers participating in the consensus.
       deferredReceiptsRoot: '0x7ae0d5716513206755b6f7c95272b79dbc225759b6e17727e19c2f15c3166bda',
       deferredStateRoot: '0x3cf5deba77c8aa9072f1e972d6a97db487a0ce88455f371eb8ac8fa77321cb9d',
       hash: '0x194675173abbc5aab50326136008774eea1a289e6722c973dfed12b703ee5f2a',
-      miner: 'CFXTEST:TYPE.USER:00C928DSY36ZXW5NDUT2V75RDJBVKHYFRGYHY8JY0U',
+      miner: 'CFXTEST:TYPE.USER:AAPKCJR28DG976FZR43C5HF1RWN5XV8T1U8V8JW8A4',
       nonce: '0x799d35f695950fd6',
       parentHash: '0x4af3cf8cb358e75acad282ffa4b578b6211ea9eeb7cf87c282f120d8a1c809df',
       powQuality: '0xe7ac17feab',
@@ -1481,7 +1483,7 @@ options.topics  | `array`                 | false    |         | Search topics. 
      logIndex: 0,
      transactionIndex: 0,
      transactionLogIndex: 0,
-     address: 'CFXTEST:TYPE.CONTRACT:022EUC6RVR2ZZ0NC4WDE9TXDUPMB4AMDE4ZCUXV4YS',
+     address: 'CFXTEST:TYPE.CONTRACT:ACCS4PG151C99AZPE6RSK37R40YNEMYRSE9P475E82',
      blockHash: '0xc02689eea6a507250838463c13e6b633479e2757dfb7e9b2593d5c31b54adb63',
      data: '0x0000000000000000000000000000000000000000000000000000000000000001',
      topics: [
@@ -1719,7 +1721,7 @@ message | `string` | true     |         |
 > msg.hash
    "0x592fa743889fc7f92ac2a37bb1f5ba1daf2a5c84741ca0e0061d243a2e6707ba"
 > msg.from
-   "cfxtest:00eau2strcmx8tu567bf2593fsbazkhrfgw83tdrex"
+   "cfxtest:aasm4c231py7j34fghntcfkdt2nm9xv1tu6jd3r1s7"
 > msg.r
    "0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c"
 > msg.s
@@ -1757,7 +1759,7 @@ Sign message and set 'r','s','v' and 'hash'.
 Name       | Type      | Required | Default | Description
 -----------|-----------|----------|---------|------------------------
 privateKey | `string`  | true     |         | Private key hex string.
-netId      | `Integer` | false    | 1029    | Network id of account
+networkId  | `Integer` | false    | 1029    | Network id of account
 
 * **Returns**
 
@@ -1815,7 +1817,7 @@ Sign transaction and set 'r','s','v'.
 Name       | Type     | Required | Default | Description
 -----------|----------|----------|---------|------------------------
 privateKey | `string` | true     |         | Private key hex string.
-netId      | `number` | true     |         | fullnode's network id.
+networkId  | `number` | true     |         | fullnode's network id.
 
 * **Returns**
 
@@ -1888,7 +1890,7 @@ conflux          | `Conflux` | true     |         | Conflux instance.
 > const contract = conflux.Contract({ abi, bytecode, address });
    {
       abi: ContractABI { contract: [Circular *1] },
-      address: 'cfxtest:0272ybk8xduvr2sstaryjs3j8ba793wdk0s62tr4gj',
+      address: 'cfxtest:achc8nxj7r451c223m18w2dwjnmhkd6rxa2gc31euw',
       constructor: [Function: bound call],
       name: [Function: bound call],
       'name()': [Function: bound call],
@@ -1909,7 +1911,7 @@ conflux          | `Conflux` | true     |         | Conflux instance.
 
 ```
 > const contract = conflux.Contract({
-   address: 'cfxtest:0272ybk8xduvr2sstaryjs3j8ba793wdk0s62tr4gj',
+   address: 'cfxtest:achc8nxj7r451c223m18w2dwjnmhkd6rxa2gc31euw',
    abi: [
       {
         type: 'function',
@@ -1936,7 +1938,7 @@ conflux          | `Conflux` | true     |         | Conflux instance.
     ]
    });
 > contract.address
-   "cfxtest:0272ybk8xduvr2sstaryjs3j8ba793wdk0s62tr4gj"
+   "cfxtest:achc8nxj7r451c223m18w2dwjnmhkd6rxa2gc31euw"
 > await contract.name(); // call a method without parameter, get decoded return value.
    "FansCoin"
 > await contract.name().call({ to: '0x8b8689c7f3014a4d86e4d1d0daaf74a47f5e0f27' }); // call a method with options
@@ -2052,7 +2054,7 @@ array | `Array.<object>` | true     |         | Array of object with "method" an
 ```
 > await provider.batch([
   { method: 'cfx_epochNumber' },
-  { method: 'cfx_getBalance', params: ['cfxtest:000j6hb7h40j6hb7h40j6hb7h40j6hb7h4mrga5njc'] },
+  { method: 'cfx_getBalance', params: ['cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp'] },
   { method: 'InValidInput' },
 ])
    [ '0x3b734d', '0x22374d959c622f74728', RPCError: Method not found ]
@@ -2391,10 +2393,10 @@ Checks if a given string is a valid address.
 
 * **Parameters**
 
-Name    | Type            | Required | Default | Description
---------|-----------------|----------|---------|------------
-address | `string,Buffer` | true     |         |
-netId   | `integer`       | true     |         |
+Name      | Type            | Required | Default | Description
+----------|-----------------|----------|---------|------------
+address   | `string,Buffer` | true     |         |
+networkId | `integer`       | true     |         |
 
 * **Returns**
 
@@ -2404,7 +2406,7 @@ netId   | `integer`       | true     |         |
 
 ```
 > format.address('0x0123456789012345678901234567890123456789', 1)
- "cfxtest:000j6hb7h40j6hb7h40j6hb7h40j6hb7h4mrga5njc"
+ "cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp"
 > format.address('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
  Error("not match address")
 ```
@@ -2431,7 +2433,7 @@ address | `string,Buffer` | true     |         |
  "0x0123456789012345678901234567890123456789"
 > format.hexAddress('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
  Error("not match address")
-> format.hexAddress('cfxtest:000j6hb7h40j6hb7h40j6hb7h40j6hb7h4mrga5njc')
+> format.hexAddress('cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp')
  0x0123456789012345678901234567890123456789
 ```
 
@@ -2975,10 +2977,10 @@ Create a new PrivateKeyAccount with random privateKey.
 
 * **Parameters**
 
-Name    | Type            | Required | Default | Description
---------|-----------------|----------|---------|--------------------------
-entropy | `string,Buffer` | false    |         | Entropy of random account
-netId   | `Integer`       | false    | 1029    | network id of account
+Name      | Type            | Required | Default | Description
+----------|-----------------|----------|---------|--------------------------
+entropy   | `string,Buffer` | false    |         | Entropy of random account
+networkId | `Integer`       | false    | 1029    | network id of account
 
 * **Returns**
 
@@ -2991,26 +2993,26 @@ netId   | `Integer`       | false    | 1029    | network id of account
    PrivateKeyAccount {
       privateKey: '0xd28edbdb7bbe75787b84c5f525f47666a3274bb06561581f00839645f3c26f66',
       publicKey: '0xc42b53ae2ef95fee489948d33df391c4a9da31b7a3e29cf772c24eb42f74e94ab3bfe00bf29a239c17786a5b921853b7c5344d36694db43aa849e401f91566a5',
-      address: 'cfxtest:00eetd52j8nr01z26vdf1hwrvtr5ajbeggmy2sw5sp'
+      address: 'cfxtest:aass3rfcwjz1ab9cg5rtbv61531fmwnsuuy8c26f20'
     }
 > PrivateKeyAccount.random() // gen a different account from above
    PrivateKeyAccount {
       privateKey: '0x1b67150f56f49556ef7e3899024d83c125d84990d311ec08fa98aa1433bc0f53',
       publicKey: '0xd442207828ffd4dad918fea0d75d42dbea1fe5e3789c00a82e18ce8229714eae3f70b12f2f1abd795ad3e5c52a5a597289eb5096548438c233431f498b47b9a6',
-      address: 'cfxtest:00bc4nmhnbe36szngspjcg3jb17kxfu62cn2b9n83s'
+      address: 'cfxtest:aanpezyvznsdg29zu20wpudwnbhx7t4gcpzcnkzjd2'
     }
 > PrivateKeyAccount.random('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
    PrivateKeyAccount {
       privateKey: '0x1d41e006afd28ea339922d8ab4be93154a14d4f1b6d0ad4e7aabf807e7536a5f',
       publicKey: '0x4c07c75d3fdc5b1d6afef6ec374b0eaac86bcaa771a1d536bc4ce6f111b1c60e414b370e4cf31bf7770ae6818a3518c485398a43857d9053153f6eb4f5644a90',
-      address: 'cfxtest:008kujbs9j0ddy7xrg5yypjup3cwkzr5402rbwgdte'
+      address: 'cfxtest:aajx4wn2kwarr8h71uf880w40dp6x91feac1n6ur3s'
     }
 > PrivateKeyAccount.random('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
 // gen a different account from above, even use same entropy
    PrivateKeyAccount {
       privateKey: '0x5a34ff3318674c33209ce856218890e9a6ee3811e8a51e3094ed1e6a94bf58ef',
       publicKey: '0xe530d77c3ed6115cb46ba79821085bf67d2a7a8c808c1d52dec03fd7a82e569c2136dba84b21d40f46d90484722b21a9d5a8038495adf93f2eed564ababa2422',
-      address: 'cfxtest:00fp7z7f9an8hg1wrde9zcubwueywtegn0wngx3sdd'
+      address: 'cfxtest:aat0h9htkmzjvub61rsk9p4n64s863suza6zu7d2rr'
     }
 ```
 
@@ -3020,11 +3022,11 @@ Decrypt account encrypt info.
 
 * **Parameters**
 
-Name     | Type            | Required | Default | Description
----------|-----------------|----------|---------|---------------------------------------
-keystore | `object`        | true     |         | Keystore version 3 object.
-password | `string,Buffer` | true     |         | Password for keystore to decrypt with.
-netId    | `Integer`       | false    | 1029    | Network id of account
+Name      | Type            | Required | Default | Description
+----------|-----------------|----------|---------|---------------------------------------
+keystore  | `object`        | true     |         | Keystore version 3 object.
+password  | `string,Buffer` | true     |         | Password for keystore to decrypt with.
+networkId | `Integer`       | false    | 1029    | Network id of account
 
 * **Returns**
 
@@ -3068,7 +3070,7 @@ Create a account by privateKey.
 Name       | Type            | Required | Default | Description
 -----------|-----------------|----------|---------|-----------------------
 privateKey | `string,Buffer` | true     |         | Private key of account
-netId      | `Integer`       | false    |         | Network id of account
+networkId  | `Integer`       | false    |         | Network id of account
 
 * **Returns**
 
@@ -3079,7 +3081,7 @@ netId      | `Integer`       | false    |         | Network id of account
 ```
 > new PrivateKeyAccount('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
    PrivateKeyAccount {
-    address: 'cfxtest:00eau2strcmx8tu567bf2593fsbazkhrfgw83tdrex',
+    address: 'cfxtest:aasm4c231py7j34fghntcfkdt2nm9xv1tu6jd3r1s7',
     publicKey: '0x4646ae5047316b4230d0086c8acec687f00b1cd9d1dc634f6cb358ac0a9a8ffffe77b4dd0a4bfb95851f3b7355c781dd60f8418fc8a65d14907aff47c903a559',
     privateKey: '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'
   }
@@ -3135,7 +3137,7 @@ options | `object` | true     |         | See [Transaction](Transaction.js/const
     })
 
    Transaction {
-      from: 'cfxtest:00eau2strcmx8tu567bf2593fsbazkhrfgw83tdrex',
+      from: 'cfxtest:aasm4c231py7j34fghntcfkdt2nm9xv1tu6jd3r1s7',
       nonce: 0,
       gasPrice: 100,
       gas: 10000,

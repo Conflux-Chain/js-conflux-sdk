@@ -8,7 +8,7 @@ const PASSWORD = 'password';
 
 // ----------------------------------------------------------------------------
 const conflux = new Conflux({
-  chainId: CONST.TESTNET_ID,
+  networkId: CONST.TESTNET_ID,
 });
 conflux.provider = new MockProvider();
 const account = conflux.wallet.addPrivateKey(PRIVATE_KEY, CONST.TESTNET_ID);

@@ -80,7 +80,7 @@ class BaseProvider extends EventEmitter {
    * @example
    * > await provider.batch([
    *   { method: 'cfx_epochNumber' },
-   *   { method: 'cfx_getBalance', params: ['cfxtest:000j6hb7h40j6hb7h40j6hb7h40j6hb7h4mrga5njc'] },
+   *   { method: 'cfx_getBalance', params: ['cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp'] },
    *   { method: 'InValidInput' },
    * ])
    [ '0x3b734d', '0x22374d959c622f74728', RPCError: Method not found ]

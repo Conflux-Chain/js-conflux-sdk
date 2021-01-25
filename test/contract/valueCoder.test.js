@@ -63,15 +63,15 @@ test('bool', () => {
 });
 
 test('address', () => {
-  const coder = valueCoder({ type: 'address', netId: 1 });
+  const coder = valueCoder({ type: 'address', networkId: 1 });
   expect(coder.constructor.name).toEqual('AddressCoder');
   expect(coder.type).toEqual('address');
 
-  testEncodeAndDecode(coder, 'cfxtest:000j6hb7h40j6hb7h40j6hb7h40j6hb7h4mrga5njc',
+  testEncodeAndDecode(coder, 'cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp',
     '0x0000000000000000000000000123456789012345678901234567890123456789',
   );
 
-  testDecode(coder, 'cfxtest:000j6hb7h40j6hb7h40j6hb7h40j6hb7h4mrga5njc',
+  testDecode(coder, 'cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp',
     '0xffffffffffffffffffffffff0123456789012345678901234567890123456789',
   );
 });

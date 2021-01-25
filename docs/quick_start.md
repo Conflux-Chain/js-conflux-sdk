@@ -23,7 +23,7 @@ const { Conflux } = require('js-conflux-sdk');
 const conflux = new Conflux({
     url: 'https://test.confluxrpc.org', // testnet provider
     logger: console, // for debug: this will log all the RPC request and response to console
-    chainId: 1,
+    networkId: 1,
     // timeout: 300 * 1000, // request timeout in ms, default 300*1000 ms === 5 minute
 });
 ```
@@ -34,7 +34,7 @@ Then we can use the Conflux instance get blockchain data.
 ```js
 async function main() {
   // use conflux to get balance (in Drip) of a conflux address
-  const address = 'cfxtest:009sdd0sb8h3xx4nj8hkpu993ez5n0654w3vdy4zvx';
+  const address = 'cfxtest:aak2rra2njvd77ezwjvx04kkds9fzagfe6d5r8e957';
   const balance = await conflux.getBalance(address);
   console.log(balance);
 }

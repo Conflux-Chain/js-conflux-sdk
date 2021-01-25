@@ -8,7 +8,7 @@ const ADDRESS = '0x1cad0b19bb29d4674531d6f115237e16afce377c';
 const HEX64 = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 
 // ----------------------------------------------------------------------------
-const conflux = new Conflux({ chainId: 1 });
+const conflux = new Conflux({ networkId: 1 });
 conflux.provider = new MockProvider();
 
 const contract = conflux.Contract({ abi, bytecode, address });
@@ -134,7 +134,7 @@ test('contract.sendTransaction', async () => {
   await contract.count().sendTransaction({ from: ADDRESS, gasPrice: 0, gas: 0, storageLimit: 0, chainId: 1 });
 
   expect(call).toHaveBeenLastCalledWith('cfx_sendTransaction', {
-    from: 'cfxtest:00eau2strcmx8tu567bf2593fsbazkhrfgw83tdrex',
+    from: 'cfxtest:aasm4c231py7j34fghntcfkdt2nm9xv1tu6jd3r1s7',
     to: address,
     data: '0x06661abd',
     gasPrice: '0x0',
@@ -340,9 +340,9 @@ test('decodeLog', () => {
     fullName: 'SelfEvent(address indexed sender, uint256 current)',
     type: 'SelfEvent(address,uint256)',
     signature: '0xc4c01f6de493c58245fb681341f3a76bba9551ce81b11cbbb5d6d297844594df',
-    array: ['cfxtest:00800000000000000000000000000000042rjys0n5', JSBI.BigInt(100)],
+    array: ['cfxtest:aajaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaec1w82azf', JSBI.BigInt(100)],
     object: {
-      sender: 'cfxtest:00800000000000000000000000000000042rjys0n5',
+      sender: 'cfxtest:aajaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaec1w82azf',
       current: JSBI.BigInt(100),
     },
   });

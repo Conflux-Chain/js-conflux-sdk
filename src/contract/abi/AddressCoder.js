@@ -12,7 +12,7 @@ class AddressCoder extends BaseCoder {
 
   constructor({ type, ...options }) {
     super({ ...options, type });
-    this.netId = options.netId;
+    this.networkId = options.networkId;
   }
 
   /**
@@ -30,7 +30,7 @@ class AddressCoder extends BaseCoder {
   decode(stream) {
     const hexAddress = stream.read(40);
     const isConfluxAddress = hexAddress.startsWith('1') || hexAddress.startsWith('0') || hexAddress.startsWith('8');
-    return (isConfluxAddress && this.netId) ? format.address(`0x${hexAddress}`, this.netId) : format.hexAddress(`0x${hexAddress}`);
+    return (isConfluxAddress && this.networkId) ? format.address(`0x${hexAddress}`, this.networkId) : format.hexAddress(`0x${hexAddress}`);
   }
 }
 

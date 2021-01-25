@@ -30,7 +30,7 @@ function verifyCfxAddress(address) {
  *
  * @example
  */
-function haveCfxAddressPrefix(address) {
+function hasNetworkPrefix(address) {
   if (!lodash.isString(address)) {
     return false;
   }
@@ -67,6 +67,6 @@ module.exports = {
   encodeCfxAddress,
   decodeCfxAddress,
   verifyCfxAddress,
-  haveCfxAddressPrefix,
+  hasNetworkPrefix,
   ethChecksumAddress,
 };

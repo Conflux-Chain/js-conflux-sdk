@@ -71,7 +71,7 @@ test('function not inputs many outputs', () => {
       {
         type: 'address',
         name: 'account',
-        netId: 1,
+        networkId: 1,
       },
       {
         type: 'uint256',
@@ -86,9 +86,9 @@ test('function not inputs many outputs', () => {
     '0000000000000000000000000123456789012345678901234567890123456789' +
     '0000000000000000000000000000000000000000000000000000000000000001',
   );
-  expect([...tuple]).toEqual(['cfxtest:000j6hb7h40j6hb7h40j6hb7h40j6hb7h4mrga5njc', JSBI.BigInt(1)]);
+  expect([...tuple]).toEqual(['cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp', JSBI.BigInt(1)]);
   expect(tuple.toObject()).toEqual({
-    account: 'cfxtest:000j6hb7h40j6hb7h40j6hb7h40j6hb7h4mrga5njc',
+    account: 'cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp',
     number: JSBI.BigInt(1),
   });
 });

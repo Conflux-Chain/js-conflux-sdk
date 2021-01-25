@@ -9,25 +9,25 @@ JavaScript Conflux Software Development Kit
 ## 1.5 Key features
 v1.5 add support for [CIP37](https://github.com/Conflux-Chain/CIPs/blob/master/CIPs/cip-37.md) address.
 
-The biggest difference you `must to know` is conflux object need chainId to figure out right CIP37 address. There are two way you can set it.
+The biggest difference you `must to know` is conflux object need `networkId` to figure out right CIP37 address. There are two way you can set it.
 
-You can specify chainId when initiate the conflux object
+You can specify `networkId` when initiate the conflux object
 ```js
 const conflux = new Conflux({
     url: 'http://test.confluxrpc.org',
-    chainId: 1
+    networkId: 1
 });
 ```
 
-Or you can update it after conflux initiate by invoke `updateChainId` method
+Or you can update it after conflux initiate by invoke `updateNetworkId` method
 ```js
 const conflux = new Conflux({
     url: 'http://test.confluxrpc.org',
 });
-await conflux.updateChainId();  // this line should be in a async function
+await conflux.updateNetworkId();  // this line should be in a async function
 ```
 
-If you forgot to set chainId, you will see warning about it.
+If you forgot to set networkId, you will see warning about it.
 
 Check detail in the [complete changelog](./CHANGE_LOG.md)
 
@@ -39,7 +39,7 @@ const { Conflux } = require('js-conflux-sdk');
 
 const conflux = new Conflux({
   url: 'http://test.confluxrpc.org',
-  chainId: 1,
+  networkId: 1,
   logger: console, // for debug
 });
 ```
@@ -70,7 +70,7 @@ or
   const conflux = new window.Conflux.Conflux({
     url: 'http://test.confluxrpc.org',
     logger: console,
-    chainId: 1,
+    networkId: 1,
   });
 </script>
 ```

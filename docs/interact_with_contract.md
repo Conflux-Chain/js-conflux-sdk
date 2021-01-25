@@ -5,9 +5,9 @@ In Conflux world you may often need to interact with contracts, with JS SDK this
 
 ```js
 // use string
-await contract.deposit('90071992547409910').sendTransaction({from: 'cfxtest:00dxkudya9dbjtz66eydnup8rnbj7vaddcg5cdsgxw'});
+await contract.deposit('90071992547409910').sendTransaction({from: 'cfxtest:aar7x4r8mkrnw39ggs8rz40j1znwh5mrrpufpr2u76'});
 // or use hex string
-await contract.deposit('0x13ffffffffffff0').sendTransaction({from: 'cfxtest:00dxkudya9dbjtz66eydnup8rnbj7vaddcg5cdsgxw'});
+await contract.deposit('0x13ffffffffffff0').sendTransaction({from: 'cfxtest:aar7x4r8mkrnw39ggs8rz40j1znwh5mrrpufpr2u76'});
 // not use number
 // await contract.deposit(Number.MAX_SAFE_INTEGER * 10);
 ```
@@ -25,7 +25,7 @@ const PRIVATE_KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef012345678
 async function main() {
   const conflux = new Conflux({ 
     url: 'http://test.confluxrpc.org',
-    chainId: 1,
+    networkId: 1,
   });
   const account = conflux.wallet.addPrivateKey(PRIVATE_KEY);
 
@@ -49,7 +49,7 @@ async function main() {
     "gasFee": 1054531000000000n,
     "blockHash": "0x4a8b07e2694e358af075f7a9e96e78842b77ac2d511e2ab33f6acfff34a5846c",
     "contractCreated": "0x8a9c270e1a99c05ca90ef0f0008b8f6444cf1a97",
-    "from": "cfxtest:00dxkudya9dbjtz66eydnup8rnbj7vaddcg5cdsgxw",
+    "from": "cfxtest:aar7x4r8mkrnw39ggs8rz40j1znwh5mrrpufpr2u76",
     "logs": [],
     "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
     "stateRoot": "0x0940d4870e25bae1e7a5e5d7c19411b41922c025aa3de61aea2be17759673b1a",
@@ -77,11 +77,11 @@ const { abi } = MINI_ERC20;
 async function main() {
   const conflux = new Conflux({ 
     url: 'http://test.confluxrpc.org',
-    chainId: 1,
+    networkId: 1,
   });
   const account = conflux.wallet.addPrivateKey(PRIVATE_KEY);
   // 1. initialize contract with abi and address
-  const contract = conflux.Contract({ abi, address: 'cfxtest:0259s9se3acw0r591vsf004bhxj49ksujw995xd5p4' });
+  const contract = conflux.Contract({ abi, address: 'cfxtest:acfk2k2sdmp6a1fkb52taaenv7wekx24w6kkf7rf0e' });
   // 2. call method to get contract state
   const name = await contract.name(); 
   console.log(name); // MiniERC20
@@ -108,12 +108,12 @@ const { Conflux } = require('js-conflux-sdk');
 async function main() {
     const conflux = new Conflux({ 
         url: 'http://test.confluxrpc.org',
-        chainId: 1,
+        networkId: 1,
     });
     
     // 1. get internal contract through InternalContract method and pass the internal contract name
     const sponsor = conflux.InternalContract('SponsorWhitelistControl');
-    const gasSponsor = await sponsor.getSponsorForGas('cfxtest:026wd1xez7r14wtn8d71m2va2ujt879vcw44ac4z79');
+    const gasSponsor = await sponsor.getSponsorForGas('cfxtest:acg6rb7s9h1be63zjrhbyc5mc4w3jhk5p6eempe9hk');
 }
 main();
 ```

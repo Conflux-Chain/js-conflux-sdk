@@ -31,7 +31,7 @@ class Contract {
    * > const contract = conflux.Contract({ abi, bytecode, address });
    {
       abi: ContractABI { contract: [Circular *1] },
-      address: 'cfxtest:0272ybk8xduvr2sstaryjs3j8ba793wdk0s62tr4gj',
+      address: 'cfxtest:achc8nxj7r451c223m18w2dwjnmhkd6rxa2gc31euw',
       constructor: [Function: bound call],
       name: [Function: bound call],
       'name()': [Function: bound call],
@@ -52,7 +52,7 @@ class Contract {
 
    * @example
    * > const contract = conflux.Contract({
-   address: 'cfxtest:0272ybk8xduvr2sstaryjs3j8ba793wdk0s62tr4gj',
+   address: 'cfxtest:achc8nxj7r451c223m18w2dwjnmhkd6rxa2gc31euw',
    abi: [
       {
         type: 'function',
@@ -79,7 +79,7 @@ class Contract {
     ]
    });
    * > contract.address
-   "cfxtest:0272ybk8xduvr2sstaryjs3j8ba793wdk0s62tr4gj"
+   "cfxtest:achc8nxj7r451c223m18w2dwjnmhkd6rxa2gc31euw"
 
    * > await contract.name(); // call a method without parameter, get decoded return value.
    "FansCoin"
@@ -160,7 +160,7 @@ class Contract {
   }
 
   _feedAddressNetId(abi, conflux) {
-    if (!abi || !conflux || !conflux.chainId) return;
+    if (!abi || !conflux || !conflux.networkId) return;
 
     for (const item of abi) {
       if (['function', 'event', 'constructor'].indexOf(item.type) >= 0) {
@@ -176,7 +176,7 @@ class Contract {
     function feedInfo(items) {
       for (const meta of items) {
         if (meta.type === 'address') {
-          meta.netId = conflux.chainId;
+          meta.networkId = conflux.networkId;
         }
         if (meta.type === 'tuple') {
           feedInfo(meta.components);
