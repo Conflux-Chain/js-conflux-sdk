@@ -1,16 +1,42 @@
 const lodash = require('lodash');
-const { encode: encodeCfxAddress, decode: decodeCfxAddress } = require('conflux-address-js');
+const { encode, decode } = require('conflux-address-js');
 const { checksumAddress } = require('./sign');
 
 /**
- * Check whether a given address is valid
+ * Encode address buffer to new CIP37 address
+ *
+ * @param addressBuffer {buffer}
+ * @param netId {number}
+ * @param verbose {boolean}
+ * @return {string}
+ *
+ * @example
+ */
+function encodeCfxAddress(addressBuffer, netId, verbose = false) {
+  return encode(addressBuffer, netId, verbose);
+}
+
+/**
+ * Decode CIP37 address to hex40 address with type, netId info
+ *
+ * @param address {string}
+ * @return {Object}
+ *
+ * @example
+ */
+function decodeCfxAddress(address) {
+  return decode(address);
+}
+
+/**
+ * Check whether a given address is valid, will return a boolean value
  *
  * @param address {string}
  * @return {boolean}
  *
  * @example
  */
-function verifyCfxAddress(address) {
+function isValidCfxAddress(address) {
   if (!lodash.isString(address)) {
     return false;
   }
@@ -20,6 +46,18 @@ function verifyCfxAddress(address) {
   } catch (e) {
     return false;
   }
+}
+
+/**
+ * Check whether a given address is valid
+ *
+ * @param address {string}
+ *
+ * @example
+ */
+function verifyCfxAddress(address) {
+  decodeCfxAddress(address.toLowerCase());
+  return true;
 }
 
 /**
@@ -67,6 +105,7 @@ module.exports = {
   encodeCfxAddress,
   decodeCfxAddress,
   verifyCfxAddress,
+  isValidCfxAddress,
   hasNetworkPrefix,
   ethChecksumAddress,
 };

@@ -8,6 +8,8 @@ const Drip = require('./Drip');
 const providerFactory = require('./provider');
 const sign = require('./util/sign');
 const format = require('./util/format');
+const PrivateKeyAccount = require('./wallet/PrivateKeyAccount');
+const address = require('./util/address');
 
 module.exports = {
   CONST,
@@ -20,4 +22,6 @@ module.exports = {
   providerFactory,
   sign,
   format,
+  PrivateKeyAccount,
+  address,
 };

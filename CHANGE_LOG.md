@@ -9,7 +9,6 @@
 * PrivateKeyAccount `constructor`, `decrypt`, `random` need one more parameter `networkId`
 * `Transaction`, `Message` `sign` method need one more parameter `networkId`
 * Conflux's get methods will return new address, and same to contract method returned address.
-* When Initialize the `Conflux`, if the configured RPC endpoint is v1.1.0 or below, `useHexAddressInParameter` should set to `true`.
 * `getSupplyInfo` response add new field `totalCirculating`
 * `getStatus` response add new field `networkId`
 

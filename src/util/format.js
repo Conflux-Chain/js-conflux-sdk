@@ -233,12 +233,12 @@ format.hex = format(toHex);
 
 format.hex40 = format.hex.$validate(v => v.length === 2 + 40, 'hex40');
 
-function toAddress(address, networkId) {
+function toAddress(address, networkId, verbose = false) {
   // convert Account instance to string
   if (lodash.isObject(address) && addressUtil.hasNetworkPrefix(address.toString())) {
     address = address.toString();
   }
-  if (lodash.isString(address) && addressUtil.verifyCfxAddress(address)) {
+  if (lodash.isString(address) && addressUtil.isValidCfxAddress(address)) {
     return address.toLowerCase();
   }
   const buffer = format.hexBuffer(address);
@@ -248,7 +248,7 @@ function toAddress(address, networkId) {
   if (!networkId) {
     throw new Error('expected parameter: networkId');
   }
-  return addressUtil.encodeCfxAddress(buffer, networkId);
+  return addressUtil.encodeCfxAddress(buffer, networkId, verbose);
 }
 
 /**
@@ -256,6 +256,7 @@ function toAddress(address, networkId) {
  *
  * @param address {string|Buffer}
  * @param networkId {integer}
+ * @param [verbose=false] {boolean} if you want a address with type info, pass true
  * @return {string} Hex string
  *
  * @example

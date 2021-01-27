@@ -183,7 +183,7 @@ class Conflux {
   async updateNetworkId() {
     const { networkId, chainId } = await this.getStatus();
     this.networkId = networkId || chainId;
-    this.wallet.setNetworkId(networkId);
+    this.wallet.setNetworkId(this.networkId);
   }
 
   /**
@@ -208,7 +208,7 @@ class Conflux {
    * @example
    * > await conflux.getSupplyInfo()
    {
-     totalCirculating: 28953062500000000000000n,  
+     totalCirculating: 28953062500000000000000n,
      totalCollateral: 28953062500000000000000n,
      totalIssued: 5033319899279074765657343554n,
      totalStaking: 25026010834970490328077641n

@@ -8,10 +8,13 @@ JavaScript Conflux Software Development Kit
 
 ## 1.5 Key features
 v1.5 add support for [CIP37](https://github.com/Conflux-Chain/CIPs/blob/master/CIPs/cip-37.md) address.
+And only work with `conflux-rust` v1.1.1 or above.
 
-The biggest difference you `must to know` is conflux object need `networkId` to figure out right CIP37 address. There are two way you can set it.
+The biggest difference you `must to know` is class `Conflux`'s init option add a new field `networkId`.
+If you still want use hex40 address when invoke RPC methods, `networkId must be set`, 
+only with `networkId` conflux can firgure out a right CIP37 address from hex40 address.
 
-You can specify `networkId` when initiate the conflux object
+There are two way you can set it. You can specify `networkId` when initiate the conflux object
 ```js
 const conflux = new Conflux({
     url: 'http://test.confluxrpc.org',
@@ -27,7 +30,7 @@ const conflux = new Conflux({
 await conflux.updateNetworkId();  // this line should be in a async function
 ```
 
-If you forgot to set networkId, you will see warning about it.
+If you forgot to set networkId, you will see warning about it. 
 
 Check detail in the [complete changelog](./CHANGE_LOG.md)
 
