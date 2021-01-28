@@ -239,10 +239,10 @@ function toAddress(address, networkId, verbose = false) {
     address = address.toString();
   }
   if (lodash.isString(address) && addressUtil.isValidCfxAddress(address)) {
-    return address.toLowerCase();
+    return address;
   }
   const buffer = format.hexBuffer(address);
-  if (buffer.length !== 20) {
+  if ((lodash.isString(address) && address.length !== 2 + 40) || buffer.length !== 20) {
     throw new Error('not match "hex40"');
   }
   if (!networkId) {
@@ -287,6 +287,10 @@ format.netAddress = networkId => format(address => toAddress(address, networkId)
 format.hexAddress = format.hex40.$before(address => {
   if (lodash.isString(address) && addressUtil.hasNetworkPrefix(address)) {
     address = addressUtil.decodeCfxAddress(address).hexAddress;
+  }
+
+  if (lodash.isString(address) && address.length !== 2 + 40) {
+    throw new Error('not match "hex40"');
   }
 
   if (lodash.isString(address)

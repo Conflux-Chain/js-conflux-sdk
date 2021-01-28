@@ -6,7 +6,7 @@ The advantage of the compatibility between Conflux and Ethereum is obvious:  it 
 ### Before CIP37
 At first, Conflux adopts the address format similar with Ethereum, which is a hex40 address (hex code with a length of 40 bits). The difference is that Conflux differentiate the addresses with different starts: 0x1 for ordinary individual addresses, 0x8 for smart contracts and 0x0 for in-built contracts.
 
-Only hex40 addresses with these three starts are available on Conflux. We can say that Conflux address is a subset of Ethereum address, so a Conflux address can be used as an Ethereum address, but an Ethereum address cannot be used as a Conflux address.
+Only hex40 addresses with these three starts are available on Conflux. Some Ethereum addresses (with a 0x1 start) can be used as Conflux addresses, while a Conflux address has a 1/16 chance of being used as an Ethereum address.
 
 Currently, there are three kinds of addresses:
 
@@ -43,7 +43,7 @@ Meanwhile, new addresses also include address type information, currently four t
 * builtin: CFX:TYPE.BUILTIN:AAEJUAAAAAAAAAAAAAAAAAAAAAAAAAAAAJRWUC9JNB
 * null: CFX:TYPE.NULL:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0SFBNJM2
 
-The two address formats (hex40 and base32) are convertible to each other. They are the same if converted to byte arrays.
+The two address formats (hex40 and base32) are convertible to each other. They are the same if converted to byte arrays. However, when converting hex40 addresses (starting with 0x) into base32check addresses, the network ID information is also required.
 
 ### Conflux Fullnode RPC
 From v1.1.1, Conflux-rust will apply the new address format. If returns include address information, it will be in the new format.

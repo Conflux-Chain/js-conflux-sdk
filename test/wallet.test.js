@@ -41,7 +41,7 @@ test('set', async () => {
 
   conflux.wallet.set(ADDRESS, account);
   expect(conflux.wallet.has(ADDRESS)).toEqual(true);
-  expect(conflux.wallet.has(ADDRESS.toUpperCase())).toEqual(true);
+  expect(conflux.wallet.has(ADDRESS)).toEqual(true);
 
 //   const ERROR_ADDRESS = `${ADDRESS.substr(0, 20)}${ADDRESS.substr(20).toUpperCase()}`;
 //   expect(() => conflux.wallet.set(ERROR_ADDRESS, account)).toThrow('checksum error');

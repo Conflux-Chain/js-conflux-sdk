@@ -101,6 +101,24 @@ function ethChecksumAddress(address) {
   return checksumAddress(address);
 }
 
+/**
+ * simplify a verbose address
+ *
+ * @param address {string}
+ * @return {string}
+ *
+ */
+function simplifyCfxAddress(address) {
+  if (!lodash.isString(address) || !hasNetworkPrefix(address)) {
+    throw new Error('invalid base32 address');
+  }
+  const parts = address.toLocaleLowerCase().split(':');
+  if (parts.length !== 3) {
+    return address;
+  }
+  return `${parts[0]}:${parts[2]}`;
+}
+
 module.exports = {
   encodeCfxAddress,
   decodeCfxAddress,
@@ -108,4 +126,5 @@ module.exports = {
   isValidCfxAddress,
   hasNetworkPrefix,
   ethChecksumAddress,
+  simplifyCfxAddress,
 };
