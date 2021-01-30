@@ -307,7 +307,7 @@ format.hexAddress = format.hex40.$before(address => {
 /**
  * Will convert an upper or lowercase address to a checksum address.
  *
- * @deprecated
+ * @deprecated Please use address.ethChecksumAddress
  * @param arg {string|Buffer}
  * @return {string} Checksum address hex string
  *
@@ -446,6 +446,7 @@ format.getLogs = format({
   topics: format([format.hex64.$or([format.hex64]).$or(null)]),
 }, { pick: true });
 
+// configure getLogs formatter with networkId and toHexAddress
 format.getLogsAdvance = function (networkId, toHexAddress = false) {
   const fromatAddress = toHexAddress ? format.hexAddress : format.netAddress(networkId);
   return format({
@@ -486,6 +487,7 @@ format.callTx = format({
   data: format.hex,
 }, { pick: true });
 
+// configure callTx formatter with networkId and toHexAddress
 format.callTxAdvance = function (networkId, toHexAddress = false) {
   const fromatAddress = toHexAddress ? format.hexAddress : format.netAddress(networkId);
   return format({
