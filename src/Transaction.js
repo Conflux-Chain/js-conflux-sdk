@@ -65,7 +65,7 @@ class Transaction {
     const addressBuffer = privateKeyToAddress(privateKeyBuffer);
     const { r, s, v } = ecdsaSign(keccak256(this.encode(false)), privateKeyBuffer);
 
-    this.from = format.address(addressBuffer, networkId || this.chainId);
+    this.from = format.address(addressBuffer, networkId);
     this.r = format.hex(r);
     this.s = format.hex(s);
     this.v = v;

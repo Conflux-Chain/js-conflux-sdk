@@ -13,6 +13,16 @@ const Subscription = require('./subscribe/Subscription');
  */
 class Conflux {
   /**
+   * Create a Conflux instance with networdId set up
+   */
+  static async create(options) {
+    const cfx = new Conflux(options);
+    if (options.networkId) return cfx;
+    await cfx.updateNetworkId();
+    return cfx;
+  }
+
+  /**
    * @param [options] {object} - Conflux and Provider constructor options.
    * @param [options.defaultGasPrice] {string|number} - The default gas price in drip to use for transactions.
    * @param [options.defaultGasRatio=1.1] {number} - The ratio to multiply by gas.
@@ -181,8 +191,8 @@ class Conflux {
    * Update conflux networkId from RPC
    */
   async updateNetworkId() {
-    const { networkId, chainId } = await this.getStatus();
-    this.networkId = networkId || chainId;
+    const { networkId } = await this.getStatus();
+    this.networkId = networkId;
     this.wallet.setNetworkId(this.networkId);
   }
 

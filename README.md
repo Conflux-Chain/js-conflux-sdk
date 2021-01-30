@@ -17,20 +17,19 @@ only with `networkId` conflux can firgure out a right CIP37 address from hex40 a
 There are two way you can set it. You can specify `networkId` when initiate the conflux object
 ```js
 const conflux = new Conflux({
-    url: 'http://test.confluxrpc.org',
+    url: 'http://test.confluxrpc.org/v2',
     networkId: 1
 });
 ```
 
-Or you can update it after conflux initiate by invoke `updateNetworkId` method
+Or you can create a `Conflux` instance with `create` static method
 ```js
-const conflux = new Conflux({
-    url: 'http://test.confluxrpc.org',
+const conflux = await Conflux.create({
+    url: 'http://test.confluxrpc.org/v2',
 });
-await conflux.updateNetworkId();  // this line should be in a async function
 ```
 
-If you forgot to set networkId, you will see warning about it. 
+If you forgot to set networkId, you will see warning about it.
 
 Check detail in the [complete changelog](./CHANGE_LOG.md)
 
@@ -41,7 +40,7 @@ Check detail in the [complete changelog](./CHANGE_LOG.md)
 const { Conflux } = require('js-conflux-sdk');
 
 const conflux = new Conflux({
-  url: 'http://test.confluxrpc.org',
+  url: 'http://test.confluxrpc.org/v2',
   networkId: 1,
   logger: console, // for debug
 });
@@ -71,7 +70,7 @@ or
 <script type="text/javascript" src="node_modules/js-conflux-sdk/dist/js-conflux-sdk.umd.min.js"></script>
 <script type="text/javascript">
   const conflux = new window.Conflux.Conflux({
-    url: 'http://test.confluxrpc.org',
+    url: 'http://test.confluxrpc.org/v2',
     logger: console,
     networkId: 1,
   });
@@ -86,6 +85,7 @@ or
 * [SDK support for CIP37 address](./docs/conflux_checksum_address.md)
 * [API](./docs/api.md)
 * [Conflux Official document](https://developer.conflux-chain.org/docs/introduction/en/conflux_overview)
+* [Conflux RPC endpoints](https://github.com/conflux-fans/conflux-rpc-endpoints)
 
 ## TODO
 

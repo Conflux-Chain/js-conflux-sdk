@@ -1,6 +1,5 @@
 const { keccak256, ecdsaSign, ecdsaRecover, publicKeyToAddress } = require('./util/sign');
 const format = require('./util/format');
-const CONST = require('./CONST');
 
 class Message {
   /**
@@ -110,10 +109,10 @@ class Message {
    * Sign message and set 'r','s','v' and 'hash'.
    *
    * @param privateKey {string} - Private key hex string.
-   * @param [networkId=1029] {Integer} - Network id of account
+   * @param networkId {Integer} - Network id of account
    * @return {Message}
    */
-  sign(privateKey, networkId = CONST.MAINNET_ID) {
+  sign(privateKey, networkId) {
     this.signature = Message.sign(privateKey, this.hash);
     this.networkId = networkId;
     return this;

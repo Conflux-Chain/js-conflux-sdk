@@ -2,14 +2,13 @@ const { assert } = require('../util');
 const format = require('../util/format');
 const sign = require('../util/sign');
 const Account = require('./Account');
-const CONST = require('../CONST');
 
 class PrivateKeyAccount extends Account {
   /**
    * Create a new PrivateKeyAccount with random privateKey.
    *
    * @param [entropy] {string|Buffer} - Entropy of random account
-   * @param [networkId=1029] {Integer} - network id of account
+   * @param [networkId] {Integer} - network id of account
    * @return {PrivateKeyAccount}
    *
    * @example
@@ -39,7 +38,7 @@ class PrivateKeyAccount extends Account {
       address: 'cfxtest:aat0h9htkmzjvub61rsk9p4n64s863suza6zu7d2rr'
     }
    */
-  static random(entropy, networkId = CONST.MAINNET_ID) {
+  static random(entropy, networkId) {
     const privateKeyBuffer = sign.randomPrivateKey(entropy === undefined ? undefined : format.hexBuffer(entropy));
     return new this(privateKeyBuffer, networkId);
   }
@@ -49,7 +48,7 @@ class PrivateKeyAccount extends Account {
    *
    * @param keystore {object} - Keystore version 3 object.
    * @param password {string|Buffer} - Password for keystore to decrypt with.
-   * @param [networkId=1029] {Integer} - Network id of account
+   * @param networkId {Integer} - Network id of account
    * @return {PrivateKeyAccount}
    *
    * @example
@@ -78,7 +77,7 @@ class PrivateKeyAccount extends Account {
     privateKey: '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'
   }
    */
-  static decrypt(keystore, password, networkId = CONST.MAINNET_ID) {
+  static decrypt(keystore, password, networkId) {
     const privateKeyBuffer = sign.decrypt(keystore, password);
     return new this(privateKeyBuffer, networkId);
   }
@@ -87,7 +86,7 @@ class PrivateKeyAccount extends Account {
    * Create a account by privateKey.
    *
    * @param privateKey {string|Buffer} - Private key of account
-   * @param [networkId] {Integer} - Network id of account
+   * @param networkId {Integer} - Network id of account
    * @return {PrivateKeyAccount}
    *
    * @example
@@ -98,7 +97,7 @@ class PrivateKeyAccount extends Account {
     privateKey: '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'
   }
    */
-  constructor(privateKey, networkId = CONST.MAINNET_ID) {
+  constructor(privateKey, networkId) {
     const privateKeyBuffer = format.hexBuffer(privateKey);
     const publicKeyBuffer = sign.privateKeyToPublicKey(privateKeyBuffer);
     const addressBuffer = sign.publicKeyToAddress(publicKeyBuffer);
@@ -159,7 +158,7 @@ class PrivateKeyAccount extends Account {
    */
   async signTransaction(options) {
     const transaction = await super.signTransaction(options);
-    transaction.sign(this.privateKey); // sign will cover r,s,v fields
+    transaction.sign(this.privateKey, this.networkId); // sign will cover r,s,v fields
 
     assert(transaction.from === this.address, {
       message: 'Invalid sign transaction.from',

@@ -30,7 +30,7 @@ test('Transaction', () => {
   expect(transaction.from).toEqual(undefined); // virtual attribute
   expect(transaction.hash).toEqual(undefined); // virtual attribute
 
-  transaction.sign(KEY);
+  transaction.sign(KEY, 1);
 
   expect(transaction.r).toEqual('0xef53e4af065905cb5134f7de4e9434e71656f824e3e268a9babb4f14ff808113');
   expect(transaction.s).toEqual('0x407f05f44f79c1fd19262665d3efc29368e317fe5e77be27c0c1314b6a242a1e');
@@ -53,7 +53,7 @@ test('s starts with 0x00', () => {
     chainId: 1,
   });
 
-  transaction.sign(KEY);
+  transaction.sign(KEY, 1);
 
   expect(transaction.s).toEqual('0x233f41b647de5846856106a8bc0fb67ba4dc3c184d328e565547928adedc8f3c');
   expect(transaction.serialize()).toEqual('0xf863df7f01825208940123456789012345678901234567890123456789808080018001a0bde07fe87c58cf83c50a4787c637a05a521d5f8372bd8acb207504e8af2daee4a0233f41b647de5846856106a8bc0fb67ba4dc3c184d328e565547928adedc8f3c');
