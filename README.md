@@ -10,6 +10,11 @@ JavaScript Conflux Software Development Kit
 v1.5 add support for [CIP37](https://github.com/Conflux-Chain/CIPs/blob/master/CIPs/cip-37.md) address.
 And only work with `conflux-rust v1.1.1` or above.
 
+```sh
+# For now you can install it with `next` tag
+$ npm install js-conflux-sdk@next
+```
+
 The biggest difference you `must to know` is class `Conflux`'s init option add a new field `networkId`.
 If you still want use hex40 address when invoke RPC methods, `networkId must be set`, 
 only with `networkId` conflux can firgure out a right CIP37 address from hex40 address.
@@ -17,7 +22,7 @@ only with `networkId` conflux can firgure out a right CIP37 address from hex40 a
 There are two way you can set it. You can specify `networkId` when initiate the conflux object
 ```js
 const conflux = new Conflux({
-    url: 'http://test.confluxrpc.org/v2',
+    url: 'https://test.confluxrpc.org/v2',
     networkId: 1
 });
 ```
@@ -25,11 +30,20 @@ const conflux = new Conflux({
 Or you can create a `Conflux` instance with `create` static method
 ```js
 const conflux = await Conflux.create({
-    url: 'http://test.confluxrpc.org/v2',
+    url: 'https://test.confluxrpc.org/v2',
 });
 ```
 
 If you forgot to set networkId, you will see warning about it.
+
+Another big change is `format.address` will return CIP-37 address.
+
+```js
+format.address('0x0123456789012345678901234567890123456789', 1)  // second parameter networkId is required when passing a hex40 address
+// "cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp"
+format.address('cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp')
+// "cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp"
+```
 
 Check detail in the [complete changelog](./CHANGE_LOG.md)
 
@@ -40,7 +54,7 @@ Check detail in the [complete changelog](./CHANGE_LOG.md)
 const { Conflux } = require('js-conflux-sdk');
 
 const conflux = new Conflux({
-  url: 'http://test.confluxrpc.org/v2',
+  url: 'https://test.confluxrpc.org/v2',
   networkId: 1,
   logger: console, // for debug
 });
@@ -70,7 +84,7 @@ or
 <script type="text/javascript" src="node_modules/js-conflux-sdk/dist/js-conflux-sdk.umd.min.js"></script>
 <script type="text/javascript">
   const conflux = new window.Conflux.Conflux({
-    url: 'http://test.confluxrpc.org/v2',
+    url: 'https://test.confluxrpc.org/v2',
     logger: console,
     networkId: 1,
   });
