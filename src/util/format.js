@@ -629,8 +629,10 @@ format.action = format({
   action: {
     input: format.hex.$before(Buffer.from),
     init: format.hex.$before(Buffer.from),
+    returnData: format.hex.$before(Buffer.from),
     gas: format.bigUInt,
     value: format.bigUInt,
+    gasLeft: format.bigUInt,
   },
 });
 
