@@ -8,6 +8,7 @@ class PrivateKeyAccount extends Account {
    * Create a new PrivateKeyAccount with random privateKey.
    *
    * @param [entropy] {string|Buffer} - Entropy of random account
+   * @param [networkId] {Integer} - network id of account
    * @return {PrivateKeyAccount}
    *
    * @example
@@ -15,31 +16,31 @@ class PrivateKeyAccount extends Account {
    PrivateKeyAccount {
       privateKey: '0xd28edbdb7bbe75787b84c5f525f47666a3274bb06561581f00839645f3c26f66',
       publicKey: '0xc42b53ae2ef95fee489948d33df391c4a9da31b7a3e29cf772c24eb42f74e94ab3bfe00bf29a239c17786a5b921853b7c5344d36694db43aa849e401f91566a5',
-      address: '0x1cecb4a2922b7007e236daf0c797de6e55496e84'
+      address: 'cfxtest:aass3rfcwjz1ab9cg5rtbv61531fmwnsuuy8c26f20'
     }
    * > PrivateKeyAccount.random() // gen a different account from above
    PrivateKeyAccount {
       privateKey: '0x1b67150f56f49556ef7e3899024d83c125d84990d311ec08fa98aa1433bc0f53',
       publicKey: '0xd442207828ffd4dad918fea0d75d42dbea1fe5e3789c00a82e18ce8229714eae3f70b12f2f1abd795ad3e5c52a5a597289eb5096548438c233431f498b47b9a6',
-      address: '0x16c25691aadc3363f5862d264072584f3ebf4613'
+      address: 'cfxtest:aanpezyvznsdg29zu20wpudwnbhx7t4gcpzcnkzjd2'
     }
    * > PrivateKeyAccount.random('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
    PrivateKeyAccount {
       privateKey: '0x1d41e006afd28ea339922d8ab4be93154a14d4f1b6d0ad4e7aabf807e7536a5f',
       publicKey: '0x4c07c75d3fdc5b1d6afef6ec374b0eaac86bcaa771a1d536bc4ce6f111b1c60e414b370e4cf31bf7770ae6818a3518c485398a43857d9053153f6eb4f5644a90',
-      address: '0x113d49784c80d6f8fdbc0bef5a5ab0d9c9fee520'
+      address: 'cfxtest:aajx4wn2kwarr8h71uf880w40dp6x91feac1n6ur3s'
     }
    * > PrivateKeyAccount.random('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
    * // gen a different account from above, even use same entropy
    PrivateKeyAccount {
       privateKey: '0x5a34ff3318674c33209ce856218890e9a6ee3811e8a51e3094ed1e6a94bf58ef',
       publicKey: '0xe530d77c3ed6115cb46ba79821085bf67d2a7a8c808c1d52dec03fd7a82e569c2136dba84b21d40f46d90484722b21a9d5a8038495adf93f2eed564ababa2422',
-      address: '0x1f63fcef4aaa88c03cbb5c9fb34be69dee65d0a8'
+      address: 'cfxtest:aat0h9htkmzjvub61rsk9p4n64s863suza6zu7d2rr'
     }
    */
-  static random(entropy) {
+  static random(entropy, networkId) {
     const privateKeyBuffer = sign.randomPrivateKey(entropy === undefined ? undefined : format.hexBuffer(entropy));
-    return new this(privateKeyBuffer);
+    return new this(privateKeyBuffer, networkId);
   }
 
   /**
@@ -47,6 +48,7 @@ class PrivateKeyAccount extends Account {
    *
    * @param keystore {object} - Keystore version 3 object.
    * @param password {string|Buffer} - Password for keystore to decrypt with.
+   * @param networkId {Integer} - Network id of account
    * @return {PrivateKeyAccount}
    *
    * @example
@@ -75,33 +77,35 @@ class PrivateKeyAccount extends Account {
     privateKey: '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'
   }
    */
-  static decrypt(keystore, password) {
+  static decrypt(keystore, password, networkId) {
     const privateKeyBuffer = sign.decrypt(keystore, password);
-    return new this(privateKeyBuffer);
+    return new this(privateKeyBuffer, networkId);
   }
 
   /**
    * Create a account by privateKey.
    *
    * @param privateKey {string|Buffer} - Private key of account
+   * @param networkId {Integer} - Network id of account
    * @return {PrivateKeyAccount}
    *
    * @example
    * > new PrivateKeyAccount('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
    PrivateKeyAccount {
-    address: '0x1cad0b19bb29d4674531d6f115237e16afce377c',
+    address: 'cfxtest:aasm4c231py7j34fghntcfkdt2nm9xv1tu6jd3r1s7',
     publicKey: '0x4646ae5047316b4230d0086c8acec687f00b1cd9d1dc634f6cb358ac0a9a8ffffe77b4dd0a4bfb95851f3b7355c781dd60f8418fc8a65d14907aff47c903a559',
     privateKey: '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'
   }
    */
-  constructor(privateKey) {
+  constructor(privateKey, networkId) {
     const privateKeyBuffer = format.hexBuffer(privateKey);
     const publicKeyBuffer = sign.privateKeyToPublicKey(privateKeyBuffer);
     const addressBuffer = sign.publicKeyToAddress(publicKeyBuffer);
 
-    super(format.address(addressBuffer));
+    super(format.address(addressBuffer, networkId));
     this.publicKey = format.publicKey(publicKeyBuffer);
     this.privateKey = format.privateKey(privateKeyBuffer);
+    this.networkId = networkId;
   }
 
   /**
@@ -137,7 +141,7 @@ class PrivateKeyAccount extends Account {
     })
 
    Transaction {
-      from: '0x1cad0b19bb29d4674531d6f115237e16afce377c',
+      from: 'cfxtest:aasm4c231py7j34fghntcfkdt2nm9xv1tu6jd3r1s7',
       nonce: 0,
       gasPrice: 100,
       gas: 10000,
@@ -154,7 +158,7 @@ class PrivateKeyAccount extends Account {
    */
   async signTransaction(options) {
     const transaction = await super.signTransaction(options);
-    transaction.sign(this.privateKey); // sign will cover r,s,v fields
+    transaction.sign(this.privateKey, this.networkId); // sign will cover r,s,v fields
 
     assert(transaction.from === this.address, {
       message: 'Invalid sign transaction.from',
@@ -181,7 +185,7 @@ class PrivateKeyAccount extends Account {
    */
   async signMessage(options) {
     const message = await super.signMessage(options);
-    message.sign(this.privateKey); // sign will cover r,s,v fields
+    message.sign(this.privateKey, this.networkId); // sign will cover r,s,v fields
 
     assert(message.from === this.address, {
       message: 'Invalid sign message.from',

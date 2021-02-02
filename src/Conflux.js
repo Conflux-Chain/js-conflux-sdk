@@ -13,6 +13,16 @@ const Subscription = require('./subscribe/Subscription');
  */
 class Conflux {
   /**
+   * Create a Conflux instance with networdId set up
+   */
+  static async create(options) {
+    const cfx = new Conflux(options);
+    if (options.networkId) return cfx;
+    await cfx.updateNetworkId();
+    return cfx;
+  }
+
+  /**
    * @param [options] {object} - Conflux and Provider constructor options.
    * @param [options.defaultGasPrice] {string|number} - The default gas price in drip to use for transactions.
    * @param [options.defaultGasRatio=1.1] {number} - The ratio to multiply by gas.
@@ -22,7 +32,7 @@ class Conflux {
    * @param [options.logger] {Object} - Logger object with 'info' and 'error' method.
    * @example
    * > const { Conflux } = require('js-conflux-sdk');
-   * > const conflux = new Conflux({url:'http://test.confluxrpc.org'});
+   * > const conflux = new Conflux({url:'http://test.confluxrpc.org', networkId: 1});
    *
    * @example
    * > const conflux = new Conflux({
@@ -35,6 +45,8 @@ class Conflux {
     defaultGasPrice,
     defaultGasRatio = 1.1,
     defaultStorageRatio = 1.1,
+    networkId,
+    useHexAddressInParameter = false,
     ...rest
   } = {}) {
     /**
@@ -90,6 +102,13 @@ class Conflux {
 
     this.sendRawTransaction = this._decoratePendingTransaction(this.sendRawTransaction);
     this.sendTransaction = this._decoratePendingTransaction(this.sendTransaction);
+
+    if (networkId) {
+      this.networkId = networkId;
+      this.wallet.setNetworkId(networkId);
+    }
+
+    this.useHexAddressInParameter = useHexAddressInParameter;
   }
 
   _decoratePendingTransaction(func) {
@@ -97,6 +116,21 @@ class Conflux {
     return function (...args) {
       return new PendingTransaction(conflux, func.bind(this), args);
     };
+  }
+
+  _formatAddress(address) {
+    if (!this.networkId) {
+      console.warn('Conflux address: networkId is not set properly, please set it');
+    }
+    return this.useHexAddressInParameter ? format.hexAddress(address) : format.address(address, this.networkId);
+  }
+
+  _formatCallTx(options) {
+    return format.callTxAdvance(this.networkId, this.useHexAddressInParameter)(options);
+  }
+
+  _formatGetLogs(options) {
+    return format.getLogsAdvance(this.networkId, this.useHexAddressInParameter)(options);
   }
 
   /**
@@ -154,6 +188,15 @@ class Conflux {
 
   // --------------------------------------------------------------------------
   /**
+   * Update conflux networkId from RPC
+   */
+  async updateNetworkId() {
+    const { networkId } = await this.getStatus();
+    this.networkId = networkId;
+    this.wallet.setNetworkId(this.networkId);
+  }
+
+  /**
    * Get node client version
    *
    * @private
@@ -175,6 +218,7 @@ class Conflux {
    * @example
    * > await conflux.getSupplyInfo()
    {
+     totalCirculating: 28953062500000000000000n,
      totalCollateral: 28953062500000000000000n,
      totalIssued: 5033319899279074765657343554n,
      totalStaking: 25026010834970490328077641n
@@ -200,6 +244,7 @@ class Conflux {
    * > await conflux.getStatus()
    {
       chainId: 1029,
+      networkId: 1029,
       epochNumber: 1117476,
       blockNumber: 2230973,
       pendingTxNumber: 4531,
@@ -275,20 +320,20 @@ class Conflux {
    * - admin `string`: admin of the account.
    *
    * @example
-   > await conflux.getAccount('0x1c1e72f0c37968557b3d85a3f32747792798bbde');
+   > await conflux.getAccount('cfxtest:aasb661u2r60uzn5h0c4h63hj76wtgf552r9ghu7a4');
    {
       accumulatedInterestReturn: 0n,
       balance: 824812401057514588670n,
       collateralForStorage: 174187500000000000000n,
       nonce: 1449n,
       stakingBalance: 0n,
-      admin: '0x0000000000000000000000000000000000000000',
+      admin: 'CFXTEST:TYPE.NULL:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA6F0VRCSW',
       codeHash: '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'
    }
    */
   async getAccount(address, epochNumber) {
     const result = await this.provider.call('cfx_getAccount',
-      format.address(address),
+      this._formatAddress(address),
       format.epochNumber.$or(undefined)(epochNumber),
     );
     return format.account(result);
@@ -302,12 +347,12 @@ class Conflux {
    * @return {Promise<BigInt>} The balance in Drip.
    *
    * @example
-   * > await conflux.getBalance("0x1c1e72f0c37968557b3d85a3f32747792798bbde");
+   * > await conflux.getBalance("cfxtest:aasb661u2r60uzn5h0c4h63hj76wtgf552r9ghu7a4");
    824812401057514588670n
    */
   async getBalance(address, epochNumber) {
     const result = await this.provider.call('cfx_getBalance',
-      format.address(address),
+      this._formatAddress(address),
       format.epochNumber.$or(undefined)(epochNumber),
     );
     return format.bigUInt(result);
@@ -321,12 +366,12 @@ class Conflux {
    * @return {Promise<BigInt>} The staking balance in Drip.
    *
    * @example
-   * > await conflux.getStakingBalance('0x1c1e72f0c37968557b3d85a3f32747792798bbde', 'latest_state');
+   * > await conflux.getStakingBalance('cfxtest:aasb661u2r60uzn5h0c4h63hj76wtgf552r9ghu7a4', 'latest_state');
    0n
    */
   async getStakingBalance(address, epochNumber) {
     const result = await this.provider.call('cfx_getStakingBalance',
-      format.address(address),
+      this._formatAddress(address),
       format.epochNumber.$or(undefined)(epochNumber),
     );
     return format.bigUInt(result);
@@ -340,12 +385,12 @@ class Conflux {
    * @return {Promise<BigInt>} The next nonce should be used by given address.
    *
    * @example
-   * > await conflux.getNextNonce("0x1c1e72f0c37968557b3d85a3f32747792798bbde");
+   * > await conflux.getNextNonce("cfxtest:aasb661u2r60uzn5h0c4h63hj76wtgf552r9ghu7a4");
    1449n
    */
   async getNextNonce(address, epochNumber) {
     const result = await this.provider.call('cfx_getNextNonce',
-      format.address(address),
+      this._formatAddress(address),
       format.epochNumber.$or(undefined)(epochNumber),
     );
     return format.bigUInt(result);
@@ -359,12 +404,12 @@ class Conflux {
    * @return {Promise<string>} Address to admin, or `null` if the contract does not exist.
    *
    * @example
-   * > conflux.getAdmin('0x8e2f2e68eb75bb8b18caafe9607242d4748f8d98')
-   "0x1c1e72f0c37968557b3d85a3f32747792798bbde"
+   * > conflux.getAdmin('cfxtest:achc8nxj7r451c223m18w2dwjnmhkd6rxa2gc31euw')
+   "CFXTEST:TYPE.USER:AASB661U2R60UZN5H0C4H63HJ76WTGF552R9GHU7A4"
    */
   async getAdmin(address, epochNumber) {
     return this.provider.call('cfx_getAdmin',
-      format.address(address),
+      this._formatAddress(address),
       format.epochNumber.$or(undefined)(epochNumber),
     );
   }
@@ -381,7 +426,7 @@ class Conflux {
    */
   async getVoteList(address, epochNumber) {
     const result = await this.provider.call('cfx_getVoteList',
-      format.address(address),
+      this._formatAddress(address),
       format.epochNumber.$or(undefined)(epochNumber),
     );
     return format.voteList(result);
@@ -399,7 +444,7 @@ class Conflux {
    */
   async getDepositList(address, epochNumber) {
     const result = await this.provider.call('cfx_getDepositList',
-      format.address(address),
+      this._formatAddress(address),
       format.epochNumber.$or(undefined)(epochNumber),
     );
     return format.depositList(result);
@@ -477,14 +522,14 @@ class Conflux {
       baseReward: 6993700000000000000n,
       totalReward: 6993700031741486703n,
       txFee: 0n,
-      author: '0x1f323dccb24606b061db9e3a1277b8db99f1c1b2',
+      author: 'CFXTEST:TYPE.USER:AATXETSP0KDARPDB5STDYEX11DR3X6SB0J2XZETSG6',
       blockHash: '0x73cd891aea310e2c0b8644de91746c7353cebfffb780126bc06101b20689c893'
     },
    {
       baseReward: 6997200000000000000n,
       totalReward: 6997200031760371742n,
       txFee: 3000000n,
-      author: '0x1f323dccb24606b061db9e3a1277b8db99f1c1b2',
+      author: 'CFXTEST:TYPE.USER:AATXETSP0KDARPDB5STDYEX11DR3X6SB0J2XZETSG6',
       blockHash: '0xaf4136d04e9e2cc470703251ec46f5913ab7955d526feed43771705e89c77390'
     }
    ]
@@ -556,7 +601,7 @@ class Conflux {
       deferredReceiptsRoot: '0x09f8709ea9f344a810811a373b30861568f5686e649d6177fd92ea2db7477508',
       deferredStateRoot: '0x50c0fcbc5bafa7d1dba7b19c87629830106a6be8d0adf505cdc656bb43535d69',
       hash: '0xaf4136d04e9e2cc470703251ec46f5913ab7955d526feed43771705e89c77390',
-      miner: '0x1f323dccb24606b061db9e3a1277b8db99f1c1b2',
+      miner: 'CFXTEST:TYPE.USER:AATXETSP0KDARPDB5STDYEX11DR3X6SB0J2XZETSG6',
       nonce: '0x17d86f2f6',
       parentHash: '0xc8a412b4b77b48d61f694975f032d109f26bb0f9fc02e4b221d67a382fab386b',
       powQuality: '0x5a0f86a6f4',
@@ -651,11 +696,11 @@ class Conflux {
       blockHash: '0xaf4136d04e9e2cc470703251ec46f5913ab7955d526feed43771705e89c77390',
       contractCreated: null,
       data: '0xfebe49090000000000000000000000000000000000000000000000000000000000000000000000000000000000000000162788589c8e386863f217faef78840919fb2854',
-      from: '0x108b8b1333523a79ac363d8f41805e81b085d55d',
+      from: 'CFXTEST:TYPE.USER:AATXETSP0KDARPDB5STDYEX11DR3X6SB0J2XZETSG6',
       hash: '0xbf7110474779ba2404433ef39a24cb5b277186ef1e6cb199b0b60907b029a1ce',
       r: '0x495da01ae9f445847022a8bc7df0198577ba75f88b26699f61afb435bb9c50bc',
       s: '0x2291051b1c53db1d6bfe2fb29be1bf512d063e726dc6b98aaf0f2259b7456be0',
-      to: '0x83bf953c8b687f0d1b8d2243a3e0654ec1f70d1b'
+      to: 'CFXTEST:TYPE.USER:AATXETSP0KDARPDB5STDYEX11DR3X6SB0J2XZETSG6'
     }
    */
   async getTransactionByHash(transactionHash) {
@@ -699,11 +744,11 @@ class Conflux {
       gasFee: 1500000n,
       blockHash: '0xaf4136d04e9e2cc470703251ec46f5913ab7955d526feed43771705e89c77390',
       contractCreated: null,
-      from: '0x108b8b1333523a79ac363d8f41805e81b085d55d',
+      from: 'CFXTEST:TYPE.USER:AAJJ1C2XGRKDY8RPG2828UPAN4A5BBSZNYB28K0PHS',
       logs: [],
       logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
       stateRoot: '0xd6a7c2c14cb0d1233010acca98e114db5a10e0b94803d23b01a6777b7fd3b2fd',
-      to: '0x83bf953c8b687f0d1b8d2243a3e0654ec1f70d1b',
+      to: 'CFXTEST:TYPE.CONTRACT:ACB59FK6VRYH8DJ5VYVEHJ9APZHPD72RDP2FVP77R9',
       transactionHash: '0xbf7110474779ba2404433ef39a24cb5b277186ef1e6cb199b0b60907b029a1ce',
       txExecErrorMsg: null,
       gasCoveredBySponsor: false,
@@ -830,11 +875,11 @@ class Conflux {
     "blockHash": null,
     "contractCreated": null,
     "data": "0x",
-    "from": "0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b",
+    "from": "CFXTEST:TYPE.USER:AAR7X4R8MKRNW39GGS8RZ40J1ZNWH5MRRPUFPR2U76",
     "hash": "0xb2ba6cca35f0af99a9601d09ee19c1949d8130312550e3f5413c520c6d828f88",
     "r": "0x245a1a86ae405eb72c1eaf98f5e22baa326fcf8262abad2c4a3e5bdcf2e912b5",
     "s": "0x4df8058887a4dd8aaf60208accb3e57292a50ff06a117df6e54f7f56176248c0",
-    "to": "0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b"
+    "to": "CFXTEST:TYPE.USER:AAR7X4R8MKRNW39GGS8RZ40J1ZNWH5MRRPUFPR2U76"
    }
 
    * @example
@@ -853,11 +898,11 @@ class Conflux {
     "blockHash": "0xdb2d2d438dcdee8d61c6f495bd363b1afb68cb0fdff16582c08450a9ca487852",
     "contractCreated": null,
     "data": "0x",
-    "from": "0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b",
+    "from": "CFXTEST:TYPE.USER:AAR7X4R8MKRNW39GGS8RZ40J1ZNWH5MRRPUFPR2U76",
     "hash": "0xb2ba6cca35f0af99a9601d09ee19c1949d8130312550e3f5413c520c6d828f88",
     "r": "0x245a1a86ae405eb72c1eaf98f5e22baa326fcf8262abad2c4a3e5bdcf2e912b5",
     "s": "0x4df8058887a4dd8aaf60208accb3e57292a50ff06a117df6e54f7f56176248c0",
-    "to": "0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b"
+    "to": "CFXTEST:TYPE.USER:AAR7X4R8MKRNW39GGS8RZ40J1ZNWH5MRRPUFPR2U76"
    }
 
    * @example
@@ -870,11 +915,11 @@ class Conflux {
     "gasFee": 21000000000000n,
     "blockHash": "0xdb2d2d438dcdee8d61c6f495bd363b1afb68cb0fdff16582c08450a9ca487852",
     "contractCreated": null,
-    "from": "0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b",
+    "from": "CFXTEST:TYPE.USER:AAR7X4R8MKRNW39GGS8RZ40J1ZNWH5MRRPUFPR2U76",
     "logs": [],
     "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
     "stateRoot": "0x510d680cdbf60d34bcd987b3bf9925449c0839a7381dc8fd8222d2c7ee96122d",
-    "to": "0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b",
+    "to": "CFXTEST:TYPE.USER:AAR7X4R8MKRNW39GGS8RZ40J1ZNWH5MRRPUFPR2U76",
     "transactionHash": "0xb2ba6cca35f0af99a9601d09ee19c1949d8130312550e3f5413c520c6d828f88"
    }
 
@@ -888,11 +933,11 @@ class Conflux {
     "gasFee": 21000000000000n,
     "blockHash": "0xdb2d2d438dcdee8d61c6f495bd363b1afb68cb0fdff16582c08450a9ca487852",
     "contractCreated": null,
-    "from": "0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b",
+    "from": "CFXTEST:TYPE.USER:AAR7X4R8MKRNW39GGS8RZ40J1ZNWH5MRRPUFPR2U76",
     "logs": [],
     "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
     "stateRoot": "0x510d680cdbf60d34bcd987b3bf9925449c0839a7381dc8fd8222d2c7ee96122d",
-    "to": "0x1bd9e9be525ab967e633bcdaeac8bd5723ed4d6b",
+    "to": "CFXTEST:TYPE.USER:AAR7X4R8MKRNW39GGS8RZ40J1ZNWH5MRRPUFPR2U76",
     "transactionHash": "0xb2ba6cca35f0af99a9601d09ee19c1949d8130312550e3f5413c520c6d828f88"
    }
    */
@@ -903,7 +948,7 @@ class Conflux {
     }
 
     return this.provider.call('cfx_sendTransaction',
-      format.callTx(options),
+      this._formatCallTx(options),
       password,
     );
   }
@@ -917,12 +962,12 @@ class Conflux {
    * @return {Promise<string>} Byte code of contract, or 0x if the contract does not exist.
    *
    * @example
-   * > await conflux.getCode('0xb385b84f08161f92a195953b980c8939679e906a');
+   * > await conflux.getCode('cfxtest:acb2nsctbanb9ezbw0mx1gapve60thyurjmxkage0f');
    "0x6080604052348015600f57600080fd5b506004361060325760003560e01c806306661abd1460375780638..."
    */
   async getCode(address, epochNumber) {
     return this.provider.call('cfx_getCode',
-      format.address(address),
+      this._formatAddress(address),
       format.epochNumber.$or(undefined)(epochNumber),
     );
   }
@@ -936,12 +981,12 @@ class Conflux {
    * @return {Promise<string|null>} Storage entry of given query, or null if the it does not exist.
    *
    * @example
-   * > await conflux.getStorageAt('0x866aca87ff33a0ae05d2164b3d999a804f583222', '0x6661e9d6d8b923d5bbaab1b96e1dd51ff6ea2a93520fdc9eb75d059238b8c5e9')
+   * > await conflux.getStorageAt('cfxtest:acdgzwyh9634bnuf4jne0tp3xmae80bwej1w4hr66c', '0x6661e9d6d8b923d5bbaab1b96e1dd51ff6ea2a93520fdc9eb75d059238b8c5e9')
    "0x000000000000000000000000000000000000000000000000000000000000162e"
    */
   async getStorageAt(address, position, epochNumber) {
     return this.provider.call('cfx_getStorageAt',
-      format.address(address),
+      this._formatAddress(address),
       format.hex64(position),
       format.epochNumber.$or(undefined)(epochNumber),
     );
@@ -958,7 +1003,7 @@ class Conflux {
    * - snapshot `string`: storage root in the snapshot.
    *
    * @example
-   * > await conflux.getStorageRoot('0x866aca87ff33a0ae05d2164b3d999a804f583222')
+   * > await conflux.getStorageRoot('cfxtest:acdgzwyh9634bnuf4jne0tp3xmae80bwej1w4hr66c')
    {
       "delta": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470",
       "intermediate": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470",
@@ -967,7 +1012,7 @@ class Conflux {
    */
   async getStorageRoot(address, epochNumber) {
     return this.provider.call('cfx_getStorageRoot',
-      format.address(address),
+      this._formatAddress(address),
       format.epochNumber.$or(undefined)(epochNumber),
     );
   }
@@ -985,18 +1030,18 @@ class Conflux {
    * - sponsorForGas `string`: the address of the gas sponsor.
    *
    * @example
-   * > await conflux.getSponsorInfo('0x8e2f2e68eb75bb8b18caafe9607242d4748f8d98')
+   * > await conflux.getSponsorInfo('cfxtest:achc8nxj7r451c223m18w2dwjnmhkd6rxa2gc31euw')
    {
       sponsorBalanceForCollateral: 410625000000000000000n,
       sponsorBalanceForGas: 9999999993626232440n,
       sponsorGasBound: 10000000000n,
-      sponsorForCollateral: '0x8d5adbcaf5714924830591586f05302bf87f74bd',
-      sponsorForGas: '0x8d5adbcaf5714924830591586f05302bf87f74bd'
+      sponsorForCollateral: 'CFXTEST:TYPE.CONTRACT:ACGZZ08M8Z2YWKEDA0JZU52FGAZ9U95Y1YV785YANX',
+      sponsorForGas: 'CFXTEST:TYPE.CONTRACT:ACGZZ08M8Z2YWKEDA0JZU52FGAZ9U95Y1YV785YANX'
    }
    */
   async getSponsorInfo(address, epochNumber) {
     const result = await this.provider.call('cfx_getSponsorInfo',
-      format.address(address),
+      this._formatAddress(address),
       format.epochNumber.$or(undefined)(epochNumber),
     );
     return format.sponsorInfo(result);
@@ -1010,12 +1055,12 @@ class Conflux {
    * @return {Promise<BigInt>} - The collateral storage in Byte.
    *
    * @example
-   * > await conflux.getCollateralForStorage('0x8e2f2e68eb75bb8b18caafe9607242d4748f8d98')
+   * > await conflux.getCollateralForStorage('cfxtest:achc8nxj7r451c223m18w2dwjnmhkd6rxa2gc31euw')
    89375000000000000000n
    */
   async getCollateralForStorage(address, epochNumber) {
     const result = await this.provider.call('cfx_getCollateralForStorage',
-      format.address(address),
+      this._formatAddress(address),
       format.epochNumber.$or(undefined)(epochNumber),
     );
     return format.bigUInt(result);
@@ -1031,7 +1076,7 @@ class Conflux {
   async call(options, epochNumber) {
     try {
       return await this.provider.call('cfx_call',
-        format.callTx(options),
+        this._formatCallTx(options),
         format.epochNumber.$or(undefined)(epochNumber),
       );
     } catch (e) {
@@ -1052,7 +1097,7 @@ class Conflux {
   async estimateGasAndCollateral(options, epochNumber) {
     try {
       const result = await this.provider.call('cfx_estimateGasAndCollateral',
-        format.callTx(options),
+        this._formatCallTx(options),
         format.epochNumber.$or(undefined)(epochNumber),
       );
       return format.estimate(result);
@@ -1084,7 +1129,7 @@ class Conflux {
    *
    * @example
    * > await conflux.getLogs({
-      address: '0x8e2f2e68eb75bb8b18caafe9607242d4748f8d98',
+      address: 'cfxtest:achc8nxj7r451c223m18w2dwjnmhkd6rxa2gc31euw',
       fromEpoch: 39802,
       toEpoch: 39802,
       limit: 1,
@@ -1096,7 +1141,7 @@ class Conflux {
       logIndex: 2,
       transactionIndex: 0,
       transactionLogIndex: 2,
-      address: '0x8e2f2e68eb75bb8b18caafe9607242d4748f8d98',
+      address: 'CFXTEST:TYPE.CONTRACT:ACHC8NXJ7R451C223M18W2DWJNMHKD6RXA2GC31EUW',
       blockHash: '0xca00158a2a508170278d5bdc5ca258b6698306dd8c30fdba32266222c79e57e6',
       data: '0x',
       topics: [
@@ -1114,7 +1159,7 @@ class Conflux {
       throw new Error('OverrideError, do not use `blockHashes` with `fromEpoch` or `toEpoch`, cause only `blockHashes` will take effect');
     }
 
-    const result = await this.provider.call('cfx_getLogs', format.getLogs(options));
+    const result = await this.provider.call('cfx_getLogs', this._formatGetLogs(options));
 
     return format.logs(result);
   }
@@ -1136,10 +1181,10 @@ class Conflux {
                     {
                         "action": {
                             "callType": "call",
-                            "from": "0x19c742cec42b9e4eff3b84cdedcde2f58a36f44f",
+                            "from": "CFXTEST:TYPE.USER:AAP6SU0S2UZ36X19HSCP55SR6N42YR1YK6HX8D8SD1",
                             "gas": "311592",
                             "input": "0x",
-                            "to": "0x84980a94d94f54ac335109393c08c866a21b1b0e",
+                            "to": "CFXTEST:TYPE.CONTRACT:ACCKUCYY5FHZKNBXMEEXWTAJ3BXMEG25B2NUF6KM25",
                             "value": "0"
                         },
                         "type": "call"
@@ -1150,7 +1195,7 @@ class Conflux {
                 "traces": [
                     {
                         "action": {
-                            "from": "0x1bdd8e198e78a36a1819c06d683ab1f89d2b006d",
+                            "from": "CFXTEST:TYPE.USER:AAR75DU3V36MG4U2DHAG44B40H6K4M2ARY46G0ECMB",
                             "gas": "83962",
                             "init": "0x",
                             "value": "0"
@@ -1257,7 +1302,7 @@ class Conflux {
       deferredReceiptsRoot: '0x7ae0d5716513206755b6f7c95272b79dbc225759b6e17727e19c2f15c3166bda',
       deferredStateRoot: '0x3cf5deba77c8aa9072f1e972d6a97db487a0ce88455f371eb8ac8fa77321cb9d',
       hash: '0x194675173abbc5aab50326136008774eea1a289e6722c973dfed12b703ee5f2a',
-      miner: '0x189121b8f0cdfef0b56eb22d9cb76c97b9c7cfbc',
+      miner: 'CFXTEST:TYPE.USER:AAPKCJR28DG976FZR43C5HF1RWN5XV8T1U8V8JW8A4',
       nonce: '0x799d35f695950fd6',
       parentHash: '0x4af3cf8cb358e75acad282ffa4b578b6211ea9eeb7cf87c282f120d8a1c809df',
       powQuality: '0xe7ac17feab',
@@ -1297,7 +1342,7 @@ class Conflux {
      logIndex: 0,
      transactionIndex: 0,
      transactionLogIndex: 0,
-     address: '0x84ed30d7ddc5ff82ac271ae4e7add5a8b22a8d71',
+     address: 'CFXTEST:TYPE.CONTRACT:ACCS4PG151C99AZPE6RSK37R40YNEMYRSE9P475E82',
      blockHash: '0xc02689eea6a507250838463c13e6b633479e2757dfb7e9b2593d5c31b54adb63',
      data: '0x0000000000000000000000000000000000000000000000000000000000000001',
      topics: [
@@ -1313,7 +1358,7 @@ class Conflux {
    { revertTo: 568231 }
    */
   async subscribeLogs({ address, topics } = {}) {
-    const id = await this.subscribe('logs', format.getLogs({ address, topics }));
+    const id = await this.subscribe('logs', this._formatGetLogs({ address, topics }));
 
     const subscription = new Subscription(id);
     this.provider.on(id, data => {

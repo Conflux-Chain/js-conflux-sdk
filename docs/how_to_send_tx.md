@@ -7,10 +7,13 @@ It can be very easy to send a simple transaction(transfer some CFX to another ad
 const { Conflux, Drip } = require('js-conflux-sdk');
 
 const PRIVATE_KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'; // sender private key
-const ADDRESS = '0x0123456789012345678901234567890123456789';
+const ADDRESS = 'cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp';
 
 async function main() {
-  const conflux = new Conflux({ url: 'http://test.confluxrpc.org' });
+  const conflux = new Conflux({ 
+    url: 'http://test.confluxrpc.org',
+    networkId: 1,
+  });
   
   const sender = conflux.wallet.addPrivateKey(PRIVATE_KEY); // add private to local wallet
   const transactionHash = await conflux.sendTransaction({
@@ -42,11 +45,11 @@ async function main() {
     blockHash: '0x4ee16b530f6b6951122c1305b262eef5251ebff03498bc510610ed45fb72a014',
     contractCreated: null,
     data: '0x',
-    from: '0x1cad0b19bb29d4674531d6f115237e16afce377c',
+    from: 'cfxtest:aasm4c231py7j34fghntcfkdt2nm9xv1tu6jd3r1s7',
     hash: '0x22e5ffefe4da995ebcb2847762b7acb1c03fd17c9ab010272965fa63c9590d6e',
     r: '0x162f2b49022528ba65fa35be2b93b8554d1910f7993201f1e755e5a29c7f8a53',
     s: '0x2106ce156aea46ffe8438b8a4057e116b4d1c8551158ae2cf1e4679924e433d8',
-    to: '0x0123456789012345678901234567890123456789'
+    to: 'cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp'
   }
   */
 
@@ -61,11 +64,11 @@ async function main() {
     gasFee: 56250n,
     blockHash: '0x4ee16b530f6b6951122c1305b262eef5251ebff03498bc510610ed45fb72a014',
     contractCreated: null,
-    from: '0x1cad0b19bb29d4674531d6f115237e16afce377c',
+    from: 'cfxtest:aasm4c231py7j34fghntcfkdt2nm9xv1tu6jd3r1s7',
     logs: [],
     logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
     stateRoot: '0xf8d93f9f783605572fb48beb81e7450b25eae2eeb28310429c862a5c1956bd71',
-    to: '0x0123456789012345678901234567890123456789',
+    to: 'cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp',
     transactionHash: '0x22e5ffefe4da995ebcb2847762b7acb1c03fd17c9ab010272965fa63c9590d6e',
     txExecErrorMsg: null
   }
@@ -99,10 +102,13 @@ Correspond to transaction stages, the SDK has provide several advanced `sendTran
 const { Conflux, Drip } = require('js-conflux-sdk');
 
 const PRIVATE_KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'; // sender private key
-const ADDRESS = '0x0123456789012345678901234567890123456789';
+const ADDRESS = 'cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp';
 
 async function main() {
-  const conflux = new Conflux({ url: 'http://test.confluxrpc.org' });
+  const conflux = new Conflux({ 
+    url: 'http://test.confluxrpc.org',
+    networkId: 1,
+  });
   
   const sender = conflux.wallet.addPrivateKey(PRIVATE_KEY);
   
@@ -160,7 +166,7 @@ Compare with ethereum Conflux transaction have three new field: `storageLimit`, 
 const { Conflux, Drip } = require('js-conflux-sdk');
 
 const PRIVATE_KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'; // sender private key
-const ADDRESS = '0x0123456789012345678901234567890123456789';
+const ADDRESS = 'cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp';
 
 async function main() {
   const conflux = new Conflux({ url: 'http://test.confluxrpc.org' });
@@ -198,7 +204,8 @@ const conflux = new Conflux({
     logger: console, // for debug
     defaultGasPrice: 1,
     defaultGasRatio: 1.1,
-    defaultStorageRatio: 1.1
+    defaultStorageRatio: 1.1,
+    networkId: 1,
 });
 ```
 
@@ -222,10 +229,13 @@ The `sendTransaction` will get `from`'s privateKey from wallet, use it sign tran
 const { Conflux, Transaction } = require('js-conflux-sdk');
 
 const PRIVATE_KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'; // sender private key
-const ADDRESS = '0x0123456789012345678901234567890123456789';
+const ADDRESS = 'cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp';
 
 async function main() {
-  const conflux = new Conflux({ url: 'http://test.confluxrpc.org' });
+  const conflux = new Conflux({ 
+    url: 'http://test.confluxrpc.org',
+    networkId: 1,
+  });
 
   const transaction = new Transaction({
     to: ADDRESS, // receiver address
@@ -267,7 +277,10 @@ const { Conflux, format } = require('js-conflux-sdk');
 const PRIVATE_KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'; // sender private key
 
 async function main() {
-  const conflux = new Conflux({ url: 'http://test.confluxrpc.org' });
+  const conflux = new Conflux({ 
+    url: 'http://test.confluxrpc.org',
+    networkId: 1,
+  });
   const account = conflux.wallet.addPrivateKey(PRIVATE_KEY); // create account instance and add to wallet
  
   const transactionHash = await conflux.sendTransaction({

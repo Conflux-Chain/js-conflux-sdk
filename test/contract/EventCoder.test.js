@@ -10,6 +10,7 @@ test('event', () => {
         indexed: true,
         name: 'account',
         type: 'address',
+        networkId: 1,
       },
       {
         indexed: false,
@@ -30,14 +31,14 @@ test('event', () => {
   const coder = new EventCoder(abi);
   expect(coder.signature).toEqual('0xb0333e0e3a6b99318e4e2e0d7e5e5f93646f9cbf62da1587955a4092bf7df6e7');
 
-  expect(coder.encodeTopics(['0x0123456789012345678901234567890123456789', null]))
+  expect(coder.encodeTopics(['cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp', null]))
     .toEqual(['0x0000000000000000000000000123456789012345678901234567890123456789']);
 
   expect(() => coder.encodeTopics(['0x0123456789012345678901234567890123456789']))
     .toThrow('length not match');
 
   expect([...coder.decodeLog(log)])
-    .toEqual(['0x0123456789012345678901234567890123456789', JSBI.BigInt(10)]);
+    .toEqual(['cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp', JSBI.BigInt(10)]);
 });
 
 test('event.anonymous', () => {
@@ -48,6 +49,7 @@ test('event.anonymous', () => {
         indexed: true,
         name: 'account',
         type: 'address',
+        networkId: 1,
       },
       {
         indexed: false,
@@ -66,9 +68,9 @@ test('event.anonymous', () => {
 
   const coder = new EventCoder(abi);
   const tuple = coder.decodeLog(log);
-  expect([...tuple]).toEqual(['0x0123456789012345678901234567890123456789', JSBI.BigInt(10)]);
+  expect([...tuple]).toEqual(['cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp', JSBI.BigInt(10)]);
   expect(tuple.toObject()).toEqual({
-    account: '0x0123456789012345678901234567890123456789',
+    account: 'cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp',
     number: JSBI.BigInt(10),
   });
 });

@@ -66,7 +66,7 @@ class Message {
    * > msg.hash
    "0x592fa743889fc7f92ac2a37bb1f5ba1daf2a5c84741ca0e0061d243a2e6707ba"
    * > msg.from
-   "0x1cad0b19bb29d4674531d6f115237e16afce377c"
+   "cfxtest:aasm4c231py7j34fghntcfkdt2nm9xv1tu6jd3r1s7"
    * > msg.r
    "0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c"
    * > msg.s
@@ -99,7 +99,7 @@ class Message {
   get from() {
     try {
       const publicKey = Message.recover(this.signature, this.hash);
-      return format.address(publicKeyToAddress(format.hexBuffer(publicKey)));
+      return format.address(publicKeyToAddress(format.hexBuffer(publicKey)), this.networkId);
     } catch (e) {
       return undefined;
     }
@@ -109,10 +109,12 @@ class Message {
    * Sign message and set 'r','s','v' and 'hash'.
    *
    * @param privateKey {string} - Private key hex string.
+   * @param networkId {Integer} - Network id of account
    * @return {Message}
    */
-  sign(privateKey) {
+  sign(privateKey, networkId) {
     this.signature = Message.sign(privateKey, this.hash);
+    this.networkId = networkId;
     return this;
   }
 

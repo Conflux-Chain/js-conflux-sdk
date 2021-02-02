@@ -1,9 +1,9 @@
-const { Conflux, sign, format } = require('../src');
+const { Conflux, sign, CONST } = require('../src');
 const BaseAccount = require('../src/wallet/Account');
 
 const PRIVATE_KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 const PUBLIC_KEY = '0x4646ae5047316b4230d0086c8acec687f00b1cd9d1dc634f6cb358ac0a9a8ffffe77b4dd0a4bfb95851f3b7355c781dd60f8418fc8a65d14907aff47c903a559';
-const ADDRESS = '0x1cad0b19bb29d4674531d6f115237e16afce377c';
+const ADDRESS = 'cfxtest:aasm4c231py7j34fghntcfkdt2nm9xv1tu6jd3r1s7';
 const PASSWORD = 'password';
 
 const KEYSTORE = {
@@ -27,7 +27,9 @@ const KEYSTORE = {
 };
 
 // ----------------------------------------------------------------------------
-const conflux = new Conflux();
+const conflux = new Conflux({
+  networkId: CONST.TESTNET_ID,
+});
 
 afterEach(() => {
   conflux.wallet.clear();
@@ -39,10 +41,10 @@ test('set', async () => {
 
   conflux.wallet.set(ADDRESS, account);
   expect(conflux.wallet.has(ADDRESS)).toEqual(true);
-  expect(conflux.wallet.has(format.checksumAddress(ADDRESS))).toEqual(true);
+  expect(conflux.wallet.has(ADDRESS)).toEqual(true);
 
-  const ERROR_ADDRESS = `${ADDRESS.substr(0, 20)}${ADDRESS.substr(20).toUpperCase()}`;
-  expect(() => conflux.wallet.set(ERROR_ADDRESS, account)).toThrow('checksum error');
+//   const ERROR_ADDRESS = `${ADDRESS.substr(0, 20)}${ADDRESS.substr(20).toUpperCase()}`;
+//   expect(() => conflux.wallet.set(ERROR_ADDRESS, account)).toThrow('checksum error');
 });
 
 test('set not BaseAccount', async () => {
@@ -61,7 +63,7 @@ test('set already exist', async () => {
 });
 
 test('addPrivateKey', async () => {
-  const account = conflux.wallet.addPrivateKey(PRIVATE_KEY);
+  const account = conflux.wallet.addPrivateKey(PRIVATE_KEY, CONST.TESTNET_ID);
   expect(conflux.wallet.has(ADDRESS)).toEqual(true);
 
   expect(account.privateKey).toEqual(PRIVATE_KEY);
@@ -71,7 +73,7 @@ test('addPrivateKey', async () => {
 });
 
 test('addKeystore', async () => {
-  const account = conflux.wallet.addKeystore(KEYSTORE, PASSWORD);
+  const account = conflux.wallet.addKeystore(KEYSTORE, PASSWORD, CONST.TESTNET_ID);
   expect(conflux.wallet.has(ADDRESS)).toEqual(true);
 
   expect(account.privateKey).toEqual(PRIVATE_KEY);
@@ -98,10 +100,10 @@ test('addRandom same entropy', async () => {
 
 // ----------------------------------------------------------------------------
 test('account.encrypt', () => {
-  const account1 = conflux.wallet.addPrivateKey(PRIVATE_KEY);
+  const account1 = conflux.wallet.addPrivateKey(PRIVATE_KEY, CONST.TESTNET_ID);
 
   const keystore = account1.encrypt(PASSWORD);
-  const account2 = account1.constructor.decrypt(keystore, PASSWORD);
+  const account2 = account1.constructor.decrypt(keystore, PASSWORD, CONST.TESTNET_ID);
 
   expect(account1.privateKey).toEqual(account2.privateKey);
   expect(account1.address).toEqual(account2.address);
@@ -109,7 +111,7 @@ test('account.encrypt', () => {
 
 // ----------------------------------------------------------------------------
 test('signTransaction', async () => {
-  const account = conflux.wallet.addPrivateKey(PRIVATE_KEY);
+  const account = conflux.wallet.addPrivateKey(PRIVATE_KEY, CONST.TESTNET_ID);
 
   const options = {
     nonce: 0,
@@ -117,7 +119,7 @@ test('signTransaction', async () => {
     gas: 10000,
     storageLimit: 10000,
     epochHeight: 100,
-    chainId: 0,
+    chainId: 1,
   };
 
   const transaction = await account.signTransaction(options);
@@ -128,7 +130,7 @@ test('signTransaction', async () => {
 });
 
 test('signMessage', async () => {
-  const account = conflux.wallet.addPrivateKey(PRIVATE_KEY);
+  const account = conflux.wallet.addPrivateKey(PRIVATE_KEY, CONST.TESTNET_ID);
 
   const message = await account.signMessage('Hello World');
   expect(message.from).toEqual(ADDRESS);

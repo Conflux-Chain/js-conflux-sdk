@@ -56,6 +56,24 @@ const TRANSACTION_GAS = 21000;
  */
 const TRANSACTION_STORAGE_LIMIT = 0;
 
+/**
+ * mainnet chainId
+ *
+ * @type {number}
+ * > CONST.MAINNET_ID
+ 0
+ */
+const MAINNET_ID = 1029;
+
+/**
+ * testnet chainId
+ *
+ * @type {number}
+ * > CONST.TESTNET_ID
+ 0
+ */
+const TESTNET_ID = 1;
+
 module.exports = {
   WORD_BYTES,
   WORD_CHARS,
@@ -65,4 +83,6 @@ module.exports = {
   MIN_GAS_PRICE,
   TRANSACTION_GAS,
   TRANSACTION_STORAGE_LIMIT,
+  TESTNET_ID,
+  MAINNET_ID,
 };
