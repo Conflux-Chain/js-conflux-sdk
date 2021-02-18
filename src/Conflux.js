@@ -7,6 +7,7 @@ const Contract = require('./contract');
 const internalContract = require('./contract/internal');
 const PendingTransaction = require('./subscribe/PendingTransaction');
 const Subscription = require('./subscribe/Subscription');
+const pkg = require('../package.json');
 
 /**
  * A sdk of conflux.
@@ -49,6 +50,8 @@ class Conflux {
     useHexAddressInParameter = false,
     ...rest
   } = {}) {
+    this.version = pkg.version;
+
     /**
      * Provider for rpc call
      *

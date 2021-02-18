@@ -71,7 +71,7 @@ Notice: one address can have two form `checksumed` and `not checksumed`, these t
 
 
 ### Send Transaction
-For detail explanation of send transaction check [here](./how_to_send_tx.md)
+Check [here](./how_to_send_tx.md) to know more details
 
 ### chainId
 `chainId` is used to distinguish different network and prevent replay attack, currently:

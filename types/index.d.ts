@@ -10,6 +10,7 @@ type Quantity = string | number | JSBI;
 interface ConfluxOption {
   url: string,
   timeout?: number,
+  networkId?: number,
   logger?: object,
   defaultGasPrice?: number,
   defaultGasRatio?: number,
@@ -95,6 +96,14 @@ export class Conflux {
   estimateGasAndCollateral(transaction: object, epochNumber?: EpochNumber): Promise<object>;
 
   getLogs(options: object): Promise<object[]>;
+
+  traceBlock(blockHash: string): Promise<object[]>;
+
+  getDepositList(address: string, epochNumber?: EpochNumber): Promise<object[]>;
+
+  getVoteList(address: string, epochNumber?: EpochNumber): Promise<object[]>;
+
+  getSupplyInfo(epochNumber: EpochNumber): Promise<object>;
 
   // ----------------------------- subscription -------------------------------
   subscribe(name: string, ...args: any[]): Promise<string>

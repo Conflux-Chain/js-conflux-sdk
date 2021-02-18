@@ -18,7 +18,8 @@ export interface BlockHeader {
     refereeHashes: string[];
     size: number;
     timestamp: number;
-    transactionsRoot: string
+    transactionsRoot: string;
+    gasUsed: string;
 }
 
 export interface Block extends BlockHeader {
@@ -115,6 +116,11 @@ export interface TransactionReceipt {
     outcomeStatus: number;
     logsBloom: string;
     logs: CfxLog[];
+    storageCollateralized: string;
+    storageReleased: Object[];
+    txExecErrorMsg: string;
+    gasCoveredBySponsor: boolean;
+    storageCoveredBySponsor: boolean;
 }
 
 export interface Account {
@@ -125,4 +131,5 @@ export interface Account {
     collateralForStorage: number;
     accumulatedInterestReturn: number;
     admin: Address;
+    address: Address;
 }

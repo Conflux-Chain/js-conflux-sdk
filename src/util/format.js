@@ -642,6 +642,6 @@ format.traces = format({
 
 format.blockTraces = format({
   transactionTraces: [format.traces],
-});
+}).$or(null);
 
 module.exports = format;
