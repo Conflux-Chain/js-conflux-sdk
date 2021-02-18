@@ -61,7 +61,7 @@ const TRANSACTION_STORAGE_LIMIT = 0;
  *
  * @type {number}
  * > CONST.MAINNET_ID
- 0
+ 1029
  */
 const MAINNET_ID = 1029;
 
@@ -70,9 +70,18 @@ const MAINNET_ID = 1029;
  *
  * @type {number}
  * > CONST.TESTNET_ID
- 0
+ 1
  */
 const TESTNET_ID = 1;
+
+/**
+ * zero address
+ *
+ * @type {string}
+ * > ZERO_ADDRESS
+ 0x0000000000000000000000000000000000000000
+ */
+const ZERO_ADDRESS_HEX = '0x0000000000000000000000000000000000000000';
 
 module.exports = {
   WORD_BYTES,
@@ -85,4 +94,5 @@ module.exports = {
   TRANSACTION_STORAGE_LIMIT,
   TESTNET_ID,
   MAINNET_ID,
+  ZERO_ADDRESS_HEX,
 };

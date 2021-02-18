@@ -1,6 +1,6 @@
 # change log
 
-## v1.5.0
+## v1.5.10
 
 * `Conflux`'s option can pass `networkId` now, and add a new method `updateNetworkId` to sync networkId from RPC.
 * `format.address` will return new CIP37 addresses, if you pass a hex address, `networkId` should also be passed as second parameter
