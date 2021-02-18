@@ -1,5 +1,4 @@
-import JSBI from 'jsbi';
-
+type JSBI = BigInt;
 type EPOCH_LABEL = 'latest_mined' | 'latest_state' | 'latest_checkpoint' | 'latest_confirmed' | 'earliest';
 type EpochNumber = number | EPOCH_LABEL;
 type Address = string;
