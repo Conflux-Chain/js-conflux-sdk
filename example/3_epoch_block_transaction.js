@@ -10,7 +10,8 @@ const JSBI = require('jsbi');
 const { Conflux, sign, format } = require('../src'); // require('js-conflux-sdk');
 
 const conflux = new Conflux({
-  url: 'http://test.confluxrpc.org',
+  url: 'http://test.confluxrpc.org/v2',
+  networkId: 1,
 });
 
 async function getGenesisBlock() {
@@ -36,7 +37,7 @@ async function getGenesisBlock() {
     "deferredReceiptsRoot": "0x09f8709ea9f344a810811a373b30861568f5686e649d6177fd92ea2db7477508",
     "deferredStateRoot": "0x867d0d102ed7eb638e25ab718c4ac4ba3d7fa0d87748382d9580b25f608dc80a",
     "hash": "0x2cfd947cd88b0876a0c7e696698188f8ea3b82dcdc239e32255e6f046045f595",
-    "miner": "0x1000000000000000000000000000000000000100",
+    "miner": "CFXTEST:TYPE.USER:AAJAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAV2WGH9U7",
     "nonce": "0x0",
     "parentHash": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470",
     "powQuality": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",

@@ -2,11 +2,14 @@
 const { Conflux } = require('../src'); // require('js-conflux-sdk');
 const { abi, bytecode } = require('./contract/override.json');
 
-const conflux = new Conflux({ url: 'http://test.confluxrpc.org' });
+const conflux = new Conflux({ 
+    url: 'http://test.confluxrpc.org/v2',
+    networkId: 1,
+});
 const contract = conflux.Contract({
   abi,
   bytecode,
-  address: '0x8f2c179069dfba596220b0d22c2542c7ba8232f1', // deployed contract address
+  address: 'CFXTEST:TYPE.CONTRACT:ACHW2F6URHT5Y0NCEC2RENBFJND5ZAVW8EBS5F9E7Z', // deployed contract address
 });
 
 function showContract() {
