@@ -781,14 +781,9 @@ class Conflux {
    "0xbe007c3eca92d01f3917f33ae983f40681182cf618defe75f490a65aac016914"
    */
   async sendRawTransaction(hex) {
-    try {
-      return await this.provider.call('cfx_sendRawTransaction',
-        format.hex(hex),
-      );
-    } catch (e) {
-      e.message = e.data || e.message;
-      throw e;
-    }
+    return await this.provider.call('cfx_sendRawTransaction',
+      format.hex(hex),
+    );
   }
 
   /**

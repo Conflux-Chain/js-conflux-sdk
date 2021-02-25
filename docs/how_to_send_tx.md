@@ -11,7 +11,7 @@ const ADDRESS = 'cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp';
 
 async function main() {
   const conflux = new Conflux({ 
-    url: 'http://test.confluxrpc.org',
+    url: 'http://test.confluxrpc.org/v2',
     networkId: 1,
   });
   
@@ -106,7 +106,7 @@ const ADDRESS = 'cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp';
 
 async function main() {
   const conflux = new Conflux({ 
-    url: 'http://test.confluxrpc.org',
+    url: 'http://test.confluxrpc.org/v2',
     networkId: 1,
   });
   
@@ -169,7 +169,10 @@ const PRIVATE_KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef012345678
 const ADDRESS = 'cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp';
 
 async function main() {
-  const conflux = new Conflux({ url: 'http://test.confluxrpc.org' });
+  const conflux = new Conflux({ 
+    url: 'http://test.confluxrpc.org/v2',
+    networkId: 1,
+  });
   const account = conflux.wallet.addPrivateKey(PRIVATE_KEY); // create account instance and add to wallet
   
   const estimate = await conflux.estimateGasAndCollateral({ to, value });
@@ -200,7 +203,7 @@ Normally you can estimate it by call `estimateGasAndCollateral`.
 
 ```js
 const conflux = new Conflux({
-    url: 'http://test.confluxrpc.org',
+    url: 'http://test.confluxrpc.org/v2',
     logger: console, // for debug
     defaultGasPrice: 1,
     defaultGasRatio: 1.1,
@@ -233,7 +236,7 @@ const ADDRESS = 'cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp';
 
 async function main() {
   const conflux = new Conflux({ 
-    url: 'http://test.confluxrpc.org',
+    url: 'http://test.confluxrpc.org/v2',
     networkId: 1,
   });
 
@@ -249,7 +252,7 @@ async function main() {
     data: '0x'
   });
 
-  transaction.sign(PRIVATE_KEY); // sender privateKey
+  transaction.sign(PRIVATE_KEY, 1); // sender privateKey
 
   const transactionHash = await conflux.sendRawTransaction(transaction.serialize());
   console.log(transactionHash)
@@ -278,7 +281,7 @@ const PRIVATE_KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef012345678
 
 async function main() {
   const conflux = new Conflux({ 
-    url: 'http://test.confluxrpc.org',
+    url: 'http://test.confluxrpc.org/v2',
     networkId: 1,
   });
   const account = conflux.wallet.addPrivateKey(PRIVATE_KEY); // create account instance and add to wallet
