@@ -32,6 +32,8 @@ export class Conflux {
 
   close(): void;
 
+  updateNetworkId(): Promise<void>;
+
   // --------------------------------------------------------------------------
   getClientVersion(): Promise<string>;
 
