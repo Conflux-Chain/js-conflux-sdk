@@ -1,11 +1,5 @@
 const EventEmitter = require('events');
-
-class RPCError extends Error {
-  constructor(object) {
-    super(object);
-    Object.assign(this, object);
-  }
-}
+const RPCError = require('./RPCError');
 
 class BaseProvider extends EventEmitter {
   /**
@@ -63,7 +57,7 @@ class BaseProvider extends EventEmitter {
 
     if (error) {
       this.logger.error({ data, error, duration: Date.now() - startTime });
-      throw new BaseProvider.RPCError(error);
+      throw new RPCError(error, { method, params });
     } else {
       this.logger.info({ data, result, duration: Date.now() - startTime });
     }
@@ -96,7 +90,7 @@ class BaseProvider extends EventEmitter {
     const returnArray = await this.requestBatch(dataArray);
 
     this.logger.info({ dataArray, returnArray, duration: Date.now() - startTime });
-    return returnArray.map(({ result, error }) => (error ? new BaseProvider.RPCError(error) : result));
+    return returnArray.map(({ result, error }, i) => (error ? new RPCError(error, array[i]) : result));
   }
 
   close() {}

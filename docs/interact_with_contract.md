@@ -24,7 +24,7 @@ const PRIVATE_KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef012345678
 
 async function main() {
   const conflux = new Conflux({ 
-    url: 'http://test.confluxrpc.org',
+    url: 'http://test.confluxrpc.org/v2',
     networkId: 1,
   });
   const account = conflux.wallet.addPrivateKey(PRIVATE_KEY);
@@ -48,7 +48,7 @@ async function main() {
     "gasUsed": 1054531n,
     "gasFee": 1054531000000000n,
     "blockHash": "0x4a8b07e2694e358af075f7a9e96e78842b77ac2d511e2ab33f6acfff34a5846c",
-    "contractCreated": "0x8a9c270e1a99c05ca90ef0f0008b8f6444cf1a97",
+    "contractCreated": "CFXTEST:TYPE.CONTRACT:ACFK2K2SDMP6A1FKB52TAAENV7WEKX24W6KKF7RF0E",
     "from": "cfxtest:aar7x4r8mkrnw39ggs8rz40j1znwh5mrrpufpr2u76",
     "logs": [],
     "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
@@ -58,7 +58,7 @@ async function main() {
   }
   */
 
-  // created contract address: "0x8a9c270e1a99c05ca90ef0f0008b8f6444cf1a97"
+  // created contract address: "CFXTEST:TYPE.CONTRACT:ACFK2K2SDMP6A1FKB52TAAENV7WEKX24W6KKF7RF0E"
 }
 
 main().catch(console.log);
@@ -76,7 +76,7 @@ const { abi } = MINI_ERC20;
 
 async function main() {
   const conflux = new Conflux({ 
-    url: 'http://test.confluxrpc.org',
+    url: 'http://test.confluxrpc.org/v2',
     networkId: 1,
   });
   const account = conflux.wallet.addPrivateKey(PRIVATE_KEY);
@@ -107,7 +107,7 @@ const { Conflux } = require('js-conflux-sdk');
 
 async function main() {
     const conflux = new Conflux({ 
-        url: 'http://test.confluxrpc.org',
+        url: 'http://test.confluxrpc.org/v2',
         networkId: 1,
     });
     

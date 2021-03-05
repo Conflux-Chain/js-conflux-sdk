@@ -2,13 +2,14 @@
 const { Conflux, Drip } = require('../src'); // require('js-conflux-sdk');
 
 const conflux = new Conflux({
-  url: 'http://test.confluxrpc.org',
+  url: 'http://test.confluxrpc.org/v2',
+  networkId: 1,
   logger: console, // use console to print log
 });
 
 // ----------------------------------------------------------------------------
 async function getAccountBalance() {
-  const balance = await conflux.getBalance('0x1be45681ac6c53d5a40475f7526bac1fe7590fb8');
+  const balance = await conflux.getBalance('cfxtest:aar8jzybzv0fhzreav49syxnzut8s0jt1a1pdeeuwb');
 
   console.log(balance); // "4999998839889983249999999950307784"
   console.log(Drip(balance).toGDrip()); // "4999998839889983249999999.950307784"
@@ -51,7 +52,7 @@ function encryptAndDecryptPrivateKeyAccount() {
   console.log(decryptedAccount);
   /*
   PrivateKeyAccount {
-    address: '0x1be45681ac6c53d5a40475f7526bac1fe7590fb8',
+    address: 'cfxtest:aar8jzybzv0fhzreav49syxnzut8s0jt1a1pdeeuwb',
     publicKey: '0x2500e7f3fbddf2842903f544ddc87494ce95029ace4e257d54ba77f2bc1f3a8837a9461c4f1c57fecc499753381e772a128a5820a924a2fa05162eb662987a9f',
     privateKey: '0x46b9e861b63d3509c88b7817275a30d22d62c8cd8fa6486ddee35ef0d8e0495f'
   }
@@ -67,7 +68,7 @@ function genRandomAccount() {
   console.log(randomAccount);
   /*
   PrivateKeyAccount {
-    address: '0x1923289de6627afd12cf96b08d06b86b3b9bcbc9',
+    address: 'cfxtest:aapwgme763vhz9jw38nnbdjg1bzx1g8n3e6mtfmm6r',
     publicKey: '0x06402a2970f35e195ee9eaa4a9cb1464a9e5a8a79df1e48808e88f4a6c1744326affe84b6f37dcc3a48d8d5b5f6e2b4130e11b812c04f92edb48c40363764cae',
     privateKey: '0xa3bcf3d3d083b12120dbebb7fbb4bcbfd7ad0d2528f366546431668685765814'
   }
@@ -76,7 +77,7 @@ function genRandomAccount() {
   console.log(conflux.wallet.addRandom()); // different account
   /*
   PrivateKeyAccount {
-    address: '0x1dfda0eb017eac56d7fc99e696b729904e65e2c7',
+    address: 'cfxtest:aas95jhnaf9m2z019wp8rfz1fgje63tc268aaeyaup',
     publicKey: '0x27589308adf0f0b6362a834da664a200453152b0103b3952d4b92e30c9f37587107dbc37953038b8e5ea697a7f745a59c36a50318cfa5d75e42637df7c6e5b8b',
     privateKey: '0xad5a63169fe8af526bd9834e3763e169bf28f8b9f72241ce647ebb2eb5d02dcb'
   }

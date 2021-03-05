@@ -6,6 +6,17 @@
 
 JavaScript Conflux Software Development Kit
 
+## Documentation
+
+* [Overview](./docs/overview.md)
+* [Complete document for sending transaction](./docs/how_to_send_tx.md)
+* [Interacting with contract](./docs/interact_with_contract.md)
+* [SDK support for CIP37 address](./docs/conflux_checksum_address.md)
+* [API](./docs/api.md)
+* [Error handling](./docs/error_handling.md)
+* [Conflux Official document](https://developer.conflux-chain.org/docs/introduction/en/conflux_overview)
+* [Conflux RPC endpoints](https://github.com/conflux-fans/conflux-rpc-endpoints)
+
 ## 1.5.10 Key features
 v1.5.10 add support for [CIP37](https://github.com/Conflux-Chain/CIPs/blob/master/CIPs/cip-37.md) address.
 And only work with `conflux-rust v1.1.1` or above.
@@ -88,16 +99,6 @@ or
 
 CDN services such as `jsdelivr` provide link you can directly use for example:
 https://cdn.jsdelivr.net/npm/js-conflux-sdk/dist/js-conflux-sdk.umd.min.js
-
-## Documentation
-
-* [Overview](./docs/overview.md)
-* [Complete document for sending transaction](./docs/how_to_send_tx.md)
-* [Interacting with contract](./docs/interact_with_contract.md)
-* [SDK support for CIP37 address](./docs/conflux_checksum_address.md)
-* [API](./docs/api.md)
-* [Conflux Official document](https://developer.conflux-chain.org/docs/introduction/en/conflux_overview)
-* [Conflux RPC endpoints](https://github.com/conflux-fans/conflux-rpc-endpoints)
 
 ## TODO
 

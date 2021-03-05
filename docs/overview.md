@@ -5,12 +5,12 @@ The purpose of this page is to give you a sense of everything js-conflux-sdk can
 
 1. Node.js environment to install this SDK
 2. Conflux account with some CFX (Use Conflux Portal to create account and get testnet CFX from faucet)
-3. Conflux RPC endpoint, for example `http://test.confluxrpc.org` is a testnet RPC endpoint
+3. Conflux RPC endpoint, for example `http://test.confluxrpc.org/v2` is a testnet RPC endpoint
 
 
 ## Initialize
 After installing `js-conflux-sdk` (via npm), you’ll need to specify the provider url. You can use the 
-mainnet(https://main.confluxrpc.org), or testnet(https://test.confluxrpc.org), or [run your own Conflux node](https://developer.conflux-chain.org/docs/conflux-doc/docs/independent_chain).
+mainnet(https://main.confluxrpc.org/v2), or testnet(https://test.confluxrpc.org/v2), or [run your own Conflux node](https://developer.conflux-chain.org/docs/conflux-doc/docs/independent_chain).
 
 ### Testnet
 
@@ -20,7 +20,7 @@ With a RPC endpoint we can initialize a Conflux object, which can be used to sen
 const { Conflux } = require('js-conflux-sdk');
 // initialize a Conflux object
 const conflux = new Conflux({
-    url: 'http://test.confluxrpc.org',
+    url: 'http://test.confluxrpc.org/v2',
     logger: console, // for debug
     networkId: 1,
 });
@@ -57,7 +57,7 @@ main();
 Besides balance you can get a lot blockchain information through it, for example: nonce, block, transaction, receipt and so on.
 You can check [API](../api.md) and [RPC](https://developer.conflux-chain.org/docs/conflux-doc/docs/json_rpc)
 
-### Conflux address
+### Conflux hex address
 In Conflux network there are three kind address:
 
 * Normal address `0x1` prefix: `0x1386B4185A223EF49592233b69291bbe5a80C527`
@@ -69,9 +69,13 @@ So normally a ethereum's address cann't used as conflux address, otherwise it st
 Notice: one address can have two form `checksumed` and `not checksumed`, these two actually are same account. For example
 `0x1386B4185A223EF49592233b69291bbe5a80C527` and `0x1386b4185a223ef49592233b69291bbe5a80c527` which point to same account.
 
+### Conflux base32 checksum address
+From `conflux-rust 1.1.1` Conflux has switch to base32Checksum address for example `cfxtest:aak2rra2njvd77ezwjvx04kkds9fzagfe6d5r8e957`.
+It was introduced by [CIP37](https://github.com/Conflux-Chain/CIPs/blob/master/CIPs/cip-37.md). `js-conflux-sdk` add support for it from version `1.5.10`, check [here](./conflux_checksum_address.md) for details.
+
 
 ### Send Transaction
-Check [here](./how_to_send_tx.md) to know more details
+Check [here](./how_to_send_tx.md) for details
 
 ### chainId
 `chainId` is used to distinguish different network and prevent replay attack, currently:
