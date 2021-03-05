@@ -11,6 +11,7 @@ const { checksumAddress } = require('./sign');
  * @return {string}
  *
  * @example
+ * cfx:aasyczc5bt792087z25kxutwj9t13sbsmy0rc60zju
  */
 function encodeCfxAddress(addressBuffer, netId, verbose = false) {
   return encode(addressBuffer, netId, verbose);
@@ -23,6 +24,11 @@ function encodeCfxAddress(addressBuffer, netId, verbose = false) {
  * @return {Object}
  *
  * @example
+ {
+    "hexAddress": "an address buffer",
+    "netId": 1029,
+    "type": "user"
+ }
  */
 function decodeCfxAddress(address) {
   return decode(address);
@@ -34,7 +40,6 @@ function decodeCfxAddress(address) {
  * @param address {string}
  * @return {boolean}
  *
- * @example
  */
 function isValidCfxAddress(address) {
   if (!lodash.isString(address)) {
@@ -49,11 +54,10 @@ function isValidCfxAddress(address) {
 }
 
 /**
- * Check whether a given address is valid
+ * Check whether a given address is valid, if not valid will throw an error
  *
  * @param address {string}
  *
- * @example
  */
 function verifyCfxAddress(address) {
   decodeCfxAddress(address.toLowerCase());

@@ -78,6 +78,14 @@ try {
 }
 ```
 
+If you use base32 address to call 1.1.0 or below RPC server, it will return with an error:
+
+```js
+"error": {
+    "code": -32602,
+    "message": "Invalid params: 0x prefix is missing."
+}
+```
 ### Contract
 The new CIP-37 address will not affect interactions with smart contracts. Data constructed when calling smart contracts are still using hex40 addresses ultimately. The js-jdk will change the address format automatically. 
 
