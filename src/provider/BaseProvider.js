@@ -57,7 +57,7 @@ class BaseProvider extends EventEmitter {
 
     if (error) {
       this.logger.error({ data, error, duration: Date.now() - startTime });
-      throw new RPCError(error, {method, params});
+      throw new RPCError(error, { method, params });
     } else {
       this.logger.info({ data, result, duration: Date.now() - startTime });
     }
