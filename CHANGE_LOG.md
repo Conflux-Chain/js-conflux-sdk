@@ -1,5 +1,13 @@
 # change log
 
+## v1.5.13
+
+* `getStatus` method rethurn three new fields `latestState`, `latestConfirmed`, `latestCheckpoint`
+* add two `trace` related rpc `traceTransaction`, `traceFilter`
+* add one debug rpc `getEpochReceipts`
+
+Notice: this update is corresponding `conflux-rust v1.1.2`
+
 ## v1.5.10
 
 * `Conflux`'s option can pass `networkId` now, and add a new method `updateNetworkId` to sync networkId from RPC.
