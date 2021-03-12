@@ -5,8 +5,9 @@
 * `getStatus` method rethurn three new fields `latestState`, `latestConfirmed`, `latestCheckpoint`
 * add two `trace` related rpc `traceTransaction`, `traceFilter`
 * add one debug rpc `getEpochReceipts`
+* add two provider wrapper `wrapEthereum`, `wrapConflux` to work with metamask
 
-Notice: this update is corresponding `conflux-rust v1.1.2`
+Notice: this is an update corresponding `conflux-rust v1.1.2`
 
 ## v1.5.10
 
