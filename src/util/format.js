@@ -511,6 +511,9 @@ format.status = format({
   epochNumber: format.uInt,
   blockNumber: format.uInt,
   pendingTxNumber: format.uInt,
+  latestCheckpoint: format.uInt.$or(null),
+  latestConfirmed: format.uInt.$or(null),
+  latestState: format.uInt.$or(null),
 });
 
 format.account = format({
@@ -563,6 +566,8 @@ format.receipt = format({
     collaterals: format.bigUInt,
   }],
 });
+
+format.epochReceipts = format([[format.receipt]]).$or(null);
 
 format.log = format({
   epochNumber: format.uInt,
@@ -624,24 +629,32 @@ format.epoch = format({
   epochNumber: format.uInt,
 });
 
-// ---------------------------- parse block traces -------------------------
+// ---------------------------- trace formater -------------------------
 format.action = format({
   action: {
-    input: format.hex.$before(Buffer.from),
-    init: format.hex.$before(Buffer.from),
-    returnData: format.hex.$before(Buffer.from),
     gas: format.bigUInt,
     value: format.bigUInt,
     gasLeft: format.bigUInt,
   },
 });
 
-format.traces = format({
+format.txTraces = format({
   traces: [format.action],
 });
 
 format.blockTraces = format({
-  transactionTraces: [format.traces],
+  transactionTraces: [format.txTraces],
 }).$or(null);
+
+format.traces = format([format.action]).$or(null);
+
+format.traceFilter = format({
+  fromEpoch: format.epochNumber.$or(null),
+  toEpoch: format.epochNumber.$or(null),
+  blockHashes: format([format.blockHash]).$or(null),
+  after: format.bigUIntHex.$or(null),
+  count: format.bigUIntHex.$or(null),
+  actionTypes: format([format.any]).$or(null),
+});
 
 module.exports = format;

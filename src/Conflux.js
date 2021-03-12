@@ -1212,6 +1212,52 @@ class Conflux {
     return format.blockTraces(result);
   }
 
+  /**
+   * Return transaction's trace
+   * @param txHash {string} transaction hash
+   * @returns {Promise<object[]>} Array of traces.
+   *
+   * @example
+   * > await conflux.traceTransaction('0xaf0e1d773dee28c95bcfa5480ed663fcc695b32c8c1dd81f57ff61ff09f55f88')
+   */
+  async traceTransaction(txHash) {
+    const result = await this.provider.call('trace_transaction', format.transactionHash(txHash));
+    return format.traces(result);
+  }
+
+  /**
+   * Return traces that satisfy an filter
+   * @param options {object} trace filters
+   * @returns {Promise<object[]>} Array of traces.
+   *
+   * @example
+   * > await conflux.traceFilter({
+      fromEpoch: 1,
+      toEpoch: 100,
+      count: 100,
+      after: 100,
+      blockHashes: ['0xaf0e1d773dee28c95bcfa5480ed663fcc695b32c8c1dd81f57ff61ff09f55f88'],
+      actionTypes: ['call_result']
+    })
+   */
+  async traceFilter(options) {
+    const result = await this.provider.call('trace_filter', format.traceFilter(options));
+    return format.traces(result);
+  }
+
+  /**
+   * Return one epoch's all receipts
+   * @param epochNumber {number|string} epoch number
+   * @returns {Promise<object[][]>} Array of array receipts.
+   *
+   * @example
+   * > await conflux.getEpochReceipts('0x6')
+   */
+  async getEpochReceipts(epochNumber) {
+    const result = await this.provider.call('cfx_getEpochReceipts', format.epochNumber(epochNumber));
+    return format.epochReceipts(result);
+  }
+
   // ----------------------------- subscription -------------------------------
   /**
    * Subscribe event by name and got id, and provider will emit event by id
