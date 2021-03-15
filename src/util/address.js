@@ -123,6 +123,13 @@ function simplifyCfxAddress(address) {
   return `${parts[0]}:${parts[2]}`;
 }
 
+/**
+ * Convert an ethereum address to conflux hex address by replace it's first letter to 1
+ */
+function ethAddressToCfxAddress(address) {
+  return `0x1${address.toLowerCase().slice(3)}`;
+}
+
 module.exports = {
   encodeCfxAddress,
   decodeCfxAddress,
@@ -131,4 +138,5 @@ module.exports = {
   hasNetworkPrefix,
   ethChecksumAddress,
   simplifyCfxAddress,
+  ethAddressToCfxAddress,
 };
