@@ -73,7 +73,11 @@ async function useConfluxPrepareTx(txInfo, callRPC) {
     txInfo.chainId = chainId;
   }
   if (!txInfo.gas || !txInfo.storageLimit) {
-    txInfo = format.callTxAdvance(txInfo.chainId)(txInfo);
+    let chainId = Number(txInfo.chainId);
+    if(isNaN(chainId)) {
+      throw new Error('Invalid chainId');
+    }
+    txInfo = format.callTxAdvance()(txInfo);
     const { gasLimit, storageCollateralized } = await callRPC('cfx_estimateGasAndCollateral', txInfo);
     if (!txInfo.gas) {
       txInfo.gas = gasLimit;

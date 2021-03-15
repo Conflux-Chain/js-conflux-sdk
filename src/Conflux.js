@@ -31,6 +31,7 @@ class Conflux {
    * @param [options.url] {string} - Url of Conflux node to connect.
    * @param [options.timeout] {number} - Request time out in ms
    * @param [options.logger] {Object} - Logger object with 'info' and 'error' method.
+   * @param [options.networkId] {number} - Connected RPC's networkId
    * @example
    * > const { Conflux } = require('js-conflux-sdk');
    * > const conflux = new Conflux({url:'http://test.confluxrpc.org', networkId: 1});
