@@ -2,6 +2,7 @@
   <head>
     <title>Test sign</title>
     <script src='/dist/js-conflux-sdk.umd.min.js'></script>
+    <!-- <script src='https://cdn.jsdelivr.net/npm/js-conflux-sdk/dist/js-conflux-sdk.umd.min.js'></script> -->
   </head>
   <body>
     <button class="enableEthereumButton">Enable Ethereum</button>
@@ -56,6 +57,8 @@
       sendTxButton2.addEventListener('click', async () => {
         // let nonce = await cfx.getStatus();
         try {
+          let b = await cfx.getBalance('cfxtest:aak2rra2njvd77ezwjvx04kkds9fzagfe6d5r8e957');
+          console.log("balance", b.toString());
           let hash = await cfx.sendTransaction({
             from: convertEthAddressToCfx(ethereum.selectedAddress),
             to: '0x0000000000000000000000000000000000000000',
