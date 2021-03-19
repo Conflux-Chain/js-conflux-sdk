@@ -106,7 +106,7 @@ function wrapConflux(provider) {
 
   async function request(method, ...params) {
     if (method !== 'cfx_sendTransaction') {
-      return originRequest(method, params);
+      return originRequest(method, ...params);
     }
     let txInfo = params[0];
     txInfo = await useConfluxPrepareTx(txInfo, originRequest);
