@@ -26,6 +26,8 @@ export class Conflux {
   defaultGasRatio: number;
   defaultStorageRatio: number;
 
+  static create(options: ConfluxOption): Conflux;
+
   Contract(options: ContractOption): object;
 
   InternalContract(name: string): object;
@@ -197,3 +199,57 @@ export class Contract {
   abi: any;
   address: Address;
 }
+
+export class Drip {
+  constructor(value: number);
+
+  static fromCFX(value: string): Drip;
+
+  static fromGDrip(value: string): Drip;
+
+  toCFX(): string;
+
+  toGDrip(): string;
+}
+
+export class Message {
+  static sign(privateKey: string, messageHash: string): string;
+
+  static recover(signature: string, messageHash: string): string;
+
+  constructor(message: string);
+
+  get hash(): string;
+
+  get from(): string;
+
+  get r(): string;
+
+  get s(): string;
+
+  get v(): number;
+
+  sign(privateKey: string, networkId: number): Message;
+}
+
+export class PrivateKeyAccount {
+  static random(entropy: Buffer, networkId: number): PrivateKeyAccount;
+
+  static decrypt(keystore: object, password: string, networkId: number): PrivateKeyAccount;
+
+  constructor(privateKey: string, networkId: number);
+
+  encrypt(password: string): object;
+
+  signTransaction(options: object): Transaction;
+
+  signMessage(options: object): Message;
+}
+
+export declare let sign: object;
+
+export declare let address: object;  // address utilities
+
+export declare let format: any;
+
+export declare let providerWrapper: any;
