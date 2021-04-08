@@ -1,0 +1,58 @@
+<html>
+  <head>
+    <title>Test sign</title>
+    <script src='/dist/js-conflux-sdk.umd.min.js'></script>
+    <!-- <script src='https://cdn.jsdelivr.net/npm/js-conflux-sdk/dist/js-conflux-sdk.umd.min.js'></script> -->
+  </head>
+  <body>
+    <button class="enableEthereumButton">Enable Portal</button>
+    <h2>Account: <span class="showAccount"></span></h2>
+    <script>
+      const ethereumButton = document.querySelector('.enableEthereumButton');
+      const showAccount = document.querySelector('.showAccount');
+
+      ethereumButton.addEventListener('click', () => {
+        getAccount();
+      });
+
+      let account;
+
+      async function getAccount() {
+        const accounts = await conflux.enable();
+        account = accounts[0];
+        showAccount.innerHTML = account;
+      }
+    </script>
+
+    <br/><br/>
+    <button class="sendTxBtn2">SendTx with js-conflux-sdk</button>
+    <script>
+      
+      // let url = 'https://testnet-rpc.conflux-chain.org.cn/v2';
+      let cfx = new Conflux.Conflux({
+        url,
+        networkId: 1,
+        logger: console,
+      });
+      cfx.provider = conflux;
+      const sendTxButton2 = document.querySelector('.sendTxBtn2');
+      sendTxButton2.addEventListener('click', async () => {
+        let nonce = await cfx.getStatus();
+        console.log("status", nonce);
+        return;
+        try {
+          let b = await cfx.getBalance('cfxtest:aak2rra2njvd77ezwjvx04kkds9fzagfe6d5r8e957');
+          console.log("balance", b.toString());
+          let hash = await cfx.sendTransaction({
+            from: account,
+            to: '0x0000000000000000000000000000000000000000',
+            value: '0x01',
+          });
+          console.log(hash);
+        } catch(e) {
+          console.error(e) ;
+        }
+      });
+    </script>
+  </body>
+</html>

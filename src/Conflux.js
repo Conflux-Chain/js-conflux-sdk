@@ -5,6 +5,7 @@ const providerFactory = require('./provider');
 const Wallet = require('./wallet');
 const Contract = require('./contract');
 const internalContract = require('./contract/internal');
+const { CRC20_ABI } = require('./contract/standard');
 const PendingTransaction = require('./subscribe/PendingTransaction');
 const Subscription = require('./subscribe/Subscription');
 const pkg = require('../package.json');
@@ -178,6 +179,16 @@ class Conflux {
     const options = internalContract[name];
     assert(options, `can not find internal contract named "${name}"`);
     return this.Contract(options);
+  }
+
+  /**
+   * Create an token CRC20 contract with standard CRC20 abi
+   *
+   * @param address {string}
+   * @returns  {Contract} - A token contract instance
+   */
+  CRC20(address) {
+    return this.Contract({ address, abi: CRC20_ABI });
   }
 
   /**
