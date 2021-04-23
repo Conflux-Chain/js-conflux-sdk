@@ -76,8 +76,7 @@ function hasNetworkPrefix(address) {
   if (!lodash.isString(address)) {
     return false;
   }
-  address = address.toLowerCase();
-  const parts = address.split(':');
+  const parts = address.toLowerCase().split(':');
   if (parts.length !== 2 && parts.length !== 3) {
     return false;
   }

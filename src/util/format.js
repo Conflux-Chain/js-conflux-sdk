@@ -234,21 +234,20 @@ format.hex = format(toHex);
 format.hex40 = format.hex.$validate(v => v.length === 2 + 40, 'hex40');
 
 function toAddress(address, networkId, verbose = false) {
-  // convert Account instance to string
-  if (lodash.isObject(address) && addressUtil.hasNetworkPrefix(address.toString())) {
-    address = address.toString();
-  }
-  if (lodash.isString(address) && addressUtil.isValidCfxAddress(address)) {
-    return address;
-  }
-  const buffer = format.hexBuffer(address);
-  if ((lodash.isString(address) && address.length !== 2 + 40) || buffer.length !== 20) {
-    throw new Error('not match "hex40"');
-  }
   if (!networkId) {
     throw new Error('expected parameter: networkId');
   }
-  return addressUtil.encodeCfxAddress(buffer, networkId, verbose);
+  // if is an (Account) object, convert it to string (address)
+  if (lodash.isObject(address) && addressUtil.hasNetworkPrefix(address.toString())) {
+    address = address.toString();
+  }
+  if (lodash.isString(address)) {
+    address = addressUtil.hasNetworkPrefix(address) ? addressUtil.decodeCfxAddress(address).hexAddress : format.hexBuffer(address);
+  }
+  if (address.length !== 20) {
+    throw new Error('not match "hex40"');
+  }
+  return addressUtil.encodeCfxAddress(address, networkId, verbose);
 }
 
 /**
@@ -392,6 +391,8 @@ format.publicKey = format.hex.$validate(v => v.length === 2 + 128, 'publicKey');
 format.hexBuffer = format.hex.$after(v => Buffer.from(v.substr(2), 'hex'));
 
 /**
+ * If pass an string it will decode with ASCII encoding
+ * 
  * @param arg {string|Buffer|array}
  * @return {Buffer}
  *
