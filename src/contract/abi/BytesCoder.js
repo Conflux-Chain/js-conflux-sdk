@@ -42,13 +42,18 @@ class BytesCoder extends BaseCoder {
   encode(value) {
     value = format.bytes(value);
 
-    if (this.size !== undefined) {
-      assert(value.length === this.size, {
-        message: 'length not match',
-        expect: this.size,
-        got: value.length,
-        coder: this,
-      });
+    if (this.size !== undefined && this.size !== value.length) {
+      if (value.length < this.size) {
+        // if short than the expect size, auto complete it
+        value = Buffer.concat([value, Buffer.alloc(this.size - value.length)]);
+      } else {
+        assert(false, {
+          message: 'length not match',
+          expect: this.size,
+          got: value.length,
+          coder: this,
+        });
+      }
     }
 
     let buffer = alignBuffer(value, true);
