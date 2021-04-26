@@ -5,6 +5,7 @@ const providerFactory = require('./provider');
 const Wallet = require('./wallet');
 const Contract = require('./contract');
 const internalContract = require('./contract/internal');
+const { CRC20_ABI } = require('./contract/standard');
 const PendingTransaction = require('./subscribe/PendingTransaction');
 const Subscription = require('./subscribe/Subscription');
 const pkg = require('../package.json');
@@ -178,6 +179,16 @@ class Conflux {
     const options = internalContract[name];
     assert(options, `can not find internal contract named "${name}"`);
     return this.Contract(options);
+  }
+
+  /**
+   * Create an token CRC20 contract with standard CRC20 abi
+   *
+   * @param address {string}
+   * @returns  {Contract} - A token contract instance
+   */
+  CRC20(address) {
+    return this.Contract({ address, abi: CRC20_ABI });
   }
 
   /**
@@ -1048,6 +1059,24 @@ class Conflux {
   }
 
   /**
+   * Return pending info of an account
+   *
+   * @param address {string} - Address to account
+   * @returns {Promise<object>} An account pending info object.
+   * - localNonce `BigInt`: then next nonce can use in the transaction pool
+   * - nextPendingTx `string`: the hash of next pending transaction
+   * - pendingCount `BigInt`: the count of pending transactions
+   * - pendingNonce `BigInt`: the nonce of pending transaction
+   *
+   */
+  async getAccountPendingInfo(address) {
+    const result = await this.provider.call('cfx_getAccountPendingInfo',
+      this._formatAddress(address),
+    );
+    return format.accountPendingInfo(result);
+  }
+
+  /**
    * Returns the size of the collateral storage of given address, in Byte.
    *
    * @param address {string} - Address to check for collateral storage.
@@ -1292,6 +1321,8 @@ class Conflux {
    * If you see the same epoch twice, this suggests a pivot chain reorg has happened (this might happen for recent epochs).
    * For each epoch, the last hash in epochHashesOrdered is the hash of the pivot block.
    *
+   * @param [sub_epoch] {string} Available values are latest_mined(default value) and latest_state
+   *
    * @return {Promise<Subscription>} EventEmitter instance with the follow events:
    * - 'data':
    *   - epochNumber `number`: epoch number
@@ -1316,8 +1347,8 @@ class Conflux {
      ]
    }
    */
-  async subscribeEpochs() {
-    const id = await this.subscribe('epochs');
+  async subscribeEpochs(sub_epoch = CONST.EPOCH_NUMBER.LATEST_MINED) {
+    const id = await this.subscribe('epochs', sub_epoch);
     const subscription = new Subscription(id);
 
     this.provider.on(id, data => {

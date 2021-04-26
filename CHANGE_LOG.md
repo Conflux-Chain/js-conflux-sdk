@@ -1,5 +1,17 @@
 # change log
 
+## v1.16.0
+This version is corresponding to conflux-rust v1.1.3, check it's [changelog](https://github.com/Conflux-Chain/conflux-rust/blob/master/changelogs/CHANGELOG-1.1.x.md#113) for detail info.
+
+* `format.address` will respect `networkId`, `verbose` flag even if the first parameter is an CIP37 address.
+* Add support for standard token contract through `Conflux.CRC20`
+* `cfx_getLogs` filter option add one more field `offset`
+* Add one RPC method `cfx_getAccountPendingInfo` to get account's transaction pending info
+* `epochs` pubsub now accept one parameter `subscription_epoch` the supported values are `latest_mined` (default) and `latest_state`
+* Include `blockHash`, `epochHash`, `epochNumber`, `transactionHash`, and `transactionPosition` for trace RPCs
+* When abi encoding `bytes-N` type, if the data's length is not enough, will auto pad (right) to `N`
+
+
 ## v1.5.13
 
 * `getStatus` method rethurn three new fields `latestState`, `latestConfirmed`, `latestCheckpoint`

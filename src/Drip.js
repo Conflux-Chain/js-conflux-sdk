@@ -41,9 +41,9 @@ class Drip extends String {
    * @return {Drip}
    *
    * @example
-   * > Drip(1.00)
+   * > new Drip(1.00)
    [String (Drip): '1']
-   * > Drip('0xab')
+   * > new Drip('0xab')
    [String (Drip): '171']
    */
   constructor(value) {

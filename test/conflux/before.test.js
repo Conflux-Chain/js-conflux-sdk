@@ -437,7 +437,7 @@ test('subscribeEpochs', async () => {
   const call = jest.spyOn(conflux.provider, 'call');
 
   await conflux.subscribeEpochs();
-  expect(call).toHaveBeenLastCalledWith('cfx_subscribe', 'epochs');
+  expect(call).toHaveBeenLastCalledWith('cfx_subscribe', 'epochs', 'latest_mined');
 
   call.mockRestore();
 });

@@ -234,21 +234,23 @@ format.hex = format(toHex);
 format.hex40 = format.hex.$validate(v => v.length === 2 + 40, 'hex40');
 
 function toAddress(address, networkId, verbose = false) {
-  // convert Account instance to string
+  // if is an (Account) object, convert it to string (address)
   if (lodash.isObject(address) && addressUtil.hasNetworkPrefix(address.toString())) {
     address = address.toString();
   }
-  if (lodash.isString(address) && addressUtil.isValidCfxAddress(address)) {
-    return address;
+  if (lodash.isString(address) && addressUtil.hasNetworkPrefix(address)) {
+    const _decodedAddress = addressUtil.decodeCfxAddress(address);
+    address = _decodedAddress.hexAddress;
+    networkId = networkId || _decodedAddress.netId;
   }
-  const buffer = format.hexBuffer(address);
-  if ((lodash.isString(address) && address.length !== 2 + 40) || buffer.length !== 20) {
+  address = format.hexBuffer(address);
+  if (address.length !== 20) {
     throw new Error('not match "hex40"');
   }
   if (!networkId) {
     throw new Error('expected parameter: networkId');
   }
-  return addressUtil.encodeCfxAddress(buffer, networkId, verbose);
+  return addressUtil.encodeCfxAddress(address, networkId, verbose);
 }
 
 /**
@@ -392,6 +394,8 @@ format.publicKey = format.hex.$validate(v => v.length === 2 + 128, 'publicKey');
 format.hexBuffer = format.hex.$after(v => Buffer.from(v.substr(2), 'hex'));
 
 /**
+ * If pass an string it will decode with ASCII encoding
+ *
  * @param arg {string|Buffer|array}
  * @return {Buffer}
  *
@@ -439,6 +443,7 @@ format.keccak256 = format.bytes.$after(sign.keccak256).$after(format.hex);
 // -------------------------- format method arguments -------------------------
 format.getLogs = format({
   limit: format.bigUIntHex,
+  offset: format.bigUIntHex,
   fromEpoch: format.epochNumber,
   toEpoch: format.epochNumber,
   blockHashes: format.blockHash.$or([format.blockHash]),
@@ -451,6 +456,7 @@ format.getLogsAdvance = function (networkId, toHexAddress = false) {
   const fromatAddress = toHexAddress ? format.hexAddress : format.netAddress(networkId);
   return format({
     limit: format.bigUIntHex,
+    offset: format.bigUIntHex,
     fromEpoch: format.epochNumber,
     toEpoch: format.epochNumber,
     blockHashes: format.blockHash.$or([format.blockHash]),
@@ -632,20 +638,38 @@ format.epoch = format({
 // ---------------------------- trace formater -------------------------
 format.action = format({
   action: {
-    gas: format.bigUInt,
+    from: format.any,
+    to: format.any,
     value: format.bigUInt,
+    gas: format.bigUInt,
     gasLeft: format.bigUInt,
+    input: format.hex,
+    init: format.hex,
+    returnData: format.hex,
+    callType: format.any,
+    outcome: format.uInt,
+    addr: format.any,
   },
-});
+  epochNumber: format.bigUInt,
+  epochHash: format.hex,
+  blockHash: format.hex,
+  transactionHash: format.hex,
+  transactionPosition: format.bigUInt,
+  type: format.any,
+}, { pick: true });
 
+// only used in block traces
 format.txTraces = format({
   traces: [format.action],
+  transactionPosition: format.bigUInt,
 });
 
 format.blockTraces = format({
   transactionTraces: [format.txTraces],
+  epochNumber: format.bigUInt,
 }).$or(null);
 
+// trace array
 format.traces = format([format.action]).$or(null);
 
 format.traceFilter = format({
@@ -655,6 +679,12 @@ format.traceFilter = format({
   after: format.bigUIntHex.$or(null),
   count: format.bigUIntHex.$or(null),
   actionTypes: format([format.any]).$or(null),
+});
+
+format.accountPendingInfo = format({
+  localNonce: format.bigUInt,
+  pendingCount: format.bigUInt,
+  pendingNonce: format.bigUInt,
 });
 
 module.exports = format;

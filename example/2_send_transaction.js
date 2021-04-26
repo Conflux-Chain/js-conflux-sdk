@@ -7,7 +7,7 @@ const conflux = new Conflux({
   // logger: console, // use console to print log
 });
 
-const accountAlice = conflux.wallet.addPrivateKey('0xa816a06117e572ca7ae2f786a046d2bc478051d0717bf5cc4f5397923258d393');
+const accountAlice = conflux.wallet.addPrivateKey('0xa816a06117e572ca7ae2f786a046d2bc478051d0717bf5cc4f5397923258d393', 1);
 const addressBob = 'cfxtest:aatm5bvugvjwdyp86ruecmhf5vmng5ysy2pehzpz9h';
 
 /*
