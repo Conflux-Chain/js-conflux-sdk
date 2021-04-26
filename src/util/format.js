@@ -440,6 +440,7 @@ format.keccak256 = format.bytes.$after(sign.keccak256).$after(format.hex);
 // -------------------------- format method arguments -------------------------
 format.getLogs = format({
   limit: format.bigUIntHex,
+  offset: format.bigUIntHex,
   fromEpoch: format.epochNumber,
   toEpoch: format.epochNumber,
   blockHashes: format.blockHash.$or([format.blockHash]),
@@ -452,6 +453,7 @@ format.getLogsAdvance = function (networkId, toHexAddress = false) {
   const fromatAddress = toHexAddress ? format.hexAddress : format.netAddress(networkId);
   return format({
     limit: format.bigUIntHex,
+    offset: format.bigUIntHex,
     fromEpoch: format.epochNumber,
     toEpoch: format.epochNumber,
     blockHashes: format.blockHash.$or([format.blockHash]),
@@ -633,20 +635,38 @@ format.epoch = format({
 // ---------------------------- trace formater -------------------------
 format.action = format({
   action: {
-    gas: format.bigUInt,
+    from: format.any,
+    to: format.any,
     value: format.bigUInt,
+    gas: format.bigUInt,
     gasLeft: format.bigUInt,
+    input: format.hex,
+    init: format.hex,
+    returnData: format.hex,
+    callType: format.any,
+    outcome: format.uInt,
+    addr: format.any,
   },
-});
+  epochNumber: format.bigUInt,
+  epochHash: format.hex,
+  blockHash: format.hex,
+  transactionHash: format.hex,
+  transactionPosition: format.bigUInt,
+  type: format.any,
+}, {pick: true});
 
+// only used in block traces
 format.txTraces = format({
   traces: [format.action],
+  transactionPosition: format.bigUInt
 });
 
 format.blockTraces = format({
   transactionTraces: [format.txTraces],
+  epochNumber: format.bigUInt,
 }).$or(null);
 
+// trace array
 format.traces = format([format.action]).$or(null);
 
 format.traceFilter = format({
@@ -656,6 +676,12 @@ format.traceFilter = format({
   after: format.bigUIntHex.$or(null),
   count: format.bigUIntHex.$or(null),
   actionTypes: format([format.any]).$or(null),
+});
+
+format.accountPendingInfo = format({
+  localNonce: format.bigUInt,
+  pendingCount: format.bigUInt,
+  pendingNonce: format.bigUInt,
 });
 
 module.exports = format;
