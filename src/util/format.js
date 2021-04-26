@@ -234,18 +234,21 @@ format.hex = format(toHex);
 format.hex40 = format.hex.$validate(v => v.length === 2 + 40, 'hex40');
 
 function toAddress(address, networkId, verbose = false) {
-  if (!networkId) {
-    throw new Error('expected parameter: networkId');
-  }
   // if is an (Account) object, convert it to string (address)
   if (lodash.isObject(address) && addressUtil.hasNetworkPrefix(address.toString())) {
     address = address.toString();
   }
-  if (lodash.isString(address)) {
-    address = addressUtil.hasNetworkPrefix(address) ? addressUtil.decodeCfxAddress(address).hexAddress : format.hexBuffer(address);
+  if (lodash.isString(address) && addressUtil.hasNetworkPrefix(address)) {
+    const _decodedAddress = addressUtil.decodeCfxAddress(address);
+    address = _decodedAddress.hexAddress;
+    networkId = networkId || _decodedAddress.netId;
   }
+  address =format.hexBuffer(address);
   if (address.length !== 20) {
     throw new Error('not match "hex40"');
+  }
+  if (!networkId) {
+    throw new Error('expected parameter: networkId');
   }
   return addressUtil.encodeCfxAddress(address, networkId, verbose);
 }

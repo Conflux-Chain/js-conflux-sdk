@@ -239,6 +239,5 @@ test('address', () => {
   expect(format.address(Buffer.from('0123456789012345678901234567890123456789', 'hex'), 1)).toEqual('cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp');
 
   expect(() => format.address('0x0123456789012345678')).toThrow('not match "hex40"');
-  expect(() => format.address('cfx:123')).toThrow('not match "hex"');
   expect(() => format.address('cfx123')).toThrow('not match "hex"');
 });
