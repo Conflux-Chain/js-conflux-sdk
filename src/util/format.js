@@ -243,7 +243,7 @@ function toAddress(address, networkId, verbose = false) {
     address = _decodedAddress.hexAddress;
     networkId = networkId || _decodedAddress.netId;
   }
-  address =format.hexBuffer(address);
+  address = format.hexBuffer(address);
   if (address.length !== 20) {
     throw new Error('not match "hex40"');
   }
