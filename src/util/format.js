@@ -392,7 +392,7 @@ format.hexBuffer = format.hex.$after(v => Buffer.from(v.substr(2), 'hex'));
 
 /**
  * If pass an string it will decode with ASCII encoding
- * 
+ *
  * @param arg {string|Buffer|array}
  * @return {Buffer}
  *
@@ -653,12 +653,12 @@ format.action = format({
   transactionHash: format.hex,
   transactionPosition: format.bigUInt,
   type: format.any,
-}, {pick: true});
+}, { pick: true });
 
 // only used in block traces
 format.txTraces = format({
   traces: [format.action],
-  transactionPosition: format.bigUInt
+  transactionPosition: format.bigUInt,
 });
 
 format.blockTraces = format({

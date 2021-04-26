@@ -1060,19 +1060,19 @@ class Conflux {
 
   /**
    * Return pending info of an account
-   * 
+   *
    * @param address {string} - Address to account
    * @returns {Promise<object>} An account pending info object.
    * - localNonce `BigInt`: then next nonce can use in the transaction pool
    * - nextPendingTx `string`: the hash of next pending transaction
    * - pendingCount `BigInt`: the count of pending transactions
    * - pendingNonce `BigInt`: the nonce of pending transaction
-   * 
+   *
    */
   async getAccountPendingInfo(address) {
     const result = await this.provider.call('cfx_getAccountPendingInfo',
-      this._formatAddress(address)
-    )
+      this._formatAddress(address),
+    );
     return format.accountPendingInfo(result);
   }
 
@@ -1320,7 +1320,7 @@ class Conflux {
    * The returned series of epoch numbers is monotonically increasing with an increment of one.
    * If you see the same epoch twice, this suggests a pivot chain reorg has happened (this might happen for recent epochs).
    * For each epoch, the last hash in epochHashesOrdered is the hash of the pivot block.
-   * 
+   *
    * @param [sub_epoch] {string} Available values are latest_mined(default value) and latest_state
    *
    * @return {Promise<Subscription>} EventEmitter instance with the follow events:
