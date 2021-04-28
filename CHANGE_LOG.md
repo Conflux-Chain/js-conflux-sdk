@@ -1,5 +1,9 @@
 # change log
 
+## v1.16.1
+
+* Websocket provider add on error hook.
+
 ## v1.16.0
 This version is corresponding to conflux-rust v1.1.3, check it's [changelog](https://github.com/Conflux-Chain/conflux-rust/blob/master/changelogs/CHANGELOG-1.1.x.md#113) for detail info.
 
