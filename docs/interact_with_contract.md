@@ -1,9 +1,10 @@
 # Interact with contract
+
 In Conflux world you may often need to interact with contracts, with JS SDK this can be done very easy.
 
->Note: when interacting with contract and if your parameter is bigger than `Number.MAX_SAFE_INTEGER`, you should use string represention of the number or BigInt.
+> Note: when interacting with contract and if your parameter is bigger than `Number.MAX_SAFE_INTEGER`, you should use string represention of the number or BigInt.
 
-```js
+```javascript
 // use string
 await contract.deposit('90071992547409910').sendTransaction({from: 'cfxtest:aar7x4r8mkrnw39ggs8rz40j1znwh5mrrpufpr2u76'});
 // or use hex string
@@ -12,11 +13,11 @@ await contract.deposit('0x13ffffffffffff0').sendTransaction({from: 'cfxtest:aar7
 // await contract.deposit(Number.MAX_SAFE_INTEGER * 10);
 ```
 
-### How to deploy a contract
-One contract must be created before interacting with it. To create a contract you can write it with `solidity`.
-Then compile it with solidity compiler or [cfxtruffle](http://github.com/conflux-chain/truffle), you will get `bytecode` and `abi`. With `bytecode`, `abi` you can deploy it by send a transaction.
+## How to deploy a contract
 
-```js
+One contract must be created before interacting with it. To create a contract you can write it with `solidity`. Then compile it with solidity compiler or [cfxtruffle](http://github.com/conflux-chain/truffle), you will get `bytecode` and `abi`. With `bytecode`, `abi` you can deploy it by send a transaction.
+
+```javascript
 const { Conflux } = require('js-conflux-sdk');
 const { abi, bytecode } = MINI_ERC20; // see https://github.com/Conflux-Chain/js-conflux-sdk/tree/master/example/contract/miniERC20.json
 
@@ -66,7 +67,7 @@ main().catch(console.log);
 
 Check the transaction you will find the tx data is the contract bytecode and constructor's encoded signature.
 
-### How to get and update contract's state
+## How to get and update contract's state
 
 After you got the contract address, you can interact with it. The Conflux network makes a distinction between writing data to the network and reading data from it, and this distinction plays a significant part in how you write your application, and this behavior is very like Ethereum network. In general, writing data is called a transaction whereas reading data is called a call. Transactions and calls are treated very differently, and have the [following characteristics](https://www.trufflesuite.com/docs/truffle/getting-started/interacting-with-your-contracts#reading-and-writing-data).
 
@@ -99,7 +100,8 @@ async function main() {
 main();
 ```
 
-### How to play with InternalContract
+## How to play with InternalContract
+
 Conflux network has provide three Internal Contract `AdminControl`, `SponsorWhitelistControl`, `Staking`, these internal contract are very helpful to contract developer, for detail documentation check [official doc](https://developer.conflux-chain.org/docs/conflux-rust/internal_contract/internal_contract). This SDK have fully support for Internal Contract, you can use them like this.
 
 ```javascript
@@ -110,10 +112,11 @@ async function main() {
         url: 'http://test.confluxrpc.org/v2',
         networkId: 1,
     });
-    
+
     // 1. get internal contract through InternalContract method and pass the internal contract name
     const sponsor = conflux.InternalContract('SponsorWhitelistControl');
     const gasSponsor = await sponsor.getSponsorForGas('cfxtest:acg6rb7s9h1be63zjrhbyc5mc4w3jhk5p6eempe9hk');
 }
 main();
 ```
+
