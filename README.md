@@ -11,7 +11,7 @@ JavaScript Conflux Software Development Kit
 * [Complete document for sending transaction](docs/how_to_send_tx.md)
 * [Interact with contract](docs/interact_with_contract.md)
 * [SDK support for CIP37 address](docs/conflux_checksum_address.md)
-* [API](docs/api.md)
+* [API](docs/api/Conflux.md)
 * [Error handling](docs/error_handling.md)
 * [Conflux Official document](https://developer.conflux-chain.org/docs/introduction/en/conflux_overview)
 * [Conflux RPC endpoints](https://github.com/conflux-fans/conflux-rpc-endpoints)
