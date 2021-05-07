@@ -88,6 +88,12 @@ class Contract {
    * > await contract.balanceOf('0x19c742cec42b9e4eff3b84cdedcde2f58a36f44f'); // call a method with parameters, get decoded return value.
    10000000000000000000n
 
+   * Update contract state with sendTransaction
+   * > await contract.transfer('0x19c742cec42b9e4eff3b84cdedcde2f58a36f44f', 10000).sendTransaction({
+     from: 'cfxtest:aak2rra2njvd77ezwjvx04kkds9fzagfe6d5r8e957',
+   });
+   0x2055f3287f1a6ce77d91f5dfdf7517a531b3a560fee1265f27dc1ff92314530b
+
    * > transaction = await conflux.getTransactionByHash('0x2055f3287f1a6ce77d91f5dfdf7517a531b3a560fee1265f27dc1ff92314530b');
    * > contract.abi.decodeData(transaction.data)
    {
