@@ -6,7 +6,7 @@ The purpose of this page is to give you a sense of everything js-conflux-sdk can
 
 1. Node.js environment to install this SDK
 2. Conflux account with some CFX \(Use Conflux Portal to create account and get testnet CFX from faucet\)
-3. Conflux RPC endpoint, for example `http://test.confluxrpc.org/v2` is a testnet RPC endpoint
+3. Conflux RPC endpoint, for example `https://test.confluxrpc.org/v2` is a testnet RPC endpoint
 
 ## Initialize
 
@@ -20,7 +20,7 @@ With a RPC endpoint we can initialize a Conflux object, which can be used to sen
 const { Conflux } = require('js-conflux-sdk');
 // initialize a Conflux object
 const conflux = new Conflux({
-    url: 'http://test.confluxrpc.org/v2',
+    url: 'https://test.confluxrpc.org/v2',
     logger: console, // for debug
     networkId: 1,
 });
@@ -83,8 +83,8 @@ Check [here](how_to_send_tx.md) for details
 
 ### RPC endpoint
 
-1. `mainnet`: [https://main.confluxrpc.org](https://main.confluxrpc.org)
-2. `testnet`: [https://test.confluxrpc.org](https://test.confluxrpc.org)
+1. `mainnet`: [https://main.confluxrpc.org/v2](https://main.confluxrpc.org/v2)
+2. `testnet`: [https://test.confluxrpc.org/v2](https://test.confluxrpc.org/v2)
 
 ### Hex value and epochNumber and tags
 

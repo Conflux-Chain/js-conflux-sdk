@@ -1,4 +1,4 @@
-# error\_handling
+# Error Handling
 
 ## Use try-catch to get RPC error
 

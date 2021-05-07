@@ -6,7 +6,7 @@ It’s commonly found in decentralized apps \(dapps\) to help with sending trans
 
 ## Getting Started
 
-* Unfamiliar with Conflux? → [confluxnetwork](http://confluxnetwork.org/zh/)
+* Unfamiliar with Conflux? → [confluxnetwork](http://confluxnetwork.org)
 * Ready to code? → [Quickstart](quick_start.md)
 * Interested in a quick tour? → [Overview](overview.md)
 * Like to give back? → [Contribute](https://github.com/conflux-chain/js-conflux-sdk)
