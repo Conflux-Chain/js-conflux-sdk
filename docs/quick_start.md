@@ -23,7 +23,7 @@ The quickest way to interact with the Conflux blockchain is using a remote node 
 const { Conflux } = require('js-conflux-sdk');
 // initialize a Conflux object
 const conflux = new Conflux({
-    url: 'https://test.confluxrpc.org/2', // testnet provider
+    url: 'https://test.confluxrpc.org/v2', // testnet provider
     logger: console, // for debug: this will log all the RPC request and response to console
     networkId: 1,
     // timeout: 300 * 1000, // request timeout in ms, default 300*1000 ms === 5 minute
@@ -46,6 +46,4 @@ main();
 ```
 
 The conflux instance have a lot methods that correspond to Conflux RPC methods, such as `getBalance` map to RPC `cfx_getBalance`. Call these methods will return a promise or thenable, which means you can use it with ES6 `async/await` syntax.
-
-For the detail documentation of Conflux methods and options, you can check with [fullnode RPC](https://developer.conflux-chain.org/docs/conflux-doc/docs/json_rpc) and [JS-SDK API](api.md)
 

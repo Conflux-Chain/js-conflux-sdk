@@ -12,7 +12,7 @@ const ADDRESS = 'cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp';
 
 async function main() {
   const conflux = new Conflux({ 
-    url: 'http://test.confluxrpc.org/v2',
+    url: 'https://test.confluxrpc.org/v2',
     networkId: 1,
   });
 
@@ -108,7 +108,7 @@ const ADDRESS = 'cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp';
 
 async function main() {
   const conflux = new Conflux({ 
-    url: 'http://test.confluxrpc.org/v2',
+    url: 'https://test.confluxrpc.org/v2',
     networkId: 1,
   });
 
@@ -170,7 +170,7 @@ const ADDRESS = 'cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp';
 
 async function main() {
   const conflux = new Conflux({ 
-    url: 'http://test.confluxrpc.org/v2',
+    url: 'https://test.confluxrpc.org/v2',
     networkId: 1,
   });
   const account = conflux.wallet.addPrivateKey(PRIVATE_KEY); // create account instance and add to wallet
@@ -203,7 +203,7 @@ If you are just transfer CFX, the gas should be `21000`, if you are interact wit
 
 ```javascript
 const conflux = new Conflux({
-    url: 'http://test.confluxrpc.org/v2',
+    url: 'https://test.confluxrpc.org/v2',
     logger: console, // for debug
     defaultGasPrice: 1,
     defaultGasRatio: 1.1,
@@ -240,7 +240,7 @@ const ADDRESS = 'cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp';
 
 async function main() {
   const conflux = new Conflux({ 
-    url: 'http://test.confluxrpc.org/v2',
+    url: 'https://test.confluxrpc.org/v2',
     networkId: 1,
   });
 
@@ -288,7 +288,7 @@ const PRIVATE_KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef012345678
 
 async function main() {
   const conflux = new Conflux({ 
-    url: 'http://test.confluxrpc.org/v2',
+    url: 'https://test.confluxrpc.org/v2',
     networkId: 1,
   });
   const account = conflux.wallet.addPrivateKey(PRIVATE_KEY); // create account instance and add to wallet

@@ -1,8 +1,7 @@
 # js-conflux-sdk
 
 [![npm](https://img.shields.io/npm/v/js-conflux-sdk.svg)](https://www.npmjs.com/package/js-conflux-sdk)
-
-## [![npm](https://img.shields.io/npm/dm/js-conflux-sdk.svg)](https://www.npmjs.com/package/js-conflux-sdk)
+[![npm](https://img.shields.io/npm/dm/js-conflux-sdk.svg)](https://www.npmjs.com/package/js-conflux-sdk)
 
 JavaScript Conflux Software Development Kit
 
@@ -19,7 +18,7 @@ JavaScript Conflux Software Development Kit
 
 ## v1.5.10 Key Features
 
-Added support for [CIP37](https://github.com/Conflux-Chain/CIPs/blob/master/CIPs/cip-37.md) address. And this version can only work based on `conflux-rust v1.1.1` or above.
+Add support for [CIP37](https://github.com/Conflux-Chain/CIPs/blob/master/CIPs/cip-37.md) address. This version can only work with `conflux-rust v1.1.1` or above.
 
 The biggest difference you `must know` is that a new field `networkId` was added when you initialize the class `Conflux`. If you still want to use the hex40 format address when calling RPC methods, `networkId must be set`. Only with `networkId`, conflux can figure out the right CIP37 address from hex40 address.
 
@@ -104,7 +103,4 @@ CDN links
 
 * [`jsdelivr`](https://cdn.jsdelivr.net/npm/js-conflux-sdk/dist/js-conflux-sdk.umd.min.js)
 
-## TODO
-
-* support [CIP 23](https://github.com/Conflux-Chain/CIPs/blob/master/CIPs/cip-23.md)
 

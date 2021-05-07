@@ -1,6 +1,6 @@
-# block\_trace
+# Traces
 
-## block\_trace
+## block_trace
 
 Block response data structure
 

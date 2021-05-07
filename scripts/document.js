@@ -3,44 +3,89 @@ const lodash = require('lodash');
 const jsdocToMd = require('@geekberry/jsdoc-to-md'); // eslint-disable-line import/no-extraneous-dependencies
 const { sep } = require('path');
 
-const markdown = jsdocToMd(`${__dirname}/../src`, {
-  filter: filename => {
-    const suffixArray = [
+function generateMarkdown(filters, apiName) {
+  const markdown = jsdocToMd(`${__dirname}/../src`, {
+    filter: filename => {
+      if (lodash.some(filters, suffix => filename.endsWith(suffix))) {
+        console.log(`File "${filename}" parsing...`); // eslint-disable-line no-console
+        return true;
+      }
+      return false;
+    },
+  });
+
+  fs.writeFileSync(`${__dirname}/../docs/api/${apiName}.md`, `---
+  id: javascript_sdk
+  title: Javascript SDK ${apiName}
+  custom_edit_url: https://github.com/Conflux-Chain/js-conflux-sdk/edit/master/docs/api/${apiName}.md
+  keywords:
+    - conflux
+    - javascript
+    - sdk
+  ---
+  
+  ${markdown}
+  `);
+}
+
+const APIs = [
+  {
+    name: 'Conflux',
+    files: [
+      `${sep}Conflux.js`,
+    ]
+  }, {
+    name: 'Wallet',
+    files: [
       `${sep}wallet${sep}Wallet.js`,
       `${sep}wallet${sep}PrivateKeyAccount.js`,
-      `${sep}contract${sep}Contract.js`,
+    ]
+  }, {
+    name: 'Provider',
+    files: [
       `${sep}provider${sep}index.js`,
       `${sep}provider${sep}BaseProvider.js`,
       `${sep}provider${sep}HttpProvider.js`,
       `${sep}provider${sep}WebSocketProvider.js`,
-      `${sep}subscribe${sep}PendingTransaction.js`,
-      `${sep}subscribe${sep}Subscription.js`,
+    ]
+  }, {
+    name: 'Contract',
+    files: [
+      `${sep}contract${sep}Contract.js`,
+    ]
+  }, {
+    name: 'Transaction',
+    files: [
+      `${sep}Transaction.js`,
+    ]
+  }, {
+    name: 'Drip',
+    files: [
+      `${sep}Drip.js`,
+    ]
+  }, {
+    name: 'utils',
+    files: [
       `${sep}util${sep}format.js`,
       `${sep}util${sep}sign.js`,
+    ]
+  }, {
+    name: 'Subscribe',
+    files: [
+      `${sep}subscribe${sep}PendingTransaction.js`,
+      `${sep}subscribe${sep}Subscription.js`,
+    ]
+  }, {
+    name: 'Misc',
+    files: [
       `${sep}CONST.js`,
-      `${sep}Conflux.js`,
       `${sep}Message.js`,
-      `${sep}Transaction.js`,
-      `${sep}Drip.js`,
-    ];
+    ]
+  }
+];
 
-    if (lodash.some(suffixArray, suffix => filename.endsWith(suffix))) {
-      console.log(`File "${filename}" parsing...`); // eslint-disable-line no-console
-      return true;
-    }
-    return false;
-  },
-});
+for (let API of APIs) {
+  generateMarkdown(API.files, API.name);
+}
 
-fs.writeFileSync(`${__dirname}/../docs/api.md`, `---
-id: javascript_sdk
-title: Javascript SDK
-custom_edit_url: https://github.com/Conflux-Chain/js-conflux-sdk/edit/master/docs/api.md
-keywords:
-  - conflux
-  - javascript
-  - sdk
----
 
-${markdown}
-`);
