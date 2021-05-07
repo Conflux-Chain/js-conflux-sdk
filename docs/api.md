@@ -1,188 +1,186 @@
 ---
 id: javascript_sdk
 title: Javascript SDK
-custom_edit_url: https://github.com/Conflux-Chain/js-conflux-sdk/edit/master/docs/api.md
+custom_edit_url: 'https://github.com/Conflux-Chain/js-conflux-sdk/edit/master/docs/api.md'
 keywords:
   - conflux
   - javascript
   - sdk
 ---
 
-- CONST.js
-    - [EPOCH_NUMBER](#CONST.js/EPOCH_NUMBER)
-    - [MIN_GAS_PRICE](#CONST.js/MIN_GAS_PRICE)
-    - [TRANSACTION_GAS](#CONST.js/TRANSACTION_GAS)
-    - [TRANSACTION_STORAGE_LIMIT](#CONST.js/TRANSACTION_STORAGE_LIMIT)
-    - [MAINNET_ID](#CONST.js/MAINNET_ID)
-    - [TESTNET_ID](#CONST.js/TESTNET_ID)
-- Conflux.js
-    - Conflux
-        - [**constructor**](#Conflux.js/Conflux/**constructor**)
-        - [provider](#Conflux.js/Conflux/provider)
-        - [wallet](#Conflux.js/Conflux/wallet)
-        - [defaultGasPrice](#Conflux.js/Conflux/defaultGasPrice)
-        - [defaultGasRatio](#Conflux.js/Conflux/defaultGasRatio)
-        - [defaultStorageRatio](#Conflux.js/Conflux/defaultStorageRatio)
-        - [Contract](#Conflux.js/Conflux/Contract)
-        - [InternalContract](#Conflux.js/Conflux/InternalContract)
-        - [close](#Conflux.js/Conflux/close)
-        - [updateNetworkId](#Conflux.js/Conflux/updateNetworkId)
-        - [getSupplyInfo](#Conflux.js/Conflux/getSupplyInfo)
-        - [getStatus](#Conflux.js/Conflux/getStatus)
-        - [getGasPrice](#Conflux.js/Conflux/getGasPrice)
-        - [getInterestRate](#Conflux.js/Conflux/getInterestRate)
-        - [getAccumulateInterestRate](#Conflux.js/Conflux/getAccumulateInterestRate)
-        - [getAccount](#Conflux.js/Conflux/getAccount)
-        - [getBalance](#Conflux.js/Conflux/getBalance)
-        - [getStakingBalance](#Conflux.js/Conflux/getStakingBalance)
-        - [getNextNonce](#Conflux.js/Conflux/getNextNonce)
-        - [getAdmin](#Conflux.js/Conflux/getAdmin)
-        - [getVoteList](#Conflux.js/Conflux/getVoteList)
-        - [getDepositList](#Conflux.js/Conflux/getDepositList)
-        - [getEpochNumber](#Conflux.js/Conflux/getEpochNumber)
-        - [getBlockByEpochNumber](#Conflux.js/Conflux/getBlockByEpochNumber)
-        - [getBlocksByEpochNumber](#Conflux.js/Conflux/getBlocksByEpochNumber)
-        - [getBestBlockHash](#Conflux.js/Conflux/getBestBlockHash)
-        - [getBlockByHash](#Conflux.js/Conflux/getBlockByHash)
-        - [getConfirmationRiskByHash](#Conflux.js/Conflux/getConfirmationRiskByHash)
-        - [getTransactionByHash](#Conflux.js/Conflux/getTransactionByHash)
-        - [getTransactionReceipt](#Conflux.js/Conflux/getTransactionReceipt)
-        - [sendRawTransaction](#Conflux.js/Conflux/sendRawTransaction)
-        - [sendTransaction](#Conflux.js/Conflux/sendTransaction)
-        - [getCode](#Conflux.js/Conflux/getCode)
-        - [getStorageAt](#Conflux.js/Conflux/getStorageAt)
-        - [getStorageRoot](#Conflux.js/Conflux/getStorageRoot)
-        - [getSponsorInfo](#Conflux.js/Conflux/getSponsorInfo)
-        - [getCollateralForStorage](#Conflux.js/Conflux/getCollateralForStorage)
-        - [call](#Conflux.js/Conflux/call)
-        - [estimateGasAndCollateral](#Conflux.js/Conflux/estimateGasAndCollateral)
-        - [getLogs](#Conflux.js/Conflux/getLogs)
-        - [traceBlock](#Conflux.js/Conflux/traceBlock)
-        - [subscribe](#Conflux.js/Conflux/subscribe)
-        - [subscribeEpochs](#Conflux.js/Conflux/subscribeEpochs)
-        - [subscribeNewHeads](#Conflux.js/Conflux/subscribeNewHeads)
-        - [subscribeLogs](#Conflux.js/Conflux/subscribeLogs)
-        - [unsubscribe](#Conflux.js/Conflux/unsubscribe)
-- Drip.js
-    - Drip
-        - [(static)fromCFX](#Drip.js/Drip/(static)fromCFX)
-        - [(static)fromGDrip](#Drip.js/Drip/(static)fromGDrip)
-        - [**constructor**](#Drip.js/Drip/**constructor**)
-        - [toCFX](#Drip.js/Drip/toCFX)
-        - [toGDrip](#Drip.js/Drip/toGDrip)
-- Message.js
-    - Message
-        - [(static)sign](#Message.js/Message/(static)sign)
-        - [(static)recover](#Message.js/Message/(static)recover)
-        - [**constructor**](#Message.js/Message/**constructor**)
-        - [hash(getter)](#Message.js/Message/hash(getter))
-        - [from(getter)](#Message.js/Message/from(getter))
-        - [sign](#Message.js/Message/sign)
-- Transaction.js
-    - Transaction
-        - [**constructor**](#Transaction.js/Transaction/**constructor**)
-        - [hash(getter)](#Transaction.js/Transaction/hash(getter))
-        - [sign](#Transaction.js/Transaction/sign)
-        - [recover](#Transaction.js/Transaction/recover)
-        - [encode](#Transaction.js/Transaction/encode)
-        - [serialize](#Transaction.js/Transaction/serialize)
-- contract
-    - Contract.js
-        - Contract
-            - [**constructor**](#contract/Contract.js/Contract/**constructor**)
-- provider
-    - BaseProvider.js
-        - BaseProvider
-            - [**constructor**](#provider/BaseProvider.js/BaseProvider/**constructor**)
-            - [requestId](#provider/BaseProvider.js/BaseProvider/requestId)
-            - [call](#provider/BaseProvider.js/BaseProvider/call)
-            - [batch](#provider/BaseProvider.js/BaseProvider/batch)
-    - HttpProvider.js
-        - [HttpProvider](#provider/HttpProvider.js/HttpProvider)
-    - WebSocketProvider.js
-        - WebSocketProvider
-            - [**constructor**](#provider/WebSocketProvider.js/WebSocketProvider/**constructor**)
-    - index.js
-        - [providerFactory](#provider/index.js/providerFactory)
-- subscribe
-    - PendingTransaction.js
-        - PendingTransaction
-            - [get](#subscribe/PendingTransaction.js/PendingTransaction/get)
-            - [mined](#subscribe/PendingTransaction.js/PendingTransaction/mined)
-            - [executed](#subscribe/PendingTransaction.js/PendingTransaction/executed)
-            - [confirmed](#subscribe/PendingTransaction.js/PendingTransaction/confirmed)
-    - Subscription.js
-        - [Subscription](#subscribe/Subscription.js/Subscription)
-- util
-    - format.js
-        - format
-            - [(static)any](#util/format.js/format/(static)any)
-            - [(static)uInt](#util/format.js/format/(static)uInt)
-            - [(static)bigInt](#util/format.js/format/(static)bigInt)
-            - [(static)bigUInt](#util/format.js/format/(static)bigUInt)
-            - [(static)bigUIntHex](#util/format.js/format/(static)bigUIntHex)
-            - [(static)big](#util/format.js/format/(static)big)
-            - [(static)fixed64](#util/format.js/format/(static)fixed64)
-            - [(static)epochNumber](#util/format.js/format/(static)epochNumber)
-            - [(static)hex](#util/format.js/format/(static)hex)
-            - [(static)address](#util/format.js/format/(static)address)
-            - [(static)hexAddress](#util/format.js/format/(static)hexAddress)
-            - [(static)checksumAddress](#util/format.js/format/(static)checksumAddress)
-            - [(static)blockHash](#util/format.js/format/(static)blockHash)
-            - [(static)transactionHash](#util/format.js/format/(static)transactionHash)
-            - [(static)privateKey](#util/format.js/format/(static)privateKey)
-            - [(static)publicKey](#util/format.js/format/(static)publicKey)
-            - [(static)hexBuffer](#util/format.js/format/(static)hexBuffer)
-            - [(static)bytes](#util/format.js/format/(static)bytes)
-            - [(static)boolean](#util/format.js/format/(static)boolean)
-            - [(static)keccak256](#util/format.js/format/(static)keccak256)
-    - sign.js
-        - [keccak256](#util/sign.js/keccak256)
-        - [checksumAddress](#util/sign.js/checksumAddress)
-        - [randomBuffer](#util/sign.js/randomBuffer)
-        - [randomPrivateKey](#util/sign.js/randomPrivateKey)
-        - [privateKeyToPublicKey](#util/sign.js/privateKeyToPublicKey)
-        - [publicKeyToAddress](#util/sign.js/publicKeyToAddress)
-        - [privateKeyToAddress](#util/sign.js/privateKeyToAddress)
-        - [ecdsaSign](#util/sign.js/ecdsaSign)
-        - [ecdsaRecover](#util/sign.js/ecdsaRecover)
-        - [encrypt](#util/sign.js/encrypt)
-        - [decrypt](#util/sign.js/decrypt)
-- wallet
-    - PrivateKeyAccount.js
-        - PrivateKeyAccount
-            - [(static)random](#wallet/PrivateKeyAccount.js/PrivateKeyAccount/(static)random)
-            - [(static)decrypt](#wallet/PrivateKeyAccount.js/PrivateKeyAccount/(static)decrypt)
-            - [**constructor**](#wallet/PrivateKeyAccount.js/PrivateKeyAccount/**constructor**)
-            - [encrypt](#wallet/PrivateKeyAccount.js/PrivateKeyAccount/encrypt)
-            - [signTransaction](#wallet/PrivateKeyAccount.js/PrivateKeyAccount/signTransaction)
-            - [signMessage](#wallet/PrivateKeyAccount.js/PrivateKeyAccount/signMessage)
-    - Wallet.js
-        - Wallet
-            - [has](#wallet/Wallet.js/Wallet/has)
-            - [delete](#wallet/Wallet.js/Wallet/delete)
-            - [clear](#wallet/Wallet.js/Wallet/clear)
-            - [set](#wallet/Wallet.js/Wallet/set)
-            - [get](#wallet/Wallet.js/Wallet/get)
-            - [addPrivateKey](#wallet/Wallet.js/Wallet/addPrivateKey)
-            - [addRandom](#wallet/Wallet.js/Wallet/addRandom)
-            - [addKeystore](#wallet/Wallet.js/Wallet/addKeystore)
+# api
 
-----------------------------------------
+* CONST.js
+  * [EPOCH\_NUMBER](api.md#CONST.js/EPOCH_NUMBER)
+  * [MIN\_GAS\_PRICE](api.md#CONST.js/MIN_GAS_PRICE)
+  * [TRANSACTION\_GAS](api.md#CONST.js/TRANSACTION_GAS)
+  * [TRANSACTION\_STORAGE\_LIMIT](api.md#CONST.js/TRANSACTION_STORAGE_LIMIT)
+  * [MAINNET\_ID](api.md#CONST.js/MAINNET_ID)
+  * [TESTNET\_ID](api.md#CONST.js/TESTNET_ID)
+* Conflux.js
+  * Conflux
+    * [**constructor**](api.md#Conflux.js/Conflux/**constructor**)
+    * [provider](api.md#Conflux.js/Conflux/provider)
+    * [wallet](api.md#Conflux.js/Conflux/wallet)
+    * [defaultGasPrice](api.md#Conflux.js/Conflux/defaultGasPrice)
+    * [defaultGasRatio](api.md#Conflux.js/Conflux/defaultGasRatio)
+    * [defaultStorageRatio](api.md#Conflux.js/Conflux/defaultStorageRatio)
+    * [Contract](api.md#Conflux.js/Conflux/Contract)
+    * [InternalContract](api.md#Conflux.js/Conflux/InternalContract)
+    * [close](api.md#Conflux.js/Conflux/close)
+    * [updateNetworkId](api.md#Conflux.js/Conflux/updateNetworkId)
+    * [getSupplyInfo](api.md#Conflux.js/Conflux/getSupplyInfo)
+    * [getStatus](api.md#Conflux.js/Conflux/getStatus)
+    * [getGasPrice](api.md#Conflux.js/Conflux/getGasPrice)
+    * [getInterestRate](api.md#Conflux.js/Conflux/getInterestRate)
+    * [getAccumulateInterestRate](api.md#Conflux.js/Conflux/getAccumulateInterestRate)
+    * [getAccount](api.md#Conflux.js/Conflux/getAccount)
+    * [getBalance](api.md#Conflux.js/Conflux/getBalance)
+    * [getStakingBalance](api.md#Conflux.js/Conflux/getStakingBalance)
+    * [getNextNonce](api.md#Conflux.js/Conflux/getNextNonce)
+    * [getAdmin](api.md#Conflux.js/Conflux/getAdmin)
+    * [getVoteList](api.md#Conflux.js/Conflux/getVoteList)
+    * [getDepositList](api.md#Conflux.js/Conflux/getDepositList)
+    * [getEpochNumber](api.md#Conflux.js/Conflux/getEpochNumber)
+    * [getBlockByEpochNumber](api.md#Conflux.js/Conflux/getBlockByEpochNumber)
+    * [getBlocksByEpochNumber](api.md#Conflux.js/Conflux/getBlocksByEpochNumber)
+    * [getBestBlockHash](api.md#Conflux.js/Conflux/getBestBlockHash)
+    * [getBlockByHash](api.md#Conflux.js/Conflux/getBlockByHash)
+    * [getConfirmationRiskByHash](api.md#Conflux.js/Conflux/getConfirmationRiskByHash)
+    * [getTransactionByHash](api.md#Conflux.js/Conflux/getTransactionByHash)
+    * [getTransactionReceipt](api.md#Conflux.js/Conflux/getTransactionReceipt)
+    * [sendRawTransaction](api.md#Conflux.js/Conflux/sendRawTransaction)
+    * [sendTransaction](api.md#Conflux.js/Conflux/sendTransaction)
+    * [getCode](api.md#Conflux.js/Conflux/getCode)
+    * [getStorageAt](api.md#Conflux.js/Conflux/getStorageAt)
+    * [getStorageRoot](api.md#Conflux.js/Conflux/getStorageRoot)
+    * [getSponsorInfo](api.md#Conflux.js/Conflux/getSponsorInfo)
+    * [getCollateralForStorage](api.md#Conflux.js/Conflux/getCollateralForStorage)
+    * [call](api.md#Conflux.js/Conflux/call)
+    * [estimateGasAndCollateral](api.md#Conflux.js/Conflux/estimateGasAndCollateral)
+    * [getLogs](api.md#Conflux.js/Conflux/getLogs)
+    * [traceBlock](api.md#Conflux.js/Conflux/traceBlock)
+    * [subscribe](api.md#Conflux.js/Conflux/subscribe)
+    * [subscribeEpochs](api.md#Conflux.js/Conflux/subscribeEpochs)
+    * [subscribeNewHeads](api.md#Conflux.js/Conflux/subscribeNewHeads)
+    * [subscribeLogs](api.md#Conflux.js/Conflux/subscribeLogs)
+    * [unsubscribe](api.md#Conflux.js/Conflux/unsubscribe)
+* Drip.js
+  * Drip
+    * \[\(static\)fromCFX\]\(\#Drip.js/Drip/\(static\)fromCFX\)
+    * \[\(static\)fromGDrip\]\(\#Drip.js/Drip/\(static\)fromGDrip\)
+    * [**constructor**](api.md#Drip.js/Drip/**constructor**)
+    * [toCFX](api.md#Drip.js/Drip/toCFX)
+    * [toGDrip](api.md#Drip.js/Drip/toGDrip)
+* Message.js
+  * Message
+    * \[\(static\)sign\]\(\#Message.js/Message/\(static\)sign\)
+    * \[\(static\)recover\]\(\#Message.js/Message/\(static\)recover\)
+    * [**constructor**](api.md#Message.js/Message/**constructor**)
+    * \[hash\(getter\)\]\(\#Message.js/Message/hash\(getter\)\)
+    * \[from\(getter\)\]\(\#Message.js/Message/from\(getter\)\)
+    * [sign](api.md#Message.js/Message/sign)
+* Transaction.js
+  * Transaction
+    * [**constructor**](api.md#Transaction.js/Transaction/**constructor**)
+    * \[hash\(getter\)\]\(\#Transaction.js/Transaction/hash\(getter\)\)
+    * [sign](api.md#Transaction.js/Transaction/sign)
+    * [recover](api.md#Transaction.js/Transaction/recover)
+    * [encode](api.md#Transaction.js/Transaction/encode)
+    * [serialize](api.md#Transaction.js/Transaction/serialize)
+* contract
+  * Contract.js
+    * Contract
+      * [**constructor**](api.md#contract/Contract.js/Contract/**constructor**)
+* provider
+  * BaseProvider.js
+    * BaseProvider
+      * [**constructor**](api.md#provider/BaseProvider.js/BaseProvider/**constructor**)
+      * [requestId](api.md#provider/BaseProvider.js/BaseProvider/requestId)
+      * [call](api.md#provider/BaseProvider.js/BaseProvider/call)
+      * [batch](api.md#provider/BaseProvider.js/BaseProvider/batch)
+  * HttpProvider.js
+    * [HttpProvider](api.md#provider/HttpProvider.js/HttpProvider)
+  * WebSocketProvider.js
+    * WebSocketProvider
+      * [**constructor**](api.md#provider/WebSocketProvider.js/WebSocketProvider/**constructor**)
+  * index.js
+    * [providerFactory](api.md#provider/index.js/providerFactory)
+* subscribe
+  * PendingTransaction.js
+    * PendingTransaction
+      * [get](api.md#subscribe/PendingTransaction.js/PendingTransaction/get)
+      * [mined](api.md#subscribe/PendingTransaction.js/PendingTransaction/mined)
+      * [executed](api.md#subscribe/PendingTransaction.js/PendingTransaction/executed)
+      * [confirmed](api.md#subscribe/PendingTransaction.js/PendingTransaction/confirmed)
+  * Subscription.js
+    * [Subscription](api.md#subscribe/Subscription.js/Subscription)
+* util
+  * format.js
+    * format
+      * \[\(static\)any\]\(\#util/format.js/format/\(static\)any\)
+      * \[\(static\)uInt\]\(\#util/format.js/format/\(static\)uInt\)
+      * \[\(static\)bigInt\]\(\#util/format.js/format/\(static\)bigInt\)
+      * \[\(static\)bigUInt\]\(\#util/format.js/format/\(static\)bigUInt\)
+      * \[\(static\)bigUIntHex\]\(\#util/format.js/format/\(static\)bigUIntHex\)
+      * \[\(static\)big\]\(\#util/format.js/format/\(static\)big\)
+      * \[\(static\)fixed64\]\(\#util/format.js/format/\(static\)fixed64\)
+      * \[\(static\)epochNumber\]\(\#util/format.js/format/\(static\)epochNumber\)
+      * \[\(static\)hex\]\(\#util/format.js/format/\(static\)hex\)
+      * \[\(static\)address\]\(\#util/format.js/format/\(static\)address\)
+      * \[\(static\)hexAddress\]\(\#util/format.js/format/\(static\)hexAddress\)
+      * \[\(static\)checksumAddress\]\(\#util/format.js/format/\(static\)checksumAddress\)
+      * \[\(static\)blockHash\]\(\#util/format.js/format/\(static\)blockHash\)
+      * \[\(static\)transactionHash\]\(\#util/format.js/format/\(static\)transactionHash\)
+      * \[\(static\)privateKey\]\(\#util/format.js/format/\(static\)privateKey\)
+      * \[\(static\)publicKey\]\(\#util/format.js/format/\(static\)publicKey\)
+      * \[\(static\)hexBuffer\]\(\#util/format.js/format/\(static\)hexBuffer\)
+      * \[\(static\)bytes\]\(\#util/format.js/format/\(static\)bytes\)
+      * \[\(static\)boolean\]\(\#util/format.js/format/\(static\)boolean\)
+      * \[\(static\)keccak256\]\(\#util/format.js/format/\(static\)keccak256\)
+  * sign.js
+    * [keccak256](api.md#util/sign.js/keccak256)
+    * [checksumAddress](api.md#util/sign.js/checksumAddress)
+    * [randomBuffer](api.md#util/sign.js/randomBuffer)
+    * [randomPrivateKey](api.md#util/sign.js/randomPrivateKey)
+    * [privateKeyToPublicKey](api.md#util/sign.js/privateKeyToPublicKey)
+    * [publicKeyToAddress](api.md#util/sign.js/publicKeyToAddress)
+    * [privateKeyToAddress](api.md#util/sign.js/privateKeyToAddress)
+    * [ecdsaSign](api.md#util/sign.js/ecdsaSign)
+    * [ecdsaRecover](api.md#util/sign.js/ecdsaRecover)
+    * [encrypt](api.md#util/sign.js/encrypt)
+    * [decrypt](api.md#util/sign.js/decrypt)
+* wallet
+  * PrivateKeyAccount.js
+    * PrivateKeyAccount
+      * \[\(static\)random\]\(\#wallet/PrivateKeyAccount.js/PrivateKeyAccount/\(static\)random\)
+      * \[\(static\)decrypt\]\(\#wallet/PrivateKeyAccount.js/PrivateKeyAccount/\(static\)decrypt\)
+      * [**constructor**](api.md#wallet/PrivateKeyAccount.js/PrivateKeyAccount/**constructor**)
+      * [encrypt](api.md#wallet/PrivateKeyAccount.js/PrivateKeyAccount/encrypt)
+      * [signTransaction](api.md#wallet/PrivateKeyAccount.js/PrivateKeyAccount/signTransaction)
+      * [signMessage](api.md#wallet/PrivateKeyAccount.js/PrivateKeyAccount/signMessage)
+  * Wallet.js
+    * Wallet
+      * [has](api.md#wallet/Wallet.js/Wallet/has)
+      * [delete](api.md#wallet/Wallet.js/Wallet/delete)
+      * [clear](api.md#wallet/Wallet.js/Wallet/clear)
+      * [set](api.md#wallet/Wallet.js/Wallet/set)
+      * [get](api.md#wallet/Wallet.js/Wallet/get)
+      * [addPrivateKey](api.md#wallet/Wallet.js/Wallet/addPrivateKey)
+      * [addRandom](api.md#wallet/Wallet.js/Wallet/addRandom)
+      * [addKeystore](api.md#wallet/Wallet.js/Wallet/addKeystore)
 
-## EPOCH_NUMBER <a id="CONST.js/EPOCH_NUMBER"></a>
+## EPOCH\_NUMBER <a id="CONST.js/EPOCH_NUMBER"></a>
 
 epochNumber label
 
-- `LATEST_MINED` 'latest_mined': latest epoch.
-- `LATEST_STATE` 'latest_state': latest state, about 5 epoch less then `LATEST_MINED`
-- `LATEST_CONFIRMED` 'latest_confirmed': latest epoch which confirmation risk less 1e-8.
-- `LATEST_CHECKPOINT` 'latest_checkpoint': latest check point epoch.
-- `EARLIEST` 'earliest': earliest epoch number, same as 0.
+* `LATEST_MINED` 'latest\_mined': latest epoch.
+* `LATEST_STATE` 'latest\_state': latest state, about 5 epoch less then `LATEST_MINED`
+* `LATEST_CONFIRMED` 'latest\_confirmed': latest epoch which confirmation risk less 1e-8.
+* `LATEST_CHECKPOINT` 'latest\_checkpoint': latest check point epoch.
+* `EARLIEST` 'earliest': earliest epoch number, same as 0.
 
-----------------------------------------
-
-## MIN_GAS_PRICE <a id="CONST.js/MIN_GAS_PRICE"></a>
+## MIN\_GAS\_PRICE <a id="CONST.js/MIN_GAS_PRICE"></a>
 
 `number`
 
@@ -190,14 +188,12 @@ min gas price for transaction
 
 * **Examples**
 
-```
+```text
 > CONST.MIN_GAS_PRICE
  1
 ```
 
-----------------------------------------
-
-## TRANSACTION_GAS <a id="CONST.js/TRANSACTION_GAS"></a>
+## TRANSACTION\_GAS <a id="CONST.js/TRANSACTION_GAS"></a>
 
 `number`
 
@@ -205,36 +201,28 @@ gas use for pure transfer transaction
 
 * **Examples**
 
-```
+```text
 > CONST.TRANSACTION_GAS
  21000
 ```
 
-----------------------------------------
-
-## TRANSACTION_STORAGE_LIMIT <a id="CONST.js/TRANSACTION_STORAGE_LIMIT"></a>
+## TRANSACTION\_STORAGE\_LIMIT <a id="CONST.js/TRANSACTION_STORAGE_LIMIT"></a>
 
 `number`
 
 storage limit for pure transfer transaction
 
-----------------------------------------
-
-## MAINNET_ID <a id="CONST.js/MAINNET_ID"></a>
+## MAINNET\_ID <a id="CONST.js/MAINNET_ID"></a>
 
 `number`
 
 mainnet chainId
 
-----------------------------------------
-
-## TESTNET_ID <a id="CONST.js/TESTNET_ID"></a>
+## TESTNET\_ID <a id="CONST.js/TESTNET_ID"></a>
 
 `number`
 
 testnet chainId
-
-----------------------------------------
 
 ## Conflux <a id="Conflux.js/Conflux"></a>
 
@@ -244,24 +232,24 @@ A sdk of conflux.
 
 * **Parameters**
 
-Name                        | Type            | Required | Default | Description
-----------------------------|-----------------|----------|---------|-------------------------------------------------------
-options                     | `object`        | false    |         | Conflux and Provider constructor options.
-options.defaultGasPrice     | `string,number` | false    |         | The default gas price in drip to use for transactions.
-options.defaultGasRatio     | `number`        | false    | 1.1     | The ratio to multiply by gas.
-options.defaultStorageRatio | `number`        | false    | 1.1     | The ratio to multiply by storageLimit.
-options.url                 | `string`        | false    |         | Url of Conflux node to connect.
-options.timeout             | `number`        | false    |         | Request time out in ms
-options.logger              | `Object`        | false    |         | Logger object with 'info' and 'error' method.
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| options | `object` | false |  | Conflux and Provider constructor options. |
+| options.defaultGasPrice | `string,number` | false |  | The default gas price in drip to use for transactions. |
+| options.defaultGasRatio | `number` | false | 1.1 | The ratio to multiply by gas. |
+| options.defaultStorageRatio | `number` | false | 1.1 | The ratio to multiply by storageLimit. |
+| options.url | `string` | false |  | Url of Conflux node to connect. |
+| options.timeout | `number` | false |  | Request time out in ms |
+| options.logger | `Object` | false |  | Logger object with 'info' and 'error' method. |
 
 * **Examples**
 
-```
+```text
 > const { Conflux } = require('js-conflux-sdk');
 > const conflux = new Conflux({url:'http://test.confluxrpc.org', networkId: 1});
 ```
 
-```
+```text
 > const conflux = new Conflux({
      url: 'http://localhost:8000',
      defaultGasPrice: 100,
@@ -286,33 +274,32 @@ Wallet for `sendTransaction` to get `Account` by `from` field
 `number,string`
 
 Default gas price for following methods:
-- `Conflux.sendTransaction`
+
+* `Conflux.sendTransaction`
 
 ### Conflux.prototype.defaultGasRatio <a id="Conflux.js/Conflux/defaultGasRatio"></a>
 
 `number`
 
-If transaction.gas is undefined, gas will be set by estimate,
-cause gas used might be change during `estimateGasAndCollateral` and `sendTransaction`,
-estimate value need to multiply by defaultGasRatio (>1.0) in case of gas not enough.
+If transaction.gas is undefined, gas will be set by estimate, cause gas used might be change during `estimateGasAndCollateral` and `sendTransaction`, estimate value need to multiply by defaultGasRatio \(&gt;1.0\) in case of gas not enough.
 
-> transaction.gas = estimate.gasUsed * defaultGasRatio
+> transaction.gas = estimate.gasUsed \* defaultGasRatio
 
 Default gas price for following methods:
-- `Conflux.sendTransaction`
+
+* `Conflux.sendTransaction`
 
 ### Conflux.prototype.defaultStorageRatio <a id="Conflux.js/Conflux/defaultStorageRatio"></a>
 
 `number`
 
-If transaction.storageLimit is undefined, storageLimit will be set by estimate,
-cause storage limit might be change during `estimateGasAndCollateral` and `sendTransaction`,
-estimate value need to multiply by defaultStorageRatio (>1.0) in case of storageLimit not enough.
+If transaction.storageLimit is undefined, storageLimit will be set by estimate, cause storage limit might be change during `estimateGasAndCollateral` and `sendTransaction`, estimate value need to multiply by defaultStorageRatio \(&gt;1.0\) in case of storageLimit not enough.
 
-> transaction.storageLimit = estimate.storageCollateralized * defaultStorageRatio
+> transaction.storageLimit = estimate.storageCollateralized \* defaultStorageRatio
 
 Default gas price for following methods:
-- `Conflux.sendTransaction`
+
+* `Conflux.sendTransaction`
 
 ### Conflux.prototype.Contract <a id="Conflux.js/Conflux/Contract"></a>
 
@@ -320,9 +307,9 @@ A shout cut for `new Contract(options, conflux);`
 
 * **Parameters**
 
-Name    | Type     | Required | Default | Description
---------|----------|----------|---------|-----------------------------------------------------
-options | `object` | true     |         | See [Contract.constructor](#Contract.js/constructor)
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| options | `object` | true |  | See [Contract.constructor](api.md#Contract.js/constructor) |
 
 * **Returns**
 
@@ -332,23 +319,22 @@ options | `object` | true     |         | See [Contract.constructor](#Contract.j
 
 Create internal contract by default abi and address
 
-- [AdminControl](https://github.com/Conflux-Chain/conflux-rust/blob/master/internal_contract/contracts/AdminControl.sol)
-- [SponsorWhitelistControl](https://github.com/Conflux-Chain/conflux-rust/blob/master/internal_contract/contracts/SponsorWhitelistControl.sol)
-- [Staking](https://github.com/Conflux-Chain/conflux-rust/blob/master/internal_contract/contracts/Staking.sol)
-
+* [AdminControl](https://github.com/Conflux-Chain/conflux-rust/blob/master/internal_contract/contracts/AdminControl.sol)
+* [SponsorWhitelistControl](https://github.com/Conflux-Chain/conflux-rust/blob/master/internal_contract/contracts/SponsorWhitelistControl.sol)
+* [Staking](https://github.com/Conflux-Chain/conflux-rust/blob/master/internal_contract/contracts/Staking.sol)
 * **Parameters**
 
-Name | Type                                                 | Required | Default | Description
------|------------------------------------------------------|----------|---------|-----------------------
-name | `"AdminControl","SponsorWhitelistControl","Staking"` | true     |         | Internal contract name
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| name | `"AdminControl","SponsorWhitelistControl","Staking"` | true |  | Internal contract name |
 
 * **Returns**
 
-`Contract` 
+`Contract`
 
 * **Examples**
 
-```
+```text
 > conflux.InternalContract('AdminControl')
    {
     constructor: [Function: bound call],
@@ -372,7 +358,7 @@ close connection.
 
 * **Examples**
 
-```
+```text
 > conflux.close();
 ```
 
@@ -386,20 +372,20 @@ Get supply info
 
 * **Parameters**
 
-Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|---------------------------------------------------------------------
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| epochNumber | `string,number` | false | 'latest\_state' | See \[format.epochNumber\]\(\#util/format.js/format/\(static\)epochNumber\) |
 
 * **Returns**
 
 `Promise.<object>` Return supply info
-- totalIssued `BigInt`: Total issued balance in `Drip`
-- totalStaking `BigInt`: Total staking balance in `Drip`
-- totalCollateral `BigInt`: Total collateral balance in `Drip`
 
+* totalIssued `BigInt`: Total issued balance in `Drip`
+* totalStaking `BigInt`: Total staking balance in `Drip`
+* totalCollateral `BigInt`: Total collateral balance in `Drip`
 * **Examples**
 
-```
+```text
 > await conflux.getSupplyInfo()
    {
      totalCirculating: 28953062500000000000000n,  
@@ -416,15 +402,15 @@ Get status
 * **Returns**
 
 `Promise.<object>` Status information object
-- chainId `number`: Chain id
-- epochNumber `number`: Epoch number
-- blockNumber `number`: Block number
-- pendingTxNumber `number`: Pending transaction number
-- bestHash `string`: The block hash of best pivot block
 
+* chainId `number`: Chain id
+* epochNumber `number`: Epoch number
+* blockNumber `number`: Block number
+* pendingTxNumber `number`: Pending transaction number
+* bestHash `string`: The block hash of best pivot block
 * **Examples**
 
-```
+```text
 > await conflux.getStatus()
    {
       chainId: 1029,
@@ -446,7 +432,7 @@ Returns the current price per gas in Drip.
 
 * **Examples**
 
-```
+```text
 > await conflux.getGasPrice();
    1n
 ```
@@ -457,9 +443,9 @@ Returns the interest rate of given parameter.
 
 * **Parameters**
 
-Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|---------------------------------------------------------------------
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| epochNumber | `string,number` | false | 'latest\_state' | See \[format.epochNumber\]\(\#util/format.js/format/\(static\)epochNumber\) |
 
 * **Returns**
 
@@ -467,7 +453,7 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNum
 
 * **Examples**
 
-```
+```text
 > await conflux.getInterestRate();
    2522880000000n
 ```
@@ -478,9 +464,9 @@ Returns the accumulate interest rate of given parameter.
 
 * **Parameters**
 
-Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|---------------------------------------------------------------------
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| epochNumber | `string,number` | false | 'latest\_state' | See \[format.epochNumber\]\(\#util/format.js/format/\(static\)epochNumber\) |
 
 * **Returns**
 
@@ -488,7 +474,7 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNum
 
 * **Examples**
 
-```
+```text
 > await conflux.getAccumulateInterestRate()
    76357297457647044505744908994993n
 ```
@@ -499,25 +485,25 @@ Return account related states of the given account
 
 * **Parameters**
 
-Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|---------------------------------------------------------------------
-address     | `string`        | true     |                | address to get account.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| address | `string` | true |  | address to get account. |
+| epochNumber | `string,number` | false | 'latest\_state' | See \[format.epochNumber\]\(\#util/format.js/format/\(static\)epochNumber\) |
 
 * **Returns**
 
 `Promise.<object>` Return the states of the given account:
-- balance `BigInt`: the balance of the account.
-- nonce `BigInt`: the nonce of the account's next transaction.
-- codeHash `string`: the code hash of the account.
-- stakingBalance `BigInt`: the staking balance of the account.
-- collateralForStorage `BigInt`: the collateral storage of the account.
-- accumulatedInterestReturn `BigInt`: accumulated unterest return of the account.
-- admin `string`: admin of the account.
 
+* balance `BigInt`: the balance of the account.
+* nonce `BigInt`: the nonce of the account's next transaction.
+* codeHash `string`: the code hash of the account.
+* stakingBalance `BigInt`: the staking balance of the account.
+* collateralForStorage `BigInt`: the collateral storage of the account.
+* accumulatedInterestReturn `BigInt`: accumulated unterest return of the account.
+* admin `string`: admin of the account.
 * **Examples**
 
-```
+```text
 > await conflux.getAccount('cfxtest:aasb661u2r60uzn5h0c4h63hj76wtgf552r9ghu7a4');
    {
       accumulatedInterestReturn: 0n,
@@ -536,10 +522,10 @@ Returns the balance of the account of given address.
 
 * **Parameters**
 
-Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|---------------------------------------------------------------------
-address     | `string`        | true     |                | The address to get the balance of.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| address | `string` | true |  | The address to get the balance of. |
+| epochNumber | `string,number` | false | 'latest\_state' | See \[format.epochNumber\]\(\#util/format.js/format/\(static\)epochNumber\) |
 
 * **Returns**
 
@@ -547,7 +533,7 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNum
 
 * **Examples**
 
-```
+```text
 > await conflux.getBalance("cfxtest:aasb661u2r60uzn5h0c4h63hj76wtgf552r9ghu7a4");
    824812401057514588670n
 ```
@@ -558,10 +544,10 @@ Returns the balance of the staking account of given address.
 
 * **Parameters**
 
-Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|---------------------------------------------------------------------
-address     | `string`        | true     |                | Address to check for staking balance.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| address | `string` | true |  | Address to check for staking balance. |
+| epochNumber | `string,number` | false | 'latest\_state' | See \[format.epochNumber\]\(\#util/format.js/format/\(static\)epochNumber\) |
 
 * **Returns**
 
@@ -569,7 +555,7 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNum
 
 * **Examples**
 
-```
+```text
 > await conflux.getStakingBalance('cfxtest:aasb661u2r60uzn5h0c4h63hj76wtgf552r9ghu7a4', 'latest_state');
    0n
 ```
@@ -580,10 +566,10 @@ Returns the next nonce should be used by given address.
 
 * **Parameters**
 
-Name        | Type            | Required | Default | Description
-------------|-----------------|----------|---------|---------------------------------------------------------------------
-address     | `string`        | true     |         | The address to get the numbers of transactions from.
-epochNumber | `string,number` | false    |         | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| address | `string` | true |  | The address to get the numbers of transactions from. |
+| epochNumber | `string,number` | false |  | See \[format.epochNumber\]\(\#util/format.js/format/\(static\)epochNumber\) |
 
 * **Returns**
 
@@ -591,7 +577,7 @@ epochNumber | `string,number` | false    |         | See [format.epochNumber](#u
 
 * **Examples**
 
-```
+```text
 > await conflux.getNextNonce("cfxtest:aasb661u2r60uzn5h0c4h63hj76wtgf552r9ghu7a4");
    1449n
 ```
@@ -602,10 +588,10 @@ Returns the admin of given contract.
 
 * **Parameters**
 
-Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|---------------------------------------------------------------------
-address     | `string`        | true     |                | Address to contract.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| address | `string` | true |  | Address to contract. |
+| epochNumber | `string,number` | false | 'latest\_state' | See \[format.epochNumber\]\(\#util/format.js/format/\(static\)epochNumber\) |
 
 * **Returns**
 
@@ -613,7 +599,7 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNum
 
 * **Examples**
 
-```
+```text
 > conflux.getAdmin('cfxtest:achc8nxj7r451c223m18w2dwjnmhkd6rxa2gc31euw')
    "CFXTEST:TYPE.USER:AASB661U2R60UZN5H0C4H63HJ76WTGF552R9GHU7A4"
 ```
@@ -624,17 +610,18 @@ Returns vote list of the given account.
 
 * **Parameters**
 
-Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|---------------------------------------------------------------------
-address     | `string`        | true     |                | Address to contract.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| address | `string` | true |  | Address to contract. |
+| epochNumber | `string,number` | false | 'latest\_state' | See \[format.epochNumber\]\(\#util/format.js/format/\(static\)epochNumber\) |
 
 * **Returns**
 
 `Promise.<Array.<object>>` Vote list
-- `array`:
-  - amount `BigInt`: This is the number of tokens should be locked before
-  - unlockBlockNumber `number`: This is the timestamp when the vote right will be invalid, measured in, the number of past blocks.
+
+* `array`:
+  * amount `BigInt`: This is the number of tokens should be locked before
+  * unlockBlockNumber `number`: This is the timestamp when the vote right will be invalid, measured in, the number of past blocks.
 
 ### Conflux.prototype.getDepositList <a id="Conflux.js/Conflux/getDepositList"></a>
 
@@ -642,18 +629,19 @@ Returns deposit list of the given account.
 
 * **Parameters**
 
-Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|---------------------------------------------------------------------
-address     | `string`        | true     |                | Address to contract.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| address | `string` | true |  | Address to contract. |
+| epochNumber | `string,number` | false | 'latest\_state' | See \[format.epochNumber\]\(\#util/format.js/format/\(static\)epochNumber\) |
 
 * **Returns**
 
 `Promise.<Array.<object>>` Deposit list
-- `array`:
-  - amount `BigInt`: the number of tokens deposited
-  - accumulatedInterestRate: `BigInt`: the accumulated interest rate at the time of the deposit
-  - depositTime `number`: the time of the deposit
+
+* `array`:
+  * amount `BigInt`: the number of tokens deposited
+  * accumulatedInterestRate: `BigInt`: the accumulated interest rate at the time of the deposit
+  * depositTime `number`: the time of the deposit
 
 ### Conflux.prototype.getEpochNumber <a id="Conflux.js/Conflux/getEpochNumber"></a>
 
@@ -661,9 +649,9 @@ Returns the epoch number of given parameter.
 
 * **Parameters**
 
-Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|---------------------------------------------------------------------
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| epochNumber | `string,number` | false | 'latest\_state' | See \[format.epochNumber\]\(\#util/format.js/format/\(static\)epochNumber\) |
 
 * **Returns**
 
@@ -671,7 +659,7 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNum
 
 * **Examples**
 
-```
+```text
 > await conflux.getEpochNumber();
    443
 ```
@@ -682,10 +670,10 @@ Returns information about a block by epoch number.
 
 * **Parameters**
 
-Name        | Type            | Required | Default | Description
-------------|-----------------|----------|---------|---------------------------------------------------------------------------------------------------
-epochNumber | `string,number` | true     |         | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
-detail      | `boolean`       | false    | false   | If `true` it returns the full transaction objects, if `false` only the hashes of the transactions.
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| epochNumber | `string,number` | true |  | See \[format.epochNumber\]\(\#util/format.js/format/\(static\)epochNumber\) |
+| detail | `boolean` | false | false | If `true` it returns the full transaction objects, if `false` only the hashes of the transactions. |
 
 * **Returns**
 
@@ -693,7 +681,7 @@ detail      | `boolean`       | false    | false   | If `true` it returns the fu
 
 * **Examples**
 
-```
+```text
 > await conflux.getBlockByEpochNumber('latest_mined', true);
    {...}
 ```
@@ -704,17 +692,17 @@ Returns hashes of blocks located in some epoch.
 
 * **Parameters**
 
-Name        | Type            | Required | Default | Description
-------------|-----------------|----------|---------|---------------------------------------------------------------------
-epochNumber | `string,number` | true     |         | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| epochNumber | `string,number` | true |  | See \[format.epochNumber\]\(\#util/format.js/format/\(static\)epochNumber\) |
 
 * **Returns**
 
-`Promise.<Array.<string>>` Array of block hashes, sorted by execution(topological) order.
+`Promise.<Array.<string>>` Array of block hashes, sorted by execution\(topological\) order.
 
 * **Examples**
 
-```
+```text
 > await conflux.getBlocksByEpochNumber(0);
    ['0xe677ae5206a5d67d9efa183d867b4b986ed82a3e62174a1488cf8364d58534ec']
 ```
@@ -729,7 +717,7 @@ Returns the hash of best block.
 
 * **Examples**
 
-```
+```text
 > await conflux.getBestBlockHash();
    "0xb8bb355bfeaf055a032d5b7df719917c090ee4fb6fee42383004dfe8911d7daf"
 ```
@@ -740,37 +728,37 @@ Returns information about a block by hash.
 
 * **Parameters**
 
-Name      | Type      | Required | Default | Description
-----------|-----------|----------|---------|---------------------------------------------------------------------------------------------------
-blockHash | `string`  | true     |         | hash of a block.
-detail    | `boolean` | false    | false   | If `true` it returns the full transaction objects, if `false` only the hashes of the transactions.
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| blockHash | `string` | true |  | hash of a block. |
+| detail | `boolean` | false | false | If `true` it returns the full transaction objects, if `false` only the hashes of the transactions. |
 
 * **Returns**
 
 `Promise.<(object|null)>` A block object, or null when no block was found:
-- adaptive `boolean`: If `true` the weight of the block is adaptive under GHAST rule, if `false` otherwise.
-- blame `number`: If 0, then no blocks are blamed on its parent path, If greater than 0, then the nearest blamed block on the parent path is blame steps away.
-- deferredLogsBloomHash `string`: The bloom hash of deferred logs.
-- deferredReceiptsRoot `string`: The hash of the receipts of the block after deferred execution.
-- deferredStateRoot `string`: The root of the final state trie of the block after deferred execution.
-- difficulty `string`: Integer string of the difficulty for this block.
-- epochNumber `number|null`: The current block epoch number in the client's view. null when it's not in best block's past set and the epoch number is not determined.
-- gasLimit `BigInt`: The maximum gas allowed in this block.
-- hash `string|null`: Hash of the block. `null` when its pending block.
-- height `number`: The block heights. `null` when its pending block.
-- miner `string`: The address of the beneficiary to whom the mining rewards were given.
-- nonce `string`: Hash of the generated proof-of-work. `null` when its pending block.
-- parentHash `string`: Hash of the parent block.
-- powQuality `string`:Hash of the generated proof-of-work. `null` when its pending block.
-- refereeHashes `string[]`: Array of referee hashes.
-- size `number`: Integer the size of this block in bytes.
-- timestamp `number`: The unix timestamp for when the block was collated.
-- transactions `string[]|object[]`: Array of transaction objects, or 32 Bytes transaction hashes depending on the last given parameter.
-- transactionsRoot `string`: The hash of the transactions of the block.
 
+* adaptive `boolean`: If `true` the weight of the block is adaptive under GHAST rule, if `false` otherwise.
+* blame `number`: If 0, then no blocks are blamed on its parent path, If greater than 0, then the nearest blamed block on the parent path is blame steps away.
+* deferredLogsBloomHash `string`: The bloom hash of deferred logs.
+* deferredReceiptsRoot `string`: The hash of the receipts of the block after deferred execution.
+* deferredStateRoot `string`: The root of the final state trie of the block after deferred execution.
+* difficulty `string`: Integer string of the difficulty for this block.
+* epochNumber `number|null`: The current block epoch number in the client's view. null when it's not in best block's past set and the epoch number is not determined.
+* gasLimit `BigInt`: The maximum gas allowed in this block.
+* hash `string|null`: Hash of the block. `null` when its pending block.
+* height `number`: The block heights. `null` when its pending block.
+* miner `string`: The address of the beneficiary to whom the mining rewards were given.
+* nonce `string`: Hash of the generated proof-of-work. `null` when its pending block.
+* parentHash `string`: Hash of the parent block.
+* powQuality `string`:Hash of the generated proof-of-work. `null` when its pending block.
+* refereeHashes `string[]`: Array of referee hashes.
+* size `number`: Integer the size of this block in bytes.
+* timestamp `number`: The unix timestamp for when the block was collated.
+* transactions `string[]|object[]`: Array of transaction objects, or 32 Bytes transaction hashes depending on the last given parameter.
+* transactionsRoot `string`: The hash of the transactions of the block.
 * **Examples**
 
-```
+```text
 > await conflux.getBlockByHash('0xaf4136d04e9e2cc470703251ec46f5913ab7955d526feed43771705e89c77390');
    {
       epochNumber: 6,
@@ -803,22 +791,21 @@ detail    | `boolean` | false    | false   | If `true` it returns the full trans
 
 ### Conflux.prototype.getConfirmationRiskByHash <a id="Conflux.js/Conflux/getConfirmationRiskByHash"></a>
 
-Get the risk of the block could be reverted.
-All block in one same epoch returned same risk number
+Get the risk of the block could be reverted. All block in one same epoch returned same risk number
 
 * **Parameters**
 
-Name      | Type     | Required | Default | Description
-----------|----------|----------|---------|----------------
-blockHash | `string` | true     |         | Hash of a block
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| blockHash | `string` | true |  | Hash of a block |
 
 * **Returns**
 
-`Promise.<(number|null)>` Number >0 and <1
+`Promise.<(number|null)>` Number &gt;0 and &lt;1
 
 * **Examples**
 
-```
+```text
 > await conflux.getConfirmationRiskByHash('0xaf4136d04e9e2cc470703251ec46f5913ab7955d526feed43771705e89c77390')
    1e-8
 ```
@@ -829,35 +816,35 @@ Returns the information about a transaction requested by transaction hash.
 
 * **Parameters**
 
-Name            | Type     | Required | Default | Description
-----------------|----------|----------|---------|----------------------
-transactionHash | `string` | true     |         | hash of a transaction
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| transactionHash | `string` | true |  | hash of a transaction |
 
 * **Returns**
 
 `Promise.<(object|null)>` transaction object, or `null` when no transaction was found:
-- blockHash `string`: hash of the block where this transaction was in and got executed. `null` when its pending.
-- contractCreated `string|null`: address of created contract. `null` when it's not a contract creating transaction
-- data `string`: the data send along with the transaction.
-- epochHeight `number`: epoch height
-- from `string`: address of the sender.
-- gas `BigInt`: gas provided by the sender.
-- gasPrice `number`: gas price provided by the sender in Drip.
-- hash `string`: hash of the transaction.
-- nonce `BigInt`: the number of transactions made by the sender prior to this one.
-- r `string`: ECDSA signature r
-- s `string`: ECDSA signature s
-- status `number`: 0 for success, 1 for error occured, `null` when the transaction is skipped or not packed.
-- storageLimit `BigInt`: storage limit in bytes
-- chainId `number`: chain id
-- to `string`: address of the receiver. null when its a contract creation transaction.
-- transactionIndex `number`: integer of the transactions's index position in the block. `null` when its pending.
-- v `string`: ECDSA recovery id
-- value `BigInt`: value transferred in Drip.
 
+* blockHash `string`: hash of the block where this transaction was in and got executed. `null` when its pending.
+* contractCreated `string|null`: address of created contract. `null` when it's not a contract creating transaction
+* data `string`: the data send along with the transaction.
+* epochHeight `number`: epoch height
+* from `string`: address of the sender.
+* gas `BigInt`: gas provided by the sender.
+* gasPrice `number`: gas price provided by the sender in Drip.
+* hash `string`: hash of the transaction.
+* nonce `BigInt`: the number of transactions made by the sender prior to this one.
+* r `string`: ECDSA signature r
+* s `string`: ECDSA signature s
+* status `number`: 0 for success, 1 for error occured, `null` when the transaction is skipped or not packed.
+* storageLimit `BigInt`: storage limit in bytes
+* chainId `number`: chain id
+* to `string`: address of the receiver. null when its a contract creation transaction.
+* transactionIndex `number`: integer of the transactions's index position in the block. `null` when its pending.
+* v `string`: ECDSA recovery id
+* value `BigInt`: value transferred in Drip.
 * **Examples**
 
-```
+```text
 > await conflux.getTransactionByHash('0xbf7110474779ba2404433ef39a24cb5b277186ef1e6cb199b0b60907b029a1ce');
    {
       nonce: 0n,
@@ -887,35 +874,35 @@ Returns the information about a transaction receipt requested by transaction has
 
 * **Parameters**
 
-Name            | Type     | Required | Default | Description
-----------------|----------|----------|---------|----------------------
-transactionHash | `string` | true     |         | Hash of a transaction
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| transactionHash | `string` | true |  | Hash of a transaction |
 
 * **Returns**
 
 `Promise.<(object|null)>` A transaction receipt object, or null when no transaction was found or the transaction was not executed yet:
-- transactionHash `string`: Hash of the given transaction.
-- index `number`: Transaction index within the block.
-- blockHash `string`: Hash of the block where this transaction was in and got executed.
-- epochNumber `number`: Epoch number of the block where this transaction was in and got executed.
-- from `string`: Address of the sender.
-- to `string`: Address of the receiver. `null` when its a contract creation transaction.
-- gasUsed `number`: Gas used the transaction.
-- contractCreated `string|null`: Address of created contract. `null` when it's not a contract creating transaction.
-- stateRoot `string`: Hash of the state root.
-- outcomeStatus `number`:  the outcome status code, 0 was successful, 1 for an error occurred in the execution.
-- logsBloom `string`: Bloom filter for light clients to quickly retrieve related logs.
-- logs `object[]`: Array of log objects, which this transaction generated.
-- gasCoveredBySponsor `boolean`: `true` if this transaction's gas fee was covered by the sponsor.
-- storageCoveredBySponsor `boolean`: `true` if this transaction's storage collateral was covered by the sponsor.
-- storageCollateralized `BigInt`: the amount of storage collateral this transaction required.
-- storageReleased `array`: array of storage change objects, each specifying an address and the corresponding amount of storage collateral released
-  - address `string`: address released
-  - collaterals `BigInt`: corresponding amount of storage collateral released
 
+* transactionHash `string`: Hash of the given transaction.
+* index `number`: Transaction index within the block.
+* blockHash `string`: Hash of the block where this transaction was in and got executed.
+* epochNumber `number`: Epoch number of the block where this transaction was in and got executed.
+* from `string`: Address of the sender.
+* to `string`: Address of the receiver. `null` when its a contract creation transaction.
+* gasUsed `number`: Gas used the transaction.
+* contractCreated `string|null`: Address of created contract. `null` when it's not a contract creating transaction.
+* stateRoot `string`: Hash of the state root.
+* outcomeStatus `number`:  the outcome status code, 0 was successful, 1 for an error occurred in the execution.
+* logsBloom `string`: Bloom filter for light clients to quickly retrieve related logs.
+* logs `object[]`: Array of log objects, which this transaction generated.
+* gasCoveredBySponsor `boolean`: `true` if this transaction's gas fee was covered by the sponsor.
+* storageCoveredBySponsor `boolean`: `true` if this transaction's storage collateral was covered by the sponsor.
+* storageCollateralized `BigInt`: the amount of storage collateral this transaction required.
+* storageReleased `array`: array of storage change objects, each specifying an address and the corresponding amount of storage collateral released
+  * address `string`: address released
+  * collaterals `BigInt`: corresponding amount of storage collateral released
 * **Examples**
 
-```
+```text
 > await conflux.getTransactionReceipt('0xbf7110474779ba2404433ef39a24cb5b277186ef1e6cb199b0b60907b029a1ce');
    {
       index: 1,
@@ -948,9 +935,9 @@ Creates new message call transaction or a contract creation for signed transacti
 
 * **Parameters**
 
-Name | Type            | Required | Default | Description
------|-----------------|----------|---------|-----------------------------
-hex  | `string,Buffer` | true     |         | The signed transaction data.
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| hex | `string,Buffer` | true |  | The signed transaction data. |
 
 * **Returns**
 
@@ -958,23 +945,21 @@ hex  | `string,Buffer` | true     |         | The signed transaction data.
 
 * **Examples**
 
-```
+```text
 > await conflux.sendRawTransaction('0xf85f800382520894bbd9e9b...');
    "0xbe007c3eca92d01f3917f33ae983f40681182cf618defe75f490a65aac016914"
 ```
 
 ### Conflux.prototype.sendTransaction <a id="Conflux.js/Conflux/sendTransaction"></a>
 
-Sign and send transaction
-if `from` field in `conflux.wallet`, sign by local account and send raw transaction,
-else call `cfx_sendTransaction` and sign by remote wallet
+Sign and send transaction if `from` field in `conflux.wallet`, sign by local account and send raw transaction, else call `cfx_sendTransaction` and sign by remote wallet
 
 * **Parameters**
 
-Name     | Type     | Required | Default | Description
----------|----------|----------|---------|---------------------------------------------------------------
-options  | `object` | true     |         | See [Transaction](#Transaction.js/Transaction/**constructor**)
-password | `string` | false    |         | Password for remote node.
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| options | `object` | true |  | See [Transaction](api.md#Transaction.js/Transaction/**constructor**) |
+| password | `string` | false |  | Password for remote node. |
 
 * **Returns**
 
@@ -982,12 +967,12 @@ password | `string` | false    |         | Password for remote node.
 
 * **Examples**
 
-```
+```text
 > txHash = await conflux.sendTransaction({from:account, to:address, value:0}); // send and get transaction hash
    "0xb2ba6cca35f0af99a9601d09ee19c1949d8130312550e3f5413c520c6d828f88"
 ```
 
-```
+```text
 > packedTx = await conflux.sendTransaction({from:account, to:address, value:0}).get(); // await till transaction packed
    {
     "nonce": 8n,
@@ -1011,7 +996,7 @@ password | `string` | false    |         | Password for remote node.
    }
 ```
 
-```
+```text
 > minedTx = await conflux.sendTransaction({from:account, to:address, value:0}).mined(); // await till transaction mined
    {
     "nonce": 8n,
@@ -1035,7 +1020,7 @@ password | `string` | false    |         | Password for remote node.
    }
 ```
 
-```
+```text
 > executedReceipt = await conflux.sendTransaction({from:account, to:address, value:0}).executed(); // await till transaction executed
    {
     "index": 0,
@@ -1054,7 +1039,7 @@ password | `string` | false    |         | Password for remote node.
    }
 ```
 
-```
+```text
 > confirmedReceipt = await conflux.sendTransaction({from:account, to:address, value:0}).confirmed(); // await till risk coefficient < threshold (default 1e-8)
    {
     "index": 0,
@@ -1079,10 +1064,10 @@ Returns the code of given contract.
 
 * **Parameters**
 
-Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|---------------------------------------------------------------------
-address     | `string`        | true     |                | Address to contract.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| address | `string` | true |  | Address to contract. |
+| epochNumber | `string,number` | false | 'latest\_state' | See \[format.epochNumber\]\(\#util/format.js/format/\(static\)epochNumber\) |
 
 * **Returns**
 
@@ -1090,7 +1075,7 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNum
 
 * **Examples**
 
-```
+```text
 > await conflux.getCode('cfxtest:acb2nsctbanb9ezbw0mx1gapve60thyurjmxkage0f');
    "0x6080604052348015600f57600080fd5b506004361060325760003560e01c806306661abd1460375780638..."
 ```
@@ -1101,11 +1086,11 @@ Returns storage entries from a given contract.
 
 * **Parameters**
 
-Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|---------------------------------------------------------------------
-address     | `string`        | true     |                | Address to contract.
-position    | `string`        | true     |                | The given position.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| address | `string` | true |  | Address to contract. |
+| position | `string` | true |  | The given position. |
+| epochNumber | `string,number` | false | 'latest\_state' | See \[format.epochNumber\]\(\#util/format.js/format/\(static\)epochNumber\) |
 
 * **Returns**
 
@@ -1113,7 +1098,7 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNum
 
 * **Examples**
 
-```
+```text
 > await conflux.getStorageAt('cfxtest:acdgzwyh9634bnuf4jne0tp3xmae80bwej1w4hr66c', '0x6661e9d6d8b923d5bbaab1b96e1dd51ff6ea2a93520fdc9eb75d059238b8c5e9')
    "0x000000000000000000000000000000000000000000000000000000000000162e"
 ```
@@ -1124,21 +1109,21 @@ Returns the storage root of a given contract.
 
 * **Parameters**
 
-Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|---------------------------------------------------------------------
-address     | `string`        | true     |                | Address to contract.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| address | `string` | true |  | Address to contract. |
+| epochNumber | `string,number` | false | 'latest\_state' | See \[format.epochNumber\]\(\#util/format.js/format/\(static\)epochNumber\) |
 
 * **Returns**
 
 `Promise.<object>` A storage root object, or `null` if the contract does not exist
-- delta `string`: storage root in the delta trie.
-- intermediate `string`: storage root in the intermediate trie.
-- snapshot `string`: storage root in the snapshot.
 
+* delta `string`: storage root in the delta trie.
+* intermediate `string`: storage root in the intermediate trie.
+* snapshot `string`: storage root in the snapshot.
 * **Examples**
 
-```
+```text
 > await conflux.getStorageRoot('cfxtest:acdgzwyh9634bnuf4jne0tp3xmae80bwej1w4hr66c')
    {
       "delta": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470",
@@ -1153,23 +1138,23 @@ Returns the sponsor info of given contract.
 
 * **Parameters**
 
-Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|---------------------------------------------------------------------
-address     | `string`        | true     |                | Address to contract.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| address | `string` | true |  | Address to contract. |
+| epochNumber | `string,number` | false | 'latest\_state' | See \[format.epochNumber\]\(\#util/format.js/format/\(static\)epochNumber\) |
 
 * **Returns**
 
 `Promise.<object>` A sponsor info object, if the contract doesn't have a sponsor, then the all fields in returned object will be 0:
-- sponsorBalanceForCollateral `BigInt`: the sponsored balance for storage.
-- sponsorBalanceForGas `BigInt`: the sponsored balance for gas.
-- sponsorGasBound `BigInt`: the max gas could be sponsored for one transaction.
-- sponsorForCollateral `string`: the address of the storage sponsor.
-- sponsorForGas `string`: the address of the gas sponsor.
 
+* sponsorBalanceForCollateral `BigInt`: the sponsored balance for storage.
+* sponsorBalanceForGas `BigInt`: the sponsored balance for gas.
+* sponsorGasBound `BigInt`: the max gas could be sponsored for one transaction.
+* sponsorForCollateral `string`: the address of the storage sponsor.
+* sponsorForGas `string`: the address of the gas sponsor.
 * **Examples**
 
-```
+```text
 > await conflux.getSponsorInfo('cfxtest:achc8nxj7r451c223m18w2dwjnmhkd6rxa2gc31euw')
    {
       sponsorBalanceForCollateral: 410625000000000000000n,
@@ -1186,10 +1171,10 @@ Returns the size of the collateral storage of given address, in Byte.
 
 * **Parameters**
 
-Name        | Type     | Required | Default        | Description
-------------|----------|----------|----------------|---------------------------------------------------------------------
-address     | `string` | true     |                | Address to check for collateral storage.
-epochNumber |          | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| address | `string` | true |  | Address to check for collateral storage. |
+| epochNumber |  | false | 'latest\_state' | See \[format.epochNumber\]\(\#util/format.js/format/\(static\)epochNumber\) |
 
 * **Returns**
 
@@ -1197,7 +1182,7 @@ epochNumber |          | false    | 'latest_state' | See [format.epochNumber](#u
 
 * **Examples**
 
-```
+```text
 > await conflux.getCollateralForStorage('cfxtest:achc8nxj7r451c223m18w2dwjnmhkd6rxa2gc31euw')
    89375000000000000000n
 ```
@@ -1208,10 +1193,10 @@ Virtually call a contract, return the output data.
 
 * **Parameters**
 
-Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|---------------------------------------------------------------------
-options     | `object`        | true     |                | See [Transaction](#Transaction.js/Transaction/**constructor**)
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| options | `object` | true |  | See [Transaction](api.md#Transaction.js/Transaction/**constructor**) |
+| epochNumber | `string,number` | false | 'latest\_state' | See \[format.epochNumber\]\(\#util/format.js/format/\(static\)epochNumber\) |
 
 * **Returns**
 
@@ -1223,17 +1208,18 @@ Virtually call a contract, return the estimate gas used and storage collateraliz
 
 * **Parameters**
 
-Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|---------------------------------------------------------------------
-options     | `object`        | true     |                | See [Transaction](#Transaction.js/Transaction/**constructor**)
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| options | `object` | true |  | See [Transaction](api.md#Transaction.js/Transaction/**constructor**) |
+| epochNumber | `string,number` | false | 'latest\_state' | See \[format.epochNumber\]\(\#util/format.js/format/\(static\)epochNumber\) |
 
 * **Returns**
 
 `Promise.<object>` A estimate result object:
-- `BigInt` gasUsed: The gas used.
-- `BigInt` gasLimit: The gas limit.
-- `BigInt` storageCollateralized: The storage collateralized in Byte.
+
+* `BigInt` gasUsed: The gas used.
+* `BigInt` gasLimit: The gas limit.
+* `BigInt` storageCollateralized: The storage collateralized in Byte.
 
 ### Conflux.prototype.getLogs <a id="Conflux.js/Conflux/getLogs"></a>
 
@@ -1241,32 +1227,32 @@ Returns logs matching the filter provided.
 
 * **Parameters**
 
-Name                | Type                    | Required | Default             | Description
---------------------|-------------------------|----------|---------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-options             | `object`                | false    |                     |
-options.fromEpoch   | `string,number`         | false    | 'latest_checkpoint' | See [format.epochNumber](#util/format.js/format/(static)epochNumber). Search will be applied from this epoch number.
-options.toEpoch     | `string,number`         | false    | 'latest_state'      | See [format.epochNumber](#util/format.js/format/(static)epochNumber). Search will be applied up until (and including) this epoch number.
-options.blockHashes | `Array.<string>`        | false    |                     | Array of up to 128 block hashes that the search will be applied to. This will override from/to epoch fields if it's not null
-options.address     | `string,Array.<string>` | false    |                     | Search contract addresses. If null, match all. If specified, log must be produced by one of these addresses.
-options.topics      | `array`                 | false    |                     | Search topics. Logs can have 4 topics: the function signature and up to 3 indexed event arguments. The elements of topics match the corresponding log topics. Example: ["0xA", null, ["0xB", "0xC"], null] matches logs with "0xA" as the 1st topic AND ("0xB" OR "0xC") as the 3rd topic. If null, match all.
-options.limit       | `number`                | false    |                     | Return the last limit logs
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| options | `object` | false |  |  |
+| options.fromEpoch | `string,number` | false | 'latest\_checkpoint' | See \[format.epochNumber\]\(\#util/format.js/format/\(static\)epochNumber\). Search will be applied from this epoch number. |
+| options.toEpoch | `string,number` | false | 'latest\_state' | See \[format.epochNumber\]\(\#util/format.js/format/\(static\)epochNumber\). Search will be applied up until \(and including\) this epoch number. |
+| options.blockHashes | `Array.<string>` | false |  | Array of up to 128 block hashes that the search will be applied to. This will override from/to epoch fields if it's not null |
+| options.address | `string,Array.<string>` | false |  | Search contract addresses. If null, match all. If specified, log must be produced by one of these addresses. |
+| options.topics | `array` | false |  | Search topics. Logs can have 4 topics: the function signature and up to 3 indexed event arguments. The elements of topics match the corresponding log topics. Example: \["0xA", null, \["0xB", "0xC"\], null\] matches logs with "0xA" as the 1st topic AND \("0xB" OR "0xC"\) as the 3rd topic. If null, match all. |
+| options.limit | `number` | false |  | Return the last limit logs |
 
 * **Returns**
 
 `Promise.<Array.<object>>` Array of log, that the logs matching the filter provided:
-- address `string`: Address this event originated from.
-- topics `string[]`: Array of topics.
-- data `string`: The data containing non-indexed log parameter.
-- blockHash `string`: Hash of the block where the log in.
-- epochNumber `number`: Epoch number of the block where the log in.
-- transactionHash `string`: Hash of the transaction where the log in.
-- transactionIndex `string`: Transaction index in the block.
-- logIndex `number`: Log index in block.
-- transactionLogIndex `number`: Log index in transaction.
 
+* address `string`: Address this event originated from.
+* topics `string[]`: Array of topics.
+* data `string`: The data containing non-indexed log parameter.
+* blockHash `string`: Hash of the block where the log in.
+* epochNumber `number`: Epoch number of the block where the log in.
+* transactionHash `string`: Hash of the transaction where the log in.
+* transactionIndex `string`: Transaction index in the block.
+* logIndex `number`: Log index in block.
+* transactionLogIndex `number`: Log index in transaction.
 * **Examples**
 
-```
+```text
 > await conflux.getLogs({
       address: 'cfxtest:achc8nxj7r451c223m18w2dwjnmhkd6rxa2gc31euw',
       fromEpoch: 39802,
@@ -1298,13 +1284,13 @@ options.limit       | `number`                | false    |                     |
 
 Return block's execution trace.
 
-> Note: need RPC server open trace_block method
+> Note: need RPC server open trace\_block method
 
 * **Parameters**
 
-Name      | Type     | Required | Default | Description
-----------|----------|----------|---------|------------
-blockHash | `string` | true     |         | block hash
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| blockHash | `string` | true |  | block hash |
 
 * **Returns**
 
@@ -1312,7 +1298,7 @@ blockHash | `string` | true     |         | block hash
 
 * **Examples**
 
-```
+```text
 > await conflux.traceBlock('0xaf0e1d773dee28c95bcfa5480ed663fcc695b32c8c1dd81f57ff61ff09f55f88')
    {
         "transactionTraces": [
@@ -1356,10 +1342,10 @@ Subscribe event by name and got id, and provider will emit event by id
 
 * **Parameters**
 
-Name    | Type     | Required | Default | Description
---------|----------|----------|---------|-----------------------
-name    | `string` | true     |         | Subscription name
-...args | `array`  | true     |         | Subscription arguments
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| name | `string` | true |  | Subscription name |
+| ...args | `array` | true |  | Subscription arguments |
 
 * **Returns**
 
@@ -1367,7 +1353,7 @@ name    | `string` | true     |         | Subscription name
 
 * **Examples**
 
-```
+```text
 > conflux = new Conflux({url:'ws://127.0.0.1:12535'})
 > id = await conflux.subscribe('epochs');
    "0x8fe7879a1681e9b9"
@@ -1383,22 +1369,19 @@ name    | `string` | true     |         | Subscription name
 
 ### Conflux.prototype.subscribeEpochs <a id="Conflux.js/Conflux/subscribeEpochs"></a>
 
-The epochs topic streams consensus results: the total order of blocks, as expressed by a sequence of epochs.
-The returned series of epoch numbers is monotonically increasing with an increment of one.
-If you see the same epoch twice, this suggests a pivot chain reorg has happened (this might happen for recent epochs).
-For each epoch, the last hash in epochHashesOrdered is the hash of the pivot block.
+The epochs topic streams consensus results: the total order of blocks, as expressed by a sequence of epochs. The returned series of epoch numbers is monotonically increasing with an increment of one. If you see the same epoch twice, this suggests a pivot chain reorg has happened \(this might happen for recent epochs\). For each epoch, the last hash in epochHashesOrdered is the hash of the pivot block.
 
 * **Returns**
 
 `Promise.<Subscription>` EventEmitter instance with the follow events:
-- 'data':
-  - epochNumber `number`: epoch number
-  - epochHashesOrdered `array`: epoch block hash in order
-    - `string`: block hash
 
+* 'data':
+  * epochNumber `number`: epoch number
+  * epochHashesOrdered `array`: epoch block hash in order
+    * `string`: block hash
 * **Examples**
 
-```
+```text
 > subscription = await conflux.subscribeEpochs()
 > subscription.on('data', data=>console.log(data))
    {
@@ -1424,11 +1407,11 @@ The newHeads topic streams all new block headers participating in the consensus.
 * **Returns**
 
 `Promise.<Subscription>` EventEmitter instance with the follow events:
-- 'data': see `getBlockByHash`
 
+* 'data': see `getBlockByHash`
 * **Examples**
 
-```
+```text
 > subscription = await conflux.subscribeNewHeads()
 > subscription.on('data', data=>console.log(data))
    {
@@ -1454,28 +1437,26 @@ The newHeads topic streams all new block headers participating in the consensus.
 
 ### Conflux.prototype.subscribeLogs <a id="Conflux.js/Conflux/subscribeLogs"></a>
 
-The logs topic streams all logs matching a certain filter, in order.
-In case of a pivot chain reorg (which might affect recent logs), a special revert message is sent.
-All logs received previously that belong to epochs larger than the one in this message should be considered invalid.
+The logs topic streams all logs matching a certain filter, in order. In case of a pivot chain reorg \(which might affect recent logs\), a special revert message is sent. All logs received previously that belong to epochs larger than the one in this message should be considered invalid.
 
 * **Parameters**
 
-Name            | Type                    | Required | Default | Description
-----------------|-------------------------|----------|---------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-options         | `object`                | false    |         |
-options.address | `string,Array.<string>` | false    |         | Search contract addresses. If null, match all. If specified, log must be produced by one of these addresses.
-options.topics  | `array`                 | false    |         | Search topics. Logs can have 4 topics: the function signature and up to 3 indexed event arguments. The elements of topics match the corresponding log topics. Example: ["0xA", null, ["0xB", "0xC"], null] matches logs with "0xA" as the 1st topic AND ("0xB" OR "0xC") as the 3rd topic. If null, match all.
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| options | `object` | false |  |  |
+| options.address | `string,Array.<string>` | false |  | Search contract addresses. If null, match all. If specified, log must be produced by one of these addresses. |
+| options.topics | `array` | false |  | Search topics. Logs can have 4 topics: the function signature and up to 3 indexed event arguments. The elements of topics match the corresponding log topics. Example: \["0xA", null, \["0xB", "0xC"\], null\] matches logs with "0xA" as the 1st topic AND \("0xB" OR "0xC"\) as the 3rd topic. If null, match all. |
 
 * **Returns**
 
 `Promise.<Subscription>` EventEmitter instance with the follow events:
-- 'data': see `getLogs`
-- 'revert':
-  - revertTo 'number': epoch number
 
+* 'data': see `getLogs`
+* 'revert':
+  * revertTo 'number': epoch number
 * **Examples**
 
-```
+```text
 > subscription = await conflux.subscribeLogs()
 > subscription.on('data', data=>console.log(data))
    {
@@ -1495,7 +1476,7 @@ options.topics  | `array`                 | false    |         | Search topics. 
    }
 ```
 
-```
+```text
 > subscription.on('revert', data=>console.log(data))
    { revertTo: 568230 }
    { revertTo: 568231 }
@@ -1507,9 +1488,9 @@ Unsubscribe subscription.
 
 * **Parameters**
 
-Name | Type                  | Required | Default | Description
------|-----------------------|----------|---------|----------------
-id   | `string,Subscription` | true     |         | Subscription id
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| id | `string,Subscription` | true |  | Subscription id |
 
 * **Returns**
 
@@ -1517,7 +1498,7 @@ id   | `string,Subscription` | true     |         | Subscription id
 
 * **Examples**
 
-```
+```text
 > id = await conflux.subscribe('epochs');
 > await conflux.unsubscribe(id);
    true
@@ -1525,13 +1506,11 @@ id   | `string,Subscription` | true     |         | Subscription id
    false
 ```
 
-```
+```text
 > subscription = await conflux.subscribeLogs();
 > await conflux.unsubscribe(subscription);
    true
 ```
-
-----------------------------------------
 
 ## Drip <a id="Drip.js/Drip"></a>
 
@@ -1543,17 +1522,17 @@ Get `Drip` string from `CFX`
 
 * **Parameters**
 
-Name  | Type            | Required | Default | Description
-------|-----------------|----------|---------|------------
-value | `string,number` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| value | `string,number` | true |  |  |
 
 * **Returns**
 
-`Drip` 
+`Drip`
 
 * **Examples**
 
-```
+```text
 > Drip.fromCFX(3.14)
    [String (Drip): '3140000000000000000']
 > Drip.fromCFX('0xab')
@@ -1566,17 +1545,17 @@ Get `Drip` string from `GDrip`
 
 * **Parameters**
 
-Name  | Type            | Required | Default | Description
-------|-----------------|----------|---------|------------
-value | `string,number` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| value | `string,number` | true |  |  |
 
 * **Returns**
 
-`Drip` 
+`Drip`
 
 * **Examples**
 
-```
+```text
 > Drip.fromGDrip(3.14)
    [String (Drip): '3140000000']
 > Drip.fromGDrip('0xab')
@@ -1587,17 +1566,17 @@ value | `string,number` | true     |         |
 
 * **Parameters**
 
-Name  | Type            | Required | Default | Description
-------|-----------------|----------|---------|------------
-value | `number,string` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| value | `number,string` | true |  |  |
 
 * **Returns**
 
-`Drip` 
+`Drip`
 
 * **Examples**
 
-```
+```text
 > Drip(1.00)
    [String (Drip): '1']
 > Drip('0xab')
@@ -1610,11 +1589,11 @@ Get `CFX` number string
 
 * **Returns**
 
-`string` 
+`string`
 
 * **Examples**
 
-```
+```text
 > Drip(1e9).toCFX()
    "0.000000001"
 ```
@@ -1625,20 +1604,16 @@ Get `GDrip` number string
 
 * **Returns**
 
-`string` 
+`string`
 
 * **Examples**
 
-```
+```text
 > Drip(1e9).toGDrip()
    "1"
 ```
 
-----------------------------------------
-
 ## Message <a id="Message.js/Message"></a>
-
-
 
 ### Message.sign <a id="Message.js/Message/(static)sign"></a>
 
@@ -1648,10 +1623,10 @@ Signs the hash with the privateKey.
 
 * **Parameters**
 
-Name        | Type            | Required | Default | Description
-------------|-----------------|----------|---------|------------
-privateKey  | `string,Buffer` | true     |         |
-messageHash | `string,Buffer` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| privateKey | `string,Buffer` | true |  |  |
+| messageHash | `string,Buffer` | true |  |  |
 
 * **Returns**
 
@@ -1659,7 +1634,7 @@ messageHash | `string,Buffer` | true     |         |
 
 * **Examples**
 
-```
+```text
 > Message.sign(
    '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef', // privateKey
    '0x592fa743889fc7f92ac2a37bb1f5ba1daf2a5c84741ca0e0061d243a2e6707ba',
@@ -1673,10 +1648,10 @@ Recovers the signers publicKey from the signature.
 
 * **Parameters**
 
-Name        | Type            | Required | Default | Description
-------------|-----------------|----------|---------|------------
-signature   | `string,Buffer` | true     |         |
-messageHash | `string,Buffer` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| signature | `string,Buffer` | true |  |  |
+| messageHash | `string,Buffer` | true |  |  |
 
 * **Returns**
 
@@ -1684,7 +1659,7 @@ messageHash | `string,Buffer` | true     |         |
 
 * **Examples**
 
-```
+```text
 > Message.recover(
    '0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01',
    '0x592fa743889fc7f92ac2a37bb1f5ba1daf2a5c84741ca0e0061d243a2e6707ba',
@@ -1696,17 +1671,17 @@ messageHash | `string,Buffer` | true     |         |
 
 * **Parameters**
 
-Name    | Type     | Required | Default | Description
---------|----------|----------|---------|------------
-message | `string` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| message | `string` | true |  |  |
 
 * **Returns**
 
-`Message` 
+`Message`
 
 * **Examples**
 
-```
+```text
 > msg = new Message('Hello World');
    Message {
       message: 'Hello World',
@@ -1738,7 +1713,7 @@ Getter of message hash include signature.
 
 * **Returns**
 
-`string` 
+`string`
 
 ### Message.prototype.from <a id="Message.js/Message/from(getter)"></a>
 
@@ -1756,20 +1731,16 @@ Sign message and set 'r','s','v' and 'hash'.
 
 * **Parameters**
 
-Name       | Type      | Required | Default | Description
------------|-----------|----------|---------|------------------------
-privateKey | `string`  | true     |         | Private key hex string.
-networkId  | `Integer` | false    | 1029    | Network id of account
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| privateKey | `string` | true |  | Private key hex string. |
+| networkId | `Integer` | false | 1029 | Network id of account |
 
 * **Returns**
 
-`Message` 
-
-----------------------------------------
+`Message`
 
 ## Transaction <a id="Transaction.js/Transaction"></a>
-
-
 
 ### Transaction.prototype.**constructor** <a id="Transaction.js/Transaction/**constructor**"></a>
 
@@ -1777,26 +1748,26 @@ Create a transaction.
 
 * **Parameters**
 
-Name                 | Type            | Required | Default | Description
----------------------|-----------------|----------|---------|------------------------------------------------------------------------------------------------------------------------------------------------------------
-options              | `object`        | true     |         |
-options.from         | `string`        | false    |         | The sender address.
-options.nonce        | `string,number` | false    |         | This allows to overwrite your own pending transactions that use the same nonce.
-options.gasPrice     | `string,number` | false    |         | The price of gas for this transaction in drip.
-options.gas          | `string,number` | false    |         | The amount of gas to use for the transaction (unused gas is refunded).
-options.to           | `string`        | false    |         | The destination address of the message, left undefined for a contract-creation transaction.
-options.value        | `string,number` | false    |         | The value transferred for the transaction in drip, also the endowment if it’s a contract-creation transaction.
-options.storageLimit | `string,number` | false    |         | The storage limit specified by the sender.
-options.epochHeight  | `string,number` | false    |         | The epoch proposed by the sender. Note that this is NOT the epoch of the block containing this transaction.
-options.chainId      | `string,number` | false    |         | The chain ID specified by the sender.
-options.data         | `string,Buffer` | false    |         | Either a ABI byte string containing the data of the function call on a contract, or in the case of a contract-creation transaction the initialisation code.
-options.r            | `string,Buffer` | false    |         | ECDSA signature r
-options.s            | `string,Buffer` | false    |         | ECDSA signature s
-options.v            | `number`        | false    |         | ECDSA recovery id
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| options | `object` | true |  |  |
+| options.from | `string` | false |  | The sender address. |
+| options.nonce | `string,number` | false |  | This allows to overwrite your own pending transactions that use the same nonce. |
+| options.gasPrice | `string,number` | false |  | The price of gas for this transaction in drip. |
+| options.gas | `string,number` | false |  | The amount of gas to use for the transaction \(unused gas is refunded\). |
+| options.to | `string` | false |  | The destination address of the message, left undefined for a contract-creation transaction. |
+| options.value | `string,number` | false |  | The value transferred for the transaction in drip, also the endowment if it’s a contract-creation transaction. |
+| options.storageLimit | `string,number` | false |  | The storage limit specified by the sender. |
+| options.epochHeight | `string,number` | false |  | The epoch proposed by the sender. Note that this is NOT the epoch of the block containing this transaction. |
+| options.chainId | `string,number` | false |  | The chain ID specified by the sender. |
+| options.data | `string,Buffer` | false |  | Either a ABI byte string containing the data of the function call on a contract, or in the case of a contract-creation transaction the initialisation code. |
+| options.r | `string,Buffer` | false |  | ECDSA signature r |
+| options.s | `string,Buffer` | false |  | ECDSA signature s |
+| options.v | `number` | false |  | ECDSA recovery id |
 
 * **Returns**
 
-`Transaction` 
+`Transaction`
 
 ### Transaction.prototype.hash <a id="Transaction.js/Transaction/hash(getter)"></a>
 
@@ -1814,14 +1785,14 @@ Sign transaction and set 'r','s','v'.
 
 * **Parameters**
 
-Name       | Type     | Required | Default | Description
------------|----------|----------|---------|------------------------
-privateKey | `string` | true     |         | Private key hex string.
-networkId  | `number` | true     |         | fullnode's network id.
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| privateKey | `string` | true |  | Private key hex string. |
+| networkId | `number` | true |  | fullnode's network id. |
 
 * **Returns**
 
-`Transaction` 
+`Transaction`
 
 ### Transaction.prototype.recover <a id="Transaction.js/Transaction/recover"></a>
 
@@ -1829,7 +1800,7 @@ Recover public key from signed Transaction.
 
 * **Returns**
 
-`string` 
+`string`
 
 ### Transaction.prototype.encode <a id="Transaction.js/Transaction/encode"></a>
 
@@ -1837,13 +1808,13 @@ Encode rlp.
 
 * **Parameters**
 
-Name             | Type      | Required | Default | Description
------------------|-----------|----------|---------|-----------------------------------------
-includeSignature | `boolean` | false    | false   | Whether or not to include the signature.
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| includeSignature | `boolean` | false | false | Whether or not to include the signature. |
 
 * **Returns**
 
-`Buffer` 
+`Buffer`
 
 ### Transaction.prototype.serialize <a id="Transaction.js/Transaction/serialize"></a>
 
@@ -1853,8 +1824,6 @@ Get the raw transaction hex string.
 
 `string` Hex string
 
-----------------------------------------
-
 ### Contract <a id="contract/Contract.js/Contract"></a>
 
 Contract with all its methods and events defined in its abi.
@@ -1862,31 +1831,32 @@ Contract with all its methods and events defined in its abi.
 #### Contract.prototype.**constructor** <a id="contract/Contract.js/Contract/**constructor**"></a>
 
 > contract "code" definition:
-```
-6080................6080.................a264.........0033...............................
-| <-                     create contract transaction `data`                          -> |
-| <- deploy code -> | <- runtime code -> | <- metadata -> | <- constructor arguments -> |
-| <-                contract `bytecode`                -> |
-                    | <-       code as `getCode`       -> |
-```
+>
+> ```text
+> 6080................6080.................a264.........0033...............................
+> | <-                     create contract transaction `data`                          -> |
+> | <- deploy code -> | <- runtime code -> | <- metadata -> | <- constructor arguments -> |
+> | <-                contract `bytecode`                -> |
+>                     | <-       code as `getCode`       -> |
+> ```
 
 * **Parameters**
 
-Name             | Type      | Required | Default | Description
------------------|-----------|----------|---------|-----------------------------------------------------------------------------------------------------
-options          | `object`  | true     |         |
-options.abi      | `array`   | true     |         | The json interface for the contract to instantiate
-options.address  | `string`  | false    |         | The address of the smart contract to call, can be added later using `contract.address = '0x1234...'`
-options.bytecode | `string`  | false    |         | The byte code of the contract, can be added later using `contract.constructor.code = '0x1234...'`
-conflux          | `Conflux` | true     |         | Conflux instance.
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| options | `object` | true |  |  |
+| options.abi | `array` | true |  | The json interface for the contract to instantiate |
+| options.address | `string` | false |  | The address of the smart contract to call, can be added later using `contract.address = '0x1234...'` |
+| options.bytecode | `string` | false |  | The byte code of the contract, can be added later using `contract.constructor.code = '0x1234...'` |
+| conflux | `Conflux` | true |  | Conflux instance. |
 
 * **Returns**
 
-`object` 
+`object`
 
 * **Examples**
 
-```
+```text
 > const contract = conflux.Contract({ abi, bytecode, address });
    {
       abi: ContractABI { contract: [Circular *1] },
@@ -1909,7 +1879,7 @@ conflux          | `Conflux` | true     |         | Conflux instance.
    "0x6080..."
 ```
 
-```
+```text
 > const contract = conflux.Contract({
    address: 'cfxtest:achc8nxj7r451c223m18w2dwjnmhkd6rxa2gc31euw',
    abi: [
@@ -1983,35 +1953,30 @@ conflux          | `Conflux` | true     |         | Conflux instance.
     }
 ```
 
-----------------------------------------
-
 ### BaseProvider <a id="provider/BaseProvider.js/BaseProvider"></a>
-
-
 
 #### BaseProvider.prototype.**constructor** <a id="provider/BaseProvider.js/BaseProvider/**constructor**"></a>
 
 * **Parameters**
 
-Name            | Type     | Required | Default | Description
-----------------|----------|----------|---------|-------------------------------
-options         | `object` | false    |         |
-options.url     | `string` | true     |         | Full json rpc http url
-options.timeout | `number` | false    | 60*1000 | Request time out in ms
-options.logger  | `object` | false    |         | Logger with `info` and `error`
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| options | `object` | false |  |  |
+| options.url | `string` | true |  | Full json rpc http url |
+| options.timeout | `number` | false | 60\*1000 | Request time out in ms |
+| options.logger | `object` | false |  | Logger with `info` and `error` |
 
 * **Returns**
 
-`BaseProvider` 
+`BaseProvider`
 
 #### BaseProvider.prototype.requestId <a id="provider/BaseProvider.js/BaseProvider/requestId"></a>
 
-Gen a random json rpc id.
-It is used in `call` method, overwrite it to gen your own id.
+Gen a random json rpc id. It is used in `call` method, overwrite it to gen your own id.
 
 * **Returns**
 
-`string` 
+`string`
 
 #### BaseProvider.prototype.call <a id="provider/BaseProvider.js/BaseProvider/call"></a>
 
@@ -2019,10 +1984,10 @@ Call a json rpc method with params
 
 * **Parameters**
 
-Name      | Type     | Required | Default | Description
-----------|----------|----------|---------|------------------------
-method    | `string` | true     |         | Json rpc method name.
-...params | `array`  | false    |         | Json rpc method params.
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| method | `string` | true |  | Json rpc method name. |
+| ...params | `array` | false |  | Json rpc method params. |
 
 * **Returns**
 
@@ -2030,7 +1995,7 @@ method    | `string` | true     |         | Json rpc method name.
 
 * **Examples**
 
-```
+```text
 > await provider.call('cfx_epochNumber');
 > await provider.call('cfx_getBlockByHash', blockHash);
 ```
@@ -2041,17 +2006,17 @@ Batch call json rpc methods with params
 
 * **Parameters**
 
-Name  | Type             | Required | Default | Description
-------|------------------|----------|---------|-------------------------------------------
-array | `Array.<object>` | true     |         | Array of object with "method" and "params"
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| array | `Array.<object>` | true |  | Array of object with "method" and "params" |
 
 * **Returns**
 
-`Promise.<Array>` 
+`Promise.<Array>`
 
 * **Examples**
 
-```
+```text
 > await provider.batch([
   { method: 'cfx_epochNumber' },
   { method: 'cfx_getBalance', params: ['cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp'] },
@@ -2060,13 +2025,9 @@ array | `Array.<object>` | true     |         | Array of object with "method" an
    [ '0x3b734d', '0x22374d959c622f74728', RPCError: Method not found ]
 ```
 
-----------------------------------------
-
 ### HttpProvider <a id="provider/HttpProvider.js/HttpProvider"></a>
 
 Http protocol json rpc provider.
-
-----------------------------------------
 
 ### WebSocketProvider <a id="provider/WebSocketProvider.js/WebSocketProvider"></a>
 
@@ -2076,43 +2037,41 @@ Websocket protocol json rpc provider.
 
 * **Parameters**
 
-Name                                        | Type             | Required | Default  | Description
---------------------------------------------|------------------|----------|----------|---------------------------------------------------------------------------------------------------------------------------------------------------------
-options                                     | `object`         | false    |          | See [W3CWebSocket](https://github.com/theturtle32/WebSocket-Node/blob/c91a6cb8f0cf896edf0d2d49faa0c9e0a9985172/docs/W3CWebSocket.md)
-options.url                                 | `string`         | true     |          | Full json rpc http url
-options.timeout                             | `number`         | false    | 60*1000  | Request time out in ms
-options.logger                              | `object`         | false    |          | Logger with `info` and `error`
-options.protocols                           | `Array.<string>` | false    |          | See [w3](https://www.w3.org/TR/websockets/)
-options.origin                              | `string`         | false    |          |
-options.headers                             | `object`         | false    |          |
-options.requestOptions                      | `object`         | false    |          |
-options.clientConfig                        | `object`         | false    |          | See [websocket/lib/WebSocketClient](https://github.com/theturtle32/WebSocket-Node/blob/c91a6cb8f0cf896edf0d2d49faa0c9e0a9985172/docs/WebSocketClient.md)
-options.clientConfig.maxReceivedFrameSize   | `number`         | false    | 0x100000 | 1MiB max frame size.
-options.clientConfig.maxReceivedMessageSize | `number`         | false    | 0x800000 | 8MiB max message size, only applicable if assembleFragments is true
-options.clientConfig.closeTimeout           | `number`         | false    | 5000     | The number of milliseconds to wait after sending a close frame for an acknowledgement to come back before giving up and just closing the socket.
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| options | `object` | false |  | See [W3CWebSocket](https://github.com/theturtle32/WebSocket-Node/blob/c91a6cb8f0cf896edf0d2d49faa0c9e0a9985172/docs/W3CWebSocket.md) |
+| options.url | `string` | true |  | Full json rpc http url |
+| options.timeout | `number` | false | 60\*1000 | Request time out in ms |
+| options.logger | `object` | false |  | Logger with `info` and `error` |
+| options.protocols | `Array.<string>` | false |  | See [w3](https://www.w3.org/TR/websockets/) |
+| options.origin | `string` | false |  |  |
+| options.headers | `object` | false |  |  |
+| options.requestOptions | `object` | false |  |  |
+| options.clientConfig | `object` | false |  | See [websocket/lib/WebSocketClient](https://github.com/theturtle32/WebSocket-Node/blob/c91a6cb8f0cf896edf0d2d49faa0c9e0a9985172/docs/WebSocketClient.md) |
+| options.clientConfig.maxReceivedFrameSize | `number` | false | 0x100000 | 1MiB max frame size. |
+| options.clientConfig.maxReceivedMessageSize | `number` | false | 0x800000 | 8MiB max message size, only applicable if assembleFragments is true |
+| options.clientConfig.closeTimeout | `number` | false | 5000 | The number of milliseconds to wait after sending a close frame for an acknowledgement to come back before giving up and just closing the socket. |
 
 * **Returns**
 
-`WebSocketProvider` 
-
-----------------------------------------
+`WebSocketProvider`
 
 ### providerFactory <a id="provider/index.js/providerFactory"></a>
 
 * **Parameters**
 
-Name        | Type     | Required | Default | Description
-------------|----------|----------|---------|------------
-options     | `object` | true     |         |
-options.url | `string` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| options | `object` | true |  |  |
+| options.url | `string` | true |  |  |
 
 * **Returns**
 
-`WebsocketProvider,HttpProvider,BaseProvider` 
+`WebsocketProvider,HttpProvider,BaseProvider`
 
 * **Examples**
 
-```
+```text
 > providerFactory()
  BaseProvider {
     url: undefined,
@@ -2121,7 +2080,7 @@ options.url | `string` | true     |         |
   }
 ```
 
-```
+```text
 > providerFactory({ url: 'http://localhost:12537' })
  HttpProvider {
     url: 'http://localhost:12537',
@@ -2140,21 +2099,17 @@ options.url | `string` | true     |         |
   }
 ```
 
-----------------------------------------
-
 ### Subscription <a id="subscribe/Subscription.js/Subscription"></a>
 
 Subscription event emitter
-
-----------------------------------------
 
 #### format.any <a id="util/format.js/format/(static)any"></a>
 
 * **Parameters**
 
-Name | Type  | Required | Default | Description
------|-------|----------|---------|------------
-arg  | `any` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| arg | `any` | true |  |  |
 
 * **Returns**
 
@@ -2162,7 +2117,7 @@ arg  | `any` | true     |         |
 
 * **Examples**
 
-```
+```text
 > format.any(1)
  1
 ```
@@ -2171,17 +2126,17 @@ arg  | `any` | true     |         |
 
 * **Parameters**
 
-Name | Type                           | Required | Default | Description
------|--------------------------------|----------|---------|------------
-arg  | `number,BigInt,string,boolean` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| arg | `number,BigInt,string,boolean` | true |  |  |
 
 * **Returns**
 
-`Number` 
+`Number`
 
 * **Examples**
 
-```
+```text
 > format.uInt(-3.14)
  Error("not match uint")
 > format.uInt(null)
@@ -2208,17 +2163,17 @@ arg  | `number,BigInt,string,boolean` | true     |         |
 
 * **Parameters**
 
-Name | Type                   | Required | Default | Description
------|------------------------|----------|---------|------------
-arg  | `number,string,BigInt` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| arg | `number,string,BigInt` | true |  |  |
 
 * **Returns**
 
-`BigInt` 
+`BigInt`
 
 * **Examples**
 
-```
+```text
 > format.bigInt(-3.14)
  Error("Cannot convert -3.14 to a BigInt")
 > format.bigInt('0.0')
@@ -2239,17 +2194,17 @@ arg  | `number,string,BigInt` | true     |         |
 
 * **Parameters**
 
-Name | Type                   | Required | Default | Description
------|------------------------|----------|---------|------------
-arg  | `number,string,BigInt` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| arg | `number,string,BigInt` | true |  |  |
 
 * **Returns**
 
-`BigInt` 
+`BigInt`
 
 * **Examples**
 
-```
+```text
 > format.bigUInt('0.0')
  0n
 > format.bigUInt('-1')
@@ -2258,13 +2213,13 @@ arg  | `number,string,BigInt` | true     |         |
 
 #### format.bigUIntHex <a id="util/format.js/format/(static)bigUIntHex"></a>
 
-When encoding QUANTITIES (integers, numbers): encode as hex, prefix with "0x", the most compact representation (slight exception: zero should be represented as "0x0")
+When encoding QUANTITIES \(integers, numbers\): encode as hex, prefix with "0x", the most compact representation \(slight exception: zero should be represented as "0x0"\)
 
 * **Parameters**
 
-Name | Type                   | Required | Default | Description
------|------------------------|----------|---------|------------
-arg  | `number,string,BigInt` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| arg | `number,string,BigInt` | true |  |  |
 
 * **Returns**
 
@@ -2272,7 +2227,7 @@ arg  | `number,string,BigInt` | true     |         |
 
 * **Examples**
 
-```
+```text
 > format.bigUIntHex(100)
  "0x64"
 > format.bigUIntHex('0x0a')
@@ -2285,9 +2240,9 @@ arg  | `number,string,BigInt` | true     |         |
 
 * **Parameters**
 
-Name | Type                   | Required | Default | Description
------|------------------------|----------|---------|------------
-arg  | `number,string,BigInt` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| arg | `number,string,BigInt` | true |  |  |
 
 * **Returns**
 
@@ -2295,7 +2250,7 @@ arg  | `number,string,BigInt` | true     |         |
 
 * **Examples**
 
-```
+```text
 > format.big('0b10').toString()
  '2'
 > format.big('0O10').toString()
@@ -2316,17 +2271,17 @@ arg  | `number,string,BigInt` | true     |         |
 
 * **Parameters**
 
-Name | Type                       | Required | Default | Description
------|----------------------------|----------|---------|------------
-arg  | `string,number,BigInt,Big` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| arg | `string,number,BigInt,Big` | true |  |  |
 
 * **Returns**
 
-`Number` 
+`Number`
 
 * **Examples**
 
-```
+```text
 > format.fixed64('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')
  1
 > format.fixed64('0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')
@@ -2337,17 +2292,17 @@ arg  | `string,number,BigInt,Big` | true     |         |
 
 * **Parameters**
 
-Name | Type            | Required | Default | Description
------|-----------------|----------|---------|------------------------------------------------------------
-arg  | `number,string` | true     |         | number or label, See [EPOCH_NUMBER](#CONST.js/EPOCH_NUMBER)
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| arg | `number,string` | true |  | number or label, See [EPOCH\_NUMBER](api.md#CONST.js/EPOCH_NUMBER) |
 
 * **Returns**
 
-`string` 
+`string`
 
 * **Examples**
 
-```
+```text
 > format.epochNumber(10)
  "0xa"
 > format.epochNumber(EPOCH_NUMBER.LATEST_STATE)
@@ -2358,13 +2313,13 @@ arg  | `number,string` | true     |         | number or label, See [EPOCH_NUMBER
 
 #### format.hex <a id="util/format.js/format/(static)hex"></a>
 
-When encoding UNFORMATTED DATA (byte arrays, account addresses, hashes, bytecode arrays): encode as hex, prefix with "0x", two hex digits per byte.
+When encoding UNFORMATTED DATA \(byte arrays, account addresses, hashes, bytecode arrays\): encode as hex, prefix with "0x", two hex digits per byte.
 
 * **Parameters**
 
-Name | Type                                       | Required | Default | Description
------|--------------------------------------------|----------|---------|------------
-arg  | `number,BigInt,string,Buffer,boolean,null` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| arg | `number,BigInt,string,Buffer,boolean,null` | true |  |  |
 
 * **Returns**
 
@@ -2372,7 +2327,7 @@ arg  | `number,BigInt,string,Buffer,boolean,null` | true     |         |
 
 * **Examples**
 
-```
+```text
 > format.hex(null)
  '0x'
 > format.hex(1)
@@ -2393,10 +2348,10 @@ Checks if a given string is a valid address.
 
 * **Parameters**
 
-Name      | Type            | Required | Default | Description
-----------|-----------------|----------|---------|------------
-address   | `string,Buffer` | true     |         |
-networkId | `integer`       | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| address | `string,Buffer` | true |  |  |
+| networkId | `integer` | true |  |  |
 
 * **Returns**
 
@@ -2404,7 +2359,7 @@ networkId | `integer`       | true     |         |
 
 * **Examples**
 
-```
+```text
 > format.address('0x0123456789012345678901234567890123456789', 1)
  "cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp"
 > format.address('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
@@ -2413,14 +2368,13 @@ networkId | `integer`       | true     |         |
 
 #### format.hexAddress <a id="util/format.js/format/(static)hexAddress"></a>
 
-Checks if a given string is a valid hex address.
-It will also check the checksum, if the address has upper and lowercase letters.
+Checks if a given string is a valid hex address. It will also check the checksum, if the address has upper and lowercase letters.
 
 * **Parameters**
 
-Name    | Type            | Required | Default | Description
---------|-----------------|----------|---------|------------
-address | `string,Buffer` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| address | `string,Buffer` | true |  |  |
 
 * **Returns**
 
@@ -2428,7 +2382,7 @@ address | `string,Buffer` | true     |         |
 
 * **Examples**
 
-```
+```text
 > format.hexAddress('0x0123456789012345678901234567890123456789')
  "0x0123456789012345678901234567890123456789"
 > format.hexAddress('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
@@ -2443,9 +2397,9 @@ Will convert an upper or lowercase address to a checksum address.
 
 * **Parameters**
 
-Name | Type            | Required | Default | Description
------|-----------------|----------|---------|------------
-arg  | `string,Buffer` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| arg | `string,Buffer` | true |  |  |
 
 * **Returns**
 
@@ -2453,7 +2407,7 @@ arg  | `string,Buffer` | true     |         |
 
 * **Examples**
 
-```
+```text
 > format.checksumAddress('0x1b716c51381e76900ebaa7999a488511a4e1fd0a')
  "0x1B716c51381e76900EBAA7999A488511A4E1fD0a"
 > format.checksumAddress('0X1B716C51381E76900EBAA7999A488511A4E1FD0A')
@@ -2466,9 +2420,9 @@ arg  | `string,Buffer` | true     |         |
 
 * **Parameters**
 
-Name | Type            | Required | Default | Description
------|-----------------|----------|---------|------------
-arg  | `string,Buffer` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| arg | `string,Buffer` | true |  |  |
 
 * **Returns**
 
@@ -2476,7 +2430,7 @@ arg  | `string,Buffer` | true     |         |
 
 * **Examples**
 
-```
+```text
 > format.privateKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
  "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
 > format.privateKey('0x0123456789012345678901234567890123456789')
@@ -2487,9 +2441,9 @@ arg  | `string,Buffer` | true     |         |
 
 * **Parameters**
 
-Name | Type            | Required | Default | Description
------|-----------------|----------|---------|------------
-arg  | `string,Buffer` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| arg | `string,Buffer` | true |  |  |
 
 * **Returns**
 
@@ -2497,7 +2451,7 @@ arg  | `string,Buffer` | true     |         |
 
 * **Examples**
 
-```
+```text
 > format.privateKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
  "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
 > format.privateKey('0x0123456789012345678901234567890123456789')
@@ -2508,9 +2462,9 @@ arg  | `string,Buffer` | true     |         |
 
 * **Parameters**
 
-Name | Type            | Required | Default | Description
------|-----------------|----------|---------|------------
-arg  | `string,Buffer` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| arg | `string,Buffer` | true |  |  |
 
 * **Returns**
 
@@ -2518,7 +2472,7 @@ arg  | `string,Buffer` | true     |         |
 
 * **Examples**
 
-```
+```text
 > format.privateKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
  "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
 > format.privateKey('0x0123456789012345678901234567890123456789')
@@ -2529,9 +2483,9 @@ arg  | `string,Buffer` | true     |         |
 
 * **Parameters**
 
-Name | Type            | Required | Default | Description
------|-----------------|----------|---------|------------
-arg  | `string,Buffer` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| arg | `string,Buffer` | true |  |  |
 
 * **Returns**
 
@@ -2539,7 +2493,7 @@ arg  | `string,Buffer` | true     |         |
 
 * **Examples**
 
-```
+```text
 > format.publicKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
  "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
 > format.publicKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
@@ -2550,17 +2504,17 @@ arg  | `string,Buffer` | true     |         |
 
 * **Parameters**
 
-Name | Type                                       | Required | Default | Description
------|--------------------------------------------|----------|---------|------------
-arg  | `number,string,BigInt,Buffer,boolean,null` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| arg | `number,string,BigInt,Buffer,boolean,null` | true |  |  |
 
 * **Returns**
 
-`Buffer` 
+`Buffer`
 
 * **Examples**
 
-```
+```text
 > format.hexBuffer(Buffer.from([0, 1]))
  <Buffer 00 01>
 > format.hexBuffer(null)
@@ -2579,17 +2533,17 @@ arg  | `number,string,BigInt,Buffer,boolean,null` | true     |         |
 
 * **Parameters**
 
-Name | Type                  | Required | Default | Description
------|-----------------------|----------|---------|------------
-arg  | `string,Buffer,array` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| arg | `string,Buffer,array` | true |  |  |
 
 * **Returns**
 
-`Buffer` 
+`Buffer`
 
 * **Examples**
 
-```
+```text
 > format.bytes('abcd')
  <Buffer 61 62 63 64>
 > format.bytes([0, 1])
@@ -2602,17 +2556,17 @@ arg  | `string,Buffer,array` | true     |         |
 
 * **Parameters**
 
-Name | Type      | Required | Default | Description
------|-----------|----------|---------|------------
-arg  | `boolean` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| arg | `boolean` | true |  |  |
 
 * **Returns**
 
-`boolean` 
+`boolean`
 
 * **Examples**
 
-```
+```text
 > format.boolean(true)
  true
 > format.boolean(false)
@@ -2625,17 +2579,17 @@ Compute the keccak256 cryptographic hash of a value, returned as a hex string.
 
 * **Parameters**
 
-Name | Type            | Required | Default | Description
------|-----------------|----------|---------|------------
-arg  | `string,Buffer` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| arg | `string,Buffer` | true |  |  |
 
 * **Returns**
 
-`string` 
+`string`
 
 * **Examples**
 
-```
+```text
 > format.keccak256('Transfer(address,address,uint256)')
  "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
 > format.keccak256(Buffer.from([0x42]))
@@ -2646,56 +2600,49 @@ arg  | `string,Buffer` | true     |         |
  "0x3c1b2d38851281e9a7b59d10973b0c87c340ff1e76bde7d06bf6b9f28df2b8c0"
 ```
 
-----------------------------------------
-
 ### keccak256 <a id="util/sign.js/keccak256"></a>
 
 keccak 256
 
 * **Parameters**
 
-Name   | Type     | Required | Default | Description
--------|----------|----------|---------|------------
-buffer | `Buffer` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| buffer | `Buffer` | true |  |  |
 
 * **Returns**
 
-`Buffer` 
+`Buffer`
 
 * **Examples**
 
-```
+```text
 > keccak256(Buffer.from(''))
  <Buffer c5 d2 46 01 86 f7 23 3c 92 7e 7d b2 dc c7 03 c0 e5 00 b6 53 ca 82 27 3b 7b fa d8 04 5d 85 a4 70>
 ```
-
-----------------------------------------
 
 ### ~~checksumAddress~~ <a id="util/sign.js/checksumAddress"></a>
 
 Makes a checksum address
 
-> Note: support [EIP-55](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-55.md)
-> Note: not support [RSKIP60](https://github.com/rsksmart/RSKIPs/blob/master/IPs/RSKIP60.md) yet
+> Note: support [EIP-55](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-55.md) Note: not support [RSKIP60](https://github.com/rsksmart/RSKIPs/blob/master/IPs/RSKIP60.md) yet
 
 * **Parameters**
 
-Name    | Type     | Required | Default | Description
---------|----------|----------|---------|------------
-address | `string` | true     |         | Hex string
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| address | `string` | true |  | Hex string |
 
 * **Returns**
 
-`string` 
+`string`
 
 * **Examples**
 
-```
+```text
 > checksumAddress('0x1b716c51381e76900ebaa7999a488511a4e1fd0a')
  "0x1B716c51381e76900EBAA7999A488511A4E1fD0a"
 ```
-
-----------------------------------------
 
 ### randomBuffer <a id="util/sign.js/randomBuffer"></a>
 
@@ -2705,17 +2652,17 @@ gen a random buffer with `size` bytes.
 
 * **Parameters**
 
-Name | Type     | Required | Default | Description
------|----------|----------|---------|------------
-size | `number` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| size | `number` | true |  |  |
 
 * **Returns**
 
-`Buffer` 
+`Buffer`
 
 * **Examples**
 
-```
+```text
 > randomBuffer(0)
  <Buffer >
 > randomBuffer(1)
@@ -2724,32 +2671,30 @@ size | `number` | true     |         |
  <Buffer 5a>
 ```
 
-----------------------------------------
-
 ### randomPrivateKey <a id="util/sign.js/randomPrivateKey"></a>
 
 Gen a random PrivateKey buffer.
 
 * **Parameters**
 
-Name    | Type     | Required | Default | Description
---------|----------|----------|---------|------------
-entropy | `Buffer` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| entropy | `Buffer` | true |  |  |
 
 * **Returns**
 
-`Buffer` 
+`Buffer`
 
 * **Examples**
 
-```
+```text
 > randomPrivateKey()
  <Buffer 23 fb 3b 2b 1f c9 36 8c a4 8e 5b dc c7 a9 e2 bd 67 81 43 3b f2 3a cc da da ff a9 dd dd b6 08 d4>
 > randomPrivateKey()
  <Buffer e7 5b 68 fb f9 50 19 94 07 80 d5 13 2e 40 a7 f9 a1 b0 5d 72 c8 86 ca d1 c6 59 cd a6 bf 37 cb 73>
 ```
 
-```
+```text
 > entropy = randomBuffer(32)
 > randomPrivateKey(entropy)
  <Buffer 57 90 e8 3d 16 10 02 b9 a4 33 87 e1 6b cd 40 7e f7 22 b1 d8 94 ae 98 bf 76 a4 56 fb b6 0c 4b 4a>
@@ -2757,21 +2702,17 @@ entropy | `Buffer` | true     |         |
  <Buffer 89 44 ef 31 d4 9c d0 25 9f b0 de 61 99 12 4a 21 57 43 d4 4b af ae ef ae e1 3a ba 05 c3 e6 ad 21>
 ```
 
-----------------------------------------
-
 ### privateKeyToPublicKey <a id="util/sign.js/privateKeyToPublicKey"></a>
 
 * **Parameters**
 
-Name       | Type     | Required | Default | Description
------------|----------|----------|---------|------------
-privateKey | `Buffer` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| privateKey | `Buffer` | true |  |  |
 
 * **Returns**
 
-`Buffer` 
-
-----------------------------------------
+`Buffer`
 
 ### publicKeyToAddress <a id="util/sign.js/publicKeyToAddress"></a>
 
@@ -2781,22 +2722,20 @@ Get account address by public key.
 
 * **Parameters**
 
-Name      | Type     | Required | Default | Description
-----------|----------|----------|---------|------------
-publicKey | `Buffer` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| publicKey | `Buffer` | true |  |  |
 
 * **Returns**
 
-`Buffer` 
+`Buffer`
 
 * **Examples**
 
-```
+```text
 > publicKeyToAddress(Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1]))
  <Buffer 4c 6f a3 22 12 5f a3 1a 42 cb dd a8 73 0d 4c f0 20 0d 72 db>
 ```
-
-----------------------------------------
 
 ### privateKeyToAddress <a id="util/sign.js/privateKeyToAddress"></a>
 
@@ -2804,22 +2743,20 @@ Get address by private key.
 
 * **Parameters**
 
-Name       | Type     | Required | Default | Description
------------|----------|----------|---------|------------
-privateKey | `Buffer` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| privateKey | `Buffer` | true |  |  |
 
 * **Returns**
 
-`Buffer` 
+`Buffer`
 
 * **Examples**
 
-```
+```text
 > privateKeyToAddress(Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1]))
  <Buffer 0d b9 e0 02 85 67 52 28 8b ef 47 60 fa 67 94 ec 83 a8 53 b9>
 ```
-
-----------------------------------------
 
 ### ecdsaSign <a id="util/sign.js/ecdsaSign"></a>
 
@@ -2827,21 +2764,21 @@ Sign ecdsa
 
 * **Parameters**
 
-Name       | Type     | Required | Default | Description
------------|----------|----------|---------|------------
-hash       | `Buffer` | true     |         |
-privateKey | `Buffer` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| hash | `Buffer` | true |  |  |
+| privateKey | `Buffer` | true |  |  |
 
 * **Returns**
 
 `object` ECDSA signature object.
-- r {Buffer}
-- s {Buffer}
-- v {number}
 
+* r {Buffer}
+* s {Buffer}
+* v {number}
 * **Examples**
 
-```
+```text
 > privateKey = Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1]);
 > buffer32 = Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31])
 > ecdsaSign(buffer32, privateKey)
@@ -2852,21 +2789,19 @@ privateKey | `Buffer` | true     |         |
  }
 ```
 
-----------------------------------------
-
 ### ecdsaRecover <a id="util/sign.js/ecdsaRecover"></a>
 
 Recover ecdsa
 
 * **Parameters**
 
-Name      | Type     | Required | Default | Description
-----------|----------|----------|---------|------------
-hash      | `Buffer` | true     |         |
-options   | `object` | true     |         |
-options.r | `Buffer` | true     |         |
-options.s | `Buffer` | true     |         |
-options.v | `number` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| hash | `Buffer` | true |  |  |
+| options | `object` | true |  |  |
+| options.r | `Buffer` | true |  |  |
+| options.s | `Buffer` | true |  |  |
+| options.v | `number` | true |  |  |
 
 * **Returns**
 
@@ -2874,7 +2809,7 @@ options.v | `number` | true     |         |
 
 * **Examples**
 
-```
+```text
 > privateKey = Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1])
 > buffer32 = Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31])
 > privateKeyToAddress(privateKey)
@@ -2883,16 +2818,14 @@ options.v | `number` | true     |         |
  <Buffer 0d b9 e0 02 85 67 52 28 8b ef 47 60 fa 67 94 ec 83 a8 53 b9>
 ```
 
-----------------------------------------
-
 ### encrypt <a id="util/sign.js/encrypt"></a>
 
 * **Parameters**
 
-Name       | Type            | Required | Default | Description
------------|-----------------|----------|---------|------------
-privateKey | `Buffer`        | true     |         |
-password   | `string,Buffer` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| privateKey | `Buffer` | true |  |  |
+| password | `string,Buffer` | true |  |  |
 
 * **Returns**
 
@@ -2900,7 +2833,7 @@ password   | `string,Buffer` | true     |         |
 
 * **Examples**
 
-```
+```text
 > encrypt(Buffer.from('0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef', 'hex'), 'password')
  {
     version: 3,
@@ -2923,18 +2856,16 @@ password   | `string,Buffer` | true     |         |
   }
 ```
 
-----------------------------------------
-
 ### decrypt <a id="util/sign.js/decrypt"></a>
 
 Decrypt account encrypt info.
 
 * **Parameters**
 
-Name       | Type            | Required | Default | Description
------------|-----------------|----------|---------|------------
-keystoreV3 | `object`        | true     |         |
-password   | `string,Buffer` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| keystoreV3 | `object` | true |  |  |
+| password | `string,Buffer` | true |  |  |
 
 * **Returns**
 
@@ -2942,7 +2873,7 @@ password   | `string,Buffer` | true     |         |
 
 * **Examples**
 
-```
+```text
 > decrypt({
     version: 3,
     id: '0bb47ee0-aac3-a006-2717-03877afa15f0',
@@ -2965,11 +2896,7 @@ password   | `string,Buffer` | true     |         |
  <Buffer 01 23 45 67 89 ab cd ef 01 23 45 67 89 ab cd ef 01 23 45 67 89 ab cd ef 01 23 45 67 89 ab cd ef>
 ```
 
-----------------------------------------
-
 ### PrivateKeyAccount <a id="wallet/PrivateKeyAccount.js/PrivateKeyAccount"></a>
-
-
 
 #### PrivateKeyAccount.random <a id="wallet/PrivateKeyAccount.js/PrivateKeyAccount/(static)random"></a>
 
@@ -2977,18 +2904,18 @@ Create a new PrivateKeyAccount with random privateKey.
 
 * **Parameters**
 
-Name      | Type            | Required | Default | Description
-----------|-----------------|----------|---------|--------------------------
-entropy   | `string,Buffer` | false    |         | Entropy of random account
-networkId | `Integer`       | false    | 1029    | network id of account
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| entropy | `string,Buffer` | false |  | Entropy of random account |
+| networkId | `Integer` | false | 1029 | network id of account |
 
 * **Returns**
 
-`PrivateKeyAccount` 
+`PrivateKeyAccount`
 
 * **Examples**
 
-```
+```text
 > PrivateKeyAccount.random()
    PrivateKeyAccount {
       privateKey: '0xd28edbdb7bbe75787b84c5f525f47666a3274bb06561581f00839645f3c26f66',
@@ -3022,19 +2949,19 @@ Decrypt account encrypt info.
 
 * **Parameters**
 
-Name      | Type            | Required | Default | Description
-----------|-----------------|----------|---------|---------------------------------------
-keystore  | `object`        | true     |         | Keystore version 3 object.
-password  | `string,Buffer` | true     |         | Password for keystore to decrypt with.
-networkId | `Integer`       | false    | 1029    | Network id of account
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| keystore | `object` | true |  | Keystore version 3 object. |
+| password | `string,Buffer` | true |  | Password for keystore to decrypt with. |
+| networkId | `Integer` | false | 1029 | Network id of account |
 
 * **Returns**
 
-`PrivateKeyAccount` 
+`PrivateKeyAccount`
 
 * **Examples**
 
-```
+```text
 > PrivateKeyAccount.decrypt({
     version: 3,
     id: '0bb47ee0-aac3-a006-2717-03877afa15f0',
@@ -3067,18 +2994,18 @@ Create a account by privateKey.
 
 * **Parameters**
 
-Name       | Type            | Required | Default | Description
------------|-----------------|----------|---------|-----------------------
-privateKey | `string,Buffer` | true     |         | Private key of account
-networkId  | `Integer`       | false    |         | Network id of account
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| privateKey | `string,Buffer` | true |  | Private key of account |
+| networkId | `Integer` | false |  | Network id of account |
 
 * **Returns**
 
-`PrivateKeyAccount` 
+`PrivateKeyAccount`
 
 * **Examples**
 
-```
+```text
 > new PrivateKeyAccount('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
    PrivateKeyAccount {
     address: 'cfxtest:aasm4c231py7j34fghntcfkdt2nm9xv1tu6jd3r1s7',
@@ -3093,9 +3020,9 @@ Encrypt account privateKey to object.
 
 * **Parameters**
 
-Name     | Type     | Required | Default | Description
----------|----------|----------|---------|------------
-password | `string` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| password | `string` | true |  |  |
 
 * **Returns**
 
@@ -3103,7 +3030,7 @@ password | `string` | true     |         |
 
 * **Examples**
 
-```
+```text
 > account = new PrivateKeyAccount('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
 > account.encrypt('password')
    {version:3, id:..., address:..., crypto:...}
@@ -3115,17 +3042,17 @@ Sign a transaction.
 
 * **Parameters**
 
-Name    | Type     | Required | Default | Description
---------|----------|----------|---------|----------------------------------------------
-options | `object` | true     |         | See [Transaction](Transaction.js/constructor)
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| options | `object` | true |  | See [Transaction](https://github.com/Conflux-Chain/js-conflux-sdk/tree/faec50e6c2dd16158b114d0d4de228d7b2ca7535/docs/Transaction.js/constructor/README.md) |
 
 * **Returns**
 
-`Promise.<Transaction>` 
+`Promise.<Transaction>`
 
 * **Examples**
 
-```
+```text
 > account = new PrivateKeyAccount('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
 > transaction = account.signTransaction({
       nonce: 0,
@@ -3159,17 +3086,17 @@ Sign a string.
 
 * **Parameters**
 
-Name    | Type     | Required | Default | Description
---------|----------|----------|---------|------------
-options | `string` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| options | `string` | true |  |  |
 
 * **Returns**
 
-`Promise.<Message>` 
+`Promise.<Message>`
 
 * **Examples**
 
-```
+```text
 > account = new PrivateKeyAccount('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
 > message = account.signMessage('Hello World')
    Message {
@@ -3177,8 +3104,6 @@ options | `string` | true     |         |
       signature: '0x6e913e2b76459f19ebd269b82b51a70e912e909b2f5c002312efc27bcc280f3c29134d382aad0dbd3f0ccc9f0eb8f1dbe3f90141d81574ebb6504156b0d7b95f01'
     }
 ```
-
-----------------------------------------
 
 ### Wallet <a id="wallet/Wallet.js/Wallet"></a>
 
@@ -3190,13 +3115,13 @@ Check if address exist
 
 * **Parameters**
 
-Name    | Type     | Required | Default | Description
---------|----------|----------|---------|------------
-address | `string` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| address | `string` | true |  |  |
 
 * **Returns**
 
-`boolean` 
+`boolean`
 
 #### Wallet.prototype.delete <a id="wallet/Wallet.js/Wallet/delete"></a>
 
@@ -3204,13 +3129,13 @@ Drop one account by address
 
 * **Parameters**
 
-Name    | Type     | Required | Default | Description
---------|----------|----------|---------|------------
-address | `string` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| address | `string` | true |  |  |
 
 * **Returns**
 
-`boolean` 
+`boolean`
 
 #### Wallet.prototype.clear <a id="wallet/Wallet.js/Wallet/clear"></a>
 
@@ -3220,60 +3145,61 @@ Drop all account in wallet
 
 * **Parameters**
 
-Name    | Type      | Required | Default | Description
---------|-----------|----------|---------|-------------------------------------
-address | `string`  | true     |         | Key of account, usually is `address`
-account | `Account` | true     |         | Account instance
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| address | `string` | true |  | Key of account, usually is `address` |
+| account | `Account` | true |  | Account instance |
 
 * **Returns**
 
-`Wallet` 
+`Wallet`
 
 #### Wallet.prototype.get <a id="wallet/Wallet.js/Wallet/get"></a>
 
 * **Parameters**
 
-Name    | Type     | Required | Default | Description
---------|----------|----------|---------|------------
-address | `string` | true     |         |
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| address | `string` | true |  |  |
 
 * **Returns**
 
-`Account` 
+`Account`
 
 #### Wallet.prototype.addPrivateKey <a id="wallet/Wallet.js/Wallet/addPrivateKey"></a>
 
 * **Parameters**
 
-Name       | Type            | Required | Default | Description
------------|-----------------|----------|---------|-----------------------
-privateKey | `string,Buffer` | true     |         | Private key of account
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| privateKey | `string,Buffer` | true |  | Private key of account |
 
 * **Returns**
 
-`PrivateKeyAccount` 
+`PrivateKeyAccount`
 
 #### Wallet.prototype.addRandom <a id="wallet/Wallet.js/Wallet/addRandom"></a>
 
 * **Parameters**
 
-Name    | Type            | Required | Default | Description
---------|-----------------|----------|---------|--------------------------
-entropy | `string,Buffer` | false    |         | Entropy of random account
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| entropy | `string,Buffer` | false |  | Entropy of random account |
 
 * **Returns**
 
-`PrivateKeyAccount` 
+`PrivateKeyAccount`
 
 #### Wallet.prototype.addKeystore <a id="wallet/Wallet.js/Wallet/addKeystore"></a>
 
 * **Parameters**
 
-Name     | Type            | Required | Default | Description
----------|-----------------|----------|---------|---------------------------------------
-keystore | `object`        | true     |         | Keystore version 3 object.
-password | `string,Buffer` | true     |         | Password for keystore to decrypt with.
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| keystore | `object` | true |  | Keystore version 3 object. |
+| password | `string,Buffer` | true |  | Password for keystore to decrypt with. |
 
 * **Returns**
 
-`PrivateKeyAccount` 
+`PrivateKeyAccount`
+
