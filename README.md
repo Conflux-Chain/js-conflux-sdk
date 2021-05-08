@@ -26,7 +26,7 @@ There are two ways you can set it. You can specify `networkId` when initializing
 
 ```javascript
 const conflux = new Conflux({
-    url: 'https://test.confluxrpc.org/v2',
+    url: 'https://test.confluxrpc.com',
     networkId: 1
 });
 ```
@@ -35,7 +35,7 @@ Or you can use the static method `create` to create a `Conflux` instance.
 
 ```javascript
 const conflux = await Conflux.create({
-    url: 'https://test.confluxrpc.org/v2',
+    url: 'https://test.confluxrpc.com',
 });
 ```
 
@@ -60,7 +60,7 @@ More details in the [complete changelog](change_log.md)
 const { Conflux } = require('js-conflux-sdk');
 
 const conflux = new Conflux({
-  url: 'https://test.confluxrpc.org/v2',
+  url: 'https://test.confluxrpc.com',
   networkId: 1,
   logger: console, // for debug
 });
@@ -92,7 +92,7 @@ or
 <script type="text/javascript" src="node_modules/js-conflux-sdk/dist/js-conflux-sdk.umd.min.js"></script>
 <script type="text/javascript">
   const conflux = new window.Conflux.Conflux({
-    url: 'https://test.confluxrpc.org/v2',
+    url: 'https://test.confluxrpc.com',
     logger: console,
     networkId: 1,
   });

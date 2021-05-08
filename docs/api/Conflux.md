@@ -1,13 +1,4 @@
----
-  id: javascript_sdk
-  title: Javascript SDK Conflux
-  custom_edit_url: https://github.com/Conflux-Chain/js-conflux-sdk/edit/master/docs/api/Conflux.md
-  keywords:
-    - conflux
-    - javascript
-    - sdk
-  ---
-  
+
   - Conflux.js
     - Conflux
         - [(static)create](#Conflux.js/Conflux/(static)create)

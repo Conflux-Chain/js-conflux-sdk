@@ -1,13 +1,4 @@
----
-  id: javascript_sdk
-  title: Javascript SDK utils
-  custom_edit_url: https://github.com/Conflux-Chain/js-conflux-sdk/edit/master/docs/api/utils.md
-  keywords:
-    - conflux
-    - javascript
-    - sdk
-  ---
-  
+
   - util
     - format.js
         - format

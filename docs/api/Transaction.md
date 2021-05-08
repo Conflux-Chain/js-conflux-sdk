@@ -1,13 +1,4 @@
----
-  id: javascript_sdk
-  title: Javascript SDK Transaction
-  custom_edit_url: https://github.com/Conflux-Chain/js-conflux-sdk/edit/master/docs/api/Transaction.md
-  keywords:
-    - conflux
-    - javascript
-    - sdk
-  ---
-  
+
   - Transaction.js
     - Transaction
         - [**constructor**](#Transaction.js/Transaction/**constructor**)

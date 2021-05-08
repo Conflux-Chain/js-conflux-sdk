@@ -14,16 +14,7 @@ function generateMarkdown(filters, apiName) {
     },
   });
 
-  fs.writeFileSync(`${__dirname}/../docs/api/${apiName}.md`, `---
-  id: javascript_sdk
-  title: Javascript SDK ${apiName}
-  custom_edit_url: https://github.com/Conflux-Chain/js-conflux-sdk/edit/master/docs/api/${apiName}.md
-  keywords:
-    - conflux
-    - javascript
-    - sdk
-  ---
-  
+  fs.writeFileSync(`${__dirname}/../docs/api/${apiName}.md`, `
   ${markdown}
   `);
 }

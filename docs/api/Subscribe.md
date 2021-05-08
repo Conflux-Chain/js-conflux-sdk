@@ -1,13 +1,4 @@
----
-  id: javascript_sdk
-  title: Javascript SDK Subscribe
-  custom_edit_url: https://github.com/Conflux-Chain/js-conflux-sdk/edit/master/docs/api/Subscribe.md
-  keywords:
-    - conflux
-    - javascript
-    - sdk
-  ---
-  
+
   - subscribe
     - PendingTransaction.js
         - PendingTransaction

@@ -1,13 +1,4 @@
----
-  id: javascript_sdk
-  title: Javascript SDK Wallet
-  custom_edit_url: https://github.com/Conflux-Chain/js-conflux-sdk/edit/master/docs/api/Wallet.md
-  keywords:
-    - conflux
-    - javascript
-    - sdk
-  ---
-  
+
   - wallet
     - PrivateKeyAccount.js
         - PrivateKeyAccount

@@ -102,7 +102,7 @@ When initializing a Conflux object, specify through the networkId option,
 
 ```javascript
 const conflux = new Conflux({
-    url: 'http://test.confluxrpc.org',
+    url: 'https://test.confluxrpc.com',
     networkId: 1
 });
 ```
@@ -111,7 +111,7 @@ The other is to obtain from RPC by calling conflux.updateNetworkId after initial
 
 ```javascript
 const conflux = new Conflux({
-    url: 'http://test.confluxrpc.org',
+    url: 'https://test.confluxrpc.com',
 });
 await conflux.updateNetworkId();  // this line should be in a async function
 ```

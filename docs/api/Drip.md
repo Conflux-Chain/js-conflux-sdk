@@ -1,13 +1,4 @@
----
-  id: javascript_sdk
-  title: Javascript SDK Drip
-  custom_edit_url: https://github.com/Conflux-Chain/js-conflux-sdk/edit/master/docs/api/Drip.md
-  keywords:
-    - conflux
-    - javascript
-    - sdk
-  ---
-  
+
   - Drip.js
     - Drip
         - [(static)fromCFX](#Drip.js/Drip/(static)fromCFX)

@@ -35,7 +35,7 @@ class Conflux {
    * @param [options.networkId] {number} - Connected RPC's networkId
    * @example
    * > const { Conflux } = require('js-conflux-sdk');
-   * > const conflux = new Conflux({url:'http://test.confluxrpc.org', networkId: 1});
+   * > const conflux = new Conflux({url:'https://test.confluxrpc.com', networkId: 1});
    *
    * @example
    * > const conflux = new Conflux({
