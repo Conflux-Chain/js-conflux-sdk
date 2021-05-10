@@ -1077,6 +1077,17 @@ class Conflux {
   }
 
   /**
+   * Return one address's pending transactions
+   * 
+   * @param address {string} base32 address
+   * @returns {Promise<object>}
+   */
+   async getAccountPendingTransactions(address) {
+    const result = await this.provider.call('cfx_getAccountPendingTransactions', this._formatAddress(address));
+    return format.accountPendingTransactions(result);
+  }
+
+  /**
    * Returns the size of the collateral storage of given address, in Byte.
    *
    * @param address {string} - Address to check for collateral storage.

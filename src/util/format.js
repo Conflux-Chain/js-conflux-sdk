@@ -687,4 +687,9 @@ format.accountPendingInfo = format({
   pendingNonce: format.bigUInt,
 });
 
+format.accountPendingTransactions = format({
+  pendingCount: format.bigUInt,
+  pendingTransactions: [format.transaction]
+});
+
 module.exports = format;
