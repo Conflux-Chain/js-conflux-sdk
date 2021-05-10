@@ -689,7 +689,7 @@ format.accountPendingInfo = format({
 
 format.accountPendingTransactions = format({
   pendingCount: format.bigUInt,
-  pendingTransactions: [format.transaction]
+  pendingTransactions: [format.transaction],
 });
 
 module.exports = format;

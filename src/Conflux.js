@@ -1078,11 +1078,11 @@ class Conflux {
 
   /**
    * Return one address's pending transactions
-   * 
+   *
    * @param address {string} base32 address
    * @returns {Promise<object>}
    */
-   async getAccountPendingTransactions(address) {
+  async getAccountPendingTransactions(address) {
     const result = await this.provider.call('cfx_getAccountPendingTransactions', this._formatAddress(address));
     return format.accountPendingTransactions(result);
   }
