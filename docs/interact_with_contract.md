@@ -25,7 +25,7 @@ const PRIVATE_KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef012345678
 
 async function main() {
   const conflux = new Conflux({ 
-    url: 'http://test.confluxrpc.org/v2',
+    url: 'https://test.confluxrpc.com',
     networkId: 1,
   });
   const account = conflux.wallet.addPrivateKey(PRIVATE_KEY);
@@ -77,7 +77,7 @@ const { abi } = MINI_ERC20;
 
 async function main() {
   const conflux = new Conflux({ 
-    url: 'http://test.confluxrpc.org/v2',
+    url: 'https://test.confluxrpc.com',
     networkId: 1,
   });
   const account = conflux.wallet.addPrivateKey(PRIVATE_KEY);
@@ -109,7 +109,7 @@ const { Conflux } = require('js-conflux-sdk');
 
 async function main() {
     const conflux = new Conflux({ 
-        url: 'http://test.confluxrpc.org/v2',
+        url: 'https://test.confluxrpc.com',
         networkId: 1,
     });
 

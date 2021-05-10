@@ -1,13 +1,4 @@
----
-  id: javascript_sdk
-  title: Javascript SDK Contract
-  custom_edit_url: https://github.com/Conflux-Chain/js-conflux-sdk/edit/master/docs/api/Contract.md
-  keywords:
-    - conflux
-    - javascript
-    - sdk
-  ---
-  
+
   - contract
     - Contract.js
         - Contract

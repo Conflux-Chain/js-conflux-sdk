@@ -1,13 +1,4 @@
----
-  id: javascript_sdk
-  title: Javascript SDK Misc
-  custom_edit_url: https://github.com/Conflux-Chain/js-conflux-sdk/edit/master/docs/api/Misc.md
-  keywords:
-    - conflux
-    - javascript
-    - sdk
-  ---
-  
+
   - CONST.js
     - [EPOCH_NUMBER](#CONST.js/EPOCH_NUMBER)
     - [MIN_GAS_PRICE](#CONST.js/MIN_GAS_PRICE)

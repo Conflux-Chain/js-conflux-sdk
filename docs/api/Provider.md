@@ -1,13 +1,4 @@
----
-  id: javascript_sdk
-  title: Javascript SDK Provider
-  custom_edit_url: https://github.com/Conflux-Chain/js-conflux-sdk/edit/master/docs/api/Provider.md
-  keywords:
-    - conflux
-    - javascript
-    - sdk
-  ---
-  
+
   - provider
     - BaseProvider.js
         - BaseProvider

@@ -1,6 +1,11 @@
 # change log
 
-## v1.16.0
+## v1.6.1
+
+* `Conflux` add method `getAccountPendingTransactions` to get one account's pending transaction.
+* Split API documents to several files, which is easy to read.
+
+## v1.6.0
 
 This version is corresponding to conflux-rust v1.1.3, check it's [changelog](https://github.com/Conflux-Chain/conflux-rust/blob/master/changelogs/CHANGELOG-1.1.x.md#113) for detail info.
 

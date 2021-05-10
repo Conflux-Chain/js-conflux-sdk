@@ -35,7 +35,7 @@ class Conflux {
    * @param [options.networkId] {number} - Connected RPC's networkId
    * @example
    * > const { Conflux } = require('js-conflux-sdk');
-   * > const conflux = new Conflux({url:'http://test.confluxrpc.org', networkId: 1});
+   * > const conflux = new Conflux({url:'https://test.confluxrpc.com', networkId: 1});
    *
    * @example
    * > const conflux = new Conflux({
@@ -1074,6 +1074,17 @@ class Conflux {
       this._formatAddress(address),
     );
     return format.accountPendingInfo(result);
+  }
+
+  /**
+   * Return one address's pending transactions
+   *
+   * @param address {string} base32 address
+   * @returns {Promise<object>}
+   */
+  async getAccountPendingTransactions(address) {
+    const result = await this.provider.call('cfx_getAccountPendingTransactions', this._formatAddress(address));
+    return format.accountPendingTransactions(result);
   }
 
   /**
