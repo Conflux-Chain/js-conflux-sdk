@@ -1,5 +1,5 @@
 const lodash = require('lodash');
-const { encode, decode } = require('conflux-address-js');
+const { encode, decode } = require('@conflux-dev/conflux-address-js');
 const { checksumAddress } = require('./sign');
 
 /**
