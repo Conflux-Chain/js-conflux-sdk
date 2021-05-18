@@ -40,6 +40,7 @@
         - [getStorageRoot](#Conflux.js/Conflux/getStorageRoot)
         - [getSponsorInfo](#Conflux.js/Conflux/getSponsorInfo)
         - [getAccountPendingInfo](#Conflux.js/Conflux/getAccountPendingInfo)
+        - [getAccountPendingTransactions](#Conflux.js/Conflux/getAccountPendingTransactions)
         - [getCollateralForStorage](#Conflux.js/Conflux/getCollateralForStorage)
         - [call](#Conflux.js/Conflux/call)
         - [estimateGasAndCollateral](#Conflux.js/Conflux/estimateGasAndCollateral)
@@ -83,7 +84,7 @@ options.networkId           | `number`        | false    |         | Connected R
 
 ```
 > const { Conflux } = require('js-conflux-sdk');
-> const conflux = new Conflux({url:'http://test.confluxrpc.org', networkId: 1});
+> const conflux = new Conflux({url:'https://test.confluxrpc.com', networkId: 1});
 ```
 
 ```
@@ -1036,6 +1037,20 @@ address | `string` | true     |         | Address to account
 - nextPendingTx `string`: the hash of next pending transaction
 - pendingCount `BigInt`: the count of pending transactions
 - pendingNonce `BigInt`: the nonce of pending transaction
+
+### Conflux.prototype.getAccountPendingTransactions <a id="Conflux.js/Conflux/getAccountPendingTransactions"></a>
+
+Return one address's pending transactions
+
+* **Parameters**
+
+Name    | Type     | Required | Default | Description
+--------|----------|----------|---------|---------------
+address | `string` | true     |         | base32 address
+
+* **Returns**
+
+`Promise.<object>` 
 
 ### Conflux.prototype.getCollateralForStorage <a id="Conflux.js/Conflux/getCollateralForStorage"></a>
 
