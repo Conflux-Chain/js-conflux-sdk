@@ -1,5 +1,9 @@
 # change log
 
+## v1.6.2
+
+* Optimize the address convert performance.
+
 ## v1.6.1
 
 * `Conflux` add method `getAccountPendingTransactions` to get one account's pending transaction.
