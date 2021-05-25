@@ -3,7 +3,16 @@
 [![npm](https://img.shields.io/npm/v/js-conflux-sdk.svg)](https://www.npmjs.com/package/js-conflux-sdk)
 [![npm](https://img.shields.io/npm/dm/js-conflux-sdk.svg)](https://www.npmjs.com/package/js-conflux-sdk)
 
-JavaScript Conflux Software Development Kit
+JavaScript Conflux Software Development Kit is a complete library for interacting with the Conflux Blockchain.
+
+Features:
+* Can be used in both browser and Node.js environment
+* Connect to Conflux node over HTTP/Websocket JSON-RPC
+* Meta-classes create JavaScript objects from any contract ABI
+* Account utilities
+* Type converter, sign and hash utilities
+* Extensive [documentation](https://confluxnetwork.gitbook.io/js-conflux-sdk/)
+* Builtin support for CRC20 and Internal Contracts
 
 ## Docs
 
