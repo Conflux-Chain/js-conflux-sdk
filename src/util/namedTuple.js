@@ -28,7 +28,8 @@ function namedTuple(...names) {
 
   class NamedTuple extends Array {
     constructor(...args) {
-      super(...args);
+      super(args.length);
+      args.forEach((v, i) => Reflect.set(this, i, v)); // XXX: new Array(0) === []
 
       return new Proxy(this, {
         has: (_, key) => {
