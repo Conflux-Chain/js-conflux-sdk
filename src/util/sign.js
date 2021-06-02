@@ -230,7 +230,8 @@ function encrypt(privateKey, password) {
   const derived = scrypt(password, salt, n, r, p, dklen);
   const ciphertext = crypto.createCipheriv(cipher, derived.slice(0, 16), iv).update(privateKey);
   const mac = keccak256(Buffer.concat([derived.slice(16, 32), ciphertext]));
-  const address = privateKeyToAddress(privateKey);
+  const publicKey = privateKeyToPublicKey(privateKey);
+  const address = keccak256(publicKey).slice(-20);
 
   return {
     version: 3,

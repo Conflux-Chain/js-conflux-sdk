@@ -30,6 +30,7 @@ class Conflux {
    * @param [options.defaultGasRatio=1.1] {number} - The ratio to multiply by gas.
    * @param [options.defaultStorageRatio=1.1] {number} - The ratio to multiply by storageLimit.
    * @param [options.url] {string} - Url of Conflux node to connect.
+   * @param [options.retry] {number} - Retry times if request error occurs.
    * @param [options.timeout] {number} - Request time out in ms
    * @param [options.logger] {Object} - Logger object with 'info' and 'error' method.
    * @param [options.networkId] {number} - Connected RPC's networkId
@@ -1077,13 +1078,21 @@ class Conflux {
   }
 
   /**
-   * Return one address's pending transactions
+   * Return pending transactions of one account
    *
-   * @param address {string} base32 address
-   * @returns {Promise<object>}
+   * @param address {string} - base32 address
+   * @returns {Promise<object>} An account's pending transactions and info.
+   * - pendingTransactions `Array`: pending transactions
+   * - firstTxStatus `Object`: the status of first pending tx
+   * - pendingCount `BigInt`: the count of pending transactions
    */
-  async getAccountPendingTransactions(address) {
-    const result = await this.provider.call('cfx_getAccountPendingTransactions', this._formatAddress(address));
+  async getAccountPendingTransactions(address, startNonce, limit) {
+    const result = await this.provider.call(
+      'cfx_getAccountPendingTransactions',
+      this._formatAddress(address),
+      format.bigUIntHex.$or(undefined)(startNonce),
+      format.bigUIntHex.$or(undefined)(limit),
+    );
     return format.accountPendingTransactions(result);
   }
 

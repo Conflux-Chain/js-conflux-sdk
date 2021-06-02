@@ -11,11 +11,13 @@ class BaseProvider extends EventEmitter {
    */
   constructor({
     url,
+    retry = 1,
     timeout = 5 * 60 * 1000,
     logger = { info: () => undefined, error: () => undefined },
   }) {
     super();
     this.url = url;
+    this.retry = retry;
     this.timeout = timeout;
     this.logger = logger;
   }
