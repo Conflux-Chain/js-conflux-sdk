@@ -83,6 +83,17 @@ const TESTNET_ID = 1;
  */
 const ZERO_ADDRESS_HEX = '0x0000000000000000000000000000000000000000';
 
+/**
+ * pending transaction status
+ *
+ * - `FUTURE_NONCE` 'futureNonce': pending because future nonce
+ * - `NOT_ENOUGH_CASH` 'notEnoughCash': pending because insufficient balance
+ */
+const PENDING_TX_STATUS = {
+  FUTURE_NONCE: 'futureNonce',
+  NOT_ENOUGH_CASH: 'notEnoughCash',
+};
+
 module.exports = {
   WORD_BYTES,
   WORD_CHARS,
@@ -95,4 +106,5 @@ module.exports = {
   TESTNET_ID,
   MAINNET_ID,
   ZERO_ADDRESS_HEX,
+  PENDING_TX_STATUS,
 };
