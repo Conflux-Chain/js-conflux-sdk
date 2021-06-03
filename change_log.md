@@ -1,5 +1,10 @@
 # change log
 
+## v1.6.3
+
+* Support `retry` option in `Conflux` initialization.
+* Add pending transaction status enum `CONST.PENDING_TX_STATUS` currently have two value: `FUTURE_NONCE` `NOT_ENOUGH_CASH`
+
 ## v1.6.2
 
 * Optimize the address convert performance.
