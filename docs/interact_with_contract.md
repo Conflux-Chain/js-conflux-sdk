@@ -1,21 +1,9 @@
 # Interact with contract
-
 In Conflux world you may often need to interact with contracts, with JS SDK this can be done very easy.
-
-> Note: when interacting with contract and if your parameter is bigger than `Number.MAX_SAFE_INTEGER`, you should use string represention of the number or BigInt.
-
-```javascript
-// use string
-await contract.deposit('90071992547409910').sendTransaction({from: 'cfxtest:aar7x4r8mkrnw39ggs8rz40j1znwh5mrrpufpr2u76'});
-// or use hex string
-await contract.deposit('0x13ffffffffffff0').sendTransaction({from: 'cfxtest:aar7x4r8mkrnw39ggs8rz40j1znwh5mrrpufpr2u76'});
-// not use number
-// await contract.deposit(Number.MAX_SAFE_INTEGER * 10);
-```
 
 ## How to deploy a contract
 
-One contract must be created before interacting with it. To create a contract you can write it with `solidity`. Then compile it with solidity compiler or [cfxtruffle](http://github.com/conflux-chain/truffle), you will get `bytecode` and `abi`. With `bytecode`, `abi` you can deploy it by send a transaction.
+One contract must be created before interacting with it. To create a contract you can develop it with `solidity`. Then compile it with solidity compiler or [cfxtruffle](http://github.com/conflux-chain/truffle), you will get `bytecode` and `abi`. With `bytecode`, `abi` you can deploy it by send a transaction.
 
 ```javascript
 const { Conflux } = require('js-conflux-sdk');
@@ -120,3 +108,99 @@ async function main() {
 main();
 ```
 
+## How to get log
+
+### Get log through tranction receipt
+If an transaction emit some logs, you can find them in transaction receipt's `logs` field. Which is an log array, each log will have three fields:
+* `address`
+* `data`
+* `topics`
+
+```js
+let receipt = await cfx.getTransactionReceipt('0x24017dac1fb595a57196d8f6b05cd8b06292dcf14e7c594eac41daeeaa374ed0');
+console.log(receipt.logs);
+/*
+[
+    {
+        "address": "CFX:TYPE.CONTRACT:ACA13SUYK7MBGXW9Y3WBJN9VD136SWU6S21TG67XMB",
+        "data": "0x000000000000000000000000000000000000000000000000de0b6b3a764000000000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        "topics": [
+            "0x06b541ddaa720db2b10a4d0cdac39b8d360425fc073085fac19bc82614677987",
+            "0x00000000000000000000000080ae6a88ce3351e9f729e8199f2871ba786ad7c5",
+            "0x0000000000000000000000001dc05200485776b79f195a1e617dbccb6826f1c4",
+            "0x0000000000000000000000008dfa3b664cd6a62bc30f31a9f167f68806ef3488"
+        ]
+    }
+]
+*/
+```
+
+### Get log with `cfx_getLogs` method
+Also there is an RPC [`cfx_getLogs`](https://developer.conflux-chain.org/conflux-doc/docs/json_rpc#cfx_getlogs) to get logs. An filter object is need to invoke this method.
+
+```js
+let logs = cfx.getLogs({
+  fromEpoch: 100,
+  toEpoch: 200,
+  address: 'cfx:type.contract:acc7uawf5ubtnmezvhu9dhc6sghea0403y2dgpyfjp',
+  limit: 100
+});
+
+/*
+[
+   {
+      epochNumber: 39802,
+      logIndex: 2,
+      transactionIndex: 0,
+      transactionLogIndex: 2,
+      address: 'CFXTEST:TYPE.CONTRACT:ACHC8NXJ7R451C223M18W2DWJNMHKD6RXA2GC31EUW',
+      blockHash: '0xca00158a2a508170278d5bdc5ca258b6698306dd8c30fdba32266222c79e57e6',
+      data: '0x',
+      topics: [
+        '0x2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d',
+        '0x0000000000000000000000000000000000000000000000000000000000000000',
+        '0x0000000000000000000000001c1e72f0c37968557b3d85a3f32747792798bbde',
+        '0x0000000000000000000000001c1e72f0c37968557b3d85a3f32747792798bbde'
+      ],
+      transactionHash: '0xeb75f47002720311f1709e36d7f7e9a91ee4aaa469a1de892839cb1ef66a9939'
+    }
+]
+*/
+```
+
+### Subscribe logs with websocket
+With websocket's advantage, logs can be subscribed:
+
+```js
+let logFilter = {
+  address: token_address,
+  // other filter options
+};
+
+let subers = cfx.subscribeLogs(logs);
+subers.on("data", console.log);
+```
+
+## How to decode log
+With contract's abi, you can decode the event log data:
+
+```js
+const abi = [
+  // your contract ABI
+];
+let contract = cfx.Contract({abi});
+let decoded = contract.abi.decodeLog(log);
+console.log(decoded);
+```
+
+## MISC
+> Note: when interacting with contract and if your parameter is bigger than `Number.MAX_SAFE_INTEGER`, you should use string represention of the number or BigInt.
+
+```javascript
+// use string
+await contract.deposit('90071992547409910').sendTransaction({from: 'cfxtest:aar7x4r8mkrnw39ggs8rz40j1znwh5mrrpufpr2u76'});
+// or use hex string
+await contract.deposit('0x13ffffffffffff0').sendTransaction({from: 'cfxtest:aar7x4r8mkrnw39ggs8rz40j1znwh5mrrpufpr2u76'});
+// not use number
+// await contract.deposit(Number.MAX_SAFE_INTEGER * 10);
+```

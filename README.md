@@ -3,9 +3,18 @@
 [![npm](https://img.shields.io/npm/v/js-conflux-sdk.svg)](https://www.npmjs.com/package/js-conflux-sdk)
 [![npm](https://img.shields.io/npm/dm/js-conflux-sdk.svg)](https://www.npmjs.com/package/js-conflux-sdk)
 
-JavaScript Conflux Software Development Kit
+JavaScript Conflux Software Development Kit is a complete library for interacting with the Conflux Blockchain.
 
-## Documentation
+Features:
+* Can be used in both browser and Node.js environment
+* Connect to Conflux node over HTTP/Websocket JSON-RPC
+* Meta-classes create JavaScript objects from any contract ABI
+* Account utilities
+* Type converter, sign and hash utilities
+* Extensive [documentation](https://confluxnetwork.gitbook.io/js-conflux-sdk/)
+* Builtin support for CRC20 and Internal Contracts
+
+## Docs
 
 * [Overview](docs/overview.md)
 * [Complete document for sending transaction](docs/how_to_send_tx.md)
@@ -16,41 +25,6 @@ JavaScript Conflux Software Development Kit
 * [Conflux Official document](https://developer.conflux-chain.org/docs/introduction/en/conflux_overview)
 * [Conflux RPC endpoints](https://github.com/conflux-fans/conflux-rpc-endpoints)
 
-## v1.5.10 Key Features
-
-Add support for [CIP37](https://github.com/Conflux-Chain/CIPs/blob/master/CIPs/cip-37.md) address. This version can only work with `conflux-rust v1.1.1` or above.
-
-The biggest difference you `must know` is that a new field `networkId` was added when you initialize the class `Conflux`. If you still want to use the hex40 format address when calling RPC methods, `networkId must be set`. Only with `networkId`, conflux can figure out the right CIP37 address from hex40 address.
-
-There are two ways you can set it. You can specify `networkId` when initializing the conflux object.
-
-```javascript
-const conflux = new Conflux({
-    url: 'https://test.confluxrpc.com',
-    networkId: 1
-});
-```
-
-Or you can use the static method `create` to create a `Conflux` instance.
-
-```javascript
-const conflux = await Conflux.create({
-    url: 'https://test.confluxrpc.com',
-});
-```
-
-If you forget to set the networkId, you will see a warning.
-
-Another big change is `format.address` will return the CIP-37 address.
-
-```javascript
-format.address('0x0123456789012345678901234567890123456789', 1)  // second parameter networkId is required when passing a hex40 address
-// "cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp"
-format.address('cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp')
-// "cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp"
-```
-
-More details in the [complete changelog](change_log.md)
 
 ## Quick Start
 
