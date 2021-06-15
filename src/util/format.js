@@ -472,7 +472,7 @@ format.signTx = format({
   to: format(format.hexAddress.$or(null).$default(null)).$after(format.hexBuffer),
   value: format.bigUInt.$default(0).$after(format.hexBuffer),
   storageLimit: format.bigUInt.$after(format.hexBuffer),
-  epochHeight: format.uInt.$after(format.hexBuffer),
+  epochHeight: format.bigUInt.$after(format.hexBuffer),
   chainId: format.uInt.$default(0).$after(format.hexBuffer),
   data: format.hex.$default('0x').$after(format.hexBuffer),
   r: (format.bigUInt.$after(format.hexBuffer)).$or(undefined),
