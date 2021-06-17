@@ -1,5 +1,10 @@
 # change log
 
+## v1.6.7
+
+* Support `keepAlive` option in `Conflux` initialization.
+* Add one util method `tracesInTree` to return an tree structure traces
+
 ## v1.6.3
 
 * Support `retry` option in `Conflux` initialization.

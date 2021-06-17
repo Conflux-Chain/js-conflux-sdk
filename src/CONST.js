@@ -94,6 +94,28 @@ const PENDING_TX_STATUS = {
   NOT_ENOUGH_CASH: 'notEnoughCash',
 };
 
+const ACTION_TYPES = {
+  CALL: 'call',
+  CREATE: 'create',
+  CALL_RESULT: 'call_result',
+  CREATE_RESULT: 'create_result',
+  INTERNAL_TRANSFER_ACTION: 'internal_transfer_action',
+};
+
+const CALL_TYPES = {
+  NONE: 'none',
+  CALL: 'call',
+  CALL_CODE: 'callcode',
+  DELEGATE_CALL: 'delegatecall',
+  STATIC_CALL: 'staticcall',
+};
+
+const CALL_STATUS = {
+  SUCCESS: 'success',
+  REVERTED: 'reverted',
+  FAIL: 'fail',
+};
+
 module.exports = {
   WORD_BYTES,
   WORD_CHARS,
@@ -107,4 +129,7 @@ module.exports = {
   MAINNET_ID,
   ZERO_ADDRESS_HEX,
   PENDING_TX_STATUS,
+  ACTION_TYPES,
+  CALL_TYPES,
+  CALL_STATUS,
 };
