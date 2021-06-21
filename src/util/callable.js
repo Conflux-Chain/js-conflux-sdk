@@ -11,12 +11,11 @@ function callable(object, func) {
     // isExtensible
     // preventExtensions
     getOwnPropertyDescriptor: (_, key) => Object.getOwnPropertyDescriptor(object, key),
-    has: (_, key) => Reflect.has(object, key),
-    get: (_, key) => Reflect.get(object, key),
+    has: (_, key) => (Reflect.has(object, key) || Reflect.has(func, key)),
+    get: (_, key) => (Reflect.has(object, key) ? Reflect.get(object, key) : Reflect.get(func, key)),
     set: (_, key, value) => Reflect.set(object, key, value),
     deleteProperty: (_, key) => Reflect.deleteProperty(object, key),
     defineProperty: (_, key, attributes) => Reflect.defineProperty(object, key, attributes),
-    enumerate: () => Reflect.enumerate(object),
     ownKeys: () => Reflect.ownKeys(object),
     // apply
     // construct
