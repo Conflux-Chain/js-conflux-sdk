@@ -4,6 +4,7 @@
 
 * Support `keepAlive` option in `Conflux` initialization.
 * Add one util method `tracesInTree` to return a tree structure traces
+* Fix contract method override bug.
 
 ## v1.6.3
 
