@@ -3,7 +3,7 @@
 ## v1.6.7
 
 * Support `keepAlive` option in `Conflux` initialization.
-* Add one util method `tracesInTree` to return an tree structure traces
+* Add one util method `tracesInTree` to return a tree structure traces
 
 ## v1.6.3
 
@@ -17,19 +17,19 @@
 ## v1.6.1
 
 * `Conflux` add method `getAccountPendingTransactions` to get one account's pending transaction.
-* Split API documents to several files, which is easy to read.
+* Split API documents into several files, which is easy to read.
 
 ## v1.6.0
 
-This version is corresponding to conflux-rust v1.1.3, check it's [changelog](https://github.com/Conflux-Chain/conflux-rust/blob/master/changelogs/CHANGELOG-1.1.x.md#113) for detail info.
+This version is corresponding to conflux-rust v1.1.3, check it's [changelog](https://github.com/Conflux-Chain/conflux-rust/blob/master/changelogs/CHANGELOG-1.1.x.md#113) for detailed info.
 
 * `format.address` will respect `networkId`, `verbose` flag even if the first parameter is an CIP37 address.
-* Add support for standard token contract through `Conflux.CRC20`
+* Add support for a standard token contract through `Conflux.CRC20`
 * `cfx_getLogs` filter option add one more field `offset`
 * Add one RPC method `cfx_getAccountPendingInfo` to get account's transaction pending info
 * `epochs` pubsub now accept one parameter `subscription_epoch` the supported values are `latest_mined` \(default\) and `latest_state`
 * Include `blockHash`, `epochHash`, `epochNumber`, `transactionHash`, and `transactionPosition` for trace RPCs
-* When abi encoding `bytes-N` type, if the data's length is not enough, will auto pad \(right\) to `N`
+* When ABI encoding `bytes-N` type, if the data's length is not enough, will auto pad \(right\) to `N`
 
 ## v1.5.13
 
