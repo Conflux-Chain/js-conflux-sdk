@@ -24,7 +24,7 @@ function tracesInTree(txTrace) {
         t.action.decodedMessage = decoded.object.message;
       }
       if (t.action.outcome === CALL_STATUS.FAIL) {
-        t.action.decodedMessage = Buffer.from(t.action.returnData.slice(2), 'hex');
+        t.action.decodedMessage = Buffer.from(t.action.returnData.slice(2), 'hex').toString();
       }
       // set result
       const tp = stack.pop();
