@@ -1,10 +1,9 @@
 const { ACTION_TYPES, CALL_STATUS } = require('../CONST');
 const Contract = require('../contract/Contract');
 const { abi } = require('../contract/standard/error.json');
+const { decodeHexEncodedStr } = require('./index');
 
-const errorContract = new Contract({ abi });
-
-// Reorg an trace array in tree structure
+// Reorg an traces array in tree structure
 function tracesInTree(txTrace) {
   const stack = [];
   const levelCalls = {};
@@ -19,13 +18,7 @@ function tracesInTree(txTrace) {
 
     if (t.type === ACTION_TYPES.CALL_RESULT || t.type === ACTION_TYPES.CREATE_RESULT) {
       // if the result is fail or reverted then decode the returnData
-      if (t.action.outcome === CALL_STATUS.REVERTED) {
-        const decoded = errorContract.abi.decodeData(t.action.returnData);
-        t.action.decodedMessage = decoded.object.message;
-      }
-      if (t.action.outcome === CALL_STATUS.FAIL) {
-        t.action.decodedMessage = Buffer.from(t.action.returnData.slice(2), 'hex').toString();
-      }
+      t.action.decodedMessage = _decodeErrorMessage(t.action);
       // set result
       const tp = stack.pop();
       txTrace[tp.index].result = t.action;
@@ -64,6 +57,21 @@ function _cleanTrace(trace) {
   delete trace.index;
   delete trace.level;
   delete trace.parent;
+}
+
+const errorContract = new Contract({ abi });
+
+function _decodeErrorMessage(action) {
+  let errorMessage;
+  if (action.outcome === CALL_STATUS.REVERTED) {
+    const decoded = errorContract.abi.decodeData(action.returnData);
+    errorMessage = decoded.object.message;
+  }
+  if (action.outcome === CALL_STATUS.FAIL) {
+    errorMessage = decodeHexEncodedStr(action.returnData);
+    errorMessage = decodeHexEncodedStr(errorMessage); // decode second time
+  }
+  return errorMessage;
 }
 
 module.exports = {

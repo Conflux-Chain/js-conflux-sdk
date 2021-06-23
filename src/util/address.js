@@ -105,14 +105,14 @@ function ethChecksumAddress(address) {
 }
 
 /**
- * simplify a verbose address
+ * simplify a verbose address(return a non-verbose address)
  *
  * @param address {string}
  * @return {string}
  *
  */
 function simplifyCfxAddress(address) {
-  if (!lodash.isString(address) || !hasNetworkPrefix(address)) {
+  if (!hasNetworkPrefix(address)) {
     throw new Error('invalid base32 address');
   }
   const parts = address.toLocaleLowerCase().split(':');
@@ -124,9 +124,27 @@ function simplifyCfxAddress(address) {
 
 /**
  * Convert an ethereum address to conflux hex address by replace it's first letter to 1
+ * @param address {string}
+ * @return {string}
  */
 function ethAddressToCfxAddress(address) {
   return `0x1${address.toLowerCase().slice(3)}`;
+}
+
+/**
+ * Shortening a cfx address
+ *
+ * @param address {string}
+ * @param [compress=false] {boolean}
+ * @return {string}
+ */
+function shortenCfxAddress(address, compress = false) {
+  address = simplifyCfxAddress(address);
+  const [netPre, body] = address.split(':');
+  const tailLen = (netPre === 'cfx' && !compress) ? 8 : 4;
+  const pre = body.slice(0, 3);
+  const tail = body.slice(body.length - tailLen);
+  return `${netPre}:${pre}...${tail}`;
 }
 
 module.exports = {
@@ -138,4 +156,5 @@ module.exports = {
   ethChecksumAddress,
   simplifyCfxAddress,
   ethAddressToCfxAddress,
+  shortenCfxAddress,
 };

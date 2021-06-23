@@ -1,10 +1,11 @@
 # change log
 
-## v1.6.7
+## v1.6.9
 
 * Support `keepAlive` option in `Conflux` initialization.
-* Add one util method `tracesInTree` to return a tree structure traces
+* Add one util method `tracesInTree` to return a tree structure traces.
 * Fix contract method override bug.
+* Add a address utility method `shortenCfxAddress`.
 
 ## v1.6.3
 
