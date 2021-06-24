@@ -9,7 +9,7 @@ class HttpProvider extends BaseProvider {
     const { body } = await superagent
       .post(this.url)
       .retry(this.retry)
-      .set('Connection', this.keepAlive ? 'Keep-Alive' : 'close')
+      .set(this.headers)
       .send(data)
       .timeout(this.timeout);
 
@@ -20,7 +20,7 @@ class HttpProvider extends BaseProvider {
     const { body } = await superagent
       .post(this.url)
       .retry(this.retry)
-      .set('Connection', this.keepAlive ? 'Keep-Alive' : 'close')
+      .set(this.headers)
       .send(dataArray)
       .timeout(this.timeout);
     return body || [];

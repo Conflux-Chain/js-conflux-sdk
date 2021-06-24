@@ -7,7 +7,7 @@ class BaseProvider extends EventEmitter {
    * @param options.url {string} - Full json rpc http url
    * @param [options.timeout=60*1000] {number} - Request time out in ms
    * @param [options.retry=1] {number} - Retry number
-   * @param [options.keepAlive=true] {boolean} - Whether open the http keep-alive option
+   * @param [options.keepAlive=false] {boolean} - Whether open the http keep-alive option
    * @param [options.logger] {object} - Logger with `info` and `error`
    * @return {BaseProvider}
    */
@@ -15,7 +15,7 @@ class BaseProvider extends EventEmitter {
     url,
     retry = 1,
     timeout = 5 * 60 * 1000,
-    keepAlive = true,
+    keepAlive = false,
     logger = { info: () => undefined, error: () => undefined },
   }) {
     super();
@@ -24,6 +24,11 @@ class BaseProvider extends EventEmitter {
     this.timeout = timeout;
     this.logger = logger;
     this.keepAlive = keepAlive;
+    const headers = {};
+    if (keepAlive) {
+      headers.Connection = 'Keep-Alive';
+    }
+    this.headers = headers;
   }
 
   /**
