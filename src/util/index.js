@@ -34,8 +34,13 @@ function awaitTimeout(promise, timeout) {
   });
 }
 
+function decodeHexEncodedStr(hexEncodedStr) {
+  return Buffer.from(hexEncodedStr.slice(2), 'hex').toString();
+}
+
 module.exports = {
   assert,
   alignBuffer,
   awaitTimeout,
+  decodeHexEncodedStr,
 };

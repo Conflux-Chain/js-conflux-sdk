@@ -125,6 +125,8 @@ interface ProviderOptions {
   url: string;
   timeout?: number;
   logger?: object;
+  retry?: number,
+  keepAlive?: boolean;
 }
 
 export class Provider {
@@ -161,7 +163,7 @@ export class Transaction {
 
   get hash(): string;
 
-  sign(privateKey: string): Transaction;
+  sign(privateKey: string, networkId: number): Transaction;
 
   recover(): string;
 
@@ -180,6 +182,8 @@ export class Account {
 }
 
 export class Wallet extends Map {
+  constructor(networkId: number);
+
   addPrivateKey(privateKey: string): Account;
 
   addRandom(entropy?: string): Account;
