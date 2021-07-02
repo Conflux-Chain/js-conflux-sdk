@@ -10,6 +10,7 @@
     "sdk"
   ],
   "main": "src/index.js",
+  "bin": "bin/cfxjs.js",
   "types": "./types/index.d.ts",
   "browser": "dist/js-conflux-sdk.umd.min.js",
   "browserify-browser": {
@@ -25,8 +26,9 @@
   "browserslit": "cover 99.5%",
   "dependencies": {
     "@babel/runtime": "^7.8.4",
-    "big.js": "^5.2.2",
     "@conflux-dev/conflux-address-js": "^1.0.0",
+    "big.js": "^5.2.2",
+    "commander": "^8.0.0",
     "keccak": "^2.0.0",
     "lodash": "^4.17.19",
     "scrypt-js": "^3.0.1",
