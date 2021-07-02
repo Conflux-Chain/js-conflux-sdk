@@ -10,7 +10,9 @@
     "sdk"
   ],
   "main": "src/index.js",
-  "bin": "bin/cfxjs.js",
+  "bin": {
+    "cfxjs": "bin/cfxjs.js"
+  },
   "types": "./types/index.d.ts",
   "browser": "dist/js-conflux-sdk.umd.min.js",
   "browserify-browser": {
