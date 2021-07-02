@@ -2,6 +2,13 @@ const lodash = require('lodash');
 const { encode, decode } = require('@conflux-dev/conflux-address-js');
 const { checksumAddress } = require('./sign');
 
+const ADDRESS_TYPES = {
+  USER: 'user',
+  CONTRACT: 'contract',
+  BUILTIN: 'builtin',
+  NULL: 'null',
+};
+
 /**
  * Encode address buffer to new CIP37 address
  *
@@ -157,4 +164,5 @@ module.exports = {
   simplifyCfxAddress,
   ethAddressToCfxAddress,
   shortenCfxAddress,
+  ADDRESS_TYPES,
 };

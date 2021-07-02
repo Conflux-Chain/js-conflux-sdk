@@ -1,6 +1,7 @@
 const CONST = require('./CONST');
 const { assert } = require('./util');
 const format = require('./util/format');
+const { decodeCfxAddress, ADDRESS_TYPES } = require('./util/address');
 const providerFactory = require('./provider');
 const Wallet = require('./wallet');
 const Contract = require('./contract');
@@ -837,7 +838,8 @@ class Conflux {
       let gas;
       let storageLimit;
 
-      if (options.data) {
+      const isContract = decodeCfxAddress(account.address).type === ADDRESS_TYPES.CONTRACT;
+      if (options.data || isContract) {
         const { gasUsed, storageCollateralized } = await this.estimateGasAndCollateral(options);
         gas = format.big(gasUsed).times(this.defaultGasRatio).toFixed(0);
         storageLimit = format.big(storageCollateralized).times(this.defaultStorageRatio).toFixed(0);
