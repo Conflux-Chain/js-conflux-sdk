@@ -1,5 +1,12 @@
-const lodash = require('lodash');
-const { encode, decode } = require('@conflux-dev/conflux-address-js');
+const {
+  encode,
+  decode,
+  verifyCfxAddress,
+  isValidCfxAddress,
+  hasNetworkPrefix,
+  simplifyCfxAddress,
+  shortenCfxAddress,
+} = require('@conflux-dev/conflux-address-js');
 const { checksumAddress } = require('./sign');
 
 const ADDRESS_TYPES = {
@@ -8,91 +15,6 @@ const ADDRESS_TYPES = {
   BUILTIN: 'builtin',
   NULL: 'null',
 };
-
-/**
- * Encode address buffer to new CIP37 address
- *
- * @param addressBuffer {buffer}
- * @param netId {number}
- * @param verbose {boolean}
- * @return {string}
- *
- * @example
- * cfx:aasyczc5bt792087z25kxutwj9t13sbsmy0rc60zju
- */
-function encodeCfxAddress(addressBuffer, netId, verbose = false) {
-  return encode(addressBuffer, netId, verbose);
-}
-
-/**
- * Decode CIP37 address to hex40 address with type, netId info
- *
- * @param address {string}
- * @return {Object}
- *
- * @example
- {
-    "hexAddress": "an address buffer",
-    "netId": 1029,
-    "type": "user"
- }
- */
-function decodeCfxAddress(address) {
-  return decode(address);
-}
-
-/**
- * Check whether a given address is valid, will return a boolean value
- *
- * @param address {string}
- * @return {boolean}
- *
- */
-function isValidCfxAddress(address) {
-  if (!lodash.isString(address)) {
-    return false;
-  }
-  try {
-    decodeCfxAddress(address.toLowerCase());
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
-
-/**
- * Check whether a given address is valid, if not valid will throw an error
- *
- * @param address {string}
- *
- */
-function verifyCfxAddress(address) {
-  decodeCfxAddress(address.toLowerCase());
-  return true;
-}
-
-/**
- * Check conflux address's prefix
- *
- * @param address {string}
- * @return {boolean}
- *
- * @example
- */
-function hasNetworkPrefix(address) {
-  if (!lodash.isString(address)) {
-    return false;
-  }
-  const parts = address.toLowerCase().split(':');
-  if (parts.length !== 2 && parts.length !== 3) {
-    return false;
-  }
-  const prefix = parts[0];
-  if (prefix === 'cfx' || prefix === 'cfxtest') {
-    return true;
-  }
-  return prefix.startsWith('net') && /^([1-9]\d*)$/.test(prefix.slice(3));
-}
 
 /**
  * Makes a ethereum checksum address
@@ -112,24 +34,6 @@ function ethChecksumAddress(address) {
 }
 
 /**
- * simplify a verbose address(return a non-verbose address)
- *
- * @param address {string}
- * @return {string}
- *
- */
-function simplifyCfxAddress(address) {
-  if (!hasNetworkPrefix(address)) {
-    throw new Error('invalid base32 address');
-  }
-  const parts = address.toLocaleLowerCase().split(':');
-  if (parts.length !== 3) {
-    return address;
-  }
-  return `${parts[0]}:${parts[2]}`;
-}
-
-/**
  * Convert an ethereum address to conflux hex address by replace it's first letter to 1
  * @param address {string}
  * @return {string}
@@ -138,25 +42,9 @@ function ethAddressToCfxAddress(address) {
   return `0x1${address.toLowerCase().slice(3)}`;
 }
 
-/**
- * Shortening a cfx address
- *
- * @param address {string}
- * @param [compress=false] {boolean}
- * @return {string}
- */
-function shortenCfxAddress(address, compress = false) {
-  address = simplifyCfxAddress(address);
-  const [netPre, body] = address.split(':');
-  const tailLen = (netPre === 'cfx' && !compress) ? 8 : 4;
-  const pre = body.slice(0, 3);
-  const tail = body.slice(body.length - tailLen);
-  return `${netPre}:${pre}...${tail}`;
-}
-
 module.exports = {
-  encodeCfxAddress,
-  decodeCfxAddress,
+  encodeCfxAddress: encode,
+  decodeCfxAddress: decode,
   verifyCfxAddress,
   isValidCfxAddress,
   hasNetworkPrefix,

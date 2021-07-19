@@ -27,8 +27,7 @@
   ],
   "browserslit": "cover 99.5%",
   "dependencies": {
-    "@babel/runtime": "^7.8.4",
-    "@conflux-dev/conflux-address-js": "^1.0.0",
+    "@conflux-dev/conflux-address-js": "^1.1.6",
     "big.js": "^5.2.2",
     "commander": "^8.0.0",
     "keccak": "^2.0.0",
@@ -39,6 +38,7 @@
     "websocket": "^1.0.31"
   },
   "devDependencies": {
+    "@babel/runtime": "^7.8.4",
     "@babel/core": "^7.8.4",
     "@babel/plugin-transform-runtime": "^7.8.3",
     "@babel/preset-env": "^7.8.4",
