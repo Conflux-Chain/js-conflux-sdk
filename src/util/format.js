@@ -407,7 +407,10 @@ format.hexBuffer = format.hex.$after(v => Buffer.from(v.substr(2), 'hex'));
  * > format.bytes(Buffer.from([0, 1]))
  <Buffer 00 01>
  */
-format.bytes = format(v => (Buffer.isBuffer(v) ? v : Buffer.from(v)));
+format.bytes = format(v => {
+  if (Buffer.isBuffer(v)) return v;
+  return v.match(/^0x[0-9A-Fa-f]*$/) ? Buffer.from(v.substr(2), 'hex') : Buffer.from(v);
+});
 
 /**
  * @param arg {boolean}
