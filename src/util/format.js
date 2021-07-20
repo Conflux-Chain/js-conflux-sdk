@@ -5,6 +5,7 @@ const JSBI = require('./jsbi');
 const parser = require('./parser');
 const sign = require('./sign');
 const addressUtil = require('./address');
+const { isHexString } = require('./index');
 
 // ----------------------------------------------------------------------------
 function toHex(value) {
@@ -409,7 +410,7 @@ format.hexBuffer = format.hex.$after(v => Buffer.from(v.substr(2), 'hex'));
  */
 format.bytes = format(v => {
   if (Buffer.isBuffer(v)) return v;
-  return v.match(/^0x[0-9A-Fa-f]*$/) ? Buffer.from(v.substr(2), 'hex') : Buffer.from(v);
+  return isHexString(v) ? Buffer.from(v.substr(2), 'hex') : Buffer.from(v);
 });
 
 /**

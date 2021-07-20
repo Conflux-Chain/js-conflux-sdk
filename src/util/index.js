@@ -38,9 +38,14 @@ function decodeHexEncodedStr(hexEncodedStr) {
   return Buffer.from(hexEncodedStr.slice(2), 'hex').toString();
 }
 
+function isHexString(v) {
+  return lodash.isString(v) && v.match(/^0x[0-9A-Fa-f]*$/);
+}
+
 module.exports = {
   assert,
   alignBuffer,
   awaitTimeout,
   decodeHexEncodedStr,
+  isHexString,
 };
