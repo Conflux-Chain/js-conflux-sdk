@@ -409,8 +409,8 @@ format.hexBuffer = format.hex.$after(v => Buffer.from(v.substr(2), 'hex'));
  <Buffer 00 01>
  */
 format.bytes = format(v => {
-  if (Buffer.isBuffer(v)) return v;
-  return isHexString(v) ? Buffer.from(v.substr(2), 'hex') : Buffer.from(v);
+  if (isHexString(v)) v = format.hexBuffer(v);
+  return Buffer.isBuffer(v) ? v : Buffer.from(v);
 });
 
 /**

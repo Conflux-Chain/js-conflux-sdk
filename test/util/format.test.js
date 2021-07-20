@@ -203,7 +203,7 @@ test('bytes', () => {
   expect(() => format.bytes(3.14)).toThrow('type');
 
   expect(format.bytes('abcd')).toEqual(Buffer.from([97, 98, 99, 100]));
-  expect(format.bytes('0x0a')).toEqual(Buffer.from([48, 120, 48, 97]));
+  expect(format.bytes('0x0a')).toEqual(Buffer.from([10]));
   expect(format.bytes([0, 1])).toEqual(Buffer.from([0, 1]));
   expect(format.bytes(Buffer.from([0, 1]))).toEqual(Buffer.from([0, 1]));
 });
@@ -226,7 +226,7 @@ test('keccak256', () => {
   expect(format.keccak256(Buffer.from(''))).toEqual(format.keccak256(''));
 
   expect(format.keccak256([0x42])).toEqual('0x1f675bff07515f5df96737194ea945c36c41e7b4fcef307b7cd4d0e602a69111');
-  expect(format.keccak256([0x42])).not.toEqual(format.keccak256('0x42'));
+  expect(format.keccak256([0x42])).toEqual(format.keccak256('0x42'));
   expect(format.keccak256([0x42])).toEqual(format.keccak256(format.hexBuffer('0x42')));
 });
 
