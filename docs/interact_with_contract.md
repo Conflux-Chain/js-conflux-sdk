@@ -168,6 +168,32 @@ let logs = cfx.getLogs({
 */
 ```
 
+How to build the filter `topics`
+
+```js
+// initialize a contract instance with abi and address
+let fc = cfx.Contract({
+  abi: CRC20_ABI,
+});
+
+// This example will use ERC20's "Transfer" event as example
+// Get event signature
+console.log('Event signature: ', fc.Transfer.signature);
+
+// Get event topics by invoke encodeTopics method with parameters as array
+console.log(fc.Transfer.encodeTopics([account.address, targetAddress, 100]));
+
+// Get an event's log filter, which can be used as 
+console.log(fc.Transfer(account.address, targetAddress, 100));
+
+// Get "Transfer" logs
+let logs = await fc.Transfer(account.address, targetAddress, 100).getLogs();
+
+// Subscribe to "Transfer" logs
+let sub = await fc.Transfer(account.address, targetAddress, 100).subscribeLogs();
+sub.on('data', console.log);
+```
+
 ### Subscribe logs with websocket
 With websocket's advantage, logs can be subscribed:
 
@@ -181,7 +207,7 @@ let subers = cfx.subscribeLogs(logs);
 subers.on("data", console.log);
 ```
 
-## How to decode log
+### How to decode log
 With contract's abi, you can decode the event log data:
 
 ```js
@@ -194,6 +220,8 @@ console.log(decoded);
 ```
 
 ## MISC
+
+### BigNumber
 > Note: when interacting with contract and if your parameter is bigger than `Number.MAX_SAFE_INTEGER`, you should use string represention of the number or BigInt.
 
 ```javascript
@@ -203,4 +231,15 @@ await contract.deposit('90071992547409910').sendTransaction({from: 'cfxtest:aar7
 await contract.deposit('0x13ffffffffffff0').sendTransaction({from: 'cfxtest:aar7x4r8mkrnw39ggs8rz40j1znwh5mrrpufpr2u76'});
 // not use number
 // await contract.deposit(Number.MAX_SAFE_INTEGER * 10);
+```
+
+### MethodOverride
+If there are several methods that have same name in one contract. In most situation SDK can choose the right method through arguments. But sometimes you will encounter with error `Error: can not match override "xxxx" with args` for example `Error: can not match override "placeBid(uint256,address)|placeBid(uint256)" with args`, this is because SDK can not determine invoke which method through args.
+
+For this situation user can invoke method through `whole method signature`
+
+```js
+await contract['placeBid(uint256,address)'])(123, 'cfxtest:aar7x4r8mkrnw39ggs8rz40j1znwh5mrrpufpr2u76');
+// or
+await contract['placeBid(uint256)'](123);
 ```
