@@ -197,12 +197,12 @@ test('hexBuffer', () => {
 });
 
 test('bytes', () => {
-  expect(() => format.bytes(undefined)).toThrow('type');
-  expect(() => format.bytes(null)).toThrow('type');
-  expect(() => format.bytes(0)).toThrow('type');
-  expect(() => format.bytes(3.14)).toThrow('type');
+  expect(() => format.bytes(undefined)).toThrow('invalid arrayify value');
+  expect(() => format.bytes(null)).toThrow('invalid arrayify value');
+  expect(() => format.bytes(0)).toThrow('invalid arrayify value');
+  expect(() => format.bytes(3.14)).toThrow('invalid arrayify value');
+  expect(() => format.bytes('abcd')).toThrow('invalid arrayify value');
 
-  expect(format.bytes('abcd')).toEqual(Buffer.from([97, 98, 99, 100]));
   expect(format.bytes('0x0a')).toEqual(Buffer.from([10]));
   expect(format.bytes([0, 1])).toEqual(Buffer.from([0, 1]));
   expect(format.bytes(Buffer.from([0, 1]))).toEqual(Buffer.from([0, 1]));
@@ -217,9 +217,9 @@ test('boolean', () => {
 });
 
 test('keccak256', () => {
-  expect(() => format.keccak256(undefined)).toThrow('Received');
-  expect(() => format.keccak256(null)).toThrow('Received');
-  expect(() => format.keccak256(0)).toThrow('Received');
+  expect(() => format.keccak256(undefined)).toThrow('invalid arrayify value');
+  expect(() => format.keccak256(null)).toThrow('invalid arrayify value');
+  expect(() => format.keccak256(0)).toThrow('invalid arrayify value');
 
   expect(format.keccak256('')).toEqual('0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470');
   expect(format.keccak256([])).toEqual(format.keccak256(''));

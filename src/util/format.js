@@ -411,7 +411,7 @@ format.hexBuffer = format.hex.$after(v => Buffer.from(v.substr(2), 'hex'));
 format.bytes = format(v => {
   if (Buffer.isBuffer(v) || Array.isArray(v)) return Buffer.from(v);
   if (!isHexString(v)) {
-    throw new Error('invalid arrayify value type');
+    throw new Error('invalid arrayify value');
   }
   return format.hexBuffer(v);
 });
