@@ -1,7 +1,7 @@
 # change log
 
 ## v1.6.10
-* `format.bytes` support hex str
+* `format.bytes` now only support hex string, will not accept non hex utf-8 string
 * Add cli `cfxjs` which can random generate a `0x1 prefix ethereum` address
 
 ## v1.6.9
