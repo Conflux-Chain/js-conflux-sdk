@@ -5,7 +5,7 @@ const JSBI = require('./jsbi');
 const parser = require('./parser');
 const sign = require('./sign');
 const addressUtil = require('./address');
-const { isHexString } = require('./index');
+const { isHexString, isBytes } = require('./index');
 
 // ----------------------------------------------------------------------------
 function toHex(value) {
@@ -409,7 +409,7 @@ format.hexBuffer = format.hex.$after(v => Buffer.from(v.substr(2), 'hex'));
  <Buffer 00 01>
  */
 format.bytes = format(v => {
-  if (Buffer.isBuffer(v) || Array.isArray(v)) return Buffer.from(v);
+  if (Buffer.isBuffer(v) || (Array.isArray(v) && isBytes(v))) return Buffer.from(v);
   if (!isHexString(v)) {
     throw new Error('invalid arrayify value');
   }
