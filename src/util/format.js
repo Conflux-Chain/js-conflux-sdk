@@ -409,11 +409,9 @@ format.hexBuffer = format.hex.$after(v => Buffer.from(v.substr(2), 'hex'));
  <Buffer 00 01>
  */
 format.bytes = format(v => {
-  if (Buffer.isBuffer(v) || (Array.isArray(v) && isBytes(v))) return Buffer.from(v);
-  if (!isHexString(v)) {
-    throw new Error('invalid arrayify value');
-  }
-  return format.hexBuffer(v);
+  if (isHexString(v)) return format.hexBuffer(v);
+  if (Buffer.isBuffer(v) || isBytes(v)) return Buffer.from(v);
+  throw new Error('invalid arrayify value');
 });
 
 /**
