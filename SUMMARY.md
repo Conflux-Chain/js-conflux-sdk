@@ -2,10 +2,12 @@
 
 * [README](README.md)
 * [Quickstart](docs/quick_start.md)
+* [Introduction](docs/index.md)
 * [Docs](docs/README.md)
   * [Overview](docs/overview.md)
-  * [Introduction](docs/index.md)
+  * [Providers](docs/providers.md)
   * [CIP37 Address](docs/conflux_checksum_address.md)
+  * [Account](docs/account.md)
   * [Sending Transaction](docs/how_to_send_tx.md)
   * [Interact with Contract](docs/interact_with_contract.md)
   * [Error Handling](docs/error_handling.md)

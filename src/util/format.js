@@ -5,6 +5,7 @@ const JSBI = require('./jsbi');
 const parser = require('./parser');
 const sign = require('./sign');
 const addressUtil = require('./address');
+const { isHexString, isBytes } = require('./index');
 
 // ----------------------------------------------------------------------------
 function toHex(value) {
@@ -394,20 +395,24 @@ format.publicKey = format.hex.$validate(v => v.length === 2 + 128, 'publicKey');
 format.hexBuffer = format.hex.$after(v => Buffer.from(v.substr(2), 'hex'));
 
 /**
- * If pass an string it will decode with ASCII encoding
+ * If pass an string only hex is accepted
  *
  * @param arg {string|Buffer|array}
  * @return {Buffer}
  *
  * @example
- * > format.bytes('abcd')
- <Buffer 61 62 63 64>
+ * > format.bytes('0xabcd')
+ <Buffer ab cd>
  * > format.bytes([0, 1])
  <Buffer 00 01>
  * > format.bytes(Buffer.from([0, 1]))
  <Buffer 00 01>
  */
-format.bytes = format(v => (Buffer.isBuffer(v) ? v : Buffer.from(v)));
+format.bytes = format(v => {
+  if (isHexString(v)) return format.hexBuffer(v);
+  if (Buffer.isBuffer(v) || isBytes(v)) return Buffer.from(v);
+  throw new Error('invalid arrayify value');
+});
 
 /**
  * @param arg {boolean}
@@ -438,7 +443,7 @@ format.boolean = format.any.$validate(lodash.isBoolean, 'boolean');
  * > format.keccak256('0x42') // "0x42" as string and transfer to <Buffer 30 78 34 32> by ascii
  "0x3c1b2d38851281e9a7b59d10973b0c87c340ff1e76bde7d06bf6b9f28df2b8c0"
  */
-format.keccak256 = format.bytes.$after(sign.keccak256).$after(format.hex);
+format.keccak256 = format.bytes.$before(v => (lodash.isString(v) && !isHexString(v) ? Buffer.from(v) : v)).$after(sign.keccak256).$after(format.hex);
 
 // -------------------------- format method arguments -------------------------
 format.getLogs = format({

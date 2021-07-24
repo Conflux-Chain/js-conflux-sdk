@@ -1,7 +1,7 @@
 {
   "name": "js-conflux-sdk",
   "description": "JavaScript Conflux Software Development Kit",
-  "version": "1.6.9",
+  "version": "1.6.10",
   "license": "LGPL-3.0",
   "author": "Haizhou@conflux-chain.org",
   "repository": "https://github.com/Conflux-Chain/js-conflux-sdk.git",
@@ -10,6 +10,9 @@
     "sdk"
   ],
   "main": "src/index.js",
+  "bin": {
+    "cfxjs": "bin/cfxjs.js"
+  },
   "types": "./types/index.d.ts",
   "browser": "dist/js-conflux-sdk.umd.min.js",
   "browserify-browser": {
@@ -24,9 +27,9 @@
   ],
   "browserslit": "cover 99.5%",
   "dependencies": {
-    "@babel/runtime": "^7.8.4",
+    "@conflux-dev/conflux-address-js": "^1.1.7",
     "big.js": "^5.2.2",
-    "@conflux-dev/conflux-address-js": "^1.0.0",
+    "commander": "^8.0.0",
     "keccak": "^2.0.0",
     "lodash": "^4.17.19",
     "scrypt-js": "^3.0.1",
@@ -38,6 +41,7 @@
     "@babel/core": "^7.8.4",
     "@babel/plugin-transform-runtime": "^7.8.3",
     "@babel/preset-env": "^7.8.4",
+    "@babel/runtime": "^7.8.4",
     "@geekberry/jsdoc-to-md": "0.0.8",
     "@types/node": "^14.0.23",
     "babel-plugin-lodash": "^3.3.4",

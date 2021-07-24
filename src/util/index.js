@@ -38,9 +38,31 @@ function decodeHexEncodedStr(hexEncodedStr) {
   return Buffer.from(hexEncodedStr.slice(2), 'hex').toString();
 }
 
+function isHexString(v) {
+  return lodash.isString(v) && v.match(/^0x[0-9A-Fa-f]*$/);
+}
+
+function isBytes(value) {
+  if (value == null) { return false; }
+  if (value.constructor === Uint8Array) { return true; }
+  if (typeof value === 'string') { return false; }
+  if (value.length == null) { return false; }
+
+  // eslint-disable-next-line no-plusplus
+  for (let i = 0; i < value.length; i++) {
+    const v = value[i];
+    if (typeof v !== 'number' || v < 0 || v >= 256 || (v % 1)) {
+      return false;
+    }
+  }
+  return true;
+}
+
 module.exports = {
   assert,
   alignBuffer,
   awaitTimeout,
   decodeHexEncodedStr,
+  isHexString,
+  isBytes,
 };

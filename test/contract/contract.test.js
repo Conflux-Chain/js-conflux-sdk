@@ -172,7 +172,6 @@ test('contract.getLogs', async () => {
 test('contract.override', () => {
   expect(contract.override(Buffer.from('bytes')).method.type).toEqual('override(bytes)');
 
-  expect(() => contract.override('str')).toThrow('can not determine override "override(bytes)|override(string)" with args (str)');
   expect(contract['override(string)']('str').method.type).toEqual('override(string)');
   expect(contract['0x227ffd52']('str').method.type).toEqual('override(string)');
 
