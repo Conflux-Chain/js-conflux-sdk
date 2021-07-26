@@ -132,8 +132,9 @@ class Contract {
       }
     }
    */
-  constructor({ abi, address, bytecode }, conflux) {
-    this._feedAddressNetId(abi, conflux);
+  constructor({ abi, address, bytecode, decodeByteToHex }, conflux) {
+    _feedAddressNetId(abi, conflux);
+    _feedByteOption(abi, decodeByteToHex);
     const abiTable = lodash.groupBy(abi, 'type');
     this.abi = new ContractABI(this); // XXX: Create a method named `abi` in solidity is a `Warning`.
 
@@ -164,29 +165,47 @@ class Contract {
       });
     });
   }
+}
 
-  _feedAddressNetId(abi, conflux) {
-    if (!abi || !conflux || !conflux.networkId) return;
+function _feedAddressNetId(abi, conflux) {
+  if (!abi || !conflux || !conflux.networkId) return;
 
-    for (const item of abi) {
-      if (['function', 'event', 'constructor'].indexOf(item.type) >= 0) {
-        if (item.inputs) {
-          feedInfo(item.inputs);
-        }
-        if (item.outputs) {
-          feedInfo(item.outputs);
-        }
+  for (const item of abi) {
+    if (['function', 'event', 'constructor'].indexOf(item.type) >= 0) {
+      _feedInfo(item.inputs);
+      _feedInfo(item.outputs);
+    }
+  }
+
+  function _feedInfo(items = []) {
+    for (const meta of items) {
+      if (meta.type === 'address') {
+        meta.networkId = conflux.networkId;
+      }
+      if (meta.type === 'tuple') {
+        _feedInfo(meta.components);
       }
     }
+  }
+}
 
-    function feedInfo(items) {
-      for (const meta of items) {
-        if (meta.type === 'address') {
-          meta.networkId = conflux.networkId;
-        }
-        if (meta.type === 'tuple') {
-          feedInfo(meta.components);
-        }
+function _feedByteOption(abi, decodeByteToHex = false) {
+  if (!abi || !decodeByteToHex) return;
+
+  for (const item of abi) {
+    if (['function', 'constructor'].indexOf(item.type) >= 0) {
+      _feedOption(item.inputs);
+      _feedOption(item.outputs);
+    }
+  }
+
+  function _feedOption(items = []) {
+    for (const meta of items) {
+      if (meta.type.startsWith('bytes')) {
+        meta._decodeToHex = true;
+      }
+      if (meta.type === 'tuple') {
+        _feedOption(meta.components);
       }
     }
   }

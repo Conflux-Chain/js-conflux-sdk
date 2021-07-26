@@ -19,7 +19,7 @@ class BytesCoder extends BaseCoder {
     });
   }
 
-  constructor({ name, size }) {
+  constructor({ name, size, _decodeToHex }) {
     if (size !== undefined) {
       assert(Number.isInteger(size) && size <= WORD_BYTES, {
         message: 'invalid size',
@@ -33,6 +33,7 @@ class BytesCoder extends BaseCoder {
     this.type = `bytes${size > 0 ? size : ''}`;
     this.size = size;
     this.dynamic = Boolean(size === undefined);
+    this._decodeToHex = _decodeToHex;
   }
 
   /**
@@ -71,6 +72,10 @@ class BytesCoder extends BaseCoder {
     let length = this.size;
     if (length === undefined) {
       length = format.uInt(uIntCoder.decode(stream)); // XXX: BigInt => Number, for length is enough.
+    }
+
+    if (this._decodeToHex) {
+      return `0x${stream.read(length * 2, true)}`;
     }
 
     return Buffer.from(stream.read(length * 2, true), 'hex');

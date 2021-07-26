@@ -111,7 +111,9 @@ export class Conflux {
   getSupplyInfo(epochNumber: EpochNumber): Promise<object>;
 
   // ----------------------------- debug -------------------------------
-  getEpochReceipts(epochNumber: EpochNumber): Promise<object>;
+  getEpochReceipts(epochNumber: EpochNumber): Promise<object[][]>;
+
+  getEpochReceiptsByPivotBlockHash(pivotBlockHash: string): Promise<object[][]>
 
   // ----------------------------- trace -------------------------------
   traceBlock(blockHash: string): Promise<object[]>;

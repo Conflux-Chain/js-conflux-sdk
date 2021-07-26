@@ -1310,6 +1310,19 @@ class Conflux {
     return format.epochReceipts(result);
   }
 
+  /**
+   * Return one epoch's all receipts by pivot block hash
+   * @param pivotBlockHash {string} epoch pivot block hash
+   * @returns {Promise<object[][]>} Array of array receipts.
+   *
+   * @example
+   * > await conflux.getEpochReceiptsByPivotBlockHash('0x12291776d632d966896b6c580f3201cd2e2a3fd672378fc7965aa7f7058282b2')
+   */
+  async getEpochReceiptsByPivotBlockHash(pivotBlockHash) {
+    const result = await this.provider.call('cfx_getEpochReceipts', `hash:${pivotBlockHash}`);
+    return format.epochReceipts(result);
+  }
+
   // ----------------------------- subscription -------------------------------
   /**
    * Subscribe event by name and got id, and provider will emit event by id
