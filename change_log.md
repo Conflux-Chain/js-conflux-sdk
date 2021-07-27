@@ -3,6 +3,7 @@
 ## v1.6.10
 * `format.bytes` now only support hex string, will not accept non hex utf-8 string
 * Add cli `cfxjs` which can random generate a `0x1 prefix ethereum` address
+* `Conflux` add a new method `getEpochReceiptsByPivotBlockHash`
 
 ## v1.6.9
 * Support `keepAlive` option in `Conflux` initialization.
