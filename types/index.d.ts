@@ -58,6 +58,10 @@ export class Conflux {
 
   getAdmin(address: Address, epochNumber?: EpochNumber): Promise<string>;
 
+  getAccountPendingInfo(address: Address): Promise<object>;
+
+  getAccountPendingTransactions(address: Address): Promise<object>;
+
   // -------------------------------- epoch -----------------------------------
   getEpochNumber(epochNumber?: EpochNumber): Promise<number>;
 
@@ -100,13 +104,23 @@ export class Conflux {
 
   getLogs(options: object): Promise<object[]>;
 
-  traceBlock(blockHash: string): Promise<object[]>;
-
   getDepositList(address: string, epochNumber?: EpochNumber): Promise<object[]>;
 
   getVoteList(address: string, epochNumber?: EpochNumber): Promise<object[]>;
 
   getSupplyInfo(epochNumber: EpochNumber): Promise<object>;
+
+  // ----------------------------- debug -------------------------------
+  getEpochReceipts(epochNumber: EpochNumber): Promise<object[][]>;
+
+  getEpochReceiptsByPivotBlockHash(pivotBlockHash: string): Promise<object[][]>
+
+  // ----------------------------- trace -------------------------------
+  traceBlock(blockHash: string): Promise<object[]>;
+
+  traceTransaction(txHash: string): Promise<object[]>;
+
+  traceFilter(options: object): Promise<object[]>;
 
   // ----------------------------- subscription -------------------------------
   subscribe(name: string, ...args: any[]): Promise<string>

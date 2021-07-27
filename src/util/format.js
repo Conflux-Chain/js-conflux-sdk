@@ -248,7 +248,7 @@ function toAddress(address, networkId, verbose = false) {
   if (address.length !== 20) {
     throw new Error('not match "hex40"');
   }
-  if (!networkId) {
+  if (typeof networkId === 'undefined') {
     throw new Error('expected parameter: networkId');
   }
   return addressUtil.encodeCfxAddress(address, networkId, verbose);
