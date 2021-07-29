@@ -2,11 +2,12 @@ const PREFIX = '\x19Conflux Signed Message:\n';
 const format = require('./util/format');
 const Message = require('./Message');
 const { keccak256 } = require('./util/sign');
+const { isHexString } = require('./util');
 
 class PersonalMessage extends Message {
   static personalMessage(message) {
-    const msgHex = format.hex(Buffer.from(message));
-    return PREFIX + msgHex.length + msgHex;
+    const msgBuf = isHexString(message) ? format.hexBuffer(message) : Buffer.from(message);
+    return PREFIX + msgBuf.length + msgBuf.toString();
   }
 
   static personalHash(message) {
@@ -51,8 +52,8 @@ class PersonalMessage extends Message {
   }
 
   constructor(message) {
-    const msgHex = format.hex(Buffer.from(message));
-    const personalMessage = PREFIX + msgHex.length + msgHex;
+    const msgBuf = isHexString(message) ? format.hexBuffer(message) : Buffer.from(message);
+    const personalMessage = PREFIX + msgBuf.length + msgBuf.toString();
     super(personalMessage);
     this._originMsg = message;
     this._personalMsg = personalMessage;

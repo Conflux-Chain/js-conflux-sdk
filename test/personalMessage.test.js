@@ -7,9 +7,9 @@ const NET_ID = 1;
 const message = 'Hello World';
 
 test('new PersonalMessage(string)', () => {
-  const messageHex = format.hex(Buffer.from(message));
+  const messageBuf = Buffer.from(message);
   const msg = new PersonalMessage(message);
-  const personalMsg = msg._prefix + messageHex.length + messageHex;
+  const personalMsg = msg._prefix + messageBuf.length + message;
   expect(msg.hash).toEqual(format.hex(sign.keccak256(personalMsg)));
   expect(msg._originMsg).toEqual(message);
   expect(msg._personalMsg).toEqual(personalMsg);
@@ -19,7 +19,7 @@ test('new PersonalMessage(string)', () => {
 });
 
 test('PersonalMessage.sign/recover', () => {
-  const sig = '0xf2e2c43e45ddb5dedd72f9fd147556ec2b81c7a3ef1032b70d2786d759c9aa341663904c46beba7472de4ada0474e47b8dc018c717d344388938e1d66e33c7cb01';
+  const sig = '0xd72ea2020802d6dfce0d49fc1d92a16b43baa58fc152d6f437d852a014e0c5740b3563375b0b844a835be4f1521b4ae2a691048622f70026e0470acc5351043a01';
   expect(PersonalMessage.sign(KEY, message)).toEqual(sig);
   expect(PersonalMessage.recover(sig, message)).toEqual(PUBLIC);
 });
