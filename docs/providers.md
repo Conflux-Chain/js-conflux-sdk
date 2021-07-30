@@ -30,7 +30,7 @@ const cfx = new Conflux({
 ## Connect through Conflux Portal
 An Dapp can connect through Conflux Blockchain through [Portal](https://portal.conflux-chain.org/). Which is a browser extension that provides:
 
-* A connection to the Ethereum network (a Provider)
+* A connection to the Conflux network (a Provider)
 * Holds your private key and can sign things (a Signer)
 
 js-conflux-sdk can work with Portal to talk with Conflux blockchain, simply by set `conflux` to `Conflux` instance's provider.
