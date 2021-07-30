@@ -10,7 +10,10 @@ const privateKey = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789
 const message = 'Hello World';
 const signature = PersonalMessage.sign(privateKey, message);
 // 0xd72ea2020802d6dfce0d49fc1d92a16b43baa58fc152d6f437d852a014e0c5740b3563375b0b844a835be4f1521b4ae2a691048622f70026e0470acc5351043a01
-const publicKey = personalMessage.recover(signature, message);
+const publicKey = PersonalMessage.recover(signature, message);
+// 0x4646ae5047316b4230d0086c8acec687f00b1cd9d1dc634f6cb358ac0a9a8ffffe77b4dd0a4bfb95851f3b7355c781dd60f8418fc8a65d14907aff47c903a559
+
+const publicKey = PersonalMessage.recoverPortalPersonalSign(signature, message);
 // 0x4646ae5047316b4230d0086c8acec687f00b1cd9d1dc634f6cb358ac0a9a8ffffe77b4dd0a4bfb95851f3b7355c781dd60f8418fc8a65d14907aff47c903a559
 ```
 
