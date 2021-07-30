@@ -505,6 +505,25 @@ class Conflux {
   }
 
   /**
+   * Returns information about a block by block number.
+   *
+   * @param blockNumber {string|number}
+   * @param [detail=false] {boolean} - If `true` it returns the full transaction objects, if `false` only the hashes of the transactions.
+   * @return {Promise<object|null>} See `getBlockByHash`
+   *
+   * @example
+   * > await conflux.getBlockByBlockNumber('0x123', true);
+   {...}
+   */
+  async getBlockByBlockNumber(blockNumber, detail = false) {
+    const result = await this.provider.call('cfx_getBlockByBlockNumber',
+      format.bigUIntHex(blockNumber),
+      format.boolean(detail),
+    );
+    return format.block.$or(null)(result);
+  }
+
+  /**
    * Returns hashes of blocks located in some epoch.
    *
    * @param epochNumber {string|number} - See [format.epochNumber](#util/format.js/format/(static)epochNumber)

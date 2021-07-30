@@ -1,5 +1,10 @@
 # change log
 
+## v1.6.15
+
+* Add `blockNumber` to block related methods `cfx_getBlockByHash`, `cfx_getBlockByEpochNumber`, `cfx_getBlockByHashWithPivotAssumption` which need `Conflux-rust v1.1.5` or above.
+* Add one new RPC method `cfx_getBlockByBlockNubmer`
+
 ## v1.6.10
 * `format.bytes` now only support hex string, will not accept non hex utf-8 string
 * Add cli `cfxjs` which can random generate a `0x1 prefix ethereum` address

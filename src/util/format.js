@@ -556,6 +556,7 @@ format.transaction = format({
 
 format.block = format({
   epochNumber: format.uInt.$or(null),
+  blockNumber: format.uInt.$or(null),
   blame: format.uInt,
   height: format.uInt,
   size: format.uInt,
