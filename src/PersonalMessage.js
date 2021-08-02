@@ -54,8 +54,8 @@ class PersonalMessage extends Message {
   /**
    * Recovers the portal signers publicKey from the signature.
    *
-   * @param signature {string|Buffer}
-   * @param message {string|Buffer}
+   * @param signature {string}
+   * @param message {string}
    * @return {string} The publicKey as hex string.
    *
    * @example

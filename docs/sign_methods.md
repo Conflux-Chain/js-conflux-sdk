@@ -1,6 +1,20 @@
 # sign methods
 
-## personal_sign
+## Recover ConfluxPortal's personal_sign message
+
+To verify portal's personal_sign method signed signature, developer need to recover publicKey or address from it and message. `PersonalMessage` class provide a static method can do this.
+
+```js
+const { PersonalMessage } = require('js-conflux-sdk');
+const message = 'Hello World';
+const signature = '0xxxxx';
+
+// message can be a normal string, or a hex encoded string
+const publicKey = PersonalMessage.recoverPortalPersonalSign(signature, message);
+// 0x4646ae5047316b4230d0086c8acec687f00b1cd9d1dc634f6cb358ac0a9a8ffffe77b4dd0a4bfb95851f3b7355c781dd60f8418fc8a65d14907aff47c903a559
+```
+
+## CIP-23 personal_sign
 
 The SDK has provide a  `PersonalMessage` class with can be used to personal_sign a message.
 
@@ -12,12 +26,9 @@ const signature = PersonalMessage.sign(privateKey, message);
 // 0xd72ea2020802d6dfce0d49fc1d92a16b43baa58fc152d6f437d852a014e0c5740b3563375b0b844a835be4f1521b4ae2a691048622f70026e0470acc5351043a01
 const publicKey = PersonalMessage.recover(signature, message);
 // 0x4646ae5047316b4230d0086c8acec687f00b1cd9d1dc634f6cb358ac0a9a8ffffe77b4dd0a4bfb95851f3b7355c781dd60f8418fc8a65d14907aff47c903a559
-
-const publicKey = PersonalMessage.recoverPortalPersonalSign(signature, message);
-// 0x4646ae5047316b4230d0086c8acec687f00b1cd9d1dc634f6cb358ac0a9a8ffffe77b4dd0a4bfb95851f3b7355c781dd60f8418fc8a65d14907aff47c903a559
 ```
 
-## typedSign
+## CIP-23 typedDataSign
 
 Conflux also have support for typed data sign through [CIP23](https://github.com/Conflux-Chain/CIPs/blob/2d9fdbdb08f66f705348669a6cd85e2d53509e97/CIPs/cip-23.md), which is similar to [EIP712](https://eips.ethereum.org/EIPS/eip-712).
 

@@ -10,6 +10,7 @@
   * [Account](docs/account.md)
   * [Sending Transaction](docs/how_to_send_tx.md)
   * [Interact with Contract](docs/interact_with_contract.md)
+  * [Sign methods](docs/sign_methods.md)
   * [Error Handling](docs/error_handling.md)
 * [API](docs/api/README.md)
   * [Conflux](docs/api/Conflux.md)
