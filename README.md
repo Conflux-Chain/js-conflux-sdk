@@ -77,4 +77,26 @@ CDN links
 
 * [`jsdelivr`](https://cdn.jsdelivr.net/npm/js-conflux-sdk/dist/js-conflux-sdk.umd.min.js)
 
+## SDK version relation with Conflux-rust
 
+How to know SDK's version
+```js
+const { Conflux } = require('js-conflux-sdk');
+const cfx = new Conflux({
+  url: 'xxxx',
+  networkId: 1,
+});
+console.log(cfx.version);
+```
+
+How to know fullnode's version
+```js
+const clientVersion = await cfx.getClientVersion();
+console.log(clientVersion);
+```
+
+js-conflux-sdk | conflux-rust(node)
+-------------- | -------------
+v1.7.0+        | v1.1.5+
+v1.6.0+        | v1.1.3+
+v1.5.11+       | v1.1.1+
