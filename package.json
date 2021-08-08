@@ -1,7 +1,7 @@
 {
   "name": "js-conflux-sdk",
   "description": "JavaScript Conflux Software Development Kit",
-  "version": "1.6.12",
+  "version": "1.6.13",
   "license": "LGPL-3.0",
   "author": "Haizhou@conflux-chain.org",
   "repository": "https://github.com/Conflux-Chain/js-conflux-sdk.git",
@@ -34,7 +34,7 @@
     "lodash": "^4.17.19",
     "scrypt-js": "^3.0.1",
     "secp256k1": "^3.7.1",
-    "superagent": "^5.1.0",
+    "superagent": "^6.1.0",
     "websocket": "^1.0.31"
   },
   "devDependencies": {

@@ -14,6 +14,7 @@ function supplementErrorInfo(object, payload) {
     return;
   }
   if (object.message === 'Method not found' && payload.method === 'cfx_sendTransaction') {
+    object.message = `${object.message} Can't find 'from' in cfx.wallet, check 'error.data' for detail`;
     object.data = 'Please use cfx.wallet.addPrivateKey() to add a account before call cfx.sendTransaction()';
   }
 }

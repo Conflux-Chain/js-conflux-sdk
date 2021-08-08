@@ -5,8 +5,6 @@ class Message {
   /**
    * Signs the hash with the privateKey.
    *
-   * > TODO support [CIP 23](https://github.com/Conflux-Chain/CIPs/blob/master/CIPs/cip-23.md)
-   *
    * @param privateKey {string|Buffer}
    * @param messageHash {string|Buffer}
    * @return {string} The signature as hex string.

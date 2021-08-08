@@ -193,7 +193,7 @@ function _feedByteOption(abi, decodeByteToHex = false) {
   if (!abi || !decodeByteToHex) return;
 
   for (const item of abi) {
-    if (['function', 'constructor'].indexOf(item.type) >= 0) {
+    if (['function', 'event', 'constructor'].indexOf(item.type) >= 0) {
       _feedOption(item.inputs);
       _feedOption(item.outputs);
     }

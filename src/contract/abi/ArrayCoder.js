@@ -15,7 +15,7 @@ class ArrayCoder extends BaseCoder {
     const [, subType, size] = match;
     return new this({
       ...options,
-      coder: valueCoder({ type: subType, components }),
+      coder: valueCoder({ type: subType, components, ...options }),
       size: size ? parseInt(size, 10) : undefined,
     });
   }
