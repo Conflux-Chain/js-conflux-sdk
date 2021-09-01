@@ -5,7 +5,7 @@ const { decodeCfxAddress, ADDRESS_TYPES } = require('./util/address');
 const providerFactory = require('./provider');
 const Wallet = require('./wallet');
 const Contract = require('./contract');
-const internalContract = require('./contract/internal');
+const INTERNAL_CONTRACTS = require('./contract/internal');
 const { CRC20_ABI } = require('./contract/standard');
 const PendingTransaction = require('./subscribe/PendingTransaction');
 const Subscription = require('./subscribe/Subscription');
@@ -178,7 +178,7 @@ class Conflux {
   }
    */
   InternalContract(name) {
-    const options = internalContract[name];
+    const options = INTERNAL_CONTRACTS[name];
     assert(options, `can not find internal contract named "${name}"`);
     return this.Contract(options);
   }

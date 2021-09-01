@@ -1,0 +1,57 @@
+{
+  "address": "0x0888000000000000000000000000000000000003",
+  "abi": [
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "allowance",
+          "type": "bool"
+        }
+      ],
+      "name": "allowReentrancy",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "contractAddr",
+          "type": "address"
+        },
+        {
+          "name": "allowance",
+          "type": "bool"
+        }
+      ],
+      "name": "allowReentrancyByAdmin",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "contractAddr",
+          "type": "address"
+        }
+      ],
+      "name": "isReentrancyAllowed",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": ""
+}

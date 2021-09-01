@@ -1,0 +1,19 @@
+{
+  "address": "0x0888000000000000000000000000000000000004",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "epochNumber",
+      "outputs": [
+        {
+          "internalType": "uint64",
+          "name": "",
+          "type": "uint64"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": ""
+}
