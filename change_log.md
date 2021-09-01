@@ -1,6 +1,6 @@
 # change log
 
-## v1.6.15
+## v1.7.0
 
 * Add `blockNumber` to block related methods `cfx_getBlockByHash`, `cfx_getBlockByEpochNumber`, `cfx_getBlockByHashWithPivotAssumption` which need `Conflux-rust v1.1.5` or above.
 * Add one new RPC method `cfx_getBlockByBlockNubmer`

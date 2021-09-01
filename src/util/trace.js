@@ -62,13 +62,14 @@ function _cleanTrace(trace) {
 const errorContract = new Contract({ abi });
 
 function _decodeErrorMessage(action) {
+  const returnData = action.returnData;
   let errorMessage;
   if (action.outcome === CALL_STATUS.REVERTED) {
-    const decoded = errorContract.abi.decodeData(action.returnData);
-    errorMessage = decoded.object.message;
+    const decoded = errorContract.abi.decodeData(returnData);
+    errorMessage = decoded ? decoded.object.message : '';
   }
   if (action.outcome === CALL_STATUS.FAIL) {
-    errorMessage = decodeHexEncodedStr(action.returnData);
+    errorMessage = decodeHexEncodedStr(returnData);
     errorMessage = decodeHexEncodedStr(errorMessage); // decode second time
   }
   return errorMessage;
