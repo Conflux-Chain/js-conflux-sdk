@@ -10,6 +10,7 @@ const { CRC20_ABI } = require('./contract/standard');
 const PendingTransaction = require('./subscribe/PendingTransaction');
 const Subscription = require('./subscribe/Subscription');
 const pkg = require('../package.json');
+const PoS = require('./rpc/pos');
 
 /**
  * A sdk of conflux.
@@ -116,6 +117,8 @@ class Conflux {
     }
 
     this.useHexAddressInParameter = useHexAddressInParameter;
+
+    this.pos = new PoS(this.provider);
   }
 
   _decoratePendingTransaction(func) {
