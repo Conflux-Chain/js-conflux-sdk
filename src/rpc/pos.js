@@ -1,9 +1,11 @@
 const format = require('../util/format');
 
-const LATEST = 'latest';
+const LATEST_COMMITTED = 'latest_committed';
+const LATEST_VOTED = 'latest_voted';
 
 format.posBlockNumber = format.bigUIntHex
-  .$or(LATEST);
+  .$or(LATEST_COMMITTED)
+  .$or(LATEST_VOTED);
 
 format.posStatus = format({
   blockNumber: format.uInt,
@@ -28,9 +30,26 @@ format.posBlock = format({
   epoch: format.uInt,
   height: format.uInt,
   pivotDecision: format.uInt,
-  rounds: format.uInt,
+  round: format.uInt,
   timestamp: format.uInt,
   version: format.uInt,
+}).$or(null);
+
+format.committeeNode = format({
+  votingPower: format.uInt,
+});
+
+format.election = format({
+  startView: format.uInt,
+  topElectingNodes: [format.committeeNode],
+});
+
+format.committee = format({
+  currentCommittee: {
+    epochNumber: format.uInt,
+    nodes: [format.committeeNode],
+  },
+  elections: [format.election],
 });
 
 class PoS {
@@ -43,8 +62,8 @@ class PoS {
     return format.posStatus(status);
   }
 
-  async getAccount(address, blockNumber = 1) {
-    const account = await this.provider.call('pos_getAccount', format.hex64(address), format.posBlockNumber(blockNumber));
+  async getAccount(address, blockNumber) {
+    const account = await this.provider.call('pos_getAccount', format.hex64(address), format.posBlockNumber.$or(undefined)(blockNumber));
     return format.posAccount(account);
   }
 
@@ -56,6 +75,11 @@ class PoS {
   async getBlockByNumber(blockNumber) {
     const block = await this.provider.call('pos_getBlockByNumber', format.posBlockNumber(blockNumber));
     return format.posBlock(block);
+  }
+
+  async getCommittee(blockNumber) {
+    const block = await this.provider.call('pos_getCommittee', format.posBlockNumber.$or(undefined)(blockNumber));
+    return format.committee(block);
   }
 }
 
