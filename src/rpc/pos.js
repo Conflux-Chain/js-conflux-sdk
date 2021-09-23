@@ -8,9 +8,15 @@ format.posBlockNumber = format.bigUIntHex
   .$or(LATEST_VOTED);
 
 format.posStatus = format({
-  blockNumber: format.uInt,
+  latestCommitted: format.uInt,
   epoch: format.uInt,
   pivotDecision: format.uInt,
+  latestVoted: format.uInt.$or(null),
+});
+
+format.posVotePowerState = format({
+  endBlockNumber: format.uInt,
+  power: format.uInt,
 });
 
 format.posAccount = format({
@@ -19,12 +25,16 @@ format.posAccount = format({
     availableVotes: format.uInt,
     exemptFromForfeit: format.uInt.$or(null),
     forceRetired: false,
-    inQueue: format.uInt,
+    inQueue: [format.posVotePowerState],
     locked: format.uInt,
-    outQueue: format.uInt,
+    outQueue: [format.posVotePowerState],
     unlocked: format.uInt,
   },
 });
+
+format.posTransaction = format({
+  number: format.uInt,
+}).$or(null);
 
 format.posBlock = format({
   epoch: format.uInt,
@@ -32,7 +42,8 @@ format.posBlock = format({
   pivotDecision: format.uInt,
   round: format.uInt,
   timestamp: format.uInt,
-  version: format.uInt,
+  nextTxNumber: format.uInt,
+  signatures: [format({ votes: format.uInt })],
 }).$or(null);
 
 format.committeeNode = format({
@@ -40,17 +51,25 @@ format.committeeNode = format({
 });
 
 format.election = format({
-  startView: format.uInt,
+  startBlockNumber: format.uInt,
   topElectingNodes: [format.committeeNode],
 });
 
 format.committee = format({
   currentCommittee: {
     epochNumber: format.uInt,
+    quorumVotingPower: format.uInt,
+    totalVotingPower: format.uInt,
     nodes: [format.committeeNode],
   },
   elections: [format.election],
 });
+
+format.rewardsByEpoch = format({
+  accountRewards: [format({
+    reward: format.bigUInt,
+  })],
+}).$or(null);
 
 class PoS {
   constructor(provider) {
@@ -80,6 +99,16 @@ class PoS {
   async getCommittee(blockNumber) {
     const block = await this.provider.call('pos_getCommittee', format.posBlockNumber.$or(undefined)(blockNumber));
     return format.committee(block);
+  }
+
+  async getTransactionByNumber(number) {
+    const tx = await this.provider.call('pos_getTransactionByNumber', format.bigUIntHex(number));
+    return format.posTransaction(tx);
+  }
+
+  async getRewardsByEpoch(number) {
+    const tx = await this.provider.call('pos_getRewardsByEpoch', format.bigUIntHex(number));
+    return format.rewardsByEpoch(tx);
   }
 }
 
