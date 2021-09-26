@@ -1,5 +1,4 @@
 {
-  "address": "0x0888000000000000000000000000000000000005",
   "abi": [
     {
       "anonymous": false,
@@ -53,6 +52,12 @@
           "internalType": "bytes32",
           "name": "identifier",
           "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint64",
+          "name": "votePower",
+          "type": "uint64"
         }
       ],
       "name": "Retire",
@@ -167,7 +172,13 @@
       "type": "function"
     },
     {
-      "inputs": [],
+      "inputs": [
+        {
+          "internalType": "uint64",
+          "name": "votes",
+          "type": "uint64"
+        }
+      ],
       "name": "retire",
       "outputs": [],
       "stateMutability": "nonpayable",
