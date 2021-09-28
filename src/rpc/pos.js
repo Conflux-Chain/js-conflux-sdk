@@ -34,6 +34,8 @@ format.posAccount = format({
 
 format.posTransaction = format({
   number: format.uInt,
+  timestamp: format.uInt.$or(null),
+  blockNumber: format.uInt.$or(null),
 }).$or(null);
 
 format.posBlock = format({

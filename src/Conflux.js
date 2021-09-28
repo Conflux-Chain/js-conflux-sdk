@@ -1345,6 +1345,11 @@ class Conflux {
     return format.epochReceipts(result);
   }
 
+  async getPoSEconomics() {
+    const result = await this.provider.call('cfx_getPoSEconomics');
+    return format.posEconomics(result);
+  }
+
   // ----------------------------- subscription -------------------------------
   /**
    * Subscribe event by name and got id, and provider will emit event by id

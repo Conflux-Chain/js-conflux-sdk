@@ -698,4 +698,10 @@ format.accountPendingTransactions = format({
   pendingTransactions: [format.transaction],
 });
 
+format.posEconomics = format({
+  distributablePosInterest: format.bigUInt,
+  lastDistributeBlock: format.bigUInt,
+  totalPosStakingTokens: format.bigUInt,
+});
+
 module.exports = format;
