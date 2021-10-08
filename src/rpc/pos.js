@@ -1,3 +1,4 @@
+const RPCMethodFactory = require('./index');
 const format = require('../util/format');
 
 const LATEST_COMMITTED = 'latest_committed';
@@ -73,44 +74,63 @@ format.rewardsByEpoch = format({
   })],
 }).$or(null);
 
-class PoS {
+class PoS extends RPCMethodFactory {
   constructor(provider) {
+    super(provider, PoS.methods());
     this.provider = provider;
   }
 
-  async getStatus() {
-    const status = await this.provider.call('pos_getStatus');
-    return format.posStatus(status);
-  }
-
-  async getAccount(address, blockNumber) {
-    const account = await this.provider.call('pos_getAccount', format.hex64(address), format.posBlockNumber.$or(undefined)(blockNumber));
-    return format.posAccount(account);
-  }
-
-  async getBlockByHash(hash) {
-    const block = await this.provider.call('pos_getBlockByHash', format.hex64(hash));
-    return format.posBlock(block);
-  }
-
-  async getBlockByNumber(blockNumber) {
-    const block = await this.provider.call('pos_getBlockByNumber', format.posBlockNumber(blockNumber));
-    return format.posBlock(block);
-  }
-
-  async getCommittee(blockNumber) {
-    const block = await this.provider.call('pos_getCommittee', format.posBlockNumber.$or(undefined)(blockNumber));
-    return format.committee(block);
-  }
-
-  async getTransactionByNumber(number) {
-    const tx = await this.provider.call('pos_getTransactionByNumber', format.bigUIntHex(number));
-    return format.posTransaction(tx);
-  }
-
-  async getRewardsByEpoch(number) {
-    const tx = await this.provider.call('pos_getRewardsByEpoch', format.bigUIntHex(number));
-    return format.rewardsByEpoch(tx);
+  static methods() {
+    return [
+      {
+        method: 'pos_getStatus',
+        requestFormatters: [],
+        responseFormatter: format.posStatus,
+      },
+      {
+        method: 'pos_getAccount',
+        requestFormatters: [
+          format.hex64,
+          format.posBlockNumber.$or(undefined),
+        ],
+        responseFormatter: format.posAccount,
+      },
+      {
+        method: 'pos_getBlockByHash',
+        requestFormatters: [
+          format.hex64,
+        ],
+        responseFormatter: format.posBlock,
+      },
+      {
+        method: 'pos_getBlockByNumber',
+        requestFormatters: [
+          format.posBlockNumber,
+        ],
+        responseFormatter: format.posBlock,
+      },
+      {
+        method: 'pos_getCommittee',
+        requestFormatters: [
+          format.posBlockNumber.$or(undefined),
+        ],
+        responseFormatter: format.committee,
+      },
+      {
+        method: 'pos_getTransactionByNumber',
+        requestFormatters: [
+          format.bigUIntHex,
+        ],
+        responseFormatter: format.posTransaction,
+      },
+      {
+        method: 'pos_getRewardsByEpoch',
+        requestFormatters: [
+          format.bigUIntHex,
+        ],
+        responseFormatter: format.rewardsByEpoch,
+      },
+    ];
   }
 }
 

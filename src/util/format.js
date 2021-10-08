@@ -206,9 +206,12 @@ format.fixed64 = format.big.$after(v => Number(v.div(CONST.MAX_UINT)));
 format.epochNumber = format.bigUIntHex
   .$or(CONST.EPOCH_NUMBER.LATEST_MINED)
   .$or(CONST.EPOCH_NUMBER.LATEST_STATE)
+  .$or(CONST.EPOCH_NUMBER.LATEST_FINALIZED)
   .$or(CONST.EPOCH_NUMBER.LATEST_CONFIRMED)
   .$or(CONST.EPOCH_NUMBER.LATEST_CHECKPOINT)
   .$or(CONST.EPOCH_NUMBER.EARLIEST);
+
+format.epochNumberOrUndefined = format.epochNumber.$or(undefined);
 
 /**
  * When encoding UNFORMATTED DATA (byte arrays, account addresses, hashes, bytecode arrays): encode as hex, prefix with "0x", two hex digits per byte.

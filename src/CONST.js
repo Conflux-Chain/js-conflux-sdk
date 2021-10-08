@@ -15,6 +15,7 @@ const MAX_UINT = JSBI.subtract(UINT_BOUND, JSBI.BigInt(1)); // 2**256-1
  *
  * - `LATEST_MINED` 'latest_mined': latest epoch.
  * - `LATEST_STATE` 'latest_state': latest state, about 5 epoch less then `LATEST_MINED`
+ * - `LATEST_FINALIZED` 'latest_finalized': latest epoch which finalized by PoS chain.
  * - `LATEST_CONFIRMED` 'latest_confirmed': latest epoch which confirmation risk less 1e-8.
  * - `LATEST_CHECKPOINT` 'latest_checkpoint': latest check point epoch.
  * - `EARLIEST` 'earliest': earliest epoch number, same as 0.
@@ -22,6 +23,7 @@ const MAX_UINT = JSBI.subtract(UINT_BOUND, JSBI.BigInt(1)); // 2**256-1
 const EPOCH_NUMBER = {
   LATEST_MINED: 'latest_mined',
   LATEST_STATE: 'latest_state',
+  LATEST_FINALIZED: 'latest_finalized',
   LATEST_CONFIRMED: 'latest_confirmed',
   LATEST_CHECKPOINT: 'latest_checkpoint',
   EARLIEST: 'earliest',

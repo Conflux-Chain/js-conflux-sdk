@@ -11,6 +11,8 @@ const PendingTransaction = require('./subscribe/PendingTransaction');
 const Subscription = require('./subscribe/Subscription');
 const pkg = require('../package.json');
 const PoS = require('./rpc/pos');
+const CFX = require('./rpc/cfx');
+const Trace = require('./rpc/trace');
 
 /**
  * A sdk of conflux.
@@ -118,7 +120,17 @@ class Conflux {
 
     this.useHexAddressInParameter = useHexAddressInParameter;
 
+    // pos related methods
     this.pos = new PoS(this.provider);
+    // trace related methods
+    this.trace = new Trace(this.provider);
+    // cfx related methods
+    this.cfx = new CFX({
+      provider: this.provider,
+      networkId: this.networkId,
+      useHexAddressInParameter,
+      wallet: this.wallet,
+    });
   }
 
   _decoratePendingTransaction(func) {
