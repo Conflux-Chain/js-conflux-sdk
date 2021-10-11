@@ -1,5 +1,9 @@
 # change log
 
+## v1.7.1
+
+* Add method `checkBalanceAgainstTransaction`, and `estimateGasAndCollateralAdvance` to better estimate gas and check balance.
+
 ## v1.6.15
 
 * Add `blockNumber` to block related methods `cfx_getBlockByHash`, `cfx_getBlockByEpochNumber`, `cfx_getBlockByHashWithPivotAssumption` which need `Conflux-rust v1.1.5` or above.
