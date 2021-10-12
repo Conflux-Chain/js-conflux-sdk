@@ -27,6 +27,7 @@
         - [getDepositList](#Conflux.js/Conflux/getDepositList)
         - [getEpochNumber](#Conflux.js/Conflux/getEpochNumber)
         - [getBlockByEpochNumber](#Conflux.js/Conflux/getBlockByEpochNumber)
+        - [getBlockByBlockNumber](#Conflux.js/Conflux/getBlockByBlockNumber)
         - [getBlocksByEpochNumber](#Conflux.js/Conflux/getBlocksByEpochNumber)
         - [getBestBlockHash](#Conflux.js/Conflux/getBestBlockHash)
         - [getBlockByHash](#Conflux.js/Conflux/getBlockByHash)
@@ -44,11 +45,14 @@
         - [getCollateralForStorage](#Conflux.js/Conflux/getCollateralForStorage)
         - [call](#Conflux.js/Conflux/call)
         - [estimateGasAndCollateral](#Conflux.js/Conflux/estimateGasAndCollateral)
+        - [estimateGasAndCollateralAdvance](#Conflux.js/Conflux/estimateGasAndCollateralAdvance)
+        - [checkBalanceAgainstTransaction](#Conflux.js/Conflux/checkBalanceAgainstTransaction)
         - [getLogs](#Conflux.js/Conflux/getLogs)
         - [traceBlock](#Conflux.js/Conflux/traceBlock)
         - [traceTransaction](#Conflux.js/Conflux/traceTransaction)
         - [traceFilter](#Conflux.js/Conflux/traceFilter)
         - [getEpochReceipts](#Conflux.js/Conflux/getEpochReceipts)
+        - [getEpochReceiptsByPivotBlockHash](#Conflux.js/Conflux/getEpochReceiptsByPivotBlockHash)
         - [subscribe](#Conflux.js/Conflux/subscribe)
         - [subscribeEpochs](#Conflux.js/Conflux/subscribeEpochs)
         - [subscribeNewHeads](#Conflux.js/Conflux/subscribeNewHeads)
@@ -76,6 +80,7 @@ options.defaultGasPrice     | `string,number` | false    |         | The default
 options.defaultGasRatio     | `number`        | false    | 1.1     | The ratio to multiply by gas.
 options.defaultStorageRatio | `number`        | false    | 1.1     | The ratio to multiply by storageLimit.
 options.url                 | `string`        | false    |         | Url of Conflux node to connect.
+options.retry               | `number`        | false    |         | Retry times if request error occurs.
 options.timeout             | `number`        | false    |         | Request time out in ms
 options.logger              | `Object`        | false    |         | Logger object with 'info' and 'error' method.
 options.networkId           | `number`        | false    |         | Connected RPC's networkId
@@ -538,6 +543,28 @@ detail      | `boolean`       | false    | false   | If `true` it returns the fu
    {...}
 ```
 
+### Conflux.prototype.getBlockByBlockNumber <a id="Conflux.js/Conflux/getBlockByBlockNumber"></a>
+
+Returns information about a block by block number.
+
+* **Parameters**
+
+Name        | Type            | Required | Default | Description
+------------|-----------------|----------|---------|---------------------------------------------------------------------------------------------------
+blockNumber | `string,number` | true     |         |
+detail      | `boolean`       | false    | false   | If `true` it returns the full transaction objects, if `false` only the hashes of the transactions.
+
+* **Returns**
+
+`Promise.<(object|null)>` See `getBlockByHash`
+
+* **Examples**
+
+```
+> await conflux.getBlockByBlockNumber('0x123', true);
+   {...}
+```
+
 ### Conflux.prototype.getBlocksByEpochNumber <a id="Conflux.js/Conflux/getBlocksByEpochNumber"></a>
 
 Returns hashes of blocks located in some epoch.
@@ -812,8 +839,8 @@ else call `cfx_sendTransaction` and sign by remote wallet
 * **Parameters**
 
 Name     | Type     | Required | Default | Description
----------|----------|----------|---------|---------------------------------------------------------------
-options  | `object` | true     |         | See [Transaction](#Transaction.js/Transaction/**constructor**)
+---------|----------|----------|---------|-----------------------------------------------------------------------------
+options  | `object` | true     |         | See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**)
 password | `string` | false    |         | Password for remote node.
 
 * **Returns**
@@ -1040,7 +1067,7 @@ address | `string` | true     |         | Address to account
 
 ### Conflux.prototype.getAccountPendingTransactions <a id="Conflux.js/Conflux/getAccountPendingTransactions"></a>
 
-Return one address's pending transactions
+Return pending transactions of one account
 
 * **Parameters**
 
@@ -1050,7 +1077,10 @@ address | `string` | true     |         | base32 address
 
 * **Returns**
 
-`Promise.<object>` 
+`Promise.<object>` An account's pending transactions and info.
+- pendingTransactions `Array`: pending transactions
+- firstTxStatus `Object`: the status of first pending tx
+- pendingCount `BigInt`: the count of pending transactions
 
 ### Conflux.prototype.getCollateralForStorage <a id="Conflux.js/Conflux/getCollateralForStorage"></a>
 
@@ -1081,8 +1111,8 @@ Virtually call a contract, return the output data.
 * **Parameters**
 
 Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|---------------------------------------------------------------------
-options     | `object`        | true     |                | See [Transaction](#Transaction.js/Transaction/**constructor**)
+------------|-----------------|----------|----------------|-----------------------------------------------------------------------------
+options     | `object`        | true     |                | See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**)
 epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
 
 * **Returns**
@@ -1096,8 +1126,8 @@ Virtually call a contract, return the estimate gas used and storage collateraliz
 * **Parameters**
 
 Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|---------------------------------------------------------------------
-options     | `object`        | true     |                | See [Transaction](#Transaction.js/Transaction/**constructor**)
+------------|-----------------|----------|----------------|-----------------------------------------------------------------------------
+options     | `object`        | true     |                | See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**)
 epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
 
 * **Returns**
@@ -1106,6 +1136,50 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNum
 - `BigInt` gasUsed: The gas used.
 - `BigInt` gasLimit: The gas limit.
 - `BigInt` storageCollateralized: The storage collateralized in Byte.
+
+### Conflux.prototype.estimateGasAndCollateralAdvance <a id="Conflux.js/Conflux/estimateGasAndCollateralAdvance"></a>
+
+Estimate a transaction's gas and storageCollateralize, check whether user's balance is enough for fee and value
+
+* **Parameters**
+
+Name        | Type            | Required | Default        | Description
+------------|-----------------|----------|----------------|-----------------------------
+options     | `object`        | true     |                | See estimateGasAndCollateral
+epochNumber | `string,number` | false    | 'latest_state' | See estimateGasAndCollateral
+
+* **Returns**
+
+`Promise.<object>` A estimate result with advance info object:
+- `BigInt` gasUsed: The gas used.
+- `BigInt` gasLimit: The gas limit.
+- `BigInt` storageCollateralized: The storage collateralized in Byte.
+- `Boolean` isBalanceEnough: indicate balance is enough for gas and storage fee
+- `Boolean` isBalanceEnoughForValueAndFee: indicate balance is enough for gas and storage fee plus value
+- `Boolean` willPayCollateral: false if the transaction is eligible for storage collateral sponsorship, true otherwise
+- `Boolean` willPayTxFee: false if the transaction is eligible for gas sponsorship, true otherwise
+
+### Conflux.prototype.checkBalanceAgainstTransaction <a id="Conflux.js/Conflux/checkBalanceAgainstTransaction"></a>
+
+Check whether transaction sender's balance is enough for gas and storage fee
+
+* **Parameters**
+
+Name         | Type            | Required | Default | Description
+-------------|-----------------|----------|---------|------------------------
+from         | `address`       | true     |         | sender address
+to           | `address`       | true     |         | target address
+gas          | `string,number` | true     |         | gas limit (in drip)
+gasPrice     | `string,number` | true     |         | gas price (in drip)
+storageLimit | `string,number` | true     |         | storage limit (in byte)
+epochNumber  | `string,number` | false    |         | optional epoch number
+
+* **Returns**
+
+`Promise.<object>` A check result object:
+- `Boolean` isBalanceEnough: indicate balance is enough for gas and storage fee
+- `Boolean` willPayCollateral: false if the transaction is eligible for storage collateral sponsorship, true otherwise
+- `Boolean` willPayTxFee: false if the transaction is eligible for gas sponsorship, true otherwise
 
 ### Conflux.prototype.getLogs <a id="Conflux.js/Conflux/getLogs"></a>
 
@@ -1285,6 +1359,26 @@ epochNumber | `number,string` | true     |         | epoch number
 
 ```
 > await conflux.getEpochReceipts('0x6')
+```
+
+### Conflux.prototype.getEpochReceiptsByPivotBlockHash <a id="Conflux.js/Conflux/getEpochReceiptsByPivotBlockHash"></a>
+
+Return one epoch's all receipts by pivot block hash
+
+* **Parameters**
+
+Name           | Type     | Required | Default | Description
+---------------|----------|----------|---------|-----------------------
+pivotBlockHash | `string` | true     |         | epoch pivot block hash
+
+* **Returns**
+
+`Promise.<Array.<Array.<object>>>` Array of array receipts.
+
+* **Examples**
+
+```
+> await conflux.getEpochReceiptsByPivotBlockHash('0x12291776d632d966896b6c580f3201cd2e2a3fd672378fc7965aa7f7058282b2')
 ```
 
 ### Conflux.prototype.subscribe <a id="Conflux.js/Conflux/subscribe"></a>

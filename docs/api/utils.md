@@ -467,7 +467,7 @@ arg  | `number,string,BigInt,Buffer,boolean,null` | true     |         |
 
 #### format.bytes <a id="util/format.js/format/(static)bytes"></a>
 
-If pass an string it will decode with ASCII encoding
+If pass an string only hex is accepted
 
 * **Parameters**
 
@@ -482,8 +482,8 @@ arg  | `string,Buffer,array` | true     |         |
 * **Examples**
 
 ```
-> format.bytes('abcd')
- <Buffer 61 62 63 64>
+> format.bytes('0xabcd')
+ <Buffer ab cd>
 > format.bytes([0, 1])
  <Buffer 00 01>
 > format.bytes(Buffer.from([0, 1]))
