@@ -1177,6 +1177,79 @@ class Conflux {
   }
 
   /**
+   * Estimate a transaction's gas and storageCollateralize, check whether user's balance is enough for fee and value
+   * @param options {object} - See estimateGasAndCollateral
+   * @param [epochNumber='latest_state'] {string|number} - See estimateGasAndCollateral
+   * @return {Promise<object>} A estimate result with advance info object:
+   * - `BigInt` gasUsed: The gas used.
+   * - `BigInt` gasLimit: The gas limit.
+   * - `BigInt` storageCollateralized: The storage collateralized in Byte.
+   * - `Boolean` isBalanceEnough: indicate balance is enough for gas and storage fee
+   * - `Boolean` isBalanceEnoughForValueAndFee: indicate balance is enough for gas and storage fee plus value
+   * - `Boolean` willPayCollateral: false if the transaction is eligible for storage collateral sponsorship, true otherwise
+   * - `Boolean` willPayTxFee: false if the transaction is eligible for gas sponsorship, true otherwise
+   */
+  async estimateGasAndCollateralAdvance(options, epochNumber) {
+    const estimateResult = await this.estimateGasAndCollateral(options, epochNumber);
+    if (!options.from) {
+      throw new Error('Can not check balance without `from`');
+    }
+    options = this._formatCallTx(options);
+    const gasPrice = format.bigInt(options.gasPrice || BigInt(1));
+    const txValue = format.bigInt(options.value || BigInt(0));
+    const gasFee = gasPrice * estimateResult.gasLimit;
+    const storageFee = estimateResult.storageCollateralized * (BigInt(1e18) / BigInt(1024));
+    const balance = await this.getBalance(options.from);
+    if (!options.to) {
+      estimateResult.willPayCollateral = true;
+      estimateResult.willPayTxFee = true;
+      estimateResult.isBalanceEnough = balance > (gasFee + storageFee);
+      estimateResult.isBalanceEnoughForValueAndFee = balance > (gasFee + storageFee + txValue);
+    } else {
+      const checkResult = await this.checkBalanceAgainstTransaction(
+        options.from,
+        options.to,
+        estimateResult.gasLimit,
+        gasPrice,
+        estimateResult.storageCollateralized,
+        epochNumber,
+      );
+      Object.assign(estimateResult, checkResult);
+      let totalValue = txValue;
+      totalValue += checkResult.willPayTxFee ? gasFee : BigInt(0);
+      totalValue += checkResult.willPayCollateral ? storageFee : BigInt(0);
+      estimateResult.isBalanceEnoughForValueAndFee = balance > totalValue;
+    }
+    return estimateResult;
+  }
+
+  /**
+   * Check whether transaction sender's balance is enough for gas and storage fee
+   * @param from {address} sender address
+   * @param to {address} target address
+   * @param gas {string|number} gas limit (in drip)
+   * @param gasPrice {string|number} gas price (in drip)
+   * @param storageLimit {string|number} storage limit (in byte)
+   * @param [epochNumber] {string|number} optional epoch number
+   * @return {Promise<object>} A check result object:
+   * - `Boolean` isBalanceEnough: indicate balance is enough for gas and storage fee
+   * - `Boolean` willPayCollateral: false if the transaction is eligible for storage collateral sponsorship, true otherwise
+   * - `Boolean` willPayTxFee: false if the transaction is eligible for gas sponsorship, true otherwise
+   */
+  async checkBalanceAgainstTransaction(from, to, gas, gasPrice, storageLimit, epochNumber) {
+    const result = await this.provider.call(
+      'cfx_checkBalanceAgainstTransaction',
+      this._formatAddress(from),
+      this._formatAddress(to),
+      format.bigUIntHex(gas),
+      format.bigUIntHex(gasPrice),
+      format.bigUIntHex(storageLimit),
+      format.epochNumber.$or(undefined)(epochNumber),
+    );
+    return result;
+  }
+
+  /**
    * Returns logs matching the filter provided.
    *
    * @param [options] {object}
