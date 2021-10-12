@@ -227,8 +227,8 @@ arg  | `string,number,BigInt,Big` | true     |         |
 * **Parameters**
 
 Name | Type            | Required | Default | Description
------|-----------------|----------|---------|------------------------------------------------------------
-arg  | `number,string` | true     |         | number or label, See [EPOCH_NUMBER](#CONST.js/EPOCH_NUMBER)
+-----|-----------------|----------|---------|-------------------------------------------------------------------
+arg  | `number,string` | true     |         | number or label, See [EPOCH_NUMBER](Misc.md#CONST.js/EPOCH_NUMBER)
 
 * **Returns**
 

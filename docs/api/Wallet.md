@@ -170,8 +170,8 @@ Sign a transaction.
 * **Parameters**
 
 Name    | Type     | Required | Default | Description
---------|----------|----------|---------|----------------------------------------------
-options | `object` | true     |         | See [Transaction](Transaction.js/constructor)
+--------|----------|----------|---------|-----------------------------------------------------------------------------
+options | `object` | true     |         | See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**)
 
 * **Returns**
 

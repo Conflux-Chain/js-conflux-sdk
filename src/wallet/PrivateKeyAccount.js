@@ -126,7 +126,7 @@ class PrivateKeyAccount extends Account {
   /**
    * Sign a transaction.
    *
-   * @param options {object} - See [Transaction](Transaction.js/constructor)
+   * @param options {object} - See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**)
    * @return {Promise<Transaction>}
    *
    * @example

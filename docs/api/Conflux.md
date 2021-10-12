@@ -152,8 +152,8 @@ A shout cut for `new Contract(options, conflux);`
 * **Parameters**
 
 Name    | Type     | Required | Default | Description
---------|----------|----------|---------|-----------------------------------------------------
-options | `object` | true     |         | See [Contract.constructor](#Contract.js/constructor)
+--------|----------|----------|---------|----------------------------------------------------------------
+options | `object` | true     |         | See [Contract.constructor](Contract.md#Contract.js/constructor)
 
 * **Returns**
 
@@ -232,8 +232,8 @@ Get supply info
 * **Parameters**
 
 Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|---------------------------------------------------------------------
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+------------|-----------------|----------|----------------|-----------------------------------------------------------------------------
+epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
@@ -303,8 +303,8 @@ Returns the interest rate of given parameter.
 * **Parameters**
 
 Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|---------------------------------------------------------------------
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+------------|-----------------|----------|----------------|-----------------------------------------------------------------------------
+epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
@@ -324,8 +324,8 @@ Returns the accumulate interest rate of given parameter.
 * **Parameters**
 
 Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|---------------------------------------------------------------------
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+------------|-----------------|----------|----------------|-----------------------------------------------------------------------------
+epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
@@ -345,9 +345,9 @@ Return account related states of the given account
 * **Parameters**
 
 Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|---------------------------------------------------------------------
+------------|-----------------|----------|----------------|-----------------------------------------------------------------------------
 address     | `string`        | true     |                | address to get account.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
@@ -382,9 +382,9 @@ Returns the balance of the account of given address.
 * **Parameters**
 
 Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|---------------------------------------------------------------------
+------------|-----------------|----------|----------------|-----------------------------------------------------------------------------
 address     | `string`        | true     |                | The address to get the balance of.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
@@ -404,9 +404,9 @@ Returns the balance of the staking account of given address.
 * **Parameters**
 
 Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|---------------------------------------------------------------------
+------------|-----------------|----------|----------------|-----------------------------------------------------------------------------
 address     | `string`        | true     |                | Address to check for staking balance.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
@@ -426,9 +426,9 @@ Returns the next nonce should be used by given address.
 * **Parameters**
 
 Name        | Type            | Required | Default | Description
-------------|-----------------|----------|---------|---------------------------------------------------------------------
+------------|-----------------|----------|---------|-----------------------------------------------------------------------------
 address     | `string`        | true     |         | The address to get the numbers of transactions from.
-epochNumber | `string,number` | false    |         | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+epochNumber | `string,number` | false    |         | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
@@ -448,9 +448,9 @@ Returns the admin of given contract.
 * **Parameters**
 
 Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|---------------------------------------------------------------------
+------------|-----------------|----------|----------------|-----------------------------------------------------------------------------
 address     | `string`        | true     |                | Address to contract.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
@@ -470,9 +470,9 @@ Returns vote list of the given account.
 * **Parameters**
 
 Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|---------------------------------------------------------------------
+------------|-----------------|----------|----------------|-----------------------------------------------------------------------------
 address     | `string`        | true     |                | Address to contract.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
@@ -488,9 +488,9 @@ Returns deposit list of the given account.
 * **Parameters**
 
 Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|---------------------------------------------------------------------
+------------|-----------------|----------|----------------|-----------------------------------------------------------------------------
 address     | `string`        | true     |                | Address to contract.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
@@ -507,8 +507,8 @@ Returns the epoch number of given parameter.
 * **Parameters**
 
 Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|---------------------------------------------------------------------
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+------------|-----------------|----------|----------------|-----------------------------------------------------------------------------
+epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
@@ -529,7 +529,7 @@ Returns information about a block by epoch number.
 
 Name        | Type            | Required | Default | Description
 ------------|-----------------|----------|---------|---------------------------------------------------------------------------------------------------
-epochNumber | `string,number` | true     |         | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+epochNumber | `string,number` | true     |         | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
 detail      | `boolean`       | false    | false   | If `true` it returns the full transaction objects, if `false` only the hashes of the transactions.
 
 * **Returns**
@@ -572,8 +572,8 @@ Returns hashes of blocks located in some epoch.
 * **Parameters**
 
 Name        | Type            | Required | Default | Description
-------------|-----------------|----------|---------|---------------------------------------------------------------------
-epochNumber | `string,number` | true     |         | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+------------|-----------------|----------|---------|-----------------------------------------------------------------------------
+epochNumber | `string,number` | true     |         | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
@@ -947,9 +947,9 @@ Returns the code of given contract.
 * **Parameters**
 
 Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|---------------------------------------------------------------------
+------------|-----------------|----------|----------------|-----------------------------------------------------------------------------
 address     | `string`        | true     |                | Address to contract.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
@@ -969,10 +969,10 @@ Returns storage entries from a given contract.
 * **Parameters**
 
 Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|---------------------------------------------------------------------
+------------|-----------------|----------|----------------|-----------------------------------------------------------------------------
 address     | `string`        | true     |                | Address to contract.
 position    | `string`        | true     |                | The given position.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
@@ -992,9 +992,9 @@ Returns the storage root of a given contract.
 * **Parameters**
 
 Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|---------------------------------------------------------------------
+------------|-----------------|----------|----------------|-----------------------------------------------------------------------------
 address     | `string`        | true     |                | Address to contract.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
@@ -1021,9 +1021,9 @@ Returns the sponsor info of given contract.
 * **Parameters**
 
 Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|---------------------------------------------------------------------
+------------|-----------------|----------|----------------|-----------------------------------------------------------------------------
 address     | `string`        | true     |                | Address to contract.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
@@ -1089,9 +1089,9 @@ Returns the size of the collateral storage of given address, in Byte.
 * **Parameters**
 
 Name        | Type     | Required | Default        | Description
-------------|----------|----------|----------------|---------------------------------------------------------------------
+------------|----------|----------|----------------|-----------------------------------------------------------------------------
 address     | `string` | true     |                | Address to check for collateral storage.
-epochNumber |          | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+epochNumber |          | false    | 'latest_state' | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
@@ -1113,7 +1113,7 @@ Virtually call a contract, return the output data.
 Name        | Type            | Required | Default        | Description
 ------------|-----------------|----------|----------------|-----------------------------------------------------------------------------
 options     | `object`        | true     |                | See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**)
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
@@ -1128,7 +1128,7 @@ Virtually call a contract, return the estimate gas used and storage collateraliz
 Name        | Type            | Required | Default        | Description
 ------------|-----------------|----------|----------------|-----------------------------------------------------------------------------
 options     | `object`        | true     |                | See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**)
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
 
 * **Returns**
 
@@ -1190,8 +1190,8 @@ Returns logs matching the filter provided.
 Name                | Type                    | Required | Default             | Description
 --------------------|-------------------------|----------|---------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 options             | `object`                | false    |                     |
-options.fromEpoch   | `string,number`         | false    | 'latest_checkpoint' | See [format.epochNumber](#util/format.js/format/(static)epochNumber). Search will be applied from this epoch number.
-options.toEpoch     | `string,number`         | false    | 'latest_state'      | See [format.epochNumber](#util/format.js/format/(static)epochNumber). Search will be applied up until (and including) this epoch number.
+options.fromEpoch   | `string,number`         | false    | 'latest_checkpoint' | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber). Search will be applied from this epoch number.
+options.toEpoch     | `string,number`         | false    | 'latest_state'      | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber). Search will be applied up until (and including) this epoch number.
 options.blockHashes | `Array.<string>`        | false    |                     | Array of up to 128 block hashes that the search will be applied to. This will override from/to epoch fields if it's not null
 options.address     | `string,Array.<string>` | false    |                     | Search contract addresses. If null, match all. If specified, log must be produced by one of these addresses.
 options.topics      | `array`                 | false    |                     | Search topics. Logs can have 4 topics: the function signature and up to 3 indexed event arguments. The elements of topics match the corresponding log topics. Example: ["0xA", null, ["0xB", "0xC"], null] matches logs with "0xA" as the 1st topic AND ("0xB" OR "0xC") as the 3rd topic. If null, match all.
