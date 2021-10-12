@@ -1178,8 +1178,8 @@ class Conflux {
 
   /**
    * Estimate a transaction's gas and storageCollateralize, check whether user's balance is enough for fee and value
-   * @param options {object} - See estimateGasAndCollateral
-   * @param [epochNumber='latest_state'] {string|number} - See estimateGasAndCollateral
+   * @param options {object} - See [estimateGasAndCollateral](#Conflux.js/Conflux/estimateGasAndCollateral)
+   * @param [epochNumber='latest_state'] {string|number} - See [estimateGasAndCollateral](#Conflux.js/Conflux/estimateGasAndCollateral)
    * @return {Promise<object>} A estimate result with advance info object:
    * - `BigInt` gasUsed: The gas used.
    * - `BigInt` gasLimit: The gas limit.

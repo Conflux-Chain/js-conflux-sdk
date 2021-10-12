@@ -395,7 +395,7 @@ format.publicKey = format.hex.$validate(v => v.length === 2 + 128, 'publicKey');
 format.hexBuffer = format.hex.$after(v => Buffer.from(v.substr(2), 'hex'));
 
 /**
- * If pass an string only hex is accepted
+ * It can only be in hex format If want to pass a string
  *
  * @param arg {string|Buffer|array}
  * @return {Buffer}

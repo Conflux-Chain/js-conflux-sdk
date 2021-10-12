@@ -467,7 +467,7 @@ arg  | `number,string,BigInt,Buffer,boolean,null` | true     |         |
 
 #### format.bytes <a id="util/format.js/format/(static)bytes"></a>
 
-If pass an string only hex is accepted
+It can only be in hex format If want to pass a string
 
 * **Parameters**
 

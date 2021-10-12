@@ -1144,9 +1144,9 @@ Estimate a transaction's gas and storageCollateralize, check whether user's bala
 * **Parameters**
 
 Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|-----------------------------
-options     | `object`        | true     |                | See estimateGasAndCollateral
-epochNumber | `string,number` | false    | 'latest_state' | See estimateGasAndCollateral
+------------|-----------------|----------|----------------|-----------------------------------------------------------------------------
+options     | `object`        | true     |                | See [estimateGasAndCollateral](#Conflux.js/Conflux/estimateGasAndCollateral)
+epochNumber | `string,number` | false    | 'latest_state' | See [estimateGasAndCollateral](#Conflux.js/Conflux/estimateGasAndCollateral)
 
 * **Returns**
 
