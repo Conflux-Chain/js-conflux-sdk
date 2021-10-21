@@ -8,8 +8,9 @@ const Contract = require('../contract');
 
 /**
  * TODO:
- * 1. 其他地方对 rpc 方法的调用
- * 2. Test
+ * 其他地方对 rpc 方法的调用:
+ * 1. PendingTransaction
+ * 2. Contract
  */
 
 class CFX extends RPCMethodFactory {
@@ -315,9 +316,61 @@ class CFX extends RPCMethodFactory {
   }
 
   _decoratePendingTransaction(func) {
-    const conflux = this;
+    const cfx = this;
     return function (...args) {
-      return new PendingTransaction(conflux, func.bind(this), args);
+      return new PendingTransaction(cfx, func.bind(this), args);
+    };
+  }
+
+  _addRequestBuilderToMethods() {
+    this.call.request = function (options, epochNumber) {
+      return {
+        request: {
+          method: 'cfx_call',
+          params: [
+            this._formatCallTx(options),
+            format.epochNumber.$or(undefined)(epochNumber),
+          ],
+        },
+      };
+    };
+
+    this.estimateGasAndCollateral.request = function (options, epochNumber) {
+      return {
+        request: {
+          method: 'cfx_estimateGasAndCollateral',
+          params: [
+            this._formatCallTx(options),
+            format.epochNumber.$or(undefined)(epochNumber),
+          ],
+        },
+        decoder: format.estimate,
+      };
+    };
+
+    // TODO the request here is different with others, need to fix it
+    this.sendTransaction.request = async function (options, password) {
+      if (this.wallet.has(`${options.from}`)) {
+        const transaction = await this._signTransaction(options);
+        return {
+          request: {
+            method: 'cfx_sendRawTransaction',
+            params: [
+              transaction.serialize(),
+            ],
+          },
+        };
+      }
+
+      return {
+        request: {
+          method: 'cfx_sendTransaction',
+          params: [
+            this._formatCallTx(options),
+            password,
+          ],
+        },
+      };
     };
   }
 

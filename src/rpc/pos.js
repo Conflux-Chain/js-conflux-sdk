@@ -84,7 +84,6 @@ class PoS extends RPCMethodFactory {
     return [
       {
         method: 'pos_getStatus',
-        requestFormatters: [],
         responseFormatter: format.posStatus,
       },
       {
