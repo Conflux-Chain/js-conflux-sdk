@@ -128,15 +128,7 @@ class Conflux {
     this.trace = new Trace(this.provider);
     this.txpool = new TxPool(this.provider, this.networkId);
     // cfx related methods
-    this.cfx = new CFX({
-      provider: this.provider,
-      networkId: this.networkId,
-      useHexAddressInParameter,
-      wallet: this.wallet,
-      defaultStorageRatio,
-      defaultGasRatio,
-      defaultGasPrice,
-    });
+    this.cfx = new CFX(this);
   }
 
   _decoratePendingTransaction(func) {
@@ -1215,37 +1207,7 @@ class Conflux {
    * - `Boolean` willPayTxFee: false if the transaction is eligible for gas sponsorship, true otherwise
    */
   async estimateGasAndCollateralAdvance(options, epochNumber) {
-    const estimateResult = await this.estimateGasAndCollateral(options, epochNumber);
-    if (!options.from) {
-      throw new Error('Can not check balance without `from`');
-    }
-    options = this._formatCallTx(options);
-    const gasPrice = format.bigInt(options.gasPrice || BigInt(1));
-    const txValue = format.bigInt(options.value || BigInt(0));
-    const gasFee = gasPrice * estimateResult.gasLimit;
-    const storageFee = estimateResult.storageCollateralized * (BigInt(1e18) / BigInt(1024));
-    const balance = await this.getBalance(options.from);
-    if (!options.to) {
-      estimateResult.willPayCollateral = true;
-      estimateResult.willPayTxFee = true;
-      estimateResult.isBalanceEnough = balance > (gasFee + storageFee);
-      estimateResult.isBalanceEnoughForValueAndFee = balance > (gasFee + storageFee + txValue);
-    } else {
-      const checkResult = await this.checkBalanceAgainstTransaction(
-        options.from,
-        options.to,
-        estimateResult.gasLimit,
-        gasPrice,
-        estimateResult.storageCollateralized,
-        epochNumber,
-      );
-      Object.assign(estimateResult, checkResult);
-      let totalValue = txValue;
-      totalValue += checkResult.willPayTxFee ? gasFee : BigInt(0);
-      totalValue += checkResult.willPayCollateral ? storageFee : BigInt(0);
-      estimateResult.isBalanceEnoughForValueAndFee = balance > totalValue;
-    }
-    return estimateResult;
+    return this.cfx.estimateGasAndCollateralAdvance(options, epochNumber);
   }
 
   /**

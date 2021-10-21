@@ -7,16 +7,18 @@ const PendingTransaction = require('../subscribe/PendingTransaction');
 const Contract = require('../contract');
 
 class CFX extends RPCMethodFactory {
-  constructor({
-    provider,
-    networkId,
-    useHexAddressInParameter,
-    wallet,
-    defaultGasPrice,
-    defaultGasRatio = 1.1,
-    defaultStorageRatio = 1.1,
-  }) {
-    super(provider);
+  constructor(conflux) {
+    super(conflux.provider);
+    const {
+      provider,
+      networkId,
+      useHexAddressInParameter,
+      wallet,
+      defaultGasPrice,
+      defaultGasRatio = 1.1,
+      defaultStorageRatio = 1.1,
+    } = conflux;
+    this.conflux = conflux;
     this.provider = provider;
     this.networkId = networkId;
     this.useHexAddressInParameter = useHexAddressInParameter;
@@ -275,6 +277,18 @@ class CFX extends RPCMethodFactory {
         ],
         responseFormatter: format.bigUInt,
       },
+      {
+        method: 'cfx_checkBalanceAgainstTransaction',
+        requestFormatters: [
+          this._formatAddress.bind(this),
+          this._formatAddress.bind(this),
+          format.bigUIntHex,
+          format.bigUIntHex,
+          format.bigUIntHex,
+          format.epochNumberOrUndefined,
+        ],
+        responseFormatter: format.any,
+      },
       /* {
         method: 'cfx_call',
         requestFormatters: [
@@ -350,31 +364,6 @@ class CFX extends RPCMethodFactory {
         decoder: format.estimate,
       };
     };
-
-    /* // TODO the request here is different with others, need to fix it
-    this.sendTransaction.request = async function (options, password) {
-      if (self.wallet.has(`${options.from}`)) {
-        const transaction = await self._signTransaction(options);
-        return {
-          request: {
-            method: 'cfx_sendRawTransaction',
-            params: [
-              transaction.serialize(),
-            ],
-          },
-        };
-      }
-
-      return {
-        request: {
-          method: 'cfx_sendTransaction',
-          params: [
-            self._formatCallTx(options),
-            password,
-          ],
-        },
-      };
-    }; */
   }
 
   async populateTransaction(options) {
@@ -457,9 +446,16 @@ class CFX extends RPCMethodFactory {
 
   async getPoSInterestRate() {
     const RATIO = new Big(0.04);
-    const { totalCirculating } = await this.getSupplyInfo();
-    const { totalPosStakingTokens } = await this.getPoSEconomics();
-    const bigTotalStaking = new Big(totalCirculating);
+    const batchRequest = this.conflux.BatchRequest();
+    batchRequest.add(this.getSupplyInfo.request());
+    batchRequest.add(this.getPoSEconomics.request());
+    batchRequest.add(this.getBalance.request(CONST.ZERO_ADDRESS_HEX));
+    const [
+      { totalCirculating },
+      { totalPosStakingTokens },
+      zeroBalance,
+    ] = await batchRequest.execute();
+    const bigTotalStaking = new Big(totalCirculating - zeroBalance);
     const bigTotalPosStakingTokens = new Big(totalPosStakingTokens);
     const bigRatio = RATIO.div(bigTotalPosStakingTokens.div(bigTotalStaking).sqrt());
     return bigRatio.toString();
@@ -508,6 +504,40 @@ class CFX extends RPCMethodFactory {
     } catch (e) {
       throw Contract.decodeError(e);
     }
+  }
+
+  async estimateGasAndCollateralAdvance(options, epochNumber) {
+    const estimateResult = await this.estimateGasAndCollateral(options, epochNumber);
+    if (!options.from) {
+      throw new Error('Can not check balance without `from`');
+    }
+    options = this._formatCallTx(options);
+    const gasPrice = format.bigInt(options.gasPrice || BigInt(1));
+    const txValue = format.bigInt(options.value || BigInt(0));
+    const gasFee = gasPrice * estimateResult.gasLimit;
+    const storageFee = estimateResult.storageCollateralized * (BigInt(1e18) / BigInt(1024));
+    const balance = await this.getBalance(options.from);
+    if (!options.to) {
+      estimateResult.willPayCollateral = true;
+      estimateResult.willPayTxFee = true;
+      estimateResult.isBalanceEnough = balance > (gasFee + storageFee);
+      estimateResult.isBalanceEnoughForValueAndFee = balance > (gasFee + storageFee + txValue);
+    } else {
+      const checkResult = await this.checkBalanceAgainstTransaction(
+        options.from,
+        options.to,
+        estimateResult.gasLimit,
+        gasPrice,
+        estimateResult.storageCollateralized,
+        epochNumber,
+      );
+      Object.assign(estimateResult, checkResult);
+      let totalValue = txValue;
+      totalValue += checkResult.willPayTxFee ? gasFee : BigInt(0);
+      totalValue += checkResult.willPayCollateral ? storageFee : BigInt(0);
+      estimateResult.isBalanceEnoughForValueAndFee = balance > totalValue;
+    }
+    return estimateResult;
   }
 }
 
