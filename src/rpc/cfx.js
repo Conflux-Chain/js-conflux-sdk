@@ -386,9 +386,9 @@ class CFX extends RPCMethodFactory {
 
   async getPoSInterestRate() {
     const RATIO = new Big(0.04);
-    const { totalStaking } = await this.getSupplyInfo();
+    const { totalCirculating } = await this.getSupplyInfo();
     const { totalPosStakingTokens } = await this.getPoSEconomics();
-    const bigTotalStaking = new Big(totalStaking);
+    const bigTotalStaking = new Big(totalCirculating);
     const bigTotalPosStakingTokens = new Big(totalPosStakingTokens);
     const bigRatio = RATIO.div(bigTotalPosStakingTokens.div(bigTotalStaking).sqrt());
     return bigRatio.toString();

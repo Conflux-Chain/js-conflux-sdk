@@ -24,8 +24,8 @@ format.posAccount = format({
   blockNumber: format.uInt,
   status: {
     availableVotes: format.uInt,
-    exemptFromForfeit: format.uInt.$or(null),
-    forceRetired: false,
+    forfeited: format.uInt,
+    forceRetired: format.uInt.$or(null),
     inQueue: [format.posVotePowerState],
     locked: format.uInt,
     outQueue: [format.posVotePowerState],

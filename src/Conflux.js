@@ -1357,6 +1357,14 @@ class Conflux {
     return format.epochReceipts(result);
   }
 
+  /**
+   * Return PoS summary info
+   * @returns {Promise<object>} PoS summary info
+   * - distributablePosInterest `number`: Currently total distributable PoS interest (Drip)
+   * - lastDistributeBlock `number`: Last distribute block number
+   * - totalPosStakingTokens `number`: Total token amount (Drip) staked in PoS
+   *
+   */
   async getPoSEconomics() {
     const result = await this.provider.call('cfx_getPoSEconomics');
     return format.posEconomics(result);
