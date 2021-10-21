@@ -1,3 +1,5 @@
+const RPCError = require('../provider/RPCError');
+
 class BatchRequester {
   constructor(provider) {
     this.provider = provider;
@@ -16,7 +18,12 @@ class BatchRequester {
 
   async execute() {
     const results = await this.provider.batch(this.requests);
-    return results.map((data, i) => this.decoders[i](data));
+    return results.map((data, i) => {
+      if (data instanceof RPCError) { // If is error direct return
+        return data;
+      }
+      return this.decoders[i](data);
+    });
   }
 }
 

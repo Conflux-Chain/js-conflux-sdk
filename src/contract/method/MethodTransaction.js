@@ -18,7 +18,11 @@ class MethodTransaction extends Transaction {
    * @return {Promise<PendingTransaction>} The PendingTransaction object.
    */
   sendTransaction(options, password) {
-    return this.method.conflux.sendTransaction({ ...this, ...options }, password);
+    return this.method.conflux.cfx.sendTransaction({ ...this, ...options }, password);
+  }
+
+  populateAndSignTransaction(options) {
+    return this.method.conflux.cfx.populateAndSignTransaction({ ...this, ...options });
   }
 
   /**
@@ -31,7 +35,7 @@ class MethodTransaction extends Transaction {
    * @return {Promise<object>} The gas used and storage occupied for the simulated call/transaction.
    */
   async estimateGasAndCollateral(options, epochNumber) {
-    return this.method.conflux.estimateGasAndCollateral({ ...this, ...options }, epochNumber);
+    return this.method.conflux.cfx.estimateGasAndCollateral({ ...this, ...options }, epochNumber);
   }
 
   /**
@@ -46,8 +50,23 @@ class MethodTransaction extends Transaction {
    * @return {Promise<*>} Decoded contact call return.
    */
   async call(options, epochNumber) {
-    const hex = await this.method.conflux.call({ ...this, ...options }, epochNumber);
+    const hex = await this.method.conflux.cfx.call({ ...this, ...options }, epochNumber);
     return this.method.decodeOutputs(hex);
+  }
+
+  request(options, epochNumber) {
+    return {
+      request: {
+        method: 'cfx_call',
+        params: [
+          {
+            ...this, ...options,
+          },
+          epochNumber,
+        ],
+      },
+      decoder: this.method.decodeOutputs,
+    };
   }
 
   async then(resolve, reject) {

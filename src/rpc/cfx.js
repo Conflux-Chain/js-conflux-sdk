@@ -6,23 +6,28 @@ const { decodeCfxAddress, ADDRESS_TYPES } = require('../util/address');
 const PendingTransaction = require('../subscribe/PendingTransaction');
 const Contract = require('../contract');
 
-/**
- * TODO:
- * 其他地方对 rpc 方法的调用:
- * 1. PendingTransaction
- * 2. Contract
- */
-
 class CFX extends RPCMethodFactory {
-  constructor({ provider, networkId, useHexAddressInParameter, wallet }) {
+  constructor({
+    provider,
+    networkId,
+    useHexAddressInParameter,
+    wallet,
+    defaultGasPrice,
+    defaultGasRatio = 1.1,
+    defaultStorageRatio = 1.1,
+  }) {
     super(provider);
     this.provider = provider;
     this.networkId = networkId;
     this.useHexAddressInParameter = useHexAddressInParameter;
     this.wallet = wallet;
+    this.defaultGasPrice = defaultGasPrice;
+    this.defaultGasRatio = defaultGasRatio;
+    this.defaultStorageRatio = defaultStorageRatio;
     super.addMethods(this.methods());
     this.sendRawTransaction = this._decoratePendingTransaction(this.sendRawTransaction);
     this.sendTransaction = this._decoratePendingTransaction(this.sendTransaction);
+    this._addRequestBuilderToCustomMethods();
   }
 
   _formatAddress(address) {
@@ -58,6 +63,7 @@ class CFX extends RPCMethodFactory {
       },
       {
         method: 'cfx_gasPrice',
+        alias: 'getGasPrice',
         responseFormatter: format.bigUInt,
       },
       {
@@ -77,7 +83,7 @@ class CFX extends RPCMethodFactory {
       {
         method: 'cfx_getAccount',
         requestFormatters: [
-          this._formatAddress,
+          this._formatAddress.bind(this),
           format.epochNumberOrUndefined,
         ],
         responseFormatter: format.account,
@@ -85,7 +91,7 @@ class CFX extends RPCMethodFactory {
       {
         method: 'cfx_getBalance',
         requestFormatters: [
-          this._formatAddress,
+          this._formatAddress.bind(this),
           format.epochNumberOrUndefined,
         ],
         responseFormatter: format.bigUInt,
@@ -93,7 +99,7 @@ class CFX extends RPCMethodFactory {
       {
         method: 'cfx_getStakingBalance',
         requestFormatters: [
-          this._formatAddress,
+          this._formatAddress.bind(this),
           format.epochNumberOrUndefined,
         ],
         responseFormatter: format.bigUInt,
@@ -101,7 +107,7 @@ class CFX extends RPCMethodFactory {
       {
         method: 'cfx_getNextNonce',
         requestFormatters: [
-          this._formatAddress,
+          this._formatAddress.bind(this),
           format.epochNumberOrUndefined,
         ],
         responseFormatter: format.bigUInt,
@@ -109,14 +115,14 @@ class CFX extends RPCMethodFactory {
       {
         method: 'cfx_getAdmin',
         requestFormatters: [
-          this._formatAddress,
+          this._formatAddress.bind(this),
           format.epochNumberOrUndefined,
         ],
       },
       {
         method: 'cfx_getVoteList',
         requestFormatters: [
-          this._formatAddress,
+          this._formatAddress.bind(this),
           format.epochNumberOrUndefined,
         ],
         responseFormatter: format.voteList,
@@ -124,13 +130,14 @@ class CFX extends RPCMethodFactory {
       {
         method: 'cfx_getDepositList',
         requestFormatters: [
-          this._formatAddress,
+          this._formatAddress.bind(this),
           format.epochNumberOrUndefined,
         ],
         responseFormatter: format.depositList,
       },
       {
         method: 'cfx_epochNumber',
+        alias: 'getEpochNumber',
         requestFormatters: [
           format.epochNumberOrUndefined,
         ],
@@ -154,6 +161,7 @@ class CFX extends RPCMethodFactory {
       },
       {
         method: 'cfx_getBlocksByEpoch',
+        alias: 'getBlocksByEpochNumber',
         requestFormatters: [
           format.epochNumber,
         ],
@@ -215,7 +223,7 @@ class CFX extends RPCMethodFactory {
       {
         method: 'cfx_getCode',
         requestFormatters: [
-          this._formatAddress,
+          this._formatAddress.bind(this),
           format.epochNumber.$or(undefined),
         ],
         responseFormatter: format.any,
@@ -223,7 +231,7 @@ class CFX extends RPCMethodFactory {
       {
         method: 'cfx_getStorageAt',
         requestFormatters: [
-          this._formatAddress,
+          this._formatAddress.bind(this),
           format.hex64,
           format.epochNumber.$or(undefined),
         ],
@@ -231,14 +239,14 @@ class CFX extends RPCMethodFactory {
       {
         method: 'cfx_getStorageRoot',
         requestFormatters: [
-          this._formatAddress,
+          this._formatAddress.bind(this),
           format.epochNumberOrUndefined,
         ],
       },
       {
         method: 'cfx_getSponsorInfo',
         requestFormatters: [
-          this._formatAddress,
+          this._formatAddress.bind(this),
           format.epochNumberOrUndefined,
         ],
         responseFormatter: format.sponsorInfo,
@@ -246,14 +254,14 @@ class CFX extends RPCMethodFactory {
       {
         method: 'cfx_getAccountPendingInfo',
         requestFormatters: [
-          this._formatAddress,
+          this._formatAddress.bind(this),
         ],
         responseFormatter: format.accountPendingInfo,
       },
       {
         method: 'cfx_getAccountPendingTransactions',
         requestFormatters: [
-          this._formatAddress,
+          this._formatAddress.bind(this),
           format.bigUIntHex.$or(undefined),
           format.bigUIntHex.$or(undefined),
         ],
@@ -262,7 +270,7 @@ class CFX extends RPCMethodFactory {
       {
         method: 'cfx_getCollateralForStorage',
         requestFormatters: [
-          this._formatAddress,
+          this._formatAddress.bind(this),
           format.epochNumberOrUndefined,
         ],
         responseFormatter: format.bigUInt,
@@ -291,7 +299,7 @@ class CFX extends RPCMethodFactory {
           }
         },
         requestFormatters: [
-          this._formatGetLogs,
+          this._formatGetLogs.bind(this),
         ],
         responseFormatter: format.logs,
       },
@@ -306,12 +314,6 @@ class CFX extends RPCMethodFactory {
         method: 'cfx_getPoSEconomics',
         responseFormatter: format.posEconomics,
       },
-      {
-        method: '',
-        requestFormatters: [
-        ],
-        responseFormatter: format.any,
-      },
     ];
   }
 
@@ -322,13 +324,14 @@ class CFX extends RPCMethodFactory {
     };
   }
 
-  _addRequestBuilderToMethods() {
+  _addRequestBuilderToCustomMethods() {
+    const self = this;
     this.call.request = function (options, epochNumber) {
       return {
         request: {
           method: 'cfx_call',
           params: [
-            this._formatCallTx(options),
+            self._formatCallTx(options),
             format.epochNumber.$or(undefined)(epochNumber),
           ],
         },
@@ -340,7 +343,7 @@ class CFX extends RPCMethodFactory {
         request: {
           method: 'cfx_estimateGasAndCollateral',
           params: [
-            this._formatCallTx(options),
+            self._formatCallTx(options),
             format.epochNumber.$or(undefined)(epochNumber),
           ],
         },
@@ -348,10 +351,10 @@ class CFX extends RPCMethodFactory {
       };
     };
 
-    // TODO the request here is different with others, need to fix it
+    /* // TODO the request here is different with others, need to fix it
     this.sendTransaction.request = async function (options, password) {
-      if (this.wallet.has(`${options.from}`)) {
-        const transaction = await this._signTransaction(options);
+      if (self.wallet.has(`${options.from}`)) {
+        const transaction = await self._signTransaction(options);
         return {
           request: {
             method: 'cfx_sendRawTransaction',
@@ -366,19 +369,23 @@ class CFX extends RPCMethodFactory {
         request: {
           method: 'cfx_sendTransaction',
           params: [
-            this._formatCallTx(options),
+            self._formatCallTx(options),
             password,
           ],
         },
       };
-    };
+    }; */
   }
 
-  async _signTransaction(options) {
-    const account = await this.wallet.get(`${options.from}`);
+  async populateTransaction(options) {
+    options.from = this._formatAddress(options.from);
 
     if (options.nonce === undefined) {
-      options.nonce = await this.getNextNonce(account);
+      options.nonce = await this.getNextNonce(options.from);
+    }
+
+    if (options.chainId === undefined) {
+      options.chainId = this.networkId;
     }
 
     if (options.chainId === undefined) {
@@ -387,12 +394,12 @@ class CFX extends RPCMethodFactory {
     }
 
     if (options.epochHeight === undefined) {
-      options.epochHeight = await this.getEpochNumber();
+      options.epochHeight = await this.epochNumber();
     }
 
     if (options.gasPrice === undefined) {
       if (this.defaultGasPrice === undefined) {
-        const gasPrice = await this.getGasPrice();
+        const gasPrice = await this.gasPrice();
         options.gasPrice = Number(gasPrice) === 0 ? CONST.MIN_GAS_PRICE : gasPrice;
       } else {
         options.gasPrice = this.defaultGasPrice;
@@ -403,10 +410,14 @@ class CFX extends RPCMethodFactory {
       let gas;
       let storageLimit;
 
-      const isContract = decodeCfxAddress(account.address).type === ADDRESS_TYPES.CONTRACT;
+      const isContract = decodeCfxAddress(options.from).type === ADDRESS_TYPES.CONTRACT;
       if (options.data || isContract) {
-        const { gasUsed, storageCollateralized } = await this.estimateGasAndCollateral(options);
-        gas = format.big(gasUsed).times(this.defaultGasRatio).toFixed(0);
+        const { gasUsed, storageCollateralized, gasLimit } = await this.estimateGasAndCollateral(options);
+        if (this.defaultGasRatio) {
+          gas = format.big(gasUsed).times(this.defaultGasRatio).toFixed(0);
+        } else {
+          gas = gasLimit;
+        }
         storageLimit = format.big(storageCollateralized).times(this.defaultStorageRatio).toFixed(0);
       } else {
         gas = CONST.TRANSACTION_GAS;
@@ -422,13 +433,20 @@ class CFX extends RPCMethodFactory {
       }
     }
 
-    return account.signTransaction(options);
+    return options;
+  }
+
+  async populateAndSignTransaction(options) {
+    await this.populateTransaction(options);
+    const account = await this.wallet.get(`${options.from}`);
+    const signedTx = await account.signTransaction(options);
+    return signedTx.serialize();
   }
 
   async sendTransaction(options, password) {
     if (this.wallet.has(`${options.from}`)) {
-      const transaction = await this._signTransaction(options);
-      return this.sendRawTransaction(transaction.serialize());
+      const rawTx = await this.populateAndSignTransaction(options);
+      return this.sendRawTransaction(rawTx);
     }
 
     return this.provider.call('cfx_sendTransaction',

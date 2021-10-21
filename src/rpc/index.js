@@ -10,6 +10,10 @@ class RPCMethodFactory {
     for (const methodMeta of methods) {
       const method = methodMeta.method.split('_')[1];
       this[method] = this.createRPCMethod(methodMeta);
+      // create method alias
+      if (methodMeta.alias) {
+        this[methodMeta.alias] = this[method];
+      }
     }
   }
 

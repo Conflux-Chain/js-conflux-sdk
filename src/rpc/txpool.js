@@ -20,7 +20,7 @@ class TxPool extends RPCMethodFactory {
       {
         method: 'txpool_nextNonce',
         requestFormatters: [
-          this._formatAddress,
+          this._formatAddress.bind(this),
         ],
         responseFormatter: format.bigUInt,
       },

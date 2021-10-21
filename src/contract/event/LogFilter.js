@@ -6,7 +6,7 @@ class LogFilter {
   }
 
   async getLogs(options = {}) {
-    const logs = await this.event.conflux.getLogs({ ...this, ...options });
+    const logs = await this.event.conflux.cfx.getLogs({ ...this, ...options });
 
     logs.forEach(log => {
       log.arguments = this.event.decodeLog(log);

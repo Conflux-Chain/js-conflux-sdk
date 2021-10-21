@@ -13,6 +13,8 @@ const pkg = require('../package.json');
 const PoS = require('./rpc/pos');
 const CFX = require('./rpc/cfx');
 const Trace = require('./rpc/trace');
+const TxPool = require('./rpc/txpool');
+const BatchRequester = require('./rpc/BatchRequester');
 
 /**
  * A sdk of conflux.
@@ -124,12 +126,16 @@ class Conflux {
     this.pos = new PoS(this.provider);
     // trace related methods
     this.trace = new Trace(this.provider);
+    this.txpool = new TxPool(this.provider, this.networkId);
     // cfx related methods
     this.cfx = new CFX({
       provider: this.provider,
       networkId: this.networkId,
       useHexAddressInParameter,
       wallet: this.wallet,
+      defaultStorageRatio,
+      defaultGasRatio,
+      defaultGasPrice,
     });
   }
 
@@ -206,6 +212,10 @@ class Conflux {
    */
   CRC20(address) {
     return this.Contract({ address, abi: CRC20_ABI });
+  }
+
+  BatchRequest() {
+    return new BatchRequester(this.provider);
   }
 
   /**

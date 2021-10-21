@@ -56,6 +56,7 @@ class Trace extends RPCMethodFactory {
     return [
       {
         method: 'trace_block',
+        alias: 'traceBlock',
         requestFormatters: [
           format.blockHash,
         ],
@@ -63,6 +64,7 @@ class Trace extends RPCMethodFactory {
       },
       {
         method: 'trace_transaction',
+        alias: 'traceTransaction',
         requestFormatters: [
           format.transactionHash,
         ],
@@ -70,6 +72,7 @@ class Trace extends RPCMethodFactory {
       },
       {
         method: 'trace_filter',
+        alias: 'traceFilter',
         requestFormatters: [
           format.traceFilter,
         ],
