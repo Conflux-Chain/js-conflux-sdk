@@ -24,13 +24,13 @@ const APIs = [
     name: 'Conflux',
     files: [
       `${sep}Conflux.js`,
-    ]
+    ],
   }, {
     name: 'Wallet',
     files: [
       `${sep}wallet${sep}Wallet.js`,
       `${sep}wallet${sep}PrivateKeyAccount.js`,
-    ]
+    ],
   }, {
     name: 'Provider',
     files: [
@@ -38,45 +38,43 @@ const APIs = [
       `${sep}provider${sep}BaseProvider.js`,
       `${sep}provider${sep}HttpProvider.js`,
       `${sep}provider${sep}WebSocketProvider.js`,
-    ]
+    ],
   }, {
     name: 'Contract',
     files: [
       `${sep}contract${sep}Contract.js`,
-    ]
+    ],
   }, {
     name: 'Transaction',
     files: [
       `${sep}Transaction.js`,
-    ]
+    ],
   }, {
     name: 'Drip',
     files: [
       `${sep}Drip.js`,
-    ]
+    ],
   }, {
     name: 'utils',
     files: [
       `${sep}util${sep}format.js`,
       `${sep}util${sep}sign.js`,
-    ]
+    ],
   }, {
     name: 'Subscribe',
     files: [
       `${sep}subscribe${sep}PendingTransaction.js`,
       `${sep}subscribe${sep}Subscription.js`,
-    ]
+    ],
   }, {
     name: 'Misc',
     files: [
       `${sep}CONST.js`,
       `${sep}Message.js`,
-    ]
-  }
+    ],
+  },
 ];
 
-for (let API of APIs) {
+for (const API of APIs) {
   generateMarkdown(API.files, API.name);
 }
-
-

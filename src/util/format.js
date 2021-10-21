@@ -192,7 +192,7 @@ format.big = format(toBig);
 format.fixed64 = format.big.$after(v => Number(v.div(CONST.MAX_UINT)));
 
 /**
- * @param arg {number|string} - number or label, See [EPOCH_NUMBER](#CONST.js/EPOCH_NUMBER)
+ * @param arg {number|string} - number or label, See [EPOCH_NUMBER](Misc.md#CONST.js/EPOCH_NUMBER)
  * @return {string}
  *
  * @example
@@ -398,7 +398,7 @@ format.publicKey = format.hex.$validate(v => v.length === 2 + 128, 'publicKey');
 format.hexBuffer = format.hex.$after(v => Buffer.from(v.substr(2), 'hex'));
 
 /**
- * If pass an string only hex is accepted
+ * It can only be in hex format If want to pass a string
  *
  * @param arg {string|Buffer|array}
  * @return {Buffer}

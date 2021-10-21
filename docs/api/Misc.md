@@ -7,6 +7,7 @@
     - [MAINNET_ID](#CONST.js/MAINNET_ID)
     - [TESTNET_ID](#CONST.js/TESTNET_ID)
     - [ZERO_ADDRESS_HEX](#CONST.js/ZERO_ADDRESS_HEX)
+    - [PENDING_TX_STATUS](#CONST.js/PENDING_TX_STATUS)
 - Message.js
     - Message
         - [(static)sign](#Message.js/Message/(static)sign)
@@ -92,6 +93,15 @@ zero address
 
 ----------------------------------------
 
+## PENDING_TX_STATUS <a id="CONST.js/PENDING_TX_STATUS"></a>
+
+pending transaction status
+
+- `FUTURE_NONCE` 'futureNonce': pending because future nonce
+- `NOT_ENOUGH_CASH` 'notEnoughCash': pending because insufficient balance
+
+----------------------------------------
+
 ## Message <a id="Message.js/Message"></a>
 
 
@@ -99,8 +109,6 @@ zero address
 ### Message.sign <a id="Message.js/Message/(static)sign"></a>
 
 Signs the hash with the privateKey.
-
-> TODO support [CIP 23](https://github.com/Conflux-Chain/CIPs/blob/master/CIPs/cip-23.md)
 
 * **Parameters**
 
