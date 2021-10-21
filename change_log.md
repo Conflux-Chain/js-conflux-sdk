@@ -1,5 +1,17 @@
 # change log
 
+## v2.0.0-beta.1
+
+* Add support for PoS [RPC methods]()
+* Split RPC methods to it's own namespace, currently include: `cfx`, `pos`, `trace`, `txpool`
+* Add support for batch RPC
+
+TODO:
+
+1. Add more comments
+2. Add more tests
+3. Add more document
+
 ## v1.7.1
 
 * Add method `checkBalanceAgainstTransaction`, and `estimateGasAndCollateralAdvance` to better estimate gas and check balance.
