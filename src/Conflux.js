@@ -122,12 +122,21 @@ class Conflux {
 
     this.useHexAddressInParameter = useHexAddressInParameter;
 
-    // pos related methods
-    this.pos = new PoS(this.provider);
-    // trace related methods
-    this.trace = new Trace(this.provider);
-    this.txpool = new TxPool(this.provider, this.networkId);
-    // cfx related methods
+    /**
+     * pos RPC methods
+     */
+    this.pos = new PoS(this);
+    /**
+     * trace RPC methods
+     */
+    this.trace = new Trace(this);
+    /**
+     * txpool RPC methods
+     */
+    this.txpool = new TxPool(this);
+    /**
+     * cfx RPC methods
+     */
     this.cfx = new CFX(this);
   }
 
@@ -206,6 +215,10 @@ class Conflux {
     return this.Contract({ address, abi: CRC20_ABI });
   }
 
+  /**
+   * Return a BatchRequester instance which can used to build batch request and decode response data
+   * @returns {BatchRequester} - A BatchRequester instance
+   */
   BatchRequest() {
     return new BatchRequester(this.provider);
   }

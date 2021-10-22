@@ -12,7 +12,7 @@ const browserifyOptions = {
   browserField: 'browserify-browser',
   entries: ['./src/index.js'],
   debug: true, // gen inline sourcemap to extract with exorcist
-  standalone: 'Conflux', // generate a umd file to load directly into browser
+  standalone: 'TreeGraph', // generate a umd file to load directly into browser
 };
 
 const OUTPUT_FILE_NAME = 'js-conflux-sdk';

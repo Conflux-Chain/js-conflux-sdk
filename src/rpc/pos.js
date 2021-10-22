@@ -74,18 +74,40 @@ format.rewardsByEpoch = format({
   })],
 }).$or(null);
 
+/**
+ * PoS RPC Class
+ */
 class PoS extends RPCMethodFactory {
-  constructor(provider) {
-    super(provider, PoS.methods());
-    this.provider = provider;
+  /**
+   * Create PoS instance
+   * @param {Conflux} conflux - The Conflux object
+   * @return {PoS} The PoS instance
+   */
+  constructor(conflux) {
+    super(conflux.provider, PoS.methods());
+    this.conflux = conflux;
   }
 
   static methods() {
     return [
+      /**
+       * @func
+       * @async
+       * @name getStatus
+       * @return {Promise<Object>} PoS status object
+       */
       {
         method: 'pos_getStatus',
         responseFormatter: format.posStatus,
       },
+      /**
+       * @func
+       * @async
+       * @name getAccount
+       * @param {Hash} account - Account address
+       * @param {BlockNumber} [blockNumber] - Optional block number
+       * @return {Promise<Object>}
+       */
       {
         method: 'pos_getAccount',
         requestFormatters: [
@@ -94,6 +116,13 @@ class PoS extends RPCMethodFactory {
         ],
         responseFormatter: format.posAccount,
       },
+      /**
+       * @func
+       * @async
+       * @name getBlockByHash
+       * @param {Hash} hash - The hash of PoS block
+       * @return {Promise<Object>}
+       */
       {
         method: 'pos_getBlockByHash',
         requestFormatters: [
@@ -101,6 +130,13 @@ class PoS extends RPCMethodFactory {
         ],
         responseFormatter: format.posBlock,
       },
+      /**
+       * @func
+       * @async
+       * @name getBlockByNumber
+       * @param {BlockNumber} blockNumber - The number of PoS block
+       * @return {Promise<Object>}
+       */
       {
         method: 'pos_getBlockByNumber',
         requestFormatters: [
@@ -108,6 +144,13 @@ class PoS extends RPCMethodFactory {
         ],
         responseFormatter: format.posBlock,
       },
+      /**
+       * @func
+       * @async
+       * @name getCommittee
+       * @param {BlockNumber} [blockNumber] - Optional block number
+       * @return {Promise<Object>}
+       */
       {
         method: 'pos_getCommittee',
         requestFormatters: [
@@ -115,6 +158,13 @@ class PoS extends RPCMethodFactory {
         ],
         responseFormatter: format.committee,
       },
+      /**
+       * @func
+       * @async
+       * @name getTransactionByNumber
+       * @param {TransactionNumber} txNumber - The number of transaction
+       * @return {Promise<Object>}
+       */
       {
         method: 'pos_getTransactionByNumber',
         requestFormatters: [
@@ -122,6 +172,13 @@ class PoS extends RPCMethodFactory {
         ],
         responseFormatter: format.posTransaction,
       },
+      /**
+       * @func
+       * @async
+       * @name getRewardsByEpoch
+       * @param {Epoch} epoch - A PoS epoch number
+       * @return {Promise<Object>}
+       */
       {
         method: 'pos_getRewardsByEpoch',
         requestFormatters: [

@@ -2,17 +2,10 @@ const RPCMethodFactory = require('./index');
 const format = require('../util/format');
 
 class TxPool extends RPCMethodFactory {
-  constructor(provider, networkId) {
-    super(provider);
-    this.networkId = networkId;
+  constructor(conflux) {
+    super(conflux.provider);
+    this.conflux = conflux;
     super.addMethods(this.methods());
-  }
-
-  _formatAddress(address) {
-    if (!this.networkId) {
-      console.warn('Conflux address: networkId is not set properly, please set it');
-    }
-    return format.address(address, this.networkId);
   }
 
   methods() {
@@ -20,7 +13,7 @@ class TxPool extends RPCMethodFactory {
       {
         method: 'txpool_nextNonce',
         requestFormatters: [
-          this._formatAddress.bind(this),
+          this.conflux._formatAddress.bind(this.conflux),
         ],
         responseFormatter: format.bigUInt,
       },
