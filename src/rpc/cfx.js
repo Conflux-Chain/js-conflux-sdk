@@ -460,9 +460,9 @@ class CFX extends RPCMethodFactory {
     const [
       { totalCirculating },
       { totalPosStakingTokens },
-      zeroBalance,
+      balanceOfZeroAddress,
     ] = await batchRequest.execute();
-    const bigTotalStaking = new Big(totalCirculating - zeroBalance);
+    const bigTotalStaking = new Big(totalCirculating - balanceOfZeroAddress);
     const bigTotalPosStakingTokens = new Big(totalPosStakingTokens);
     const bigRatio = RATIO.div(bigTotalPosStakingTokens.div(bigTotalStaking).sqrt());
     return bigRatio.toString();
