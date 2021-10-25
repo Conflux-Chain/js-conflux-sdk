@@ -1,9 +1,14 @@
-type JSBI = BigInt;
-type EPOCH_LABEL = 'latest_mined' | 'latest_state' | 'latest_checkpoint' | 'latest_confirmed' | 'earliest';
-type EpochNumber = number | EPOCH_LABEL;
-type Address = string;
-type Hash = string;
-type Quantity = string | number | JSBI;
+export * from './rpc';
+export * from './pos';
+import { PoSRPC } from './pos';
+import { BatchRequester } from './rpcBatchRequester';
+
+export type JSBI = BigInt;
+export type EPOCH_LABEL = 'latest_mined' | 'latest_state' | 'latest_checkpoint' | 'latest_confirmed' | 'earliest';
+export type EpochNumber = number | EPOCH_LABEL;
+export type Address = string;
+export type Hash = string;
+export type Quantity = string | number | JSBI;
 
 // ============================================================================
 interface ConfluxOption {
@@ -26,11 +31,15 @@ export class Conflux {
   defaultGasRatio: number;
   defaultStorageRatio: number;
 
+  pos: PoSRPC;
+
   static create(options: ConfluxOption): Conflux;
 
   Contract(options: ContractOption): object;
 
   InternalContract(name: string): object;
+
+  BatchRequest(): BatchRequester;
 
   close(): void;
 
@@ -67,12 +76,16 @@ export class Conflux {
 
   getBlockByEpochNumber(epochNumber: EpochNumber, detail?: boolean): Promise<object | null>;
 
+  getBlockByBlockNumber(blockNumber: number, detail?: boolean): Promise<object | null>;
+
+  getBlockByHashWithPivotAssumption(blockHash: Hash, pivotBlockHash: Hash, epochNumber: EpochNumber): Promise<object | null>;
+
   getBlocksByEpochNumber(epochNumber: EpochNumber): Promise<string[]>;
 
   getBlockRewardInfo(epochNumber: EpochNumber): Promise<object[]>;
 
   // -------------------------------- block -----------------------------------
-  getBestBlockHash(): Promise<string>;
+  getBestBlockHash(): Promise<Hash>;
 
   getBlockByHash(blockHash: Hash, detail?: boolean): Promise<object>;
 
@@ -102,23 +115,29 @@ export class Conflux {
 
   estimateGasAndCollateral(transaction: object, epochNumber?: EpochNumber): Promise<object>;
 
+  estimateGasAndCollateralAdvance(transaction: object, epochNumber?: EpochNumber): Promise<object>;
+
+  checkBalanceAgainstTransaction(from: Address, to: Address, gas: number, gasPrice: number, storageLimit: number, epochNumber: EpochNumber): Promise<object>;
+
   getLogs(options: object): Promise<object[]>;
 
-  getDepositList(address: string, epochNumber?: EpochNumber): Promise<object[]>;
+  getDepositList(address: Address, epochNumber?: EpochNumber): Promise<object[]>;
 
-  getVoteList(address: string, epochNumber?: EpochNumber): Promise<object[]>;
+  getVoteList(address: Address, epochNumber?: EpochNumber): Promise<object[]>;
 
   getSupplyInfo(epochNumber: EpochNumber): Promise<object>;
+
+  getPoSEconomics(): Promise<object>;
 
   // ----------------------------- debug -------------------------------
   getEpochReceipts(epochNumber: EpochNumber): Promise<object[][]>;
 
-  getEpochReceiptsByPivotBlockHash(pivotBlockHash: string): Promise<object[][]>
+  getEpochReceiptsByPivotBlockHash(pivotBlockHash: Hash): Promise<object[][]>
 
   // ----------------------------- trace -------------------------------
-  traceBlock(blockHash: string): Promise<object[]>;
+  traceBlock(blockHash: Hash): Promise<object[]>;
 
-  traceTransaction(txHash: string): Promise<object[]>;
+  traceTransaction(txHash: Hash): Promise<object[]>;
 
   traceFilter(options: object): Promise<object[]>;
 

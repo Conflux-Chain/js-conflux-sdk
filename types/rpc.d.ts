@@ -8,6 +8,7 @@ export interface BlockHeader {
     deferredStateRoot: string;
     difficulty: number;
     epochNumber: EpochNumber | null;
+    blockNumber: number | null;
     gasLimit: number;
     hash: string | null;
     height: number | null;
@@ -20,6 +21,7 @@ export interface BlockHeader {
     timestamp: number;
     transactionsRoot: string;
     gasUsed: string;
+    posReference: string;
 }
 
 export interface Block extends BlockHeader {
