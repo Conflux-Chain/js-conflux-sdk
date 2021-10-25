@@ -8,9 +8,8 @@ const Contract = require('../contract');
 
 class CFX extends RPCMethodFactory {
   constructor(conflux) {
-    super(conflux.provider);
+    super(conflux);
     this.conflux = conflux;
-    this.provider = conflux.provider;
     this._formatAddress = conflux._formatAddress;
     // add RPC methods
     super.addMethods(this.methods());
@@ -440,7 +439,7 @@ class CFX extends RPCMethodFactory {
       return this.sendRawTransaction(rawTx);
     }
 
-    return this.provider.call('cfx_sendTransaction',
+    return this.conflux.provider.call('cfx_sendTransaction',
       this.conflux._formatCallTx(options),
       password,
     );
@@ -475,7 +474,7 @@ class CFX extends RPCMethodFactory {
    * @returns {Promise<Array>} All receipts of one epoch
    */
   async getEpochReceiptsByPivotBlockHash(pivotBlockHash) {
-    const result = await this.provider.call('cfx_getEpochReceipts', `hash:${pivotBlockHash}`);
+    const result = await this.conflux.provider.call('cfx_getEpochReceipts', `hash:${pivotBlockHash}`);
     return format.epochReceipts(result);
   }
 
@@ -488,7 +487,7 @@ class CFX extends RPCMethodFactory {
    */
   async call(options, epochNumber) {
     try {
-      return await this.provider.call('cfx_call',
+      return await this.conflux.provider.call('cfx_call',
         this.conflux._formatCallTx(options),
         format.epochNumber.$or(undefined)(epochNumber),
       );
@@ -509,7 +508,7 @@ class CFX extends RPCMethodFactory {
    */
   async estimateGasAndCollateral(options, epochNumber) {
     try {
-      const result = await this.provider.call('cfx_estimateGasAndCollateral',
+      const result = await this.conflux.provider.call('cfx_estimateGasAndCollateral',
         this.conflux._formatCallTx(options),
         format.epochNumber.$or(undefined)(epochNumber),
       );

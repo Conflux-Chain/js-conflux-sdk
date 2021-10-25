@@ -3,7 +3,7 @@ const format = require('../util/format');
 
 class TxPool extends RPCMethodFactory {
   constructor(conflux) {
-    super(conflux.provider);
+    super(conflux);
     this.conflux = conflux;
     super.addMethods(this.methods());
   }

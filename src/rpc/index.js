@@ -1,8 +1,8 @@
 const format = require('../util/format');
 
 class RPCMethodFactory {
-  constructor(provider, methods = []) {
-    this.provider = provider;
+  constructor(conflux, methods = []) {
+    this.conflux = conflux;
     this.addMethods(methods);
   }
 
@@ -23,7 +23,7 @@ class RPCMethodFactory {
         beforeHook(...args);
       }
       const params = Array.from(args).map((arg, i) => (requestFormatters[i] ? requestFormatters[i](arg) : arg));
-      const result = await this.provider.call(method, ...params);
+      const result = await this.conflux.provider.call(method, ...params);
       return responseFormatter(result);
     }
 
