@@ -48,7 +48,7 @@ format.traceFilter = format({
 
 class Trace extends RPCMethodFactory {
   constructor(conflux) {
-    super(conflux.provider, Trace.methods());
+    super(conflux, Trace.methods());
     this.conflux = conflux;
   }
 

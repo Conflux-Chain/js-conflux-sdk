@@ -84,7 +84,7 @@ class PoS extends RPCMethodFactory {
    * @return {PoS} The PoS instance
    */
   constructor(conflux) {
-    super(conflux.provider, PoS.methods());
+    super(conflux, PoS.methods());
     this.conflux = conflux;
   }
 
