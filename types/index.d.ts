@@ -2,6 +2,27 @@ export * from './rpc';
 export * from './pos';
 import { PoSRPC } from './pos';
 import { BatchRequester } from './rpcBatchRequester';
+import {
+  Block,
+  Transaction as RpcTransaction,
+  Account as RpcAccount,
+  TransactionReceipt,
+  Status,
+  AccountPendingInfo,
+  AccountPendingTransactions,
+  RewardInfo,
+  SponsorInfo,
+  StorageRoot,
+  CheckBalanceResult,
+  EstimateResultAdvance,
+  EstimateResult,
+  CfxLog,
+  SupplyInfo,
+  PoSEconomics,
+  VoteInfo,
+  DepositInfo,
+  TransactionTrace,
+} from './rpc';
 
 export type JSBI = BigInt;
 export type EPOCH_LABEL = 'latest_mined' | 'latest_state' | 'latest_checkpoint' | 'latest_confirmed' | 'earliest';
@@ -35,9 +56,11 @@ export class Conflux {
 
   static create(options: ConfluxOption): Conflux;
 
-  Contract(options: ContractOption): object;
+  Contract(options: ContractOption): Contract;
 
-  InternalContract(name: string): object;
+  InternalContract(name: string): Contract;
+
+  CRC20(address: Address): Contract;
 
   BatchRequest(): BatchRequester;
 
@@ -48,7 +71,7 @@ export class Conflux {
   // --------------------------------------------------------------------------
   getClientVersion(): Promise<string>;
 
-  getStatus(): Promise<object>;
+  getStatus(): Promise<Status>;
 
   getGasPrice(): Promise<JSBI>;
 
@@ -57,7 +80,7 @@ export class Conflux {
   getAccumulateInterestRate(epochNumber?: EpochNumber): Promise<JSBI>;
 
   // ------------------------------- address ----------------------------------
-  getAccount(address: Address, epochNumber?: EpochNumber): Promise<object>
+  getAccount(address: Address, epochNumber?: EpochNumber): Promise<RpcAccount>
 
   getBalance(address: Address, epochNumber?: EpochNumber): Promise<JSBI>;
 
@@ -65,36 +88,36 @@ export class Conflux {
 
   getNextNonce(address: Address, epochNumber?: EpochNumber): Promise<JSBI>;
 
-  getAdmin(address: Address, epochNumber?: EpochNumber): Promise<string>;
+  getAdmin(address: Address, epochNumber?: EpochNumber): Promise<Address>;
 
-  getAccountPendingInfo(address: Address): Promise<object>;
+  getAccountPendingInfo(address: Address): Promise<AccountPendingInfo>;
 
-  getAccountPendingTransactions(address: Address): Promise<object>;
+  getAccountPendingTransactions(address: Address): Promise<AccountPendingTransactions>;
 
   // -------------------------------- epoch -----------------------------------
   getEpochNumber(epochNumber?: EpochNumber): Promise<number>;
 
-  getBlockByEpochNumber(epochNumber: EpochNumber, detail?: boolean): Promise<object | null>;
+  getBlockByEpochNumber(epochNumber: EpochNumber, detail?: boolean): Promise<Block | null>;
 
-  getBlockByBlockNumber(blockNumber: number, detail?: boolean): Promise<object | null>;
+  getBlockByBlockNumber(blockNumber: number, detail?: boolean): Promise<Block | null>;
 
-  getBlockByHashWithPivotAssumption(blockHash: Hash, pivotBlockHash: Hash, epochNumber: EpochNumber): Promise<object | null>;
+  getBlockByHashWithPivotAssumption(blockHash: Hash, pivotBlockHash: Hash, epochNumber: EpochNumber): Promise<Block | null>;
 
-  getBlocksByEpochNumber(epochNumber: EpochNumber): Promise<string[]>;
+  getBlocksByEpochNumber(epochNumber: EpochNumber): Promise<Hash[]>;
 
-  getBlockRewardInfo(epochNumber: EpochNumber): Promise<object[]>;
+  getBlockRewardInfo(epochNumber: EpochNumber): Promise<RewardInfo[]>;
 
   // -------------------------------- block -----------------------------------
   getBestBlockHash(): Promise<Hash>;
 
-  getBlockByHash(blockHash: Hash, detail?: boolean): Promise<object>;
+  getBlockByHash(blockHash: Hash, detail?: boolean): Promise<Block | null>;
 
   getConfirmationRiskByHash(blockHash: Hash): Promise<number | null>;
 
   // ----------------------------- transaction --------------------------------
-  getTransactionByHash(transactionHash: Hash): Promise<object | null>;
+  getTransactionByHash(transactionHash: Hash): Promise<RpcTransaction | null>;
 
-  getTransactionReceipt(transactionHash: Hash): Promise<object | null>;
+  getTransactionReceipt(transactionHash: Hash): Promise<TransactionReceipt | null>;
 
   sendRawTransaction(hex: string): Promise<Hash>
 
@@ -105,41 +128,41 @@ export class Conflux {
 
   getStorageAt(address: Address, position: number, epochNumber?: EpochNumber): Promise<string | null>
 
-  getStorageRoot(address: Address, epochNumber?: EpochNumber): Promise<object>;
+  getStorageRoot(address: Address, epochNumber?: EpochNumber): Promise<StorageRoot>;
 
-  getSponsorInfo(address: Address, epochNumber?: EpochNumber): Promise<object>;
+  getSponsorInfo(address: Address, epochNumber?: EpochNumber): Promise<SponsorInfo>;
 
   getCollateralForStorage(address: Address, epochNumber?: EpochNumber): Promise<JSBI>;
 
   call(transaction: object, epochNumber?: EpochNumber): Promise<string>;
 
-  estimateGasAndCollateral(transaction: object, epochNumber?: EpochNumber): Promise<object>;
+  estimateGasAndCollateral(transaction: object, epochNumber?: EpochNumber): Promise<EstimateResult>;
 
-  estimateGasAndCollateralAdvance(transaction: object, epochNumber?: EpochNumber): Promise<object>;
+  estimateGasAndCollateralAdvance(transaction: object, epochNumber?: EpochNumber): Promise<EstimateResultAdvance>;
 
-  checkBalanceAgainstTransaction(from: Address, to: Address, gas: number, gasPrice: number, storageLimit: number, epochNumber: EpochNumber): Promise<object>;
+  checkBalanceAgainstTransaction(from: Address, to: Address, gas: number, gasPrice: number, storageLimit: number, epochNumber: EpochNumber): Promise<CheckBalanceResult>;
 
-  getLogs(options: object): Promise<object[]>;
+  getLogs(options: object): Promise<CfxLog[]>;
 
-  getDepositList(address: Address, epochNumber?: EpochNumber): Promise<object[]>;
+  getDepositList(address: Address, epochNumber?: EpochNumber): Promise<DepositInfo[]>;
 
-  getVoteList(address: Address, epochNumber?: EpochNumber): Promise<object[]>;
+  getVoteList(address: Address, epochNumber?: EpochNumber): Promise<VoteInfo[]>;
 
-  getSupplyInfo(epochNumber: EpochNumber): Promise<object>;
+  getSupplyInfo(epochNumber: EpochNumber): Promise<SupplyInfo>;
 
-  getPoSEconomics(): Promise<object>;
+  getPoSEconomics(): Promise<PoSEconomics>;
 
   // ----------------------------- debug -------------------------------
-  getEpochReceipts(epochNumber: EpochNumber): Promise<object[][]>;
+  getEpochReceipts(epochNumber: EpochNumber): Promise<TransactionReceipt[][]>;
 
-  getEpochReceiptsByPivotBlockHash(pivotBlockHash: Hash): Promise<object[][]>
+  getEpochReceiptsByPivotBlockHash(pivotBlockHash: Hash): Promise<TransactionReceipt[][]>
 
   // ----------------------------- trace -------------------------------
   traceBlock(blockHash: Hash): Promise<object[]>;
 
-  traceTransaction(txHash: Hash): Promise<object[]>;
+  traceTransaction(txHash: Hash): Promise<TransactionTrace[]>;
 
-  traceFilter(options: object): Promise<object[]>;
+  traceFilter(options: object): Promise<TransactionTrace[]>;
 
   // ----------------------------- subscription -------------------------------
   subscribe(name: string, ...args: any[]): Promise<string>
