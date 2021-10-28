@@ -95,9 +95,9 @@ export interface PosCommittee {
 export class PoSRPC {
   getStatus(): Promise<PosStatus>;
 
-  getCommittee(): Promise<PosCommittee>;
+  getCommittee(blockNumber?: number): Promise<PosCommittee>;
 
-  getAccount(address: string): Promise<PosAccount | null>;
+  getAccount(address: string, blockNumber?: number): Promise<PosAccount | null>;
 
   getRewardsByEpoch(epoch: number): Promise<EpochRewards>;
 
