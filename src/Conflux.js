@@ -1184,6 +1184,7 @@ class Conflux {
    * - `BigInt` gasUsed: The gas used.
    * - `BigInt` gasLimit: The gas limit.
    * - `BigInt` storageCollateralized: The storage collateralized in Byte.
+   * - `BigInt` balance: The balance of the options.from.
    * - `Boolean` isBalanceEnough: indicate balance is enough for gas and storage fee
    * - `Boolean` isBalanceEnoughForValueAndFee: indicate balance is enough for gas and storage fee plus value
    * - `Boolean` willPayCollateral: false if the transaction is eligible for storage collateral sponsorship, true otherwise
@@ -1200,6 +1201,7 @@ class Conflux {
     const gasFee = gasPrice * estimateResult.gasLimit;
     const storageFee = estimateResult.storageCollateralized * (BigInt(1e18) / BigInt(1024));
     const balance = await this.getBalance(options.from);
+    estimateResult.balance = balance;
     if (!options.to) {
       estimateResult.willPayCollateral = true;
       estimateResult.willPayTxFee = true;
