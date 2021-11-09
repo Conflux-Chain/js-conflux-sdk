@@ -10,7 +10,7 @@ class CFX extends RPCMethodFactory {
   constructor(conflux) {
     super(conflux);
     this.conflux = conflux;
-    this._formatAddress = conflux._formatAddress;
+    this._formatAddress = conflux._formatAddress.bind(conflux);
     // add RPC methods
     super.addMethods(this.methods());
     // decorate methods;
@@ -20,7 +20,7 @@ class CFX extends RPCMethodFactory {
   }
 
   methods() {
-    const formatAddressWithNetworkId = this._formatAddress.bind(this.conflux);
+    const formatAddressWithNetworkId = this._formatAddress;
     return [
       {
         method: 'cfx_clientVersion',

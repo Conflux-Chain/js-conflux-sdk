@@ -33,16 +33,25 @@ format.posAccount = format({
   },
 });
 
+format.txPayload = format({
+  targetTerm: format.uInt,
+}).$or({
+  votingPower: format.uInt,
+}).$or({
+  height: format.uInt,
+});
+
 format.posTransaction = format({
   number: format.uInt,
   timestamp: format.uInt.$or(null),
   blockNumber: format.uInt.$or(null),
+  payload: format.txPayload.$or(null),
 }).$or(null);
 
 format.posBlock = format({
   epoch: format.uInt,
   height: format.uInt,
-  pivotDecision: format.uInt,
+  pivotDecision: format.uInt.$or(null),
   round: format.uInt,
   timestamp: format.uInt,
   nextTxNumber: format.uInt,
