@@ -543,6 +543,7 @@ class CFX extends RPCMethodFactory {
     const gasFee = gasPrice * estimateResult.gasLimit;
     const storageFee = estimateResult.storageCollateralized * (BigInt(1e18) / BigInt(1024));
     const balance = await this.getBalance(options.from);
+    estimateResult.balance = balance;
     if (!options.to) {
       estimateResult.willPayCollateral = true;
       estimateResult.willPayTxFee = true;
