@@ -27,7 +27,7 @@
   ],
   "browserslit": "cover 99.5%",
   "dependencies": {
-    "@conflux-dev/conflux-address-js": "^1.1.7",
+    "@conflux-dev/conflux-address-js": "1.1.7",
     "big.js": "^5.2.2",
     "commander": "^8.0.0",
     "keccak": "^2.0.0",
