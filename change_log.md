@@ -12,6 +12,10 @@ TODO:
 2. Add more tests
 3. Add more document
 
+## v1.7.2
+
+* Add `balance` key in the result of `estimateGasAndCollateralAdvance` as the balance of `options.from`.
+
 ## v1.7.1
 
 * Add method `checkBalanceAgainstTransaction`, and `estimateGasAndCollateralAdvance` to better estimate gas and check balance.

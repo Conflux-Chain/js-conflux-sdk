@@ -1214,6 +1214,7 @@ class Conflux {
    * - `BigInt` gasUsed: The gas used.
    * - `BigInt` gasLimit: The gas limit.
    * - `BigInt` storageCollateralized: The storage collateralized in Byte.
+   * - `BigInt` balance: The balance of the options.from.
    * - `Boolean` isBalanceEnough: indicate balance is enough for gas and storage fee
    * - `Boolean` isBalanceEnoughForValueAndFee: indicate balance is enough for gas and storage fee plus value
    * - `Boolean` willPayCollateral: false if the transaction is eligible for storage collateral sponsorship, true otherwise
