@@ -77,6 +77,12 @@ CDN links
 
 * [`jsdelivr`](https://cdn.jsdelivr.net/npm/js-conflux-sdk/dist/js-conflux-sdk.umd.min.js)
 
+## Address conversion performance
+
+To gain a address conversion(hex->base32 or reverse) performance boost, you can install [`@conflux-dev/conflux-address-rust`](https://github.com/conflux-fans/conflux-address-rust-binding) in your project. Which will be used to relace the purejs version and can gain a `10-100` performance boost.
+
+Note: @conflux-dev/conflux-address-rust required a rust environment to install.
+
 ## SDK version relation with Conflux-rust
 
 How to know SDK's version

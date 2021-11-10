@@ -861,20 +861,12 @@
     "exec-sh" "^0.3.2"
     "minimist" "^1.2.0"
 
-"@conflux-dev/conflux-address-js@^1.3.1":
-  "integrity" "sha512-+WqsHBsMDKL/pGY+tc68mlOKBipJvULMvRM52of5IuIXD5cLRMKJ21oHFuMj3vYGSia6c0SR/sDU31NT22BgOQ=="
-  "resolved" "https://registry.npmjs.org/@conflux-dev/conflux-address-js/-/conflux-address-js-1.3.1.tgz"
-  "version" "1.3.1"
+"@conflux-dev/conflux-address-js@^1.3.5":
+  "integrity" "sha512-0cSz6R3sL3pE1gHznx0RHszzA0G3q88ltzhlN0W7Hphso5XvNz/owCEmWq8CvkneqAY7l3ohDC4lMjW1KcJIKw=="
+  "resolved" "https://registry.npmjs.org/@conflux-dev/conflux-address-js/-/conflux-address-js-1.3.5.tgz"
+  "version" "1.3.5"
   dependencies:
-    "@conflux-dev/conflux-address-rust" "^0.1.6"
     "jsbi" "^3.1.4"
-
-"@conflux-dev/conflux-address-rust@^0.1.6":
-  "integrity" "sha512-11IAfCIk2+RhEOrGlxsMXiSHcjHNo5Y01dLW61mgBWsFY8ed9PoPDQ7ex7MksrC0a10n5lkFX5LwHjydCitHiQ=="
-  "resolved" "https://registry.npmjs.org/@conflux-dev/conflux-address-rust/-/conflux-address-rust-0.1.6.tgz"
-  "version" "0.1.6"
-  dependencies:
-    "cargo-cp-artifact" "^0.1"
 
 "@eslint/eslintrc@^0.2.1":
   "integrity" "sha512-XRUeBZ5zBWLYgSANMpThFddrZZkEbGHgUdt5UJjZfnlN9BGCiUBrf+nvbRupSjMvqzwnQN0qwCmOxITt1cfywA=="
@@ -1853,11 +1845,6 @@
   "version" "2.0.0"
   dependencies:
     "rsvp" "^4.8.4"
-
-"cargo-cp-artifact@^0.1":
-  "integrity" "sha512-mWwNdfrEyvMPxDHoAhbCYwQBNP3RyW9bV+yi5VaaHtVZqoDXbGU5JQF5qG7s65SJhqP7HIVAQD7wZM6Fk2COuw=="
-  "resolved" "https://registry.npmjs.org/cargo-cp-artifact/-/cargo-cp-artifact-0.1.5.tgz"
-  "version" "0.1.5"
 
 "caseless@~0.12.0":
   "integrity" "sha1-G2gcIf+EAzyCZUMJBolCDRhxUdw="
