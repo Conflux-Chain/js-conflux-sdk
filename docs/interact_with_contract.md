@@ -1,4 +1,5 @@
 # Interact with contract
+
 In Conflux world you may often need to interact with contracts, with JS SDK this can be done very easy.
 
 ## How to deploy a contract
@@ -80,9 +81,15 @@ async function main() {
   const balance = await contract.balanceOf(account.address); 
   console.log(balance); // 10000n
 
-  // 4. change contract state by send a transaction
+  // 5. change contract state by send a transaction
   const transactionHash = await contract.transfer(ADDRESS, 10).sendTransaction({ from: account }); 
   console.log(transactionHash); // 0xb31eb095b62bed1ef6fee6b7b4ee43d4127e4b42411e95f761b1fdab89780f1a
+
+  // 6. estimate contract method gas and storage
+  const estimated = await contract.transfer(ADDRESS, 10).estimateGasAndCollateral({from: account}, epochNumber);
+
+  // 7. get contract method data
+  const transferMethodData = contract.transfer(ADDRESS, 10).data;
 }
 
 main();
@@ -90,7 +97,7 @@ main();
 
 ## How to play with InternalContract
 
-Conflux network has provide three Internal Contract `AdminControl`, `SponsorWhitelistControl`, `Staking`, these internal contract are very helpful to contract developer, for detail documentation check [official doc](https://developer.conflux-chain.org/docs/conflux-rust/internal_contract/internal_contract). This SDK have fully support for Internal Contract, you can use them like this.
+Conflux network has provide Internal Contracts `AdminControl`, `SponsorWhitelistControl`, `Staking`, these internal contract are very helpful to contract developer, for detail documentation check [official doc](https://developer.conflux-chain.org/docs/conflux-rust/internal_contract/internal_contract). This SDK have fully support for Internal Contract, you can use them like this.
 
 ```javascript
 const { Conflux } = require('js-conflux-sdk');
@@ -108,10 +115,18 @@ async function main() {
 main();
 ```
 
+Available internal contracts:
+
+* `AdminControl`
+* `SponsorWhitelistControl`
+* `Staking`
+
 ## How to get log
 
 ### Get log through tranction receipt
+
 If an transaction emit some logs, you can find them in transaction receipt's `logs` field. Which is an log array, each log will have three fields:
+
 * `address`
 * `data`
 * `topics`

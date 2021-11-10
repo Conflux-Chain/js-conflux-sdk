@@ -1,11 +1,7 @@
 const {
   encode,
   decode,
-  verifyCfxAddress,
-  isValidCfxAddress,
-  hasNetworkPrefix,
-  simplifyCfxAddress,
-  shortenCfxAddress,
+  ...rest
 } = require('@conflux-dev/conflux-address-js');
 const { checksumAddress } = require('./sign');
 
@@ -45,12 +41,8 @@ function ethAddressToCfxAddress(address) {
 module.exports = {
   encodeCfxAddress: encode,
   decodeCfxAddress: decode,
-  verifyCfxAddress,
-  isValidCfxAddress,
-  hasNetworkPrefix,
   ethChecksumAddress,
-  simplifyCfxAddress,
   ethAddressToCfxAddress,
-  shortenCfxAddress,
   ADDRESS_TYPES,
+  ...rest,
 };
