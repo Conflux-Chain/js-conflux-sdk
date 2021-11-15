@@ -1,7 +1,7 @@
 {
   "name": "js-conflux-sdk",
   "description": "JavaScript Conflux Software Development Kit",
-  "version": "1.7.2",
+  "version": "1.7.3",
   "license": "LGPL-3.0",
   "author": "Haizhou@conflux-chain.org",
   "repository": "https://github.com/Conflux-Chain/js-conflux-sdk.git",
@@ -27,7 +27,7 @@
   ],
   "browserslit": "cover 99.5%",
   "dependencies": {
-    "@conflux-dev/conflux-address-js": "1.1.7",
+    "@conflux-dev/conflux-address-js": "1.1.8",
     "big.js": "^5.2.2",
     "commander": "^8.0.0",
     "keccak": "^2.0.0",

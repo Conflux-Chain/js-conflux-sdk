@@ -57,7 +57,7 @@ test('operator', () => {
 
   expect(JSBI.exponentiate(jsbi, JSBI.BigInt(2))).toEqual(JSBI.BigInt(10 ** 2));
   expect(NodeBI.exponentiate(bi, NodeBI.BigInt(2))).toEqual(BigInt(10 ** 2));
-  expect(() => JSBI.exponentiate(jsbi, 2)).toThrow('b.__unsignedDigit is not a function');
+  expect(() => JSBI.exponentiate(jsbi, 2)).toThrow('_.__unsignedDigit is not a function');
   expect(() => NodeBI.exponentiate(bi, 2)).toThrow('Cannot mix BigInt and other types, use explicit conversions');
 
   expect(JSBI.multiply(jsbi, JSBI.BigInt(2))).toEqual(JSBI.BigInt(10 * 2));
