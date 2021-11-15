@@ -1,16 +1,10 @@
 # change log
 
-## v2.0.0-beta.1
+## v2.0.0
 
 * Add support for PoS [RPC methods]()
 * Split RPC methods to it's own namespace, currently include: `cfx`, `pos`, `trace`, `txpool`
 * Add support for batch RPC
-
-TODO:
-
-1. Add more comments
-2. Add more tests
-3. Add more document
 
 ## v1.7.2
 
@@ -26,28 +20,34 @@ TODO:
 * Add one new RPC method `cfx_getBlockByBlockNubmer`
 
 ## v1.6.10
+
 * `format.bytes` now only support hex string, will not accept non hex utf-8 string
 * Add cli `cfxjs` which can random generate a `0x1 prefix ethereum` address
 * `Conflux` add a new method `getEpochReceiptsByPivotBlockHash`
 
 ## v1.6.9
+
 * Support `keepAlive` option in `Conflux` initialization.
 * Add one util method `tracesInTree` to return a tree structure traces.
 * Fix contract method override bug.
 * Add a address utility method `shortenCfxAddress`.
 
 ## v1.6.3
+
 * Support `retry` option in `Conflux` initialization.
 * Add pending transaction status enum `CONST.PENDING_TX_STATUS` currently have two value: `FUTURE_NONCE` `NOT_ENOUGH_CASH`
 
 ## v1.6.2
+
 * Optimize the address convert performance.
 
 ## v1.6.1
+
 * `Conflux` add method `getAccountPendingTransactions` to get one account's pending transaction.
 * Split API documents into several files, which is easy to read.
 
 ## v1.6.0
+
 This version is corresponding to conflux-rust v1.1.3, check it's [changelog](https://github.com/Conflux-Chain/conflux-rust/blob/master/changelogs/CHANGELOG-1.1.x.md#113) for detailed info.
 
 * `format.address` will respect `networkId`, `verbose` flag even if the first parameter is an CIP37 address.
@@ -59,6 +59,7 @@ This version is corresponding to conflux-rust v1.1.3, check it's [changelog](htt
 * When ABI encoding `bytes-N` type, if the data's length is not enough, will auto pad \(right\) to `N`
 
 ## v1.5.13
+
 * `getStatus` method rethurn three new fields `latestState`, `latestConfirmed`, `latestCheckpoint`
 * add two `trace` related rpc `traceTransaction`, `traceFilter`
 * add one debug rpc `getEpochReceipts`
@@ -67,6 +68,7 @@ This version is corresponding to conflux-rust v1.1.3, check it's [changelog](htt
 Notice: this is an update corresponding `conflux-rust v1.1.2`
 
 ## v1.5.10
+
 * `Conflux`'s option can pass `networkId` now, and add a new method `updateNetworkId` to sync networkId from RPC.
 * `format.address` will return new CIP37 addresses, if you pass a hex address, `networkId` should also be passed as second parameter
 * add new method `format.hexAddress` to format hex address
@@ -78,9 +80,11 @@ Notice: this is an update corresponding `conflux-rust v1.1.2`
 * `getStatus` response add new field `networkId`
 
 ## v1.1.7
+
 * Add RPC method `traceBlock`  to `Conflux` which can used to get block's execution trace
 
 ## v1.1.6
+
 * export `Contract`
 
   ```text
@@ -93,6 +97,7 @@ import { Contract } from 'js-conflux-sdk'
 ```
 
 ## v1.1.5
+
 * add `stateMutability` for method from abi
 
 ```text
