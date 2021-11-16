@@ -26,6 +26,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         # cache: 'npm'
+        cache: 'yarn'
     - run: yarn
     # - run: npm install
     - run: npm run eslint
