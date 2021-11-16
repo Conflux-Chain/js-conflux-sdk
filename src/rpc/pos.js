@@ -8,10 +8,14 @@ format.posBlockNumber = format.bigUIntHex
   .$or(LATEST_COMMITTED)
   .$or(LATEST_VOTED);
 
+format.decision = format({
+  height: format.uInt,
+});
+
 format.posStatus = format({
   latestCommitted: format.uInt,
   epoch: format.uInt,
-  pivotDecision: format.uInt,
+  pivotDecision: format.decision,
   latestVoted: format.uInt.$or(null),
 });
 
@@ -51,7 +55,7 @@ format.posTransaction = format({
 format.posBlock = format({
   epoch: format.uInt,
   height: format.uInt,
-  pivotDecision: format.uInt.$or(null),
+  pivotDecision: format.decision.$or(null),
   round: format.uInt,
   timestamp: format.uInt,
   nextTxNumber: format.uInt,
