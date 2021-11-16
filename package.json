@@ -71,7 +71,7 @@
     "jest/jest-cli/jest-config/jest-environment-jsdom/jsdom/acorn-globals/acorn": "6.4.1"
   },
   "scripts": {
-    "eslint": "eslint ./src ./test ./mock",
+    "eslint": "npx eslint ./src ./test ./mock",
     "build": "node scripts/build-frontend.js",
     "document": "node scripts/document.js",
     "prepublishOnly": "npm run build",
