@@ -6,6 +6,7 @@
 JavaScript Conflux Software Development Kit is a complete library for interacting with the Conflux Blockchain.
 
 Features:
+
 * Can be used in both browser and Node.js environment
 * Connect to Conflux node over HTTP/Websocket JSON-RPC
 * Meta-classes create JavaScript objects from any contract ABI
@@ -23,7 +24,11 @@ Features:
 * [API](docs/api/README.md)
 * [Error handling](docs/error_handling.md)
 * [Conflux Official document](https://developer.conflux-chain.org/docs/introduction/en/conflux_overview)
-* [Conflux RPC endpoints](https://github.com/conflux-fans/conflux-rpc-endpoints)
+* [Public availabel RPC service](https://github.com/conflux-fans/conflux-rpc-endpoints)
+* [Examples](https://github.com/conflux-fans/js-sdk-example)
+* [Fullnode RPC document](https://developer.confluxnetwork.org/conflux-doc/docs/json_rpc)
+
+Check [SDK's documentation](https://confluxnetwork.gitbook.io/js-conflux-sdk/) site for more info.
 
 
 ## Quick Start
@@ -103,6 +108,7 @@ console.log(clientVersion);
 
 js-conflux-sdk | conflux-rust(node)
 -------------- | -------------
+v2.0.0+        | v1.2.0+
 v1.7.0+        | v1.1.5+
 v1.6.0+        | v1.1.3+
 v1.5.11+       | v1.1.1+
