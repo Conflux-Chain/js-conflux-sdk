@@ -1,7 +1,9 @@
 const Big = require('big.js');
 const RPCMethodFactory = require('./index');
 const format = require('../util/format');
+const addressUtil = require('../util/address');
 const CONST = require('../CONST');
+const { assert } = require('../util');
 const { decodeCfxAddress, ADDRESS_TYPES } = require('../util/address');
 const PendingTransaction = require('../subscribe/PendingTransaction');
 const Contract = require('../contract');
@@ -487,6 +489,17 @@ class CFX extends RPCMethodFactory {
    */
   async call(options, epochNumber) {
     try {
+      if (options.to && addressUtil.hasNetworkPrefix(options.to) && this.conflux.networkId) {
+        const { netId, type } = addressUtil.decodeCfxAddress(options.to);
+        // check target address's networkId with current RPC's networkId
+        assert(netId === this.conflux.networkId, '`to` address\'s networkId is not match current RPC\'s networkId');
+        // check target contract is exist
+        if (type === ADDRESS_TYPES.CONTRACT) {
+          const code = await this.getCode(options.to);
+          assert(code !== '0x', 'Contract not exist!');
+        }
+      }
+
       return await this.conflux.provider.call('cfx_call',
         this.conflux._formatCallTx(options),
         format.epochNumber.$or(undefined)(epochNumber),

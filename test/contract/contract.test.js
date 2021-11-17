@@ -6,6 +6,7 @@ const ContractConstructor = require('../../src/contract/method/ContractConstruct
 
 const ADDRESS = '0x1cad0b19bb29d4674531d6f115237e16afce377c';
 const HEX64 = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
+const CONTRACT_MOCK_CODE = '0x0123456789abcdef';
 
 // ----------------------------------------------------------------------------
 const conflux = new Conflux({ networkId: 1 });
@@ -54,6 +55,7 @@ test('Internal Contract', async () => {
 
 test('contract.call', async () => {
   const call = jest.spyOn(conflux.provider, 'call');
+  call.mockReturnValueOnce(CONTRACT_MOCK_CODE);
   call.mockReturnValueOnce('0x00000000000000000000000000000000000000000000000000000000000000ff');
 
   const value = await contract.count();
@@ -72,6 +74,7 @@ test('contract.call', async () => {
   call.mockRejectedValueOnce(error);
   await expect(contract.count()).rejects.toThrow('ERROR');
 
+  call.mockReturnValueOnce(CONTRACT_MOCK_CODE);
   call.mockReturnValueOnce('0x0');
   await expect(contract.count()).rejects.toThrow('length not match');
 
@@ -81,6 +84,7 @@ test('contract.call', async () => {
 test('contract.call catch', async () => {
   const call = jest.spyOn(conflux.provider, 'call');
 
+  call.mockReturnValueOnce(CONTRACT_MOCK_CODE);
   call.mockReturnValueOnce('0x00000000000000000000000000000000000000000000000000000000000000ff');
   const value = await contract.count().catch(v => v);
   expect(`${value}`).toEqual('255');
