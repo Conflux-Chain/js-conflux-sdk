@@ -26,11 +26,13 @@ console.log(e.data);
 Buffer.from(e.data.slice(2), 'hex').toString()
 ```
 
+From SDK V2.0 the hex encoded `error.data`, will be auto decoded by SDK, you can catch and check it through `error.data`.
+
 ## Common Errors
 
 ### `Method not found`
 
-`Method not found` means you send a RPC request, and the request's method is not supported by the server. If you are invoke `cfx.sendTransaction()` and seen this error, normally because `cfx.wallet` doesn't have the account `tx.from`, you should add it to wallet through `cfx.addPrivateKey()`.
+`Method not found` means you send a RPC request, and the request's method is not supported by the fullnode RPC service. If you are invoke `cfx.sendTransaction()` and seen this error, normally because `cfx.wallet` doesn't have the account `tx.from`, you should add it to wallet through `cfx.addPrivateKey()`.
 
 ### `0x prefix is missing`
 
@@ -38,3 +40,53 @@ Buffer.from(e.data.slice(2), 'hex').toString()
 
 Notes: If you use `js-conflux-sdk` version `1.5.10 or above`, it will use the new CIP37 format address for RPC request parameters. It only work with conflux node version `1.1.1` or above, if you use newer version SDK with `1.1.0` or below you will seen this error `0x prefix is missing`. To resolve it you need use a newer version RPC work with it.
 
+### ParserError
+
+The `format` utility provide a lot format methods that can convert data from one type to another type. For example `format.hex`, `format.hexBuffer`, `format.uInt`, `format.bigInt`. These convert methods use the `Parser` underline, if any convert operation failed it will throw a `ParserError`. `format` has been heavy used in SDK, including RPC parameter and response format, contract method parameter format and etc.
+
+So if you see any `ParserError` which means some invalid value is used.
+
+```js
+> format.hex('hello')
+Uncaught ParserError: path="", toHex(hello), hello not match "hex"
+    at Proxy.parser (/Users/xxxx/Projects/conflux/sdks/js-conflux-sdk/src/util/parser.js:37:13) {
+  arguments: [Arguments] { '0': 'hello' },
+  path: []
+}
+> format.hex(undefined)
+Uncaught ParserError: path="", toHex(), undefined not match "hex"
+    at Proxy.parser (/Users/xxxx/Projects/conflux/sdks/js-conflux-sdk/src/util/parser.js:37:13) {
+  arguments: [Arguments] { '0': undefined },
+  path: []
+
+> format.uInt("hello")
+Uncaught ParserError: path="", NaN do not match "uint"
+    at Proxy.parser (/Users/xxxx/Projects/conflux/sdks/js-conflux-sdk/src/util/parser.js:37:13) {
+  arguments: [Arguments] { '0': 'hello' },
+  path: []
+}
+```
+
+### cfx_call Error
+
+If you are interacting with contract, and trying query contract state through `cfx_call`, then you may encounter error `Transaction reverted`
+
+```js
+(node:1416) UnhandledPromiseRejectionWarning: Error: Transaction reverted
+    at HttpProvider.call (/Users/xxxx/Projects/conflux-fans/pos-pool/contract/node_modules/js-conflux-sdk/src/provider/BaseProvider.js:71:13)
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)
+    at async CFX.call (/Users/xxxx/Projects/conflux-fans/pos-pool/contract/node_modules/js-conflux-sdk/src/rpc/cfx.js:490:14)
+    at async MethodTransaction.call (/Users/xxxx/Projects/conflux-fans/pos-pool/contract/node_modules/js-conflux-sdk/src/contract/method/MethodTransaction.js:53:17)
+    at async MethodTransaction.then (/Users/xxxx/Projects/conflux-fans/pos-pool/contract/node_modules/js-conflux-sdk/src/contract/method/MethodTransaction.js:74:22)
+(node:1416) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). To terminate the node process on unhandled promise rejection, use the CLI flag `--unhandled-rejections=strict` (see https://nodejs.org/api/cli.html#cli_unhandled_rejections_mode). (rejection id: 1)
+(node:1416) [DEP0018] DeprecationWarning: Unhandled promise rejections are deprecated. In the future, promise rejections that are not handled will terminate the Node.js process with a non-zero exit code.
+```
+
+Normally this mean contract method call failed, may have a lot reasons, may be `parameter passed wrong`, maybe `do not have permission`.
+
+For these situations, you need to find out why contract method execute failed. If you are lucky, contract have provide some error message you can seen it in error message
+
+```js
+(node:1416) UnhandledPromiseRejectionWarning: Error: Transaction reverted balance not enough
+...
+```
