@@ -120,6 +120,8 @@ Available internal contracts:
 * `AdminControl`
 * `SponsorWhitelistControl`
 * `Staking`
+* `ConfluxContext`
+* `PoSRegister`
 
 ## How to get log
 
@@ -132,7 +134,7 @@ If an transaction emit some logs, you can find them in transaction receipt's `lo
 * `topics`
 
 ```js
-let receipt = await cfx.getTransactionReceipt('0x24017dac1fb595a57196d8f6b05cd8b06292dcf14e7c594eac41daeeaa374ed0');
+let receipt = await conflux.cfx.getTransactionReceipt('0x24017dac1fb595a57196d8f6b05cd8b06292dcf14e7c594eac41daeeaa374ed0');
 console.log(receipt.logs);
 /*
 [
@@ -151,10 +153,11 @@ console.log(receipt.logs);
 ```
 
 ### Get log with `cfx_getLogs` method
+
 Also there is an RPC [`cfx_getLogs`](https://developer.conflux-chain.org/conflux-doc/docs/json_rpc#cfx_getlogs) to get logs. An filter object is need to invoke this method.
 
 ```js
-let logs = cfx.getLogs({
+let logs = await conflux.cfx.getLogs({
   fromEpoch: 100,
   toEpoch: 200,
   address: 'cfx:type.contract:acc7uawf5ubtnmezvhu9dhc6sghea0403y2dgpyfjp',
@@ -210,6 +213,7 @@ sub.on('data', console.log);
 ```
 
 ### Subscribe logs with websocket
+
 With websocket's advantage, logs can be subscribed:
 
 ```js
@@ -223,6 +227,7 @@ subers.on("data", console.log);
 ```
 
 ### How to decode log
+
 With contract's abi, you can decode the event log data:
 
 ```js
@@ -237,6 +242,7 @@ console.log(decoded);
 ## MISC
 
 ### BigNumber
+
 > Note: when interacting with contract and if your parameter is bigger than `Number.MAX_SAFE_INTEGER`, you should use string represention of the number or BigInt.
 
 ```javascript
@@ -249,6 +255,7 @@ await contract.deposit('0x13ffffffffffff0').sendTransaction({from: 'cfxtest:aar7
 ```
 
 ### MethodOverride
+
 If there are several methods that have same name in one contract. In most situation SDK can choose the right method through arguments. But sometimes you will encounter with error `Error: can not match override "xxxx" with args` for example `Error: can not match override "placeBid(uint256,address)|placeBid(uint256)" with args`, this is because SDK can not determine invoke which method through args.
 
 For this situation user can invoke method through `whole method signature`

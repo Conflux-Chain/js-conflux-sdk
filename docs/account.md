@@ -1,25 +1,26 @@
-Account
-===
+# Account
+
 Account can be used to sign `Transaction` or `Message`. Wallet like portal can help you manage your accounts (privateKeys) and provide signing functions to you.
 SDK also provide account manage and signing functions.
 
-### Send transaction
+## Send transaction
+
 ```js
 // If you want send transaction signed by your own private key, it's need add to wallet before you send transaction
 const privateKey = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';  // use your own private key
-const account = cfx.wallet.addPrivateKey(privateKey);
-await cfx.sendTransaction({
+const account = conflux.wallet.addPrivateKey(privateKey);
+await conflux.cfx.sendTransaction({
   from: account.address,
   to: 'cfxtest:xxxx',
   value: 100
 });
 ```
 
-### Random create
+## Random create
 
 ```js
 // create through wallet
-const account = cfx.wallet.addRandom();
+const account = conflux.wallet.addRandom();
 // create though PrivateKeyAccount
 const { PrivateKeyAccount } = require('js-conflux-sdk');
 const networkId = 1;
@@ -27,20 +28,21 @@ const randomSeed = '0xfffff'; // any random buffer
 const account = PrivateKeyAccount.random(randomSeed, networkId);
 ```
 
-### Import keystore file
+## Import keystore file
 
 ```js
 const keystoreJson = {}; // read from keystore file
-const account = cfx.wallet.addKeystore(keystoreJson, 'password');
+const account = conflux.wallet.addKeystore(keystoreJson, 'password');
 ```
 
-### Export to keystore file
+## Export to keystore file
 
 ```js
 const keystoreJson = account.encrypt('password');
 ```
 
-### Sign message
+## Sign message
+
 The `Message` class can be used to sign an arbitrary message. 
 
 ```js

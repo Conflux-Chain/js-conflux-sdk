@@ -38,7 +38,7 @@ Then we can use the Conflux instance get blockchain data.
 async function main() {
   // use conflux to get balance (in Drip) of a conflux address
   const address = 'cfxtest:aak2rra2njvd77ezwjvx04kkds9fzagfe6d5r8e957';
-  const balance = await conflux.getBalance(address);
+  const balance = await conflux.cfx.getBalance(address);
   console.log(balance);
 }
 
@@ -46,4 +46,3 @@ main();
 ```
 
 The conflux instance have a lot methods that correspond to Conflux RPC methods, such as `getBalance` map to RPC `cfx_getBalance`. Call these methods will return a promise or thenable, which means you can use it with ES6 `async/await` syntax.
-
