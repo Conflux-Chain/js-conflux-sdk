@@ -29,6 +29,8 @@ Conflux's RPC method also support batch request, both `HTTP` and `Websocket`.
 
 ## Quick start
 
+From `js-conflux-sdk` v2.0 batch RPC is supported.
+
 ```js
 const { Conflux } = require('js-conflux-sdk');
 const conflux = new Conflux({
@@ -56,6 +58,9 @@ async function main() {
 main();
 ```
 
+One thing to note is `execute` method will not clean previous added request, so if you add some request later and then call `execute` method again, 
+all request will send one time. `BatchRequest` provide one method `clean` to remove all request previous added.
+
 ## Batch Send Transaction
 
 To batch send transaction, now developer could use SDK's helper to build a `rawTransaction` and add it to bacher's request array.
@@ -65,18 +70,18 @@ async function main() {
   // create a batch requester through method BatchRequest()
   const batcher = conflux.BatchRequest();
   // add method request
-  const rawTx1 = await conflux.cfx.populateAndSignTransaction({
+  const rawTx1 = await conflux.cfx.populateTransaction({
     from: addressA,
     to: addressB,
     value: 100 // Drip
   });
-  batcher.add(conflux.cfx.sendRawTransaction.request(rawTx1));
-  const rawTx2 = await conflux.cfx.populateAndSignTransaction({
+  batcher.addTransaction(rawTx1);
+  const rawTx2 = await conflux.cfx.populateTransaction({
     from: addressA,
     to: addressC,
     value: 200 // Drip
   });
-  batcher.add(conflux.cfx.sendRawTransaction.request(rawTx2));
+  batcher.addTransaction(rawTx2);
   const results = await batcher.execute();
   /*
     [
@@ -88,6 +93,8 @@ async function main() {
 
 main();
 ```
+
+Note: when sending transation there is a max amount limit `2000` for one account.
 
 ## Batch interact with contract
 
@@ -109,10 +116,10 @@ async function main() {
   }));
 
   // update contract's state
-  const rawTx = await crc20Token.transfer(targetAdress, amount).populateAndSignTransaction({
+  const rawTx = await crc20Token.transfer(targetAdress, amount).populateTransaction({
     from: addressA
   });
-  batcher.add(conflux.cfx.sendRawTransaction.request(rawTx));
+  batcher.addTransaction(rawTx);
 
   const results = batcher.execute();
 }

@@ -922,10 +922,10 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@conflux-dev/conflux-address-js@^1.3.5":
-  version "1.3.6"
-  resolved "https://registry.npmmirror.com/@conflux-dev/conflux-address-js/download/@conflux-dev/conflux-address-js-1.3.6.tgz#6c9416e4f7c052da4d816411b71ae6b4fa18994d"
-  integrity sha512-ggOxOuU74IiLr4KjdeLNCNWyfb+4aYDX9Fw3b4vpvpkuvPq1aYD61X7I3m7+9l98b4fTQex3AqmxBJj0YUlX1g==
+"@conflux-dev/conflux-address-js@^1.3.7":
+  version "1.3.7"
+  resolved "https://registry.yarnpkg.com/@conflux-dev/conflux-address-js/-/conflux-address-js-1.3.7.tgz#aac7e081728424334ff8970a7e1d0af4c1cc20d2"
+  integrity sha512-LbVxWCGSIWcGg7jB0TX7qTmuKwRoIk83RDMm8DPPbCdxK/B6+UJIp2Kpq888j2kQj/pEbwey75FgZxLc6hDGeg==
   dependencies:
     jsbi "^3.1.4"
 

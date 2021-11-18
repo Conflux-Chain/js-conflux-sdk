@@ -12,6 +12,7 @@
   * [Interact with Contract](docs/interact_with_contract.md)
   * [Sign methods](docs/sign_methods.md)
   * [Error Handling](docs/error_handling.md)
+  * [Batch RPC](docs/batch_rpc.md)
 * [API](docs/api/README.md)
   * [Conflux](docs/api/Conflux.md)
   * [Provider](docs/api/Provider.md)

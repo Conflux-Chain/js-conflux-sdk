@@ -343,6 +343,23 @@ class CFX extends RPCMethodFactory {
   }
 
   /**
+   * First try to use txpool_nextNonce method, if failed use cfx_getNextNonce
+   *
+   * @param {string} The address to get nonce
+   * @returns {Promise<BigInt>}
+   */
+  async getNextUsableNonce(address) {
+    address = this._formatAddress(address);
+    let nonce;
+    try {
+      nonce = await this.conflux.txpool.nextNonce(address);
+    } catch (e) {
+      nonce = await this.getNextNonce(address);
+    }
+    return nonce;
+  }
+
+  /**
    * Auto populate transaction info (chainId, epochNumber, nonce, gas, gasPrice, storageLimit)
    *
    * @param {Object} options transaction info
@@ -358,7 +375,7 @@ class CFX extends RPCMethodFactory {
     options.from = this._formatAddress(options.from);
 
     if (options.nonce === undefined) {
-      options.nonce = await this.getNextNonce(options.from);
+      options.nonce = await this.getNextUsableNonce(options.from);
     }
 
     if (options.chainId === undefined) {

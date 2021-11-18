@@ -220,7 +220,7 @@ class Conflux {
    * @returns {BatchRequester} - A BatchRequester instance
    */
   BatchRequest() {
-    return new BatchRequester(this.provider);
+    return new BatchRequester(this);
   }
 
   /**
