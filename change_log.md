@@ -5,6 +5,7 @@
 * Add support for PoS [RPC methods]()
 * Split RPC methods to it's own namespace, currently include: `cfx`, `pos`, `trace`, `txpool`
 * Add support for batch RPC
+* Browser export class name change from Conflux to `TreeGraph`
 
 ## v1.7.2
 
