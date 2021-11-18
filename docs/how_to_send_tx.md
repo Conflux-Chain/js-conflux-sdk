@@ -2,7 +2,7 @@
 
 ## Send transaction simple
 
-It can be very easy to send a simple transaction\(transfer some CFX to another address\), all you need is `from`, `to`, `value` and `from`'s privateKey.
+It can be very easy to send a simple transaction (transfer some CFX to another address), all you need is `from`, `to`, `value` and `from`'s privateKey.
 
 ```javascript
 const { Conflux, Drip } = require('js-conflux-sdk');
@@ -17,7 +17,7 @@ async function main() {
   });
 
   const sender = conflux.wallet.addPrivateKey(PRIVATE_KEY); // add private to local wallet
-  const transactionHash = await conflux.sendTransaction({
+  const transactionHash = await conflux.cfx.sendTransaction({
     from: sender.address, // account address or instance which added into conflux.wallet
     to: ADDRESS, // receiver address
     value: Drip.fromCFX(0.1), // 0.1 CFX = 100000000000000000 Drip
@@ -29,7 +29,7 @@ async function main() {
   // you might need wait seconds here...
   await new Promise(resolve => setTimeout(resolve, 60 * 1000));
 
-  const transaction = await conflux.getTransactionByHash(txHash);
+  const transaction = await conflux.cfx.getTransactionByHash(txHash);
   console.log(transaction); // get transaction from remote
   /*
   {
@@ -54,7 +54,7 @@ async function main() {
   }
   */
 
-  const receipt = await conflux.getTransactionReceipt(txHash);
+  const receipt = await conflux.cfx.getTransactionReceipt(txHash);
   console.log(receipt); // get receipt from remote
   /*
   {
@@ -114,7 +114,7 @@ async function main() {
 
   const sender = conflux.wallet.addPrivateKey(PRIVATE_KEY);
 
-  const pendingTransaction = conflux.sendTransaction({
+  const pendingTransaction = conflux.cfx.sendTransaction({
     from: sender.address, // account address or instance which added into conflux.wallet
     to: ADDRESS, // receiver address
     value: Drip.fromCFX(0.1), // 0.1 CFX = 100000000000000000 Drip
@@ -175,10 +175,10 @@ async function main() {
   });
   const account = conflux.wallet.addPrivateKey(PRIVATE_KEY); // create account instance and add to wallet
 
-  const estimate = await conflux.estimateGasAndCollateral({ to, value });
-  const status = await conflux.getStatus();
+  const estimate = await conflux.cfx.estimateGasAndCollateral({ to, value });
+  const status = await conflux.cfx.getStatus();
 
-  const transactionHash = await conflux.sendTransaction({
+  const transactionHash = await conflux.cfx.sendTransaction({
     from: account.address, // sender address which added into conflux.wallet
     to: ADDRESS, // receiver address
     value: Drip.fromCFX(0.1), // 0.1 CFX = 100000000000000000 Drip
@@ -258,7 +258,7 @@ async function main() {
 
   transaction.sign(PRIVATE_KEY, 1); // sender privateKey
 
-  const transactionHash = await conflux.sendRawTransaction(transaction.serialize());
+  const transactionHash = await conflux.cfx.sendRawTransaction(transaction.serialize());
   console.log(transactionHash)
 }
 
@@ -293,7 +293,7 @@ async function main() {
   });
   const account = conflux.wallet.addPrivateKey(PRIVATE_KEY); // create account instance and add to wallet
 
-  const transactionHash = await conflux.sendTransaction({
+  const transactionHash = await conflux.cfx.sendTransaction({
     from: account.address,
     to: account.address, // if data is not contract bytecode, must have `to` address
     data: format.bytes('Hello World')
@@ -303,4 +303,3 @@ async function main() {
 
 main()
 ```
-

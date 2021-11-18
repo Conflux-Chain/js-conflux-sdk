@@ -33,7 +33,7 @@ Block response data structure
 * pub value: U256,
 * pub gas: U256,
 * pub input: Bytes,
-* pub call\_type: CallType,
+* pub call_type: CallType,
 
 ### Create
 
@@ -45,15 +45,15 @@ Block response data structure
 ### CallResult
 
 * pub outcome: Outcome,
-* pub gas\_left: U256,
-* pub return\_data: Bytes,
+* pub gas_left: U256,
+* pub return_data: Bytes,
 
 ### CreateResult
 
 * pub outcome: Outcome,
 * pub addr: RpcAddress,
-* pub gas\_left: U256,
-* pub return\_data: Bytes,
+* pub gas_left: U256,
+* pub return_ata: Bytes,
 
 ### InternalTransferAction
 
@@ -74,4 +74,3 @@ Block response data structure
 * Success, 0
 * Revert, 1
 * Fail, 2
-
