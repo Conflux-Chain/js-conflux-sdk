@@ -1,10 +1,10 @@
 # Table of contents
 
-* [README](README.md)
-* [Quickstart](docs/quick_start.md)
+* [Home](README.md)
+* [QuickStart](docs/quick_start.md)
 * [Introduction](docs/index.md)
-* [Docs](docs/README.md)
-  * [Overview](docs/overview.md)
+* [Overview](docs/overview.md)
+* [Guides](docs/README.md)
   * [Providers](docs/providers.md)
   * [CIP37 Address](docs/conflux_checksum_address.md)
   * [Account](docs/account.md)
@@ -22,4 +22,3 @@
   * [utils](docs/api/utils.md)
   * [Misc](docs/api/misc.md)
 * [Release notes](change_log.md)
-

@@ -30,15 +30,17 @@ Features:
 
 Check [SDK's documentation](https://confluxnetwork.gitbook.io/js-conflux-sdk/) site for more info.
 
-## Quick Start
-
-### Nodejs
+## Install
 
 Install through npm
 
 ```sh
-npm install js-conflux-sdk
+$ npm install js-conflux-sdk
 ```
+
+## How to import
+
+### Nodejs
 
 Use in Node.js script
 
@@ -61,6 +63,8 @@ const util = require('js-conflux-sdk/src/util');
 ### Frontend
 
 #### umd
+
+The front packed package is located in `js-conflux-sdk`'s dist folder.
 
 ```javascript
 import { Conflux } from 'js-conflux-sdk/dist/js-conflux-sdk.umd.min.js';
@@ -85,7 +89,7 @@ or
 </script>
 ```
 
-CDN links
+Or you can use public CDN links:
 
 * [`jsdelivr`](https://cdn.jsdelivr.net/npm/js-conflux-sdk/dist/js-conflux-sdk.umd.min.js)
 

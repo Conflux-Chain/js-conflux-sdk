@@ -7,7 +7,7 @@
 Install the SDK with npm.
 
 ```text
-npm install js-conflux-sdk
+$ npm install js-conflux-sdk
 ```
 
 ## Using Conflux
@@ -25,7 +25,7 @@ const { Conflux } = require('js-conflux-sdk');
 const conflux = new Conflux({
     url: 'https://test.confluxrpc.com', // testnet provider
     logger: console, // for debug: this will log all the RPC request and response to console
-    networkId: 1,
+    networkId: 1,  // note networkId is required to initiat
     // timeout: 300 * 1000, // request timeout in ms, default 300*1000 ms === 5 minute
 });
 ```
@@ -46,3 +46,24 @@ main();
 ```
 
 The conflux instance have a lot methods that correspond to Conflux RPC methods, such as `getBalance` map to RPC `cfx_getBalance`. Call these methods will return a promise or thenable, which means you can use it with ES6 `async/await` syntax.
+
+## Transfer `CFX`
+
+CFX is the native token of Conflux network, can be transfered from one address to another address through transaction.
+To send one account's CFX, you must know address's private key.
+
+```js
+// ... conflux init code
+// NOTE: before send transaction, `from`'s privateKey must add to wallet first.
+const account = conflux.wallet.addPrivateKey('0xxxxxxxxxx');
+const targetAddress = 'cfxtest:xxxxxxx';
+let pendingTx = conflux.cfx.sendTransaction({
+  from: account.address,
+  to: targetAddress,
+  value: 1 // the unit is drip
+});
+let txHash = await pendingTx;
+// 0xedcfece4cc7a128992c18147cdc2b9ee58861249c97889654932d3162f78b556
+let tx = await pendingTx.mined();
+// tx
+```
