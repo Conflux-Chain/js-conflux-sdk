@@ -1,6 +1,6 @@
 # How to send a Conflux Transaction
 
-## Send transaction simple
+## Quick send a TX
 
 It can be very easy to send a simple transaction (transfer some CFX to another address), all you need is `from`, `to`, `value` and `from`'s privateKey.
 
@@ -87,7 +87,7 @@ If you can get the transaction receipt and it's `outcomeStatus` is `0`, congratu
 
 After sending, a transaction could be in several different states, [here](https://developer.conflux-chain.org/docs/conflux-doc/docs/send_transaction#track-my-transaction) is a detail explanation of transaction life cycle.
 
-You can get a transaction's state by it `status` or it's receipt's `outcomeStatus` `tx.status`
+You can get a transaction's state by it `status` or it's receipt's `outcomeStatus`
 
 * `null` The tx has not mined or executed
 * `0` Tx execute success

@@ -7,15 +7,18 @@ It’s commonly found in decentralized apps (dapps) to help with sending transac
 ## Getting Started
 
 * Unfamiliar with Conflux? → [confluxnetwork](http://confluxnetwork.org)
+* Unfamiliar with Solidity? → [Solidity documentation](https://docs.soliditylang.org/en/v0.8.10/)
 * Ready to code? → [Quickstart](quick_start.md)
 * Interested in a quick tour? → [Overview](overview.md)
 * Like to give back? → [Contribute](https://github.com/conflux-chain/js-conflux-sdk)
+* Want to get testnet CFX? → [Conflux testnet faucet](http://faucet.confluxnetwork.org/)
 
 ## Table of Contents
 
 * [Quickstart](quick_start.md)
 * [Overview](overview.md)
 * [Changelog](../change_log.md)
+* [js-sdk examples](https://github.com/conflux-fans/js-sdk-example)
 
 ## Guides
 
@@ -29,4 +32,4 @@ It’s commonly found in decentralized apps (dapps) to help with sending transac
 2. [RPC](https://developer.conflux-chain.org/docs/conflux-doc/docs/json_rpc)
 3. [Subscribtion](https://developer.conflux-chain.org/docs/conflux-doc/docs/pubsub)
 4. [Conflux Portal](https://portal.conflux-chain.org/)
-
+5. [Conflux Portal documentation](http://conflux-portal-docs.confluxnetwork.org/)
