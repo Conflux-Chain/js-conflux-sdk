@@ -58,8 +58,8 @@ async function main() {
 main();
 ```
 
-One thing to note is `execute` method will not clean previous added request, so if you add some request later and then call `execute` method again, 
-all request will send one time. `BatchRequest` provide one method `clean` to remove all request previous added.
+One thing to note is `execute` method will not clear previous added request, so if you add some request later and then call `execute` method again, 
+all request will send one time. `BatchRequest` provide one method `clear` to remove all request previous added.
 
 ## Batch Send Transaction
 

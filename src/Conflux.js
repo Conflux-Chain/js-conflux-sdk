@@ -15,6 +15,7 @@ const CFX = require('./rpc/cfx');
 const Trace = require('./rpc/trace');
 const TxPool = require('./rpc/txpool');
 const BatchRequester = require('./rpc/BatchRequester');
+const AdvancedRPCUtilities = require('./rpc/Advanced');
 
 /**
  * A sdk of conflux.
@@ -138,6 +139,10 @@ class Conflux {
      * cfx RPC methods
      */
     this.cfx = new CFX(this);
+    /**
+     * Advanced RPC compose methods
+     */
+    this.advanced = new AdvancedRPCUtilities(this);
   }
 
   _decoratePendingTransaction(func) {
