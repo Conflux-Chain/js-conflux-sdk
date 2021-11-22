@@ -2,7 +2,7 @@
 
 `js-conflux-sdk` is a Javascript library for interacting with Conflux.
 
-It’s commonly found in decentralized apps \(dapps\) to help with sending transactions, interacting with smart contracts, reading block data, and a variety of other use cases.
+It’s commonly found in decentralized apps (dapps) to help with sending transactions, interacting with smart contracts, reading block data, and a variety of other use cases.
 
 ## Getting Started
 

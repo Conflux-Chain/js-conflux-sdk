@@ -3,7 +3,7 @@
 [![npm](https://img.shields.io/npm/v/js-conflux-sdk.svg)](https://www.npmjs.com/package/js-conflux-sdk)
 [![npm](https://img.shields.io/npm/dm/js-conflux-sdk.svg)](https://www.npmjs.com/package/js-conflux-sdk)
 
-JavaScript Conflux Software Development Kit is a complete library for interacting with the Conflux Blockchain.
+JavaScript Conflux Software Development Kit is a complete library for interacting with the Conflux Blockchain in both Node.js and browser environment.
 
 Features:
 
@@ -31,10 +31,19 @@ Features:
 
 Check [SDK's documentation](https://confluxnetwork.gitbook.io/js-conflux-sdk/) site for more info.
 
+## Install
 
-## Quick Start
+Install through npm
+
+```sh
+$ npm install js-conflux-sdk
+```
+
+## How to import
 
 ### Nodejs
+
+Use in Node.js script
 
 ```javascript
 const { Conflux } = require('js-conflux-sdk');
@@ -55,6 +64,8 @@ const util = require('js-conflux-sdk/src/util');
 ### Frontend
 
 #### umd
+
+The front packed package is located in `js-conflux-sdk`'s dist folder.
 
 ```javascript
 import { Conflux } from 'js-conflux-sdk/dist/js-conflux-sdk.umd.min.js';
@@ -79,7 +90,7 @@ or
 </script>
 ```
 
-CDN links
+Or you can use public CDN links:
 
 * [`jsdelivr`](https://cdn.jsdelivr.net/npm/js-conflux-sdk/dist/js-conflux-sdk.umd.min.js)
 
@@ -92,19 +103,23 @@ Note: @conflux-dev/conflux-address-rust required a rust environment to install.
 ## SDK version relation with Conflux-rust
 
 How to know SDK's version
+
 ```js
 const { Conflux } = require('js-conflux-sdk');
-const cfx = new Conflux({
-  url: 'xxxx',
+const conflux = new Conflux({
+  url: 'https://test.confluxrpc.com',
   networkId: 1,
 });
-console.log(cfx.version);
+console.log(conflux.version);
+// 2.0.0
 ```
 
 How to know fullnode's version
+
 ```js
-const clientVersion = await cfx.getClientVersion();
+const clientVersion = await conflux.cfx.getClientVersion();
 console.log(clientVersion);
+// conflux-rust-1.2.0-beta-9
 ```
 
 js-conflux-sdk | conflux-rust(node)

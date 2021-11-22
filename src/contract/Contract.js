@@ -1,4 +1,5 @@
 const lodash = require('lodash');
+const { parseABIFromString } = require('abi-util-lite');
 const ContractABI = require('./ContractABI');
 const ContractConstructor = require('./method/ContractConstructor');
 const ContractMethod = require('./method/ContractMethod');
@@ -133,6 +134,9 @@ class Contract {
     }
    */
   constructor({ abi, address, bytecode, decodeByteToHex }, conflux) {
+    if (abi.length > 0 && typeof abi[0] === 'string') {
+      abi = parseABIFromString(abi);
+    }
     _feedAddressNetId(abi, conflux);
     _feedByteOption(abi, decodeByteToHex);
     const abiTable = lodash.groupBy(abi, 'type');
