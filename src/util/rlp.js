@@ -1,3 +1,4 @@
+const { decode } = require('rlp');
 /*
   prefix    | delta | note          | code
   ----------|-------|---------------|--------------------------------------------------------------
@@ -83,4 +84,4 @@ function encodeArray(array) {
 
 // TODO decode
 
-module.exports = { encode };
+module.exports = { encode, decode };

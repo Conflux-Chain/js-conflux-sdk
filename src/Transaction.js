@@ -1,8 +1,44 @@
-const { keccak256, ecdsaSign, ecdsaRecover, privateKeyToAddress } = require('./util/sign');
+const { keccak256, ecdsaSign, ecdsaRecover, privateKeyToAddress, publicKeyToAddress } = require('./util/sign');
 const rlp = require('./util/rlp');
 const format = require('./util/format');
 
 class Transaction {
+  /**
+   * Decode rlp encoded raw transaction hex string
+   *
+   * @param {string} raw - rlp encoded transaction hex string
+   * @returns {object} A Transaction instance
+   */
+  static decodeRaw(raw) {
+    const [
+      [nonce, gasPrice, gas, to, value, storageLimit, epochHeight, chainId, data],
+      v,
+      r,
+      s,
+    ] = rlp.decode(raw);
+
+    const netId = format.uInt(chainId);
+    const tx = new Transaction({
+      nonce: format.bigIntFromBuffer(nonce),
+      gasPrice: format.bigIntFromBuffer(gasPrice),
+      gas: format.bigIntFromBuffer(gas),
+      to: format.address(to, netId),
+      value: format.bigIntFromBuffer(value),
+      storageLimit: format.bigIntFromBuffer(storageLimit),
+      epochHeight: format.bigIntFromBuffer(epochHeight),
+      chainId: format.uInt(chainId),
+      data: format.hex(data),
+      v: v.length === 0 ? 0 : format.uInt(v),
+      r: format.hex(r),
+      s: format.hex(s),
+    });
+
+    const publicKey = tx.recover();
+    const hexAddress = publicKeyToAddress(format.hexBuffer(publicKey));
+    tx.from = format.address(hexAddress, netId);
+    return tx;
+  }
+
   /**
    * Create a transaction.
    *

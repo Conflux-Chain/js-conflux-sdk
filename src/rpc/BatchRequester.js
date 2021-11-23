@@ -1,4 +1,5 @@
 const RPCError = require('../provider/RPCError');
+const Transaction = require('../Transaction');
 
 const SEND_TX_METHOD = 'cfx_sendTransaction';
 const SEND_RAW_TX_METHOD = 'cfx_sendRawTransaction';
@@ -112,6 +113,10 @@ class BatchRequester {
         // change method to cfx_sendRawTransaction
         req.method = SEND_RAW_TX_METHOD;
         req.params[0] = signedTx.serialize();
+      }
+      if (req.method === SEND_RAW_TX_METHOD) {
+        const _tx = Transaction.decodeRaw(req.params[0]);
+        this._markNonceUsed(_tx.from, _tx.nonce);
       }
       _requests[i] = req;
     }
