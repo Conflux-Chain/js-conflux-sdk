@@ -5,12 +5,12 @@ The purpose of this page is to give you a sense of everything js-conflux-sdk can
 ## Pre-requisites
 
 1. Node.js environment to install this SDK
-2. Conflux account with some CFX \(Use Conflux Portal to create account and get testnet CFX from faucet\)
+2. Conflux account with some CFX (Use Conflux Portal to create account and get testnet CFX from [faucet](http://faucet.confluxnetwork.org/))
 3. Conflux RPC endpoint, for example `https://test.confluxrpc.com` is a testnet RPC endpoint
 
 ## Initialize
 
-After installing `js-conflux-sdk` \(via npm\), you’ll need to specify the provider url. You can use the mainnet\([https://main.confluxrpc.com](https://main.confluxrpc.com)\), or testnet\([https://test.confluxrpc.com](https://test.confluxrpc.com)\), or [run your own Conflux node](https://developer.conflux-chain.org/docs/conflux-doc/docs/independent_chain).
+After installing `js-conflux-sdk` (via npm), you’ll need to specify the provider url. You can use the mainnet([https://main.confluxrpc.com](https://main.confluxrpc.com)), or testnet([https://test.confluxrpc.com](https://test.confluxrpc.com)), or [run your own Conflux node](https://developer.conflux-chain.org/docs/conflux-doc/docs/independent_chain).
 
 ### Testnet
 
@@ -40,12 +40,12 @@ Only after you add your account to wallet, then you can use them send transactio
 
 ## Send JSON-RPC request
 
-There are a lot methods on cfx object which are one-to-one with Conflux node RPC methods. All conflux methods will return a promise, so you can use it with `async/await` syntax.
+There are a lot methods on cfx object which are one-to-one with [Conflux node RPC methods](https://developer.confluxnetwork.org/conflux-doc/docs/json_rpc). All conflux methods will return a promise, so you can use it with `async/await` syntax.
 
 ```javascript
 async function main() {
   // get balance
-  const balance = await conflux.getBalance('cfxtest:aak2rra2njvd77ezwjvx04kkds9fzagfe6d5r8e957');
+  const balance = await conflux.cfx.getBalance('cfxtest:aak2rra2njvd77ezwjvx04kkds9fzagfe6d5r8e957');
   console.log(balance.toString()); // 10098788868004995614504
 }
 
@@ -55,6 +55,8 @@ main();
 Besides balance you can get a lot blockchain information through it, for example: nonce, block, transaction, receipt and so on. You can check [API](https://github.com/Conflux-Chain/js-conflux-sdk/tree/faec50e6c2dd16158b114d0d4de228d7b2ca7535/api.md) and [RPC](https://developer.conflux-chain.org/docs/conflux-doc/docs/json_rpc)
 
 ### Conflux hex address
+
+**Note: from Conflux-rust v1.1.1 we have import a new base32 encoded address, the hex address can not be used then.**
 
 In Conflux network there are three kind address:
 
@@ -92,7 +94,7 @@ You can find the epochNumber doc at official developer [RPC doc](https://develop
 
 ### JSBI
 
-Because in blockchain world there are a lot big numbers \(uint256\), only modern JS VM and Node.js support `BigInt`, so we use JSBI in browser environment to handle these big number. For how to use [JSBI](https://www.npmjs.com/package/jsbi) check it's documentation
+Because in blockchain world there are a lot big numbers (uint256), only modern JS VM and Node.js support `BigInt`, so we use JSBI in browser environment to handle these big number. For how to use [JSBI](https://www.npmjs.com/package/jsbi) check it's documentation
 
 Note: jsbi currently cann't pretty log, you need convert it to string before log.
 
@@ -104,7 +106,7 @@ console.log(max.toString()); // directly log a jsbi is very ugly
 // JSBI(2) [ -1, 2097151, sign: false ]
 ```
 
-Note: When a js integer is bigger than `Number.MAX_SAFE_INTEGER` \(2^53 - 1 or 9,007,199,254,740,991\) you should use [`BigInt`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt) to contain it.
+Note: When a js integer is bigger than `Number.MAX_SAFE_INTEGER` (2^53 - 1 or 9,007,199,254,740,991) you should use [`BigInt`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt) to contain it.
 
 ### Drip
 
@@ -137,16 +139,16 @@ const { Conflux } = require('js-conflux-sdk');
 
 async function main() {
   // initialize a Conflux object
-  const cfx = new Conflux({
+  const conflux = new Conflux({
       url: 'ws://localhost:12535',
       logger: console, // for debug
   });
   // get balance
-  const balance = await cfx.getBalance('cfxtest:aak2rra2njvd77ezwjvx04kkds9fzagfe6d5r8e957');
+  const balance = await conflux.cfx.getBalance('cfxtest:aak2rra2njvd77ezwjvx04kkds9fzagfe6d5r8e957');
   console.log(balance.toString()); // 10098788868004995614504
 
   // you need manual close the websocket connection
-  cfx.close();
+  conflux.close();
 }
 
 main();
@@ -162,18 +164,18 @@ Use JS SDK it will be very easy to use Pub/Sub.
 const { Conflux } = require('js-conflux-sdk');
 
 async function main() {
-  const cfx = new Conflux({
+  const conflux = new Conflux({
       url: 'ws://localhost:12535',
   });
   // sub
-  let newHeadEmitter = await cfx.subscribeNewHeads();
+  let newHeadEmitter = await conflux.subscribeNewHeads();
   newHeadEmitter.on('data', console.log);
-  let logEmitter = await cfx.subscribeLogs();
+  let logEmitter = await conflux.subscribeLogs();
   logEmitter.on('data', console.log);
-  let epochEmitter = await cfx.subscribeEpochs();
+  let epochEmitter = await conflux.subscribeEpochs();
   epochEmitter.on('data', console.log);
   // unsubscribe
-  cfx.unsubscribe(epochEmitter);
+  conflux.unsubscribe(epochEmitter);
 }
 
 main();
@@ -218,4 +220,3 @@ let signResult = sign.ecdsaSign(buf, privateKey);
 // recover public key from signature and buf, then convert it to address
 sign.publicKeyToAddress(sign.ecdsaRecover(buf, sign.ecdsaSign(signResult, privateKey)))
 ```
-

@@ -28,6 +28,7 @@
   "browserslit": "cover 99.5%",
   "dependencies": {
     "@conflux-dev/conflux-address-js": "^1.3.7",
+    "abi-util-lite": "^0.1.0",
     "big.js": "^5.2.2",
     "commander": "^8.0.0",
     "keccak": "^2.0.0",

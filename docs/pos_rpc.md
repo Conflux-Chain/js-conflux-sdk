@@ -6,19 +6,13 @@ Check the PoS [OPEN-RPC documentation](https://playground.open-rpc.org/?schemaUr
 
 ## How to use
 
-Install the next version of `js-conflux-sdk`
-
-```sh
-$ npm install js-conflux-sdk@next
-```
-
 All PoS RPC methods are available at `Conflux` object's `pos` attribute.
 
 ```js
 const { Conflux } = require('js-conflux-sdk');
 const conflux = new Conflux({
   url: 'http://localhost:12537',
-  networkId: 888
+  networkId: 1
 });
 
 async function main() {

@@ -1,7 +1,7 @@
-Common utilities
-===
+# Common utilities
 
-### Types Conversion
+## Types Conversion
+
 The `format` utility can be used for format types:
 
 * uInt
@@ -14,7 +14,6 @@ The `format` utility can be used for format types:
 * bytes
 * boolean
 * keccak256
-
 
 ```js
 const { format } = require('js-conflux-sdk');

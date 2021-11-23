@@ -6,7 +6,7 @@ You can use js-conflux-sdk with async/await syntax, which means you can use try-
 
 ```javascript
 try {
-    cfx.getBalance('cfx:aak2rra2njvd77ezwjvx04kkds9fzagfe6ku8scz91');
+    conflux.cfx.getBalance('cfx:aak2rra2njvd77ezwjvx04kkds9fzagfe6ku8scz91');
 } catch(e) {
     console.log(e.message);
     console.log(e.code);
