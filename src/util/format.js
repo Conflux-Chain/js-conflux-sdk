@@ -129,6 +129,8 @@ format.uInt = format(toNumber).$validate(v => Number.isSafeInteger(v) && v >= 0,
  */
 format.bigInt = format(toBigInt);
 
+format.bigIntFromBuffer = format.bigInt.$before(v => (v.length === 0 ? '0x0' : format.hex(v)));
+
 /**
  * @param arg {number|string|BigInt}
  * @return {BigInt}
