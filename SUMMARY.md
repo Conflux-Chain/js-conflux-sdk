@@ -4,6 +4,7 @@
 * [QuickStart](docs/quick_start.md)
 * [Introduction](docs/index.md)
 * [Overview](docs/overview.md)
+* [web3.js and js-conflux-sdk contrast](docs/jssdk-vs-web3.md)
 * [Guides](docs/README.md)
   * [Providers](docs/providers.md)
   * [CIP37 Address](docs/conflux_checksum_address.md)
@@ -23,3 +24,4 @@
   * [utils](docs/api/utils.md)
   * [Misc](docs/api/misc.md)
 * [Release notes](change_log.md)
+* [v2.0 Changes](docs/v2.0_changes.md)
