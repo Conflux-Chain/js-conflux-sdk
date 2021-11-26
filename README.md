@@ -79,7 +79,7 @@ import { Conflux } from 'js-conflux-sdk';
 
 or
 
-```markup
+```html
 <script type="text/javascript" src="node_modules/js-conflux-sdk/dist/js-conflux-sdk.umd.min.js"></script>
 <script type="text/javascript">
   const conflux = new window.TreeGraph.Conflux({

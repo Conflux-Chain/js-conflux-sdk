@@ -2,11 +2,13 @@
 
 ## v2.0.0
 
-* Add support for PoS [RPC methods]()
+* Add support for PoS RPC methods
 * Split RPC methods to it's own namespace, currently include: `cfx`, `pos`, `trace`, `txpool`
 * Add support for batch RPC
 * Browser export class name change from Conflux to `TreeGraph`
 * Add method `getNextUsableNonce` to `conflux.advanced`, which will first try to use `txpool_nextNonce` to get a usable nonce, if failed it will fall back to `cfx_getNextNonce`
+
+Check [v2.0 changes](./docs/v2.0_changes.md) for change details
 
 ## v1.7.2
 
