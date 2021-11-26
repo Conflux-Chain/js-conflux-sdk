@@ -1,4 +1,4 @@
-# Compare js-conflux-sdk with web3.js
+# Contrast with web3.js
 
 `js-conflux-sdk` is Conflux network's javascript SDK, if you are familiar with Ethereum's web3.js, this guide can help you quickly know how to use `js-conflux-sdk`.
 
