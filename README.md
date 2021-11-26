@@ -14,6 +14,7 @@ Features:
 * Type converter, sign and hash utilities
 * Extensive [documentation](https://confluxnetwork.gitbook.io/js-conflux-sdk/)
 * Builtin support for CRC20 and Internal Contracts
+* Batch RPC support
 
 ## Docs
 

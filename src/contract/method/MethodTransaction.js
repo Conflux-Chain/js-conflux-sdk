@@ -21,8 +21,8 @@ class MethodTransaction extends Transaction {
     return this.method.conflux.cfx.sendTransaction({ ...this, ...options }, password);
   }
 
-  populateAndSignTransaction(options) {
-    return this.method.conflux.cfx.populateAndSignTransaction({ ...this, ...options });
+  populateTransaction(options) {
+    return this.method.conflux.cfx.populateTransaction({ ...this, ...options });
   }
 
   /**
