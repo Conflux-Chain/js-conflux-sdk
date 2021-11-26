@@ -79,16 +79,18 @@ import { Conflux } from 'js-conflux-sdk';
 
 or
 
-```markup
+```html
 <script type="text/javascript" src="node_modules/js-conflux-sdk/dist/js-conflux-sdk.umd.min.js"></script>
 <script type="text/javascript">
-  const conflux = new window.Conflux.Conflux({
+  const conflux = new window.TreeGraph.Conflux({
     url: 'https://test.confluxrpc.com',
     logger: console,
     networkId: 1,
   });
 </script>
 ```
+
+From `v2.0` the exported class to browser window name change from Conflux to `TreeGraph`
 
 Or you can use public CDN links:
 

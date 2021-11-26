@@ -22,8 +22,17 @@ const { Conflux } = require('js-conflux-sdk');
 const conflux = new Conflux({
     url: 'https://test.confluxrpc.com',
     logger: console, // for debug
-    networkId: 1,
+    networkId: 1,  // networkId is also need to pass
 });
+```
+
+```js
+// Conflux class also have a static method `create`, can be used to create a new instance with no need to set networkId option
+async function main() {
+  const conflux = await Conflux.create({
+    url: "https://test.confluxrpc.com",
+  });
+}
 ```
 
 Besides `url` and `logger` you can pass [other options](https://github.com/Conflux-Chain/js-conflux-sdk/tree/faec50e6c2dd16158b114d0d4de228d7b2ca7535/api.md) to initialize a Conflux object
@@ -36,7 +45,7 @@ Private keys are required to approve any transaction made on your behalf, `confl
 conflux.wallet.addPrivateKey('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef');
 ```
 
-Only after you add your account to wallet, then you can use them send transactions.
+**Only after you add your account to wallet, then you can use them send transactions.**
 
 ## Send JSON-RPC request
 
@@ -73,6 +82,21 @@ Notice: one address can have two form `checksumed` and `not checksumed`, these t
 From `conflux-rust 1.1.1` Conflux has switch to base32Checksum address for example `cfxtest:aak2rra2njvd77ezwjvx04kkds9fzagfe6d5r8e957`. It was introduced by [CIP37](https://github.com/Conflux-Chain/CIPs/blob/master/CIPs/cip-37.md). `js-conflux-sdk` add support for it from version `1.5.10`, check [here](conflux_checksum_address.md) for details.
 
 ### Send Transaction
+
+```js
+// first add account's private key to wallet
+const account = conflux.wallet.addPrivateKey('0xxxxxxxxxx');
+const targetAddress = 'cfxtest:xxxxxxx';
+let hash = await conflux.cfx.sendTransaction({
+  from: account.address,
+  to: targetAddress,
+  value: 1 // the unit is drip
+});
+
+// check tx status through it's hash
+let transaction = await conflux.cfx.getTransactionByHash(hash); // normally need half minute to get transaction info
+console.log(transaction);
+```
 
 Check [here](how_to_send_tx.md) for details
 
@@ -182,6 +206,17 @@ main();
 ```
 
 ### Interact with contract
+
+Quick demo of interact with contract: query balance of one CRC20 token
+
+```js
+async function main() {
+  const FC_ADDRESS = "cfx:achc8nxj7r451c223m18w2dwjnmhkd6rxawrvkvsy2";
+  const contract = conflux.CRC20(FC_ADDRESS);
+  const balance = await contract.balanceOf('cfxtest:aak2rra2njvd77ezwjvx04kkds9fzagfe6d5r8e957');
+  console.log(`FC balance: ${balance}`);
+}
+```
 
 You can use this SDK get and update contract state, we have a complete [documentation](interact_with_contract.md) for you.
 
