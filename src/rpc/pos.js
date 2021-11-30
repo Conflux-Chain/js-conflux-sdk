@@ -88,13 +88,14 @@ format.rewardsByEpoch = format({
 }).$or(null);
 
 /**
- * PoS RPC Class
+ * Class contains pos RPC methods
+ * @class
  */
 class PoS extends RPCMethodFactory {
   /**
    * Create PoS instance
-   * @param {Conflux} conflux - The Conflux object
-   * @return {PoS} The PoS instance
+   * @param {object} conflux - The Conflux object
+   * @return {object} The PoS instance
    */
   constructor(conflux) {
     super(conflux, PoS.methods());
@@ -104,7 +105,6 @@ class PoS extends RPCMethodFactory {
   static methods() {
     return [
       /**
-       * @func
        * @async
        * @name getStatus
        * @return {Promise<Object>} PoS status object
@@ -114,7 +114,6 @@ class PoS extends RPCMethodFactory {
         responseFormatter: format.posStatus,
       },
       /**
-       * @func
        * @async
        * @name getAccount
        * @param {Hash} account - Account address
@@ -130,7 +129,6 @@ class PoS extends RPCMethodFactory {
         responseFormatter: format.posAccount,
       },
       /**
-       * @func
        * @async
        * @name getBlockByHash
        * @param {Hash} hash - The hash of PoS block
@@ -144,7 +142,6 @@ class PoS extends RPCMethodFactory {
         responseFormatter: format.posBlock,
       },
       /**
-       * @func
        * @async
        * @name getBlockByNumber
        * @param {BlockNumber} blockNumber - The number of PoS block
@@ -158,7 +155,6 @@ class PoS extends RPCMethodFactory {
         responseFormatter: format.posBlock,
       },
       /**
-       * @func
        * @async
        * @name getCommittee
        * @param {BlockNumber} [blockNumber] - Optional block number
@@ -172,7 +168,6 @@ class PoS extends RPCMethodFactory {
         responseFormatter: format.committee,
       },
       /**
-       * @func
        * @async
        * @name getTransactionByNumber
        * @param {TransactionNumber} txNumber - The number of transaction
@@ -186,7 +181,6 @@ class PoS extends RPCMethodFactory {
         responseFormatter: format.posTransaction,
       },
       /**
-       * @func
        * @async
        * @name getRewardsByEpoch
        * @param {Epoch} epoch - A PoS epoch number

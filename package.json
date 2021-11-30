@@ -57,6 +57,7 @@
     "fs-extra": "^8.1.0",
     "jest": "26.6.0",
     "jsbi": "^3.1.4",
+    "jsdoc-to-markdown": "^7.1.0",
     "minify-stream": "^2.0.1",
     "mold-source-map": "^0.4.0",
     "solc": "^0.6.10"
@@ -76,6 +77,7 @@
     "eslint": "npx eslint ./src ./test ./mock",
     "build": "node scripts/build-frontend.js",
     "document": "node scripts/document.js",
+    "jsdocToMd": "node scripts/jsdoc-to-md.js",
     "prepublishOnly": "npm run build",
     "test": "jest --coverage",
     "react": "npm run build & cd react & yarn build & yarn start"

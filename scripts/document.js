@@ -14,9 +14,7 @@ function generateMarkdown(filters, apiName) {
     },
   });
 
-  fs.writeFileSync(`${__dirname}/../docs/api/${apiName}.md`, `
-  ${markdown}
-  `);
+  fs.writeFileSync(`${__dirname}/../docs/api/${apiName}.md`, `${markdown}`);
 }
 
 const APIs = [

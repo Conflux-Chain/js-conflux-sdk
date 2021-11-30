@@ -8,9 +8,15 @@
         - [defaultGasPrice](#Conflux.js/Conflux/defaultGasPrice)
         - [defaultGasRatio](#Conflux.js/Conflux/defaultGasRatio)
         - [defaultStorageRatio](#Conflux.js/Conflux/defaultStorageRatio)
+        - [pos](#Conflux.js/Conflux/pos)
+        - [trace](#Conflux.js/Conflux/trace)
+        - [txpool](#Conflux.js/Conflux/txpool)
+        - [cfx](#Conflux.js/Conflux/cfx)
+        - [advanced](#Conflux.js/Conflux/advanced)
         - [Contract](#Conflux.js/Conflux/Contract)
         - [InternalContract](#Conflux.js/Conflux/InternalContract)
         - [CRC20](#Conflux.js/Conflux/CRC20)
+        - [BatchRequest](#Conflux.js/Conflux/BatchRequest)
         - [close](#Conflux.js/Conflux/close)
         - [updateNetworkId](#Conflux.js/Conflux/updateNetworkId)
         - [getSupplyInfo](#Conflux.js/Conflux/getSupplyInfo)
@@ -53,6 +59,7 @@
         - [traceFilter](#Conflux.js/Conflux/traceFilter)
         - [getEpochReceipts](#Conflux.js/Conflux/getEpochReceipts)
         - [getEpochReceiptsByPivotBlockHash](#Conflux.js/Conflux/getEpochReceiptsByPivotBlockHash)
+        - [getPoSEconomics](#Conflux.js/Conflux/getPoSEconomics)
         - [subscribe](#Conflux.js/Conflux/subscribe)
         - [subscribeEpochs](#Conflux.js/Conflux/subscribeEpochs)
         - [subscribeNewHeads](#Conflux.js/Conflux/subscribeNewHeads)
@@ -145,6 +152,26 @@ estimate value need to multiply by defaultStorageRatio (>1.0) in case of storage
 Default gas price for following methods:
 - `Conflux.sendTransaction`
 
+### Conflux.prototype.pos <a id="Conflux.js/Conflux/pos"></a>
+
+pos RPC methods
+
+### Conflux.prototype.trace <a id="Conflux.js/Conflux/trace"></a>
+
+trace RPC methods
+
+### Conflux.prototype.txpool <a id="Conflux.js/Conflux/txpool"></a>
+
+txpool RPC methods
+
+### Conflux.prototype.cfx <a id="Conflux.js/Conflux/cfx"></a>
+
+cfx RPC methods
+
+### Conflux.prototype.advanced <a id="Conflux.js/Conflux/advanced"></a>
+
+Advanced RPC compose methods
+
 ### Conflux.prototype.Contract <a id="Conflux.js/Conflux/Contract"></a>
 
 A shout cut for `new Contract(options, conflux);`
@@ -210,6 +237,14 @@ address | `string` | true     |         |
 * **Returns**
 
 `Contract` - A token contract instance
+
+### Conflux.prototype.BatchRequest <a id="Conflux.js/Conflux/BatchRequest"></a>
+
+Return a BatchRequester instance which can used to build batch request and decode response data
+
+* **Returns**
+
+`BatchRequester` - A BatchRequester instance
 
 ### Conflux.prototype.close <a id="Conflux.js/Conflux/close"></a>
 
@@ -1154,6 +1189,7 @@ epochNumber | `string,number` | false    | 'latest_state' | See [estimateGasAndC
 - `BigInt` gasUsed: The gas used.
 - `BigInt` gasLimit: The gas limit.
 - `BigInt` storageCollateralized: The storage collateralized in Byte.
+- `BigInt` balance: The balance of the options.from.
 - `Boolean` isBalanceEnough: indicate balance is enough for gas and storage fee
 - `Boolean` isBalanceEnoughForValueAndFee: indicate balance is enough for gas and storage fee plus value
 - `Boolean` willPayCollateral: false if the transaction is eligible for storage collateral sponsorship, true otherwise
@@ -1380,6 +1416,17 @@ pivotBlockHash | `string` | true     |         | epoch pivot block hash
 ```
 > await conflux.getEpochReceiptsByPivotBlockHash('0x12291776d632d966896b6c580f3201cd2e2a3fd672378fc7965aa7f7058282b2')
 ```
+
+### Conflux.prototype.getPoSEconomics <a id="Conflux.js/Conflux/getPoSEconomics"></a>
+
+Return PoS summary info
+
+* **Returns**
+
+`Promise.<object>` PoS summary info
+- distributablePosInterest `number`: Currently total distributable PoS interest (Drip)
+- lastDistributeBlock `number`: Last distribute block number
+- totalPosStakingTokens `number`: Total token amount (Drip) staked in PoS
 
 ### Conflux.prototype.subscribe <a id="Conflux.js/Conflux/subscribe"></a>
 
