@@ -1,6 +1,7 @@
 
   - Transaction.js
     - Transaction
+        - [(static)decodeRaw](#Transaction.js/Transaction/(static)decodeRaw)
         - [**constructor**](#Transaction.js/Transaction/**constructor**)
         - [hash(getter)](#Transaction.js/Transaction/hash(getter))
         - [sign](#Transaction.js/Transaction/sign)
@@ -13,6 +14,20 @@
 ## Transaction <a id="Transaction.js/Transaction"></a>
 
 
+
+### Transaction.decodeRaw <a id="Transaction.js/Transaction/(static)decodeRaw"></a>
+
+Decode rlp encoded raw transaction hex string
+
+* **Parameters**
+
+Name | Type     | Required | Default | Description
+-----|----------|----------|---------|-----------------------------------
+raw  | `string` | true     |         | rlp encoded transaction hex string
+
+* **Returns**
+
+`object` A Transaction instance
 
 ### Transaction.prototype.**constructor** <a id="Transaction.js/Transaction/**constructor**"></a>
 

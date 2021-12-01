@@ -24,14 +24,14 @@
 
 * **Parameters**
 
-Name              | Type      | Required | Default | Description
-------------------|-----------|----------|---------|----------------------------------------
-options           | `object`  | false    |         |
-options.url       | `string`  | true     |         | Full json rpc http url
-options.timeout   | `number`  | false    | 60*1000 | Request time out in ms
-options.retry     | `number`  | false    | 1       | Retry number
-options.keepAlive | `boolean` | false    | false   | Whether open the http keep-alive option
-options.logger    | `object`  | false    |         | Logger with `info` and `error`
+Name              | Type      | Required | Default   | Description
+------------------|-----------|----------|-----------|----------------------------------------
+options           | `object`  | false    |           |
+options.url       | `string`  | true     |           | Full json rpc http url
+options.timeout   | `number`  | false    | 5*60*1000 | Request time out in ms
+options.retry     | `number`  | false    | 1         | Retry number
+options.keepAlive | `boolean` | false    | false     | Whether open the http keep-alive option
+options.logger    | `object`  | false    |           | Logger with `info` and `error`
 
 * **Returns**
 

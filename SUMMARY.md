@@ -16,6 +16,8 @@
   * [Batch RPC](docs/batch_rpc.md)
 * [API](docs/api/README.md)
   * [Conflux](docs/api/Conflux.md)
+  * [PoS](docs/api/PoS.md)
+  * [TxPool](docs/api/txpool.md)
   * [Provider](docs/api/Provider.md)
   * [Drip](docs/api/Drip.md)
   * [Contract](docs/api/Contract.md)
