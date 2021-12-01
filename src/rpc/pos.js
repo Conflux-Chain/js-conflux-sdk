@@ -189,6 +189,7 @@ format.rewardsByEpoch = format({
 
 /**
  * Class contains pos RPC methods
+ * For the detail meaning of fields, please refer to the PoS RPC document:
  * @class
  */
 class PoS extends RPCMethodFactory {

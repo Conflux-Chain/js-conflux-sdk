@@ -2,7 +2,8 @@
 
 <dl>
 <dt><a href="#PoS">PoS</a></dt>
-<dd><p>Class contains pos RPC methods</p>
+<dd><p>Class contains pos RPC methods
+For the detail meaning of fields, please refer to the PoS RPC document:</p>
 </dd>
 </dl>
 
@@ -44,6 +45,7 @@
 
 ## PoS
 Class contains pos RPC methods
+For the detail meaning of fields, please refer to the PoS RPC document:
 
 **Kind**: global class  
 <a name="new_PoS_new"></a>
