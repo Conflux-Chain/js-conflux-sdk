@@ -1,19 +1,8 @@
 ## Classes
 
 <dl>
-<dt><a href="#TxPool">TxPool</a></dt>
-<dd><p>Class contains txpool RPC methods</p>
-</dd>
 <dt><a href="#PoS">PoS</a></dt>
 <dd><p>Class contains pos RPC methods</p>
-</dd>
-</dl>
-
-## Members
-
-<dl>
-<dt><a href="#nextNonce">nextNonce</a> ⇒ <code>Promise.&lt;number&gt;</code></dt>
-<dd><p>Get user next nonce in txpool</p>
 </dd>
 </dl>
 
@@ -51,23 +40,6 @@
 <dd></dd>
 </dl>
 
-<a name="TxPool"></a>
-
-## TxPool
-Class contains txpool RPC methods
-
-**Kind**: global class  
-<a name="new_TxPool_new"></a>
-
-### new TxPool(conflux)
-TxPool constructor.
-
-**Returns**: <code>object</code> - The TxPool instance  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| conflux | <code>object</code> | A Conflux instance |
-
 <a name="PoS"></a>
 
 ## PoS
@@ -84,18 +56,6 @@ Create PoS instance
 | Param | Type | Description |
 | --- | --- | --- |
 | conflux | <code>object</code> | The Conflux object |
-
-<a name="nextNonce"></a>
-
-## nextNonce ⇒ <code>Promise.&lt;number&gt;</code>
-Get user next nonce in txpool
-
-**Kind**: global variable  
-**Returns**: <code>Promise.&lt;number&gt;</code> - - The next usable nonce  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| address | <code>string</code> | The address of the account |
 
 <a name="PivotDecision"></a>
 
@@ -119,9 +79,10 @@ PoS status
 | Name | Type |
 | --- | --- |
 | latestCommitted | <code>number</code> | 
-|  | <code>epoch</code> | 
-|  | <code>latestVoted</code> | 
-|  | [<code>PivotDecision</code>](#PivotDecision) | 
+| epoch | <code>number</code> | 
+| latestVoted | <code>number</code> | 
+| latestTxNumber | <code>number</code> | 
+| pivotDecision | [<code>PivotDecision</code>](#PivotDecision) | 
 
 <a name="VotePowerState"></a>
 
@@ -213,6 +174,7 @@ PoS status
 
 | Name | Type |
 | --- | --- |
+| isFinalized | <code>bool</code> | 
 | startBlockNumber | <code>number</code> | 
 | topElectingNodes | [<code>Array.&lt;CommitteeNode&gt;</code>](#CommitteeNode) | 
 
@@ -268,6 +230,20 @@ PoS status
 ## .getStatus ⇒ [<code>Promise.&lt;PoSStatus&gt;</code>](#PoSStatus)
 **Kind**: instance member  
 **Returns**: [<code>Promise.&lt;PoSStatus&gt;</code>](#PoSStatus) - PoS status object  
+**Example**  
+```js
+await conflux.pos.getStatus();
+// {
+//   epoch: 138,
+//   latestCommitted: 8235,
+//   latestTxNumber: '0xa5e2',
+//   latestVoted: 8238,
+//   pivotDecision: {
+//     blockHash: '0x97625d04ece6fe322ae38010ac877447927b4d5963af7eaea7db9befb615e510',
+//     height: 394020
+//   }
+// }
+```
 <a name="getAccount"></a>
 
 ## .getAccount ⇒ [<code>Promise.&lt;PoSAccount&gt;</code>](#PoSAccount)
@@ -278,6 +254,23 @@ PoS status
 | account | <code>Hash</code> | Account address |
 | [blockNumber] | <code>number</code> \| <code>hex</code> | Optional block number |
 
+**Example**  
+```js
+await conflux.pos.getAccount('0x0f0ccf5ee5276b102316acb3943a2750085f85ac7b94bdbf9d8901f03a7d7cc3');
+{
+  address: '0x0f0ccf5ee5276b102316acb3943a2750085f85ac7b94bdbf9d8901f03a7d7cc3',
+  blockNumber: 8240,
+  status: {
+    availableVotes: 1525,
+    forceRetired: null,
+    forfeited: 0,
+    inQueue: [],
+    locked: 1525,
+    outQueue: [],
+    unlocked: 1
+  }
+}
+```
 <a name="getBlockByHash"></a>
 
 ## .getBlockByHash ⇒ [<code>Promise.&lt;PoSBlock&gt;</code>](#PoSBlock)
@@ -287,6 +280,10 @@ PoS status
 | --- | --- | --- |
 | hash | <code>Hash</code> | The hash of PoS block |
 
+**Example**  
+```js
+await conflux.pos.getBlockByHash('0x97625d04ece6fe322ae38010ac877447927b4d5963af7eaea7db9befb615e510');
+```
 <a name="getBlockByNumber"></a>
 
 ## .getBlockByNumber ⇒ [<code>Promise.&lt;PoSBlock&gt;</code>](#PoSBlock)
@@ -296,6 +293,30 @@ PoS status
 | --- | --- | --- |
 | blockNumber | <code>number</code> \| <code>hex</code> | The number of PoS block |
 
+**Example**  
+```js
+await conflux.pos.getBlockByNumber(8235);
+{
+  epoch: 138,
+  hash: '0x1daf5443b7556cc39c3d4fe5e208fa77c3f5c053ea4bd637f5e43dfa7f0a95cb',
+  height: 8235,
+  miner: '0x0f0ccf5ee5276b102316acb3943a2750085f85ac7b94bdbf9d8901f03a7d7cc3',
+  nextTxNumber: 42467,
+  parentHash: '0x308699b307c81906ab97cbf213532c196f2d718f4641266aa444209349d9e31c',
+  pivotDecision: {
+    blockHash: '0x97625d04ece6fe322ae38010ac877447927b4d5963af7eaea7db9befb615e510',
+    height: 394020
+  },
+  round: 15,
+  signatures: [
+    {
+      account: '0x00f7c03318f8c4a7c6ae432e124b4a0474e973139a87f9ea6ae3efba66af7d8a',
+      votes: 3
+    }
+  ],
+  timestamp: 1638340165169041
+}
+```
 <a name="getCommittee"></a>
 
 ## .getCommittee ⇒ [<code>Promise.&lt;PoSCommittee&gt;</code>](#PoSCommittee)
@@ -305,6 +326,40 @@ PoS status
 | --- | --- | --- |
 | [blockNumber] | <code>number</code> \| <code>hex</code> | Optional block number |
 
+**Example**  
+```js
+await conflux.pos.getCommittee();
+{
+  currentCommittee: {
+    epochNumber: 138,
+    nodes: [
+     {
+      address: "0xf92d8504fad118ddb5cf475180f5bcffaa967a9f9fa9c3c899ff9ad0de99694a",
+      votingPower: 3
+     }
+    ],
+    quorumVotingPower: 199,
+    totalVotingPower: 297
+  },
+  elections: [
+    {
+      isFinalized: false,
+      startBlockNumber: 8280,
+      topElectingNodes: [
+        {
+          address: "0x0f0ccf5ee5276b102316acb3943a2750085f85ac7b94bdbf9d8901f03a7d7cc3",
+          votingPower: 3
+        }
+      ]
+    },
+    {
+      isFinalized: false,
+      startBlockNumber: 8340,
+      topElectingNodes: []
+    }
+  ]
+}
+```
 <a name="getTransactionByNumber"></a>
 
 ## .getTransactionByNumber ⇒ [<code>Promise.&lt;PoSTransaction&gt;</code>](#PoSTransaction)
@@ -314,6 +369,21 @@ PoS status
 | --- | --- | --- |
 | txNumber | <code>number</code> \| <code>hex</code> | The number of transaction |
 
+**Example**  
+```js
+await conflux.pos.getTransactionByNumber(8235);
+{
+  blockHash: '0xe684e88981b7ffe14741a2274e7b65b89ae2e133ebdd783d71ddeeacb4e957d6',
+  blockNumber: 8243,
+  from: '0x0000000000000000000000000000000000000000000000000000000000000000',
+  hash: '0xaa92222b6a20342285ed56de2b77a05a6c1a9a3e4750e4952af8f908f7316b5d',
+  number: 42480,
+  payload: null,
+  status: 'Executed',
+  timestamp: 1638340649662468,
+  type: 'BlockMetadata'
+}
+```
 <a name="getRewardsByEpoch"></a>
 
 ## .getRewardsByEpoch ⇒ [<code>Promise.&lt;PoSEpochRewards&gt;</code>](#PoSEpochRewards)
@@ -323,3 +393,18 @@ PoS status
 | --- | --- | --- |
 | epoch | <code>number</code> \| <code>hex</code> | A PoS epoch number |
 
+**Example**  
+```js
+await conflux.pos.getRewardsByEpoch(138);
+{
+  accountRewards: [
+    {
+      posAddress: '0x83ca56dd7b9d1222fff48565ed0261f42a17099061d905f9e743f89574dbd8e0',
+      powAddress: 'NET8888:TYPE.USER:AAKFSH1RUYS4P040J5M7DJRJBGMX9ZV7HAJTFN2DKP',
+      reward: 605265415757735647n
+    },
+    ... 122 more items
+  ],
+  powEpochHash: '0xd634c0a71c6197a6fad9f80439b31b4c7191b3ee42335b1548dad1160f7f628c'
+}
+```

@@ -2,14 +2,25 @@
 const jsdoc2md = require('jsdoc-to-markdown');
 const fs = require('fs');
 
-const files = [
-  './src/rpc/txpool.js',
-  './src/rpc/pos.js',
-];
+const DOC_FOLDER = './docs/api/';
 
-async function main() {
-  const result = await jsdoc2md.render({ files });
-  fs.writeFileSync('docs/api/PoS.md', result);
+const files = [{
+  source: './src/rpc/txpool.js',
+  name: 'txpool.md',
+}, {
+  source: './src/rpc/pos.js',
+  name: 'PoS.md',
+}];
+
+async function renderFile(fileMeta) {
+  const result = await jsdoc2md.render({ files: fileMeta.source });
+  fs.writeFileSync(`${DOC_FOLDER}${fileMeta.name}`, result);
 }
 
-main().catch(console.log);
+async function main() {
+  for (const file of files) {
+    await renderFile(file);
+  }
+}
+
+main().catch(console.error);

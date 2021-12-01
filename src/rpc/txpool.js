@@ -8,8 +8,7 @@ const format = require('../util/format');
 class TxPool extends RPCMethodFactory {
   /**
    * TxPool constructor.
-   *
-   * @param {object} conflux - A Conflux instance
+   * @param {object} conflux A Conflux instance
    * @return {object} The TxPool instance
    */
   constructor(conflux) {
@@ -21,11 +20,15 @@ class TxPool extends RPCMethodFactory {
   methods() {
     return [
       /**
-       * Get user next nonce in txpool
+       * Get user next nonce in transaction pool
+       * @instance
        * @async
        * @name nextNonce
-       * @param {string} address - The address of the account
-       * @return {Promise<number>} - The next usable nonce
+       * @param {string} address The address of the account
+       * @return {Promise<number>} The next usable nonce
+       * @example <caption>Example usage of txpool.nextNonce</caption>
+       * await conflux.txpool.nextNonce('cfxtest:aak2rra2njvd77ezwjvx04kkds9fzagfe6d5r8e957');
+       * // returns 100
        */
       {
         method: 'txpool_nextNonce',
