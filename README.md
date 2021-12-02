@@ -121,12 +121,12 @@ How to know fullnode's version
 ```js
 const clientVersion = await conflux.cfx.getClientVersion();
 console.log(clientVersion);
-// conflux-rust-1.2.0-beta-9
+// conflux-rust-2.0.0
 ```
 
 js-conflux-sdk | conflux-rust(node)
 -------------- | -------------
-v2.0.0+        | v1.2.0+
+v2.0.0+        | v2.0.0+
 v1.7.0+        | v1.1.5+
 v1.6.0+        | v1.1.3+
 v1.5.11+       | v1.1.1+
