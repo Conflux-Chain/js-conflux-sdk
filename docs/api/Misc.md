@@ -1,5 +1,4 @@
-
-  - CONST.js
+- CONST.js
     - [EPOCH_NUMBER](#CONST.js/EPOCH_NUMBER)
     - [MIN_GAS_PRICE](#CONST.js/MIN_GAS_PRICE)
     - [TRANSACTION_GAS](#CONST.js/TRANSACTION_GAS)
@@ -229,4 +228,3 @@ networkId  | `Integer` | true     |         | Network id of account
 * **Returns**
 
 `Message` 
-  

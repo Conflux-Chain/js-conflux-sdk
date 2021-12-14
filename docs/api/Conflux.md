@@ -1,5 +1,4 @@
-
-  - Conflux.js
+- Conflux.js
     - Conflux
         - [(static)create](#Conflux.js/Conflux/(static)create)
         - [**constructor**](#Conflux.js/Conflux/**constructor**)
@@ -1616,4 +1615,3 @@ id   | `string,Subscription` | true     |         | Subscription id
 > await conflux.unsubscribe(subscription);
    true
 ```
-  

@@ -1,5 +1,4 @@
-
-  - util
+- util
     - format.js
         - format
             - [(static)any](#util/format.js/format/(static)any)
@@ -856,4 +855,3 @@ password   | `string,Buffer` | true     |         |
   }, 'password')
  <Buffer 01 23 45 67 89 ab cd ef 01 23 45 67 89 ab cd ef 01 23 45 67 89 ab cd ef 01 23 45 67 89 ab cd ef>
 ```
-  

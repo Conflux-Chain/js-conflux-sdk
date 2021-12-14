@@ -1,5 +1,4 @@
-
-  - subscribe
+- subscribe
     - PendingTransaction.js
         - PendingTransaction
             - [get](#subscribe/PendingTransaction.js/PendingTransaction/get)
@@ -14,4 +13,3 @@
 ### Subscription <a id="subscribe/Subscription.js/Subscription"></a>
 
 Subscription event emitter
-  

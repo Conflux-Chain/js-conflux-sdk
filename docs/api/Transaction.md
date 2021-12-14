@@ -1,5 +1,4 @@
-
-  - Transaction.js
+- Transaction.js
     - Transaction
         - [(static)decodeRaw](#Transaction.js/Transaction/(static)decodeRaw)
         - [**constructor**](#Transaction.js/Transaction/**constructor**)
@@ -110,4 +109,3 @@ Get the raw transaction hex string.
 * **Returns**
 
 `string` Hex string
-  

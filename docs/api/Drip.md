@@ -1,5 +1,4 @@
-
-  - Drip.js
+- Drip.js
     - Drip
         - [(static)fromCFX](#Drip.js/Drip/(static)fromCFX)
         - [(static)fromGDrip](#Drip.js/Drip/(static)fromGDrip)
@@ -109,4 +108,3 @@ Get `GDrip` number string
 > Drip(1e9).toGDrip()
    "1"
 ```
-  

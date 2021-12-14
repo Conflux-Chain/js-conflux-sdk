@@ -1,5 +1,4 @@
-
-  - provider
+- provider
     - BaseProvider.js
         - BaseProvider
             - [**constructor**](#provider/BaseProvider.js/BaseProvider/**constructor**)
@@ -172,4 +171,3 @@ options.url | `string` | true     |         |
     logger: {...}
   }
 ```
-  
