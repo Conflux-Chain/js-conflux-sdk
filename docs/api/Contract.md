@@ -1,5 +1,4 @@
-
-  - contract
+- contract
     - Contract.js
         - Contract
             - [**constructor**](#contract/Contract.js/Contract/**constructor**)
@@ -138,4 +137,3 @@ Update contract state with sendTransaction
       }
     }
 ```
-  
