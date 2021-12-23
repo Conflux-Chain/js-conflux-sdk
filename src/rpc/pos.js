@@ -113,7 +113,7 @@ format.posTransaction = format({
  * @property {PivotDecision} pivotDecision
  * @property {number} round
  * @property {number} timestamp
- * @property {number} nextTxNumber
+ * @property {number} lastTxNumber
  * @property {Signature} signatures
  */
 format.posBlock = format({
@@ -122,7 +122,7 @@ format.posBlock = format({
   pivotDecision: format.decision.$or(null),
   round: format.uInt,
   timestamp: format.uInt,
-  nextTxNumber: format.uInt,
+  lastTxNumber: format.uInt,
   signatures: [format({ votes: format.uInt })],
 }).$or(null);
 
@@ -287,7 +287,7 @@ class PoS extends RPCMethodFactory {
        *   hash: '0x1daf5443b7556cc39c3d4fe5e208fa77c3f5c053ea4bd637f5e43dfa7f0a95cb',
        *   height: 8235,
        *   miner: '0x0f0ccf5ee5276b102316acb3943a2750085f85ac7b94bdbf9d8901f03a7d7cc3',
-       *   nextTxNumber: 42467,
+       *   lastTxNumber: 42467,
        *   parentHash: '0x308699b307c81906ab97cbf213532c196f2d718f4641266aa444209349d9e31c',
        *   pivotDecision: {
        *     blockHash: '0x97625d04ece6fe322ae38010ac877447927b4d5963af7eaea7db9befb615e510',
