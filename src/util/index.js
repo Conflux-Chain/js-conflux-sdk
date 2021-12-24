@@ -58,6 +58,12 @@ function isBytes(value) {
   return true;
 }
 
+function validAddressPrefix(addressBuf) {
+  // eslint-disable-next-line no-bitwise
+  const prefix = addressBuf[0] & 0xf0;
+  return prefix === 0x10 || prefix === 0x80 || prefix === 0x00;
+}
+
 module.exports = {
   assert,
   alignBuffer,
@@ -65,4 +71,5 @@ module.exports = {
   decodeHexEncodedStr,
   isHexString,
   isBytes,
+  validAddressPrefix,
 };

@@ -5,7 +5,7 @@ const JSBI = require('./jsbi');
 const parser = require('./parser');
 const sign = require('./sign');
 const addressUtil = require('./address');
-const { isHexString, isBytes } = require('./index');
+const { isHexString, isBytes, validAddressPrefix } = require('./index');
 
 // ----------------------------------------------------------------------------
 function toHex(value) {
@@ -297,11 +297,11 @@ format.hexAddress = format.hex40.$before(address => {
     address = addressUtil.decodeCfxAddress(address).hexAddress;
   }
 
-  if (lodash.isString(address) && address.length !== 2 + 40) {
+  if (isHexString(address) && address.length !== 2 + 40) {
     throw new Error('not match "hex40"');
   }
 
-  if (lodash.isString(address)
+  if (isHexString(address)
     && address !== address.toLowerCase()
     && address !== address.toUpperCase()
     && address !== sign.checksumAddress(address)
@@ -475,11 +475,15 @@ format.getLogsAdvance = function (networkId, toHexAddress = false) {
   }, { pick: true });
 };
 
+format.transactionToAddress = format(format.hexAddress.$or(null).$default(null))
+  .$after(format.hexBuffer)
+  .$validate(hBuf => hBuf.length === 0 || validAddressPrefix(hBuf), 'transactionToAddress');
+
 format.signTx = format({
   nonce: format.bigUInt.$after(format.hexBuffer),
   gasPrice: format.bigUInt.$after(format.hexBuffer),
   gas: format.bigUInt.$after(format.hexBuffer),
-  to: format(format.hexAddress.$or(null).$default(null)).$after(format.hexBuffer),
+  to: format.transactionToAddress,
   value: format.bigUInt.$default(0).$after(format.hexBuffer),
   storageLimit: format.bigUInt.$after(format.hexBuffer),
   epochHeight: format.bigUInt.$after(format.hexBuffer),
