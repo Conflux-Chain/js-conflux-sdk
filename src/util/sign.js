@@ -115,7 +115,9 @@ function privateKeyToPublicKey(privateKey) {
  */
 function publicKeyToAddress(publicKey) {
   if (isHexString(publicKey)) publicKey = Buffer.from(publicKey.slice(2), 'hex');
-  if (!Buffer.isBuffer(publicKey) || publicKey.length !== 64) throw new Error('publicKey should be a buffer of length 64');
+  if (!Buffer.isBuffer(publicKey)) throw new Error('publicKey should be a buffer');
+  if (publicKey.length === 65) publicKey = publicKey.slice(1);
+  if (publicKey.length !== 64) throw new Error('publicKey length should be 64 or 65');
   const buffer = keccak256(publicKey).slice(-20);
   buffer[0] = (buffer[0] & 0x0f) | 0x10; // eslint-disable-line no-bitwise
   return buffer;
