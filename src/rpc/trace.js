@@ -10,7 +10,7 @@ format.action = format({
     gasLeft: format.bigUInt,
     input: format.hex,
     init: format.hex,
-    returnData: format.hex.$before(Buffer.from),
+    returnData: format.hex,
     callType: format.any,
     outcome: format.any,
     addr: format.any,
