@@ -2,6 +2,7 @@ const crypto = require('crypto');
 const keccak = require('keccak');
 const secp256k1 = require('secp256k1');
 const { syncScrypt: scrypt } = require('scrypt-js');
+const { isHexString } = require('./index');
 
 // ----------------------------------------------------------------------------
 /**
@@ -105,7 +106,7 @@ function privateKeyToPublicKey(privateKey) {
  *
  * > Account address hex starts with '0x1'
  *
- * @param publicKey {Buffer}
+ * @param publicKey {Buffer|HexString}
  * @return {Buffer}
  *
  * @example
@@ -113,6 +114,8 @@ function privateKeyToPublicKey(privateKey) {
  <Buffer 4c 6f a3 22 12 5f a3 1a 42 cb dd a8 73 0d 4c f0 20 0d 72 db>
  */
 function publicKeyToAddress(publicKey) {
+  if (isHexString(publicKey)) publicKey = Buffer.from(publicKey.slice(2), 'hex');
+  if (!Buffer.isBuffer(publicKey) || publicKey.length !== 64) throw new Error('publicKey should be a buffer of length 64');
   const buffer = keccak256(publicKey).slice(-20);
   buffer[0] = (buffer[0] & 0x0f) | 0x10; // eslint-disable-line no-bitwise
   return buffer;
