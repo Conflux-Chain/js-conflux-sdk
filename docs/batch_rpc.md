@@ -70,17 +70,17 @@ async function main() {
   // create a batch requester through method BatchRequest()
   const batcher = conflux.BatchRequest();
   // add method request
-  const rawTx1 = await conflux.cfx.populateTransaction({
+  const rawTx1 = {
     from: addressA,
     to: addressB,
     value: 100 // Drip
-  });
+  };
   batcher.addTransaction(rawTx1);
-  const rawTx2 = await conflux.cfx.populateTransaction({
+  const rawTx2 = {
     from: addressA,
     to: addressC,
     value: 200 // Drip
-  });
+  };
   batcher.addTransaction(rawTx2);
   const results = await batcher.execute();
   /*
