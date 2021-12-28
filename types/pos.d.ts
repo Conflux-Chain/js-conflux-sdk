@@ -17,7 +17,7 @@ export interface PosBlock {
   height: number;
   epoch: number;
   round: number;
-  nextTxNumber: number;
+  lastTxNumber: number;
   miner?: Hash;
   parentHash?: Hash;
   timestamp: number;
