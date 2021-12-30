@@ -1,10 +1,12 @@
 /* copy from koaflow@0.6.2/lib/parser */
 const lodash = require('lodash');
+const { PARSER_ERROR } = require('../ERROR_CODES');
 
 class ParserError extends Error {
   constructor(message, options = {}) {
     super();
     this.message = message;
+    this.code = PARSER_ERROR;
     Object.assign(this, options);
   }
 }
@@ -22,7 +24,11 @@ class ParserContext {
   }
 
   error(message, options = {}) {
-    return new ParserError(`path="${this.path.join('.')}", ${message}`, { ...this, ...options });
+    message = `(Invalid input|args) ${message}`;
+    if (this.path.length > 0) {
+      message = `path="${this.path.join('.')}", ${message}`;
+    }
+    return new ParserError(message, { ...this, ...options });
   }
 }
 
@@ -31,11 +37,12 @@ function Parser(func) {
   function parser(...args) {
     // eslint-disable-next-line prefer-rest-params
     const context = (this instanceof ParserContext) ? this : new ParserContext(arguments);
-    try {
+    return func.call(context, ...args);
+    /* try {
       return func.call(context, ...args);
     } catch (e) {
       throw new ParserError(e.message, e); // create Error here for shallow stack
-    }
+    } */
   }
 
   parser.constructor = Parser;
@@ -129,7 +136,8 @@ Parser.fromObject = function (schema, options) {
 
   return Parser(function (object) {
     if (!lodash.isObject(object)) {
-      throw this.error(`expected plain object, got ${typeof object}`);
+      const errMsg = `"${options.name ? options.name : ''}" expected plain object, got "${typeof object}"`;
+      throw this.error(errMsg);
     }
 
     const result = lodash.mapValues(keyToParser, (parser, k) => {
@@ -144,16 +152,16 @@ Parser.fromObject = function (schema, options) {
   });
 };
 
-Parser.fromFunction = function (func) {
+Parser.fromFunction = function (func, options) {
   if (func.constructor === Parser) {
     return func;
   }
-
   return Parser(function (...args) {
     try {
       return func(...args);
     } catch (e) {
-      throw this.error(`${func.name}(${args.join(',')}), ${e.message}`);
+      const errMsg = `formatter: "${options.name || func.name}"; args: (${stringifyArgs(args)}) ; errorMessage: ${e.message}`;
+      throw this.error(errMsg, { stack: e.stack });
     }
   });
 };
@@ -175,9 +183,13 @@ Parser.from = function (schema, options = {}) {
     return Parser.fromObject(schema, options);
   }
   if (lodash.isFunction(schema)) {
-    return Parser.fromFunction(schema);
+    return Parser.fromFunction(schema, options);
   }
   return Parser.fromValue(schema);
 };
+
+function stringifyArgs(args) {
+  return args.map(a => (a === undefined ? 'undefined' : a)).join(',');
+}
 
 module.exports = Parser.from;
