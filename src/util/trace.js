@@ -8,8 +8,13 @@ function tracesInTree(txTrace) {
   const stack = [];
   const levelCalls = {};
   let maxLevel = 0;
-  // eslint-disable-next-line guard-for-in
-  for (const i in txTrace) {
+  if (txTrace.length === 0) return {};
+  // If the first trace's type is 'internal_transfer_action'(gas_payment) then remove it from array
+  if (txTrace[0].type === ACTION_TYPES.INTERNAL_TRANSFER_ACTION) {
+    txTrace = txTrace.slice(1, txTrace.length - 1);
+  }
+  // eslint-disable-next-line no-plusplus
+  for (let i = 0; i < txTrace.length; i++) {
     const t = txTrace[i];
     // set basic info
     t.index = i;
@@ -55,7 +60,7 @@ function tracesInTree(txTrace) {
 
 function _cleanTrace(trace) {
   delete trace.index;
-  delete trace.level;
+  // delete trace.level;
   delete trace.parent;
 }
 

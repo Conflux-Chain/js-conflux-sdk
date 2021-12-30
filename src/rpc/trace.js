@@ -5,6 +5,8 @@ format.action = format({
   action: {
     from: format.any,
     to: format.any,
+    fromPocket: format.any,
+    toPocket: format.any,
     value: format.bigUInt,
     gas: format.bigUInt,
     gasLeft: format.bigUInt,
@@ -21,6 +23,7 @@ format.action = format({
   transactionHash: format.hex,
   transactionPosition: format.bigUInt,
   type: format.any,
+  valid: format.any,
 }, { pick: true });
 
 // only used in block traces
