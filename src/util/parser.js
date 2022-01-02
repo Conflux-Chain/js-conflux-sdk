@@ -26,7 +26,7 @@ class ParserContext {
   error(message, options = {}) {
     message = `(Invalid input|args) ${message}`;
     if (this.path.length > 0) {
-      message = `path="${this.path.join('.')}", ${message}`;
+      message = `${message}; path="${this.path.join('.')}"`;
     }
     return new ParserError(message, { ...this, ...options });
   }
@@ -189,7 +189,11 @@ Parser.from = function (schema, options = {}) {
 };
 
 function stringifyArgs(args) {
-  return args.map(a => (a === undefined ? 'undefined' : a)).join(',');
+  function stringifyNullOrUndefined(v) {
+    // eslint-disable-next-line no-nested-ternary
+    return v === null ? 'null' : v === undefined ? 'undefined' : v;
+  }
+  return args.map(stringifyNullOrUndefined).join(',');
 }
 
 module.exports = Parser.from;
