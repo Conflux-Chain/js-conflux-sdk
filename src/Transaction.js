@@ -22,7 +22,7 @@ class Transaction {
       nonce: format.bigIntFromBuffer(nonce),
       gasPrice: format.bigIntFromBuffer(gasPrice),
       gas: format.bigIntFromBuffer(gas),
-      to: format.address(to, netId),
+      to: to.length === 0 ? null : format.address(to, netId),
       value: format.bigIntFromBuffer(value),
       storageLimit: format.bigIntFromBuffer(storageLimit),
       epochHeight: format.bigIntFromBuffer(epochHeight),
