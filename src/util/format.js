@@ -77,7 +77,7 @@ const format = new Proxy(() => undefined, {
  * > format.any(1)
  1
  */
-format.any = format(v => v);
+format.any = format(v => v, { name: 'format.any' });
 
 /**
  * @param arg {number|BigInt|string|boolean}
@@ -105,7 +105,7 @@ format.any = format(v => v);
  * > format.uInt(Number.MAX_SAFE_INTEGER + 1) // unsafe integer
  Error("not match uint")
  */
-format.uInt = format(toNumber).$validate(v => Number.isSafeInteger(v) && v >= 0, 'uint');
+format.uInt = format(toNumber, { name: 'format.uInt' }).$validate(v => Number.isSafeInteger(v) && v >= 0, 'uint');
 
 /**
  * @param arg {number|string|BigInt}
@@ -127,7 +127,7 @@ format.uInt = format(toNumber).$validate(v => Number.isSafeInteger(v) && v >= 0,
  * > format.bigInt(Number.MAX_SAFE_INTEGER + 1) // unsafe integer
  9007199254740992n
  */
-format.bigInt = format(toBigInt);
+format.bigInt = format(toBigInt, { name: 'format.bigInt' });
 
 format.bigIntFromBuffer = format.bigInt.$before(v => (v.length === 0 ? '0x0' : format.hex(v)));
 
@@ -179,7 +179,7 @@ format.bigUIntHex = format.bigUInt.$after(v => `0x${v.toString(16)}`);
  * > format.big(null)
  Error('Invalid number')
  */
-format.big = format(toBig);
+format.big = format(toBig, { name: 'format.big' });
 
 /**
  * @param arg {string|number|BigInt|Big}
@@ -235,7 +235,7 @@ format.epochNumberOrUndefined = format.epochNumber.$or(undefined);
  * > format.hex("0x0a")
  "0x0a"
  */
-format.hex = format(toHex);
+format.hex = format(toHex, { name: 'format.hex' });
 
 format.hex40 = format.hex.$validate(v => v.length === 2 + 40, 'hex40');
 
@@ -273,8 +273,11 @@ function toAddress(address, networkId, verbose = false) {
  * > format.address('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
  Error("not match address")
  */
-format.address = format(toAddress);
+format.address = format(toAddress, { name: 'format.address' });
 
+/**
+ * create a address formatter with networkId info
+ */
 format.netAddress = networkId => format(address => toAddress(address, networkId));
 
 /**
@@ -417,7 +420,7 @@ format.bytes = format(v => {
   if (isHexString(v)) return format.hexBuffer(v);
   if (Buffer.isBuffer(v) || isBytes(v)) return Buffer.from(v);
   throw new Error('invalid arrayify value');
-});
+}, { name: 'format.bytes' });
 
 /**
  * @param arg {boolean}
@@ -459,7 +462,10 @@ format.getLogs = format({
   blockHashes: format.blockHash.$or([format.blockHash]),
   address: format.address.$or([format.address]),
   topics: format([format.hex64.$or([format.hex64]).$or(null)]),
-}, { pick: true });
+}, {
+  pick: true,
+  name: 'format.getLogs',
+});
 
 // configure getLogs formatter with networkId and toHexAddress
 format.getLogsAdvance = function (networkId, toHexAddress = false) {
@@ -472,7 +478,10 @@ format.getLogsAdvance = function (networkId, toHexAddress = false) {
     blockHashes: format.blockHash.$or([format.blockHash]),
     address: fromatAddress.$or([fromatAddress]),
     topics: format([format.hex64.$or([format.hex64]).$or(null)]),
-  }, { pick: true });
+  }, {
+    pick: true,
+    name: 'format.getLogsAdvance',
+  });
 };
 
 format.transactionToAddress = format(format.hexAddress.$or(null).$default(null))
@@ -492,7 +501,11 @@ format.signTx = format({
   r: (format.bigUInt.$after(format.hexBuffer)).$or(undefined),
   s: (format.bigUInt.$after(format.hexBuffer)).$or(undefined),
   v: (format.uInt.$after(format.hexBuffer)).$or(undefined),
-}, { strict: true, pick: true });
+}, {
+  strict: true,
+  pick: true,
+  name: 'format.signTx',
+});
 
 format.callTx = format({
   from: format.address,
@@ -505,7 +518,10 @@ format.callTx = format({
   epochHeight: format.bigUIntHex,
   chainId: format.bigUIntHex,
   data: format.hex,
-}, { pick: true });
+}, {
+  pick: true,
+  name: 'format.callTx',
+});
 
 // configure callTx formatter with networkId and toHexAddress
 format.callTxAdvance = function (networkId, toHexAddress = false) {
@@ -521,7 +537,10 @@ format.callTxAdvance = function (networkId, toHexAddress = false) {
     epochHeight: format.bigUIntHex,
     chainId: format.bigUIntHex,
     data: format.hex,
-  }, { pick: true });
+  }, {
+    pick: true,
+    name: 'format.callTxAdvance',
+  });
 };
 
 // ----------------------------- parse rpc returned ---------------------------
@@ -534,6 +553,8 @@ format.status = format({
   latestCheckpoint: format.uInt.$or(null),
   latestConfirmed: format.uInt.$or(null),
   latestState: format.uInt.$or(null),
+}, {
+  name: 'format.status',
 });
 
 format.account = format({
@@ -542,12 +563,16 @@ format.account = format({
   collateralForStorage: format.bigUInt,
   nonce: format.bigUInt,
   stakingBalance: format.bigUInt,
+}, {
+  name: 'format.account',
 });
 
 format.estimate = format({
   gasUsed: format.bigUInt,
   gasLimit: format.bigUInt,
   storageCollateralized: format.bigUInt,
+}, {
+  name: 'format.estimate',
 });
 
 format.transaction = format({
@@ -561,6 +586,8 @@ format.transaction = format({
   v: format.uInt,
   status: format.uInt.$or(null),
   transactionIndex: format.uInt.$or(null),
+}, {
+  name: 'format.transaction',
 });
 
 format.block = format({
@@ -574,6 +601,8 @@ format.block = format({
   gasUsed: format.bigUInt.$or(null).$or(undefined), // XXX: undefined before main net upgrade
   difficulty: format.bigUInt,
   transactions: [(format.transaction).$or(format.transactionHash)],
+}, {
+  name: 'format.block',
 });
 
 format.receipt = format({
@@ -586,6 +615,8 @@ format.receipt = format({
   storageReleased: [{
     collaterals: format.bigUInt,
   }],
+}, {
+  name: 'format.receipt',
 });
 
 format.epochReceipts = format([[format.receipt]]).$or(null);
@@ -595,6 +626,8 @@ format.log = format({
   logIndex: format.uInt,
   transactionIndex: format.uInt,
   transactionLogIndex: format.uInt,
+}, {
+  name: 'format.log',
 });
 
 format.logs = format([format.log]);
@@ -604,12 +637,16 @@ format.supplyInfo = format({
   totalIssued: format.bigUInt,
   totalStaking: format.bigUInt,
   totalCollateral: format.bigUInt,
+}, {
+  name: 'format.supplyInfo',
 });
 
 format.sponsorInfo = format({
   sponsorBalanceForCollateral: format.bigUInt,
   sponsorBalanceForGas: format.bigUInt,
   sponsorGasBound: format.bigUInt,
+}, {
+  name: 'format.sponsorInfo',
 });
 
 format.rewardInfo = format([
@@ -640,14 +677,20 @@ format.head = format({
   gasLimit: format.bigUInt,
   height: format.uInt,
   timestamp: format.uInt,
+}, {
+  name: 'format.head',
 });
 
 format.revert = format({
   revertTo: format.uInt,
+}, {
+  name: 'format.revert',
 });
 
 format.epoch = format({
   epochNumber: format.uInt,
+}, {
+  name: 'format.epoch',
 });
 
 // --------------------------- accountPendingInfo & transactions --------------
@@ -655,17 +698,23 @@ format.accountPendingInfo = format({
   localNonce: format.bigUInt,
   pendingCount: format.bigUInt,
   pendingNonce: format.bigUInt,
+}, {
+  name: 'format.accountPendingInfo',
 });
 
 format.accountPendingTransactions = format({
   pendingCount: format.bigUInt,
   pendingTransactions: [format.transaction],
+}, {
+  name: 'format.accountPendingTransactions',
 });
 
 format.posEconomics = format({
   distributablePosInterest: format.bigUInt,
   lastDistributeBlock: format.bigUInt,
   totalPosStakingTokens: format.bigUInt,
+}, {
+  name: 'format.posEconomics',
 });
 
 module.exports = format;
