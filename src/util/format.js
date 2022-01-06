@@ -581,7 +581,7 @@ format.transaction = format({
   gas: format.bigUInt,
   value: format.bigUInt,
   storageLimit: format.bigUInt,
-  epochHeight: format.uInt,
+  epochHeight: format.bigUInt,
   chainId: format.uInt,
   v: format.uInt,
   status: format.uInt.$or(null),

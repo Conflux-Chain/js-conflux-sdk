@@ -222,7 +222,7 @@ test('getTransactionByHash', async () => {
   expect(typeof transaction.value).toEqual('bigint');
   expect(typeof transaction.storageLimit).toEqual('bigint');
   expect(Number.isInteger(transaction.chainId)).toEqual(true);
-  expect(Number.isInteger(transaction.epochHeight)).toEqual(true);
+  expect(typeof transaction.epochHeight).toEqual('bigint');
 });
 
 test('getTransactionReceipt', async () => {
