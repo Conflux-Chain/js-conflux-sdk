@@ -96,6 +96,11 @@ const PENDING_TX_STATUS = {
   NOT_ENOUGH_CASH: 'notEnoughCash',
 };
 
+/**
+ * Enum for trace action types
+ * @readonly
+ * @enum {string}
+ */
 const ACTION_TYPES = {
   CALL: 'call',
   CREATE: 'create',
@@ -114,6 +119,11 @@ const POCKET_ENUM = {
   GAS_PAYMENT: 'gas_payment',
 };
 
+/**
+ * Enum for trace call types
+ * @readonly
+ * @enum {string}
+ */
 const CALL_TYPES = {
   NONE: 'none',
   CALL: 'call',
@@ -122,10 +132,28 @@ const CALL_TYPES = {
   STATIC_CALL: 'staticcall',
 };
 
+/**
+ * Enum for trace call status
+ * @readonly
+ * @enum {string}
+ */
 const CALL_STATUS = {
   SUCCESS: 'success',
   REVERTED: 'reverted',
   FAIL: 'fail',
+};
+
+/**
+ * Enum for transaction.status and receipt.outcomeStatus
+ * @readonly
+ * @enum {number}
+ */
+const TX_STATUS = {
+  /** If tx is not packed or in the defer state or executed in other block */
+  UNEXECUTE: null,
+  SUCCESS: 0,
+  FAIL: 1,
+  SKIP: 2,
 };
 
 module.exports = {
@@ -145,4 +173,5 @@ module.exports = {
   CALL_TYPES,
   CALL_STATUS,
   POCKET_ENUM,
+  TX_STATUS,
 };

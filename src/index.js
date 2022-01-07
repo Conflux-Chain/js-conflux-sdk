@@ -1,4 +1,5 @@
 const CONST = require('./CONST');
+const ERROR_CODES = require('./ERROR_CODES');
 const Conflux = require('./Conflux');
 const Contract = require('./contract');
 const Wallet = require('./wallet');
@@ -15,6 +16,7 @@ const providerWrapper = require('./util/providerWrapper');
 
 module.exports = {
   CONST,
+  ERROR_CODES,
   Conflux,
   Contract,
   Wallet,
