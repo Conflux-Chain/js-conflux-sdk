@@ -109,6 +109,16 @@ const ACTION_TYPES = {
   INTERNAL_TRANSFER_ACTION: 'internal_transfer_action',
 };
 
+const POCKET_ENUM = {
+  BALANCE: 'balance',
+  STAKING_BALANCE: 'staking_balance',
+  STORAGE_COLLATERAL: 'stroage_collateral',
+  SPONSOR_BALANCE_FOR_GAS: 'sponsor_balance_for_gas',
+  SPONSOR_BALANCE_FOR_COLLATERAL: 'sponsor_balance_for_collateral',
+  MINT_BURN: 'mint_burn',
+  GAS_PAYMENT: 'gas_payment',
+};
+
 /**
  * Enum for trace call types
  * @readonly
@@ -162,5 +172,6 @@ module.exports = {
   ACTION_TYPES,
   CALL_TYPES,
   CALL_STATUS,
+  POCKET_ENUM,
   TX_STATUS,
 };
