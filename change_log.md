@@ -11,7 +11,7 @@
 ### trace updates
 
 * Add a new boolean field `valid` to indicate whether this trace has change state
-* The `internal_transfer_action` type trace has add two new field `fromPocket`, `toPocket`
+* The `internal_transfer_action` type trace has added two new field `fromPocket`, `toPocket`
 
 For detail explanation of the trace updates check [this doc](https://github.com/Conflux-Chain/CIPs/issues/88).
 
