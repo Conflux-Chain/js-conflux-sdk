@@ -3,7 +3,7 @@ const {
   decode,
   ...rest
 } = require('@conflux-dev/conflux-address-js');
-const { checksumAddress } = require('./sign');
+const { checksumAddress, keccak256 } = require('./sign');
 
 const ADDRESS_TYPES = {
   USER: 'user',
@@ -38,11 +38,27 @@ function ethAddressToCfxAddress(address) {
   return `0x1${address.toLowerCase().slice(3)}`;
 }
 
+/**
+ * Calculate CFX space address's mapped EVM address
+ * @param address {string} - base32 string
+ * @returns {string}
+ *
+ * @example
+ * > cfxMappedEVMSpaceAddress(cfx:aak2rra2njvd77ezwjvx04kkds9fzagfe6ku8scz91)
+ * "0x12Bf6283CcF8Ad6ffA63f7Da63EDc217228d839A"
+ */
+function cfxMappedEVMSpaceAddress(address) {
+  const { hexAddress } = decode(address);
+  const mappedBuf = keccak256(hexAddress).slice(-20);
+  return checksumAddress(`0x${mappedBuf.toString('hex')}`);
+}
+
 module.exports = {
   encodeCfxAddress: encode,
   decodeCfxAddress: decode,
   ethChecksumAddress,
   ethAddressToCfxAddress,
+  cfxMappedEVMSpaceAddress,
   ADDRESS_TYPES,
   ...rest,
 };

@@ -7,6 +7,8 @@
 * Add support for batch RPC
 * Browser export class name change from Conflux to `TreeGraph`
 * Add method `getNextUsableNonce` to `conflux.advanced`, which will first try to use `txpool_nextNonce` to get a usable nonce, if failed it will fall back to `cfx_getNextNonce`
+* Add three internal contracts `CrossSpaceCall`, `ConfluxContext`, `PoSRegister`
+* Add one method `cfxMappedEVMSpaceAddress` to `address` utility.
 
 ### trace updates
 
