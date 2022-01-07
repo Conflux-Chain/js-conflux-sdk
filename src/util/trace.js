@@ -60,7 +60,7 @@ function tracesInTree(txTrace) {
 
 function _cleanTrace(trace) {
   delete trace.index;
-  // delete trace.level;
+  delete trace.level;
   delete trace.parent;
 }
 
