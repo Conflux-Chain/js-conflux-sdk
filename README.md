@@ -25,7 +25,7 @@ Features:
 * [API](docs/api/README.md)
 * [Error handling](docs/error_handling.md)
 * [Conflux Official document](https://developer.conflux-chain.org/docs/introduction/en/conflux_overview)
-* [Public availabel RPC service](https://github.com/conflux-fans/conflux-rpc-endpoints)
+* [Public available RPC service](https://github.com/conflux-fans/conflux-rpc-endpoints)
 * [Examples](https://github.com/conflux-fans/js-sdk-example)
 * [Fullnode RPC document](https://developer.confluxnetwork.org/conflux-doc/docs/json_rpc)
 
