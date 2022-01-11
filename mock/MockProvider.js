@@ -124,6 +124,10 @@ class MockProvider extends EventEmitter {
     this.stable = stable;
   }
 
+  async request({ method, params = [] }) {
+    return this.call(method, ...params);
+  }
+
   async call(method, ...params) {
     return this[method](...params);
   }
