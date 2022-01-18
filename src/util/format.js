@@ -553,6 +553,7 @@ format.status = format({
   latestCheckpoint: format.uInt.$or(null),
   latestConfirmed: format.uInt.$or(null),
   latestState: format.uInt.$or(null),
+  ethereumSpaceChainId: format.uInt.$or(null),
 }, {
   name: 'format.status',
 });

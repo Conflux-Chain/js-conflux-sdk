@@ -1358,8 +1358,7 @@ class Conflux {
    *
    */
   async traceBlock(blockHash) {
-    const result = await this.provider.call('trace_block', format.blockHash(blockHash));
-    return format.blockTraces(result);
+    return this.trace.block(format.blockHash(blockHash));
   }
 
   /**
@@ -1371,8 +1370,7 @@ class Conflux {
    * > await conflux.traceTransaction('0xaf0e1d773dee28c95bcfa5480ed663fcc695b32c8c1dd81f57ff61ff09f55f88')
    */
   async traceTransaction(txHash) {
-    const result = await this.provider.call('trace_transaction', format.transactionHash(txHash));
-    return format.traces(result);
+    return this.trace.transaction(format.transactionHash(txHash));
   }
 
   /**
@@ -1391,8 +1389,7 @@ class Conflux {
     })
    */
   async traceFilter(options) {
-    const result = await this.provider.call('trace_filter', format.traceFilter(options));
-    return format.traces(result);
+    return this.trace.filter(format.traceFilter(options));
   }
 
   /**

@@ -1,12 +1,57 @@
 const RPCMethodFactory = require('./index');
 const format = require('../util/format');
 
+format.actionCall = format({
+  space: format.any,
+  from: format.any,
+  to: format.any,
+  input: format.any,
+  callType: format.any,
+  value: format.bigUInt,
+  gas: format.bigUInt,
+});
+
+format.actionCallResult = format({
+  outcome: format.any,
+  returnData: format.any,
+  gasLeft: format.bigUInt,
+});
+
+format.actionCreate = format({
+  space: format.any,
+  from: format.any,
+  value: format.bigUInt,
+  gas: format.bigUInt,
+  init: format.any,
+  createType: format.any,
+});
+
+format.actionCreateResult = format({
+  outcome: format.any,
+  addr: format.any,
+  gasLeft: format.bigUInt,
+  returnData: format.any,
+});
+
+format.actionInternalTrace = format({
+  from: format.any,
+  fromPocket: format.any,
+  fromSpace: format.any,
+  to: format.any,
+  toPocket: format.any,
+  toSpace: format.any,
+  value: format.bigUInt,
+});
+
 format.action = format({
   action: {
     from: format.any,
     to: format.any,
     fromPocket: format.any,
     toPocket: format.any,
+    space: format.any, // From conflux v2.0, create/call trace will have this field
+    fromSpace: format.any, // From conflux v2.0, internal_transfer_action will have this field
+    toSpace: format.any, // From conflux v2.0, internal_transfer_action will have this field
     value: format.bigUInt,
     gas: format.bigUInt,
     gasLeft: format.bigUInt,
@@ -14,6 +59,7 @@ format.action = format({
     init: format.hex,
     returnData: format.hex,
     callType: format.any,
+    createType: format.any,
     outcome: format.any,
     addr: format.any,
   },
