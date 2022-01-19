@@ -169,7 +169,7 @@ export class Conflux {
 
   unsubscribe(id: string): Promise<boolean>
 
-  subscribeEpochs(): Promise<object>
+  subscribeEpochs(tag?: string): Promise<object>
 
   subscribeNewHeads(): Promise<object>
 

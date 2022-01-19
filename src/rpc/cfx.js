@@ -6,6 +6,7 @@ const { assert } = require('../util');
 const { decodeCfxAddress, ADDRESS_TYPES } = require('../util/address');
 const PendingTransaction = require('../subscribe/PendingTransaction');
 const Contract = require('../contract');
+const RPCTypes = require('./types/index');
 
 class CFX extends RPCMethodFactory {
   constructor(conflux) {
@@ -62,7 +63,7 @@ class CFX extends RPCMethodFactory {
           formatAddressWithNetworkId,
           format.epochNumberOrUndefined,
         ],
-        responseFormatter: format.account,
+        responseFormatter: data => new RPCTypes.Account(data),
       },
       {
         method: 'cfx_getBalance',
