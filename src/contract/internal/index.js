@@ -72,7 +72,6 @@ const CrossSpaceCall = {
     'function transferEVM(bytes20 to) external payable returns (bytes memory output)',
     'function callEVM(bytes20 to, bytes calldata data) external payable returns (bytes memory output)',
     'function staticCallEVM(bytes20 to, bytes calldata data) external view returns (bytes memory output)',
-    'function deployEip1820()',
     'function withdrawFromMapped(uint256 value)',
     'function mappedBalance(address addr) external view returns (uint256)',
     'function mappedNonce(address addr) external view returns (uint256)',
