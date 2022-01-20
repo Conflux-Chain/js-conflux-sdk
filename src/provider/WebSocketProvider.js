@@ -1,6 +1,6 @@
 const Websocket = require('websocket').w3cwebsocket;
 const BaseProvider = require('./BaseProvider');
-const { awaitTimeout } = require('../util');
+const { awaitTimeout, isWeappEnv } = require('../util');
 
 /**
  * Websocket protocol json rpc provider.
@@ -38,16 +38,34 @@ class WebSocketProvider extends BaseProvider {
   }
 
   _connect({ url, protocols, origin, headers, requestOptions, clientConfig }) {
-    return new Promise((resolve, reject) => {
-      const client = new Websocket(url, protocols, origin, headers, requestOptions, clientConfig);
-      client.onopen = () => resolve(client);
-      client.onerror = e => {
-        this.emit('error', e);
-        reject(new Error(`connect to "${url}" failed`));
-      };
-      client.onmessage = ({ data }) => this.emit('message', data);
-      client.onclose = ({ code, reason }) => this.emit('close', code, reason);
-    });
+    if (isWeappEnv()) {
+      return new Promise((resolve, reject) => {
+        const client = wx.connectSocket({
+          url,
+          protocols,
+          header: { ...headers, Origin: origin },
+          // no support for requestOptions & clientConfig in wechat miniprogram
+        });
+        client.onOpen = () => resolve(client);
+        client.onError = e => {
+          this.emit('error', e);
+          reject(new Error(`connect to "${url}" failed`));
+        };
+        client.onMessage = ({ data }) => this.emit('message', data);
+        client.onClose = ({ code, reason }) => this.emit('close', code, reason);
+      });
+    } else {
+      return new Promise((resolve, reject) => {
+        const client = new Websocket(url, protocols, origin, headers, requestOptions, clientConfig);
+        client.onopen = () => resolve(client);
+        client.onerror = e => {
+          this.emit('error', e);
+          reject(new Error(`connect to "${url}" failed`));
+        };
+        client.onmessage = ({ data }) => this.emit('message', data);
+        client.onclose = ({ code, reason }) => this.emit('close', code, reason);
+      });
+    }
   }
 
   _onData(data = {}) {
@@ -91,7 +109,17 @@ class WebSocketProvider extends BaseProvider {
       await new Promise(resolve => setTimeout(resolve, 1));
     }
 
-    return this.client.send(data);
+    if (isWeappEnv()) {
+      return new Promise((resolve, reject) => {
+        this.client.send({
+          data,
+          success: resolve,
+          fail: reject,
+        });
+      });
+    } else {
+      return this.client.send(data);
+    }
   }
 
   async request(data) {

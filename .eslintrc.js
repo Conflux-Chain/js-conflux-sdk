@@ -10,6 +10,8 @@ module.exports = {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
     BigInt: true,
+    // for wechat miniprogram
+    wx: true,
   },
   parserOptions: {
     ecmaVersion: 2018,

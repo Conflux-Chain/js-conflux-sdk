@@ -64,6 +64,10 @@ function validAddressPrefix(addressBuf) {
   return prefix === 0x10 || prefix === 0x80 || prefix === 0x00;
 }
 
+function isWeappEnv() {
+  return typeof wx === 'object';
+}
+
 module.exports = {
   assert,
   alignBuffer,
@@ -72,4 +76,5 @@ module.exports = {
   isHexString,
   isBytes,
   validAddressPrefix,
+  isWeappEnv,
 };
