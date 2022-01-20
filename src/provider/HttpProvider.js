@@ -8,7 +8,7 @@ const { isWeappEnv } = require('../util');
 class HttpProvider extends BaseProvider {
   async request(data) {
     if (isWeappEnv()) {
-      return new Promise(function (resolve, reject) {
+      return new Promise((resolve, reject) => {
         let retryCount = this.retry;
         const sendRequest = () => {
           wx.request({
@@ -46,7 +46,7 @@ class HttpProvider extends BaseProvider {
 
   async requestBatch(dataArray) {
     if (isWeappEnv()) {
-      return new Promise(function (resolve, reject) {
+      return new Promise((resolve, reject) => {
         let retryCount = this.retry;
         const sendRequest = () => {
           wx.request({

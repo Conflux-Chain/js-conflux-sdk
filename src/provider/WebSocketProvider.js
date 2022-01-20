@@ -43,16 +43,16 @@ class WebSocketProvider extends BaseProvider {
         const client = wx.connectSocket({
           url,
           protocols,
-          header: { ...headers, Origin: origin },
+          header: { ...headers, ...(origin ? { Origin: origin } : {}) },
           // no support for requestOptions & clientConfig in wechat miniprogram
         });
-        client.onOpen = () => resolve(client);
-        client.onError = e => {
+        client.onOpen(() => resolve(client));
+        client.onError(e => {
           this.emit('error', e);
           reject(new Error(`connect to "${url}" failed`));
-        };
-        client.onMessage = ({ data }) => this.emit('message', data);
-        client.onClose = ({ code, reason }) => this.emit('close', code, reason);
+        });
+        client.onMessage(({ data }) => this.emit('message', data));
+        client.onClose(({ code, reason }) => this.emit('close', code, reason));
       });
     } else {
       return new Promise((resolve, reject) => {
