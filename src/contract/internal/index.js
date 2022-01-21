@@ -57,6 +57,7 @@ const PoSRegister = {
     'function addressToIdentifier(address addr) external view returns (bytes32)',
     'event Register(bytes32 indexed identifier, bytes blsPubKey, bytes vrfPubKey)',
     'event IncreaseStake(bytes32 indexed identifier, uint64 votePower)',
+    'event Retire(bytes32 indexed identifier, uint64 votePower)',
   ],
   address: '0x0888000000000000000000000000000000000005',
 };
