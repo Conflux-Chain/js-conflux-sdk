@@ -557,16 +557,6 @@ format.status = format({
   name: 'format.status',
 });
 
-format.account = format({
-  accumulatedInterestReturn: format.bigUInt,
-  balance: format.bigUInt,
-  collateralForStorage: format.bigUInt,
-  nonce: format.bigUInt,
-  stakingBalance: format.bigUInt,
-}, {
-  name: 'format.account',
-});
-
 format.estimate = format({
   gasUsed: format.bigUInt,
   gasLimit: format.bigUInt,

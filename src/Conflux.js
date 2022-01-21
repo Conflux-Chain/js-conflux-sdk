@@ -384,11 +384,7 @@ class Conflux {
    }
    */
   async getAccount(address, epochNumber) {
-    const result = await this.provider.call('cfx_getAccount',
-      this._formatAddress(address),
-      format.epochNumber.$or(undefined)(epochNumber),
-    );
-    return format.account(result);
+    return this.cfx.getAccount(address, epochNumber);
   }
 
   /**
