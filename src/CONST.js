@@ -173,6 +173,9 @@ const TX_STATUS = {
   SKIP: 2,
 };
 
+// KECCAK (i.e. Keccak) hash of the empty bytes string.
+const KECCAK_EMPTY = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
+
 module.exports = {
   WORD_BYTES,
   WORD_CHARS,
@@ -193,4 +196,5 @@ module.exports = {
   TX_STATUS,
   CREATE_TYPES,
   SPACE_ENUM,
+  KECCAK_EMPTY,
 };
