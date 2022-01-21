@@ -133,6 +133,23 @@ const CALL_TYPES = {
 };
 
 /**
+ * Enum for trace create types
+ * @readonly
+ * @enum {string}
+ */
+const CREATE_TYPES = {
+  NONE: 'none',
+  CREATE: 'create',
+  CREATE2: 'create2',
+};
+
+const SPACE_ENUM = {
+  NONE: 'none',
+  NATIVE: 'native',
+  ETHEREUM: 'ethereum',
+};
+
+/**
  * Enum for trace call status
  * @readonly
  * @enum {string}
@@ -177,5 +194,7 @@ module.exports = {
   CALL_STATUS,
   POCKET_ENUM,
   TX_STATUS,
+  CREATE_TYPES,
+  SPACE_ENUM,
   KECCAK_EMPTY,
 };
