@@ -48,5 +48,3 @@ let cfx = new Conflux.Conflux({
 // "conflux" indicate the portal's browser object
 cfx.provider = conflux;
 ```
-
-Note: from js-conflux-sdk v2.0 the underline used provider method has switch to `provider.request`, which means js-sdk v2.0 can only work with Fluent wallet provider.

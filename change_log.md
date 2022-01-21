@@ -22,7 +22,6 @@ Check [v2.0 changes](./docs/v2.0_changes.md) for change details
 ### Provider API
 
 * Add `provider.request` to make provider compliant with [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) 
-* Switch from `provider.call` to `provider.request` in all SDK RPC methods
 
 ## v1.7.2
 
