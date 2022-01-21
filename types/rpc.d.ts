@@ -134,6 +134,7 @@ export interface Account {
     accumulatedInterestReturn: number;
     admin: Address;
     address: Address;
+    isExternalAccount(): boolean;
 }
 
 export interface Status {

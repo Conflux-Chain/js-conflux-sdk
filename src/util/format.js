@@ -553,18 +553,9 @@ format.status = format({
   latestCheckpoint: format.uInt.$or(null),
   latestConfirmed: format.uInt.$or(null),
   latestState: format.uInt.$or(null),
+  ethereumSpaceChainId: format.uInt.$or(null),
 }, {
   name: 'format.status',
-});
-
-format.account = format({
-  accumulatedInterestReturn: format.bigUInt,
-  balance: format.bigUInt,
-  collateralForStorage: format.bigUInt,
-  nonce: format.bigUInt,
-  stakingBalance: format.bigUInt,
-}, {
-  name: 'format.account',
 });
 
 format.estimate = format({

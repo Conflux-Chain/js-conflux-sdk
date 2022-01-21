@@ -133,6 +133,23 @@ const CALL_TYPES = {
 };
 
 /**
+ * Enum for trace create types
+ * @readonly
+ * @enum {string}
+ */
+const CREATE_TYPES = {
+  NONE: 'none',
+  CREATE: 'create',
+  CREATE2: 'create2',
+};
+
+const SPACE_ENUM = {
+  NONE: 'none',
+  NATIVE: 'native',
+  ETHEREUM: 'ethereum',
+};
+
+/**
  * Enum for trace call status
  * @readonly
  * @enum {string}
@@ -156,6 +173,9 @@ const TX_STATUS = {
   SKIP: 2,
 };
 
+// KECCAK (i.e. Keccak) hash of the empty bytes string.
+const KECCAK_EMPTY = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
+
 module.exports = {
   WORD_BYTES,
   WORD_CHARS,
@@ -174,4 +194,7 @@ module.exports = {
   CALL_STATUS,
   POCKET_ENUM,
   TX_STATUS,
+  CREATE_TYPES,
+  SPACE_ENUM,
+  KECCAK_EMPTY,
 };
