@@ -441,7 +441,7 @@ class CFX extends RPCMethodFactory {
       return this.sendRawTransaction(rawTx);
     }
 
-    return this.conflux.provider.request({
+    return this.conflux.request({
       method: 'cfx_sendTransaction',
       params: [
         this.conflux._formatCallTx(options),
@@ -457,7 +457,7 @@ class CFX extends RPCMethodFactory {
    * @returns {Promise<Array>} All receipts of one epoch
    */
   async getEpochReceiptsByPivotBlockHash(pivotBlockHash) {
-    const result = await this.conflux.provider.request({ method: 'cfx_getEpochReceipts', params: [`hash:${pivotBlockHash}`] });
+    const result = await this.conflux.request({ method: 'cfx_getEpochReceipts', params: [`hash:${pivotBlockHash}`] });
     return format.epochReceipts(result);
   }
 
@@ -481,7 +481,7 @@ class CFX extends RPCMethodFactory {
         }
       }
 
-      return await this.conflux.provider.request({
+      return await this.conflux.request({
         method: 'cfx_call',
         params: [
           this.conflux._formatCallTx(options),
@@ -505,7 +505,7 @@ class CFX extends RPCMethodFactory {
    */
   async estimateGasAndCollateral(options, epochNumber) {
     try {
-      const result = await this.conflux.provider.request({
+      const result = await this.conflux.request({
         method: 'cfx_estimateGasAndCollateral',
         params: [
           this.conflux._formatCallTx(options),
