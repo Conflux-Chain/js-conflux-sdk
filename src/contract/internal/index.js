@@ -57,6 +57,7 @@ const PoSRegister = {
     'function addressToIdentifier(address addr) external view returns (bytes32)',
     'event Register(bytes32 indexed identifier, bytes blsPubKey, bytes vrfPubKey)',
     'event IncreaseStake(bytes32 indexed identifier, uint64 votePower)',
+    'event Retire(bytes32 indexed identifier, uint64 votePower)',
   ],
   address: '0x0888000000000000000000000000000000000005',
 };
@@ -65,8 +66,8 @@ const CrossSpaceCall = {
   abi: [
     'event Call(bytes20 indexed sender, bytes20 indexed receiver, uint256 value, uint256 nonce, bytes data)',
     'event Create(bytes20 indexed sender, bytes20 indexed contract_address, uint256 value, uint256 nonce, bytes init)',
-    'event Withdraw(bytes20 indexed sender, address indexed receiver, uint256 value)',
-    'event Outcome(uint256 nonce, uint256 gas_left, bool success)',
+    'event Withdraw(bytes20 indexed sender, address indexed receiver, uint256 value, uint256 nonce)',
+    'event Outcome(bool success)',
     'function createEVM(bytes calldata init) external payable returns (bytes20)',
     'function transferEVM(bytes20 to) external payable returns (bytes memory output)',
     'function callEVM(bytes20 to, bytes calldata data) external payable returns (bytes memory output)',
