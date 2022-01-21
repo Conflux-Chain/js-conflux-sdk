@@ -5,7 +5,7 @@ const BaseProvider = require('./BaseProvider');
  * Http protocol json rpc provider.
  */
 class HttpProvider extends BaseProvider {
-  async request(data) {
+  async _request(data) {
     const { body } = await superagent
       .post(this.url)
       .retry(this.retry)
@@ -16,7 +16,7 @@ class HttpProvider extends BaseProvider {
     return body || {};
   }
 
-  async requestBatch(dataArray) {
+  async _requestBatch(dataArray) {
     const { body } = await superagent
       .post(this.url)
       .retry(this.retry)

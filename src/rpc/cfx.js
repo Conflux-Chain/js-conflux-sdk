@@ -441,10 +441,13 @@ class CFX extends RPCMethodFactory {
       return this.sendRawTransaction(rawTx);
     }
 
-    return this.conflux.provider.call('cfx_sendTransaction',
-      this.conflux._formatCallTx(options),
-      password,
-    );
+    return this.conflux.request({
+      method: 'cfx_sendTransaction',
+      params: [
+        this.conflux._formatCallTx(options),
+        password,
+      ],
+    });
   }
 
   /**
@@ -454,7 +457,7 @@ class CFX extends RPCMethodFactory {
    * @returns {Promise<Array>} All receipts of one epoch
    */
   async getEpochReceiptsByPivotBlockHash(pivotBlockHash) {
-    const result = await this.conflux.provider.call('cfx_getEpochReceipts', `hash:${pivotBlockHash}`);
+    const result = await this.conflux.request({ method: 'cfx_getEpochReceipts', params: [`hash:${pivotBlockHash}`] });
     return format.epochReceipts(result);
   }
 
@@ -478,10 +481,13 @@ class CFX extends RPCMethodFactory {
         }
       }
 
-      return await this.conflux.provider.call('cfx_call',
-        this.conflux._formatCallTx(options),
-        format.epochNumber.$or(undefined)(epochNumber),
-      );
+      return await this.conflux.request({
+        method: 'cfx_call',
+        params: [
+          this.conflux._formatCallTx(options),
+          format.epochNumber.$or(undefined)(epochNumber),
+        ],
+      });
     } catch (e) {
       throw Contract.decodeError(e);
     }
@@ -499,10 +505,13 @@ class CFX extends RPCMethodFactory {
    */
   async estimateGasAndCollateral(options, epochNumber) {
     try {
-      const result = await this.conflux.provider.call('cfx_estimateGasAndCollateral',
-        this.conflux._formatCallTx(options),
-        format.epochNumber.$or(undefined)(epochNumber),
-      );
+      const result = await this.conflux.request({
+        method: 'cfx_estimateGasAndCollateral',
+        params: [
+          this.conflux._formatCallTx(options),
+          format.epochNumber.$or(undefined)(epochNumber),
+        ],
+      });
       return format.estimate(result);
     } catch (e) {
       throw Contract.decodeError(e);

@@ -94,13 +94,13 @@ class WebSocketProvider extends BaseProvider {
     return this.client.send(data);
   }
 
-  async request(data) {
+  async _request(data) {
     await this._send(JSON.stringify(data));
 
     return await awaitTimeout(this._awaitId(data.id), this.timeout) || {};
   }
 
-  async requestBatch(dataArray) {
+  async _requestBatch(dataArray) {
     await this._send(JSON.stringify(dataArray));
 
     return Promise.all(dataArray.map(async data => {
