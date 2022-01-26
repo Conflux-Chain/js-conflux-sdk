@@ -35,13 +35,13 @@ const WebsocketProvider = require('./WebSocketProvider');
     logger: {...}
   }
  */
-function providerFactory({ url, wechatProvider, ...rest }) {
+function providerFactory({ url, useWechatProvider, ...rest }) {
   if (!url) {
     return new BaseProvider(rest); // empty provider
   }
 
   if (lodash.startsWith(url, 'http')) {
-    return wechatProvider ? new WechatProvider({ url, ...rest }) : new HttpProvider({ url, ...rest });
+    return useWechatProvider ? new WechatProvider({ url, ...rest }) : new HttpProvider({ url, ...rest });
   }
 
   if (lodash.startsWith(url, 'ws')) {
