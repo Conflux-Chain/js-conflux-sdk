@@ -41,6 +41,7 @@ class Conflux {
    * @param [options.timeout] {number} - Request time out in ms
    * @param [options.logger] {Object} - Logger object with 'info' and 'error' method.
    * @param [options.networkId] {number} - Connected RPC's networkId
+   * @param [options.wechatProvider] {boolean} - Use wechat provider
    * @example
    * > const { Conflux } = require('js-conflux-sdk');
    * > const conflux = new Conflux({url:'https://test.confluxrpc.com', networkId: 1});
