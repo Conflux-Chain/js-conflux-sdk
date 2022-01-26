@@ -10,6 +10,7 @@ module.exports = {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
     BigInt: true,
+    wx: true,
   },
   parserOptions: {
     ecmaVersion: 2018,

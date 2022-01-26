@@ -13,7 +13,8 @@
 ### trace updates
 
 * Add a new boolean field `valid` to indicate whether this trace has change state
-* The `internal_transfer_action` type trace has added two new field `fromPocket`, `toPocket`
+* The `internal_transfer_action` type trace has added four new field `fromPocket`, `toPocket`, `fromSpace`, `toSpace`
+* The `call` and `create` type trace has added one new field `space`
 
 For detail explanation of the trace updates check [this doc](https://github.com/Conflux-Chain/CIPs/issues/88).
 
@@ -21,7 +22,8 @@ Check [v2.0 changes](./docs/v2.0_changes.md) for change details
 
 ### Provider API
 
-* Add `provider.request` to make provider compliant with [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) 
+* Add `provider.request` to make provider compliant with [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193)
+* Add a new provider `WechatProvider` which can be used in Wechat environment
 
 ## v1.7.2
 

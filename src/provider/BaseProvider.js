@@ -92,6 +92,21 @@ class BaseProvider extends EventEmitter {
   }
 
   /**
+   * Send a json rpc method request
+   *
+   * @param method {string} - Json rpc method name.
+   * @param [params] {array} - Json rpc method params.
+   * @return {Promise<*>} Json rpc method return value.
+   *
+   * @example
+   * > await provider.send('cfx_epochNumber');
+   * > await provider.send('cfx_getBlockByHash', [blockHash]);
+   */
+  async send(method, params) {
+    return this.request({ method, params });
+  }
+
+  /**
    * Batch call json rpc methods with params
    *
    * @param array {object[]} - Array of object with "method" and "params"

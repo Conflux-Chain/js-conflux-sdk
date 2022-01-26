@@ -1,6 +1,7 @@
 const lodash = require('lodash');
 const BaseProvider = require('./BaseProvider');
 const HttpProvider = require('./HttpProvider');
+const WechatProvider = require('./WechatProvider');
 const WebsocketProvider = require('./WebSocketProvider');
 
 /**
@@ -34,13 +35,13 @@ const WebsocketProvider = require('./WebSocketProvider');
     logger: {...}
   }
  */
-function providerFactory({ url, ...rest }) {
+function providerFactory({ url, useWechatProvider, ...rest }) {
   if (!url) {
     return new BaseProvider(rest); // empty provider
   }
 
   if (lodash.startsWith(url, 'http')) {
-    return new HttpProvider({ url, ...rest });
+    return useWechatProvider ? new WechatProvider({ url, ...rest }) : new HttpProvider({ url, ...rest });
   }
 
   if (lodash.startsWith(url, 'ws')) {
