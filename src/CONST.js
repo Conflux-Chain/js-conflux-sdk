@@ -146,7 +146,7 @@ const CREATE_TYPES = {
 const SPACE_ENUM = {
   NONE: 'none',
   NATIVE: 'native',
-  ETHEREUM: 'ethereum',
+  EVM: 'evm',
 };
 
 /**
