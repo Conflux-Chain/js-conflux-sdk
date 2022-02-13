@@ -435,7 +435,7 @@ class CFX extends RPCMethodFactory {
    * @param {string} [password] Optional password to unlock account in fullnode
    * @return {Promise<hash>} Transaction hash
    */
-  async sendTransaction(options, password) {
+  async sendTransaction(options, ...extra) {
     if (this.conflux.wallet.has(`${options.from}`)) {
       const rawTx = await this.populateAndSignTransaction(options);
       return this.sendRawTransaction(rawTx);
@@ -445,7 +445,7 @@ class CFX extends RPCMethodFactory {
       method: 'cfx_sendTransaction',
       params: [
         this.conflux._formatCallTx(options),
-        password,
+        ...extra,
       ],
     });
   }

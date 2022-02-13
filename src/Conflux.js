@@ -1060,7 +1060,7 @@ class Conflux {
     "transactionHash": "0xb2ba6cca35f0af99a9601d09ee19c1949d8130312550e3f5413c520c6d828f88"
    }
    */
-  async sendTransaction(options, password) {
+  async sendTransaction(options, ...extra) {
     if (this.wallet.has(`${options.from}`)) {
       const transaction = await this._signTransaction(options);
       return this.sendRawTransaction(transaction.serialize());
@@ -1070,7 +1070,7 @@ class Conflux {
       method: 'cfx_sendTransaction',
       params: [
         this._formatCallTx(options),
-        password,
+        ...extra,
       ],
     });
   }
