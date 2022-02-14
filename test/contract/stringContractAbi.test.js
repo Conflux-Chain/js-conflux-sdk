@@ -146,7 +146,7 @@ test('contract.sendTransaction', async () => {
     gas: '0x0',
     storageLimit: '0x0',
     chainId: '0x1',
-  }, undefined);
+  });
 
   call.mockRestore();
 });
