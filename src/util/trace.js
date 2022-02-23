@@ -1,4 +1,4 @@
-const { ACTION_TYPES, CALL_STATUS } = require('../CONST');
+const { ACTION_TYPES, CALL_STATUS, POCKET_ENUM } = require('../CONST');
 const Contract = require('../contract/Contract');
 const { abi } = require('../contract/standard/error.json');
 const { decodeHexEncodedStr } = require('./index');
@@ -9,10 +9,6 @@ function tracesInTree(txTrace) {
   const levelCalls = {};
   let maxLevel = 0;
   if (txTrace.length === 0) return {};
-  // If the first trace's type is 'internal_transfer_action'(gas_payment) then remove it from array
-  if (txTrace[0].type === ACTION_TYPES.INTERNAL_TRANSFER_ACTION) {
-    txTrace = txTrace.slice(1, txTrace.length - 1);
-  }
   // eslint-disable-next-line no-plusplus
   for (let i = 0; i < txTrace.length; i++) {
     const t = txTrace[i];
@@ -21,7 +17,10 @@ function tracesInTree(txTrace) {
     t.level = 0;
     t.calls = [];
 
-    if (t.type === ACTION_TYPES.CALL_RESULT || t.type === ACTION_TYPES.CREATE_RESULT) {
+    const isInternlAction = t.type === ACTION_TYPES.INTERNAL_TRANSFER_ACTION;
+    const isGasPayment = isInternlAction && t.action.toPocket === POCKET_ENUM.GAS_PAYMENT;
+    const isGasRefund = isInternlAction && t.action.fromPocket === POCKET_ENUM.GAS_PAYMENT;
+    if (t.type === ACTION_TYPES.CALL_RESULT || t.type === ACTION_TYPES.CREATE_RESULT || isGasRefund) {
       // if the result is fail or reverted then decode the returnData
       t.action.decodedMessage = _decodeErrorMessage(t.action);
       // set result
@@ -41,7 +40,7 @@ function tracesInTree(txTrace) {
       }
       levelCalls[t.level].push(t.index);
       // if is a  call or create push to stack top
-      if (t.type === ACTION_TYPES.CALL || t.type === ACTION_TYPES.CREATE) {
+      if (t.type === ACTION_TYPES.CALL || t.type === ACTION_TYPES.CREATE || isGasPayment) {
         stack.push(t);
       }
     }
