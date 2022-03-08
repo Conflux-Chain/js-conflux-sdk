@@ -17,8 +17,8 @@ class MethodTransaction extends Transaction {
    * @param [password] {string} - See [conflux.sendTransaction](#Conflux.js/Conflux/sendTransaction)
    * @return {Promise<PendingTransaction>} The PendingTransaction object.
    */
-  sendTransaction(options, password) {
-    return this.method.conflux.cfx.sendTransaction({ ...this, ...options }, password);
+  sendTransaction(options, ...extra) {
+    return this.method.conflux.cfx.sendTransaction({ ...this, ...options }, ...extra);
   }
 
   populateTransaction(options) {
