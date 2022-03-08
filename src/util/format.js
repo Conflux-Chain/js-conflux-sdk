@@ -552,6 +552,7 @@ format.status = format({
   pendingTxNumber: format.uInt,
   latestCheckpoint: format.uInt.$or(null),
   latestConfirmed: format.uInt.$or(null),
+  latestFinalized: format.uInt.$or(null),
   latestState: format.uInt.$or(null),
   ethereumSpaceChainId: format.uInt.$or(null),
 }, {

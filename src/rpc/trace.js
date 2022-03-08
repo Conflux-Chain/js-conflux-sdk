@@ -63,11 +63,11 @@ format.action = format({
     outcome: format.any,
     addr: format.any,
   },
-  epochNumber: format.bigUInt,
+  epochNumber: format.uInt,
   epochHash: format.hex,
   blockHash: format.hex,
   transactionHash: format.hex,
-  transactionPosition: format.bigUInt,
+  transactionPosition: format.uInt,
   type: format.any,
   valid: format.any,
 }, { pick: true });
@@ -75,12 +75,12 @@ format.action = format({
 // only used in block traces
 format.txTraces = format({
   traces: [format.action],
-  transactionPosition: format.bigUInt,
+  transactionPosition: format.uInt,
 });
 
 format.blockTraces = format({
   transactionTraces: [format.txTraces],
-  epochNumber: format.bigUInt,
+  epochNumber: format.uInt,
 }).$or(null);
 
 // trace array
