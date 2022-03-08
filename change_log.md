@@ -3,6 +3,7 @@
 ## v2.0.3
 
 * Change trace `epochNumber`, `transactionPosition` from BigInt to Int
+* Add field `totalEspaceTokens` in `getSupplyInfo`'s response
 
 ## v2.0.0
 
