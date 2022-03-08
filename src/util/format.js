@@ -629,6 +629,7 @@ format.supplyInfo = format({
   totalIssued: format.bigUInt,
   totalStaking: format.bigUInt,
   totalCollateral: format.bigUInt,
+  totalEspaceTokens: format.bigUInt.$or(null),
 }, {
   name: 'format.supplyInfo',
 });
