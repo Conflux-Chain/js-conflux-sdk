@@ -52,7 +52,7 @@ class PersonalMessage extends Message {
   }
 
   /**
-   * Recovers the portal signers publicKey from the signature.
+   * Recovers the wallet signers publicKey from the signature.
    *
    * @param signature {string}
    * @param message {string}

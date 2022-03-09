@@ -5,7 +5,7 @@ The purpose of this page is to give you a sense of everything js-conflux-sdk can
 ## Pre-requisites
 
 1. Node.js environment to install this SDK
-2. Conflux account with some CFX (Use Conflux Portal to create account and get testnet CFX from [faucet](http://faucet.confluxnetwork.org/))
+2. Conflux account with some CFX (Use FluentWallet to create account and get testnet CFX from [faucet](http://faucet.confluxnetwork.org/))
 3. Conflux RPC endpoint, for example `https://test.confluxrpc.com` is a testnet RPC endpoint
 
 ## Initialize

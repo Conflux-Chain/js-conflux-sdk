@@ -2,7 +2,7 @@
 
 ## Recover ConfluxPortal's personal_sign message
 
-To verify portal's personal_sign method signed signature, developer need to recover publicKey or address from it and message. `PersonalMessage` class provide a static method can do this.
+To verify wallet's personal_sign method signed signature, developer need to recover publicKey or address from it and message. `PersonalMessage` class provide a static method can do this.
 
 ```js
 const { PersonalMessage } = require('js-conflux-sdk');

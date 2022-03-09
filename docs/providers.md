@@ -15,7 +15,7 @@ Currently js-conflux-sdk has support for both `HTTP` and `Websockets`. Normally 
 When initialize a Conflux object, the underline provider can be configured through the `url` option. If you want use HTTP provider then provide a HTTP URL:
 
 ```js
-const cfx = new Conflux({
+const cfxClient = new Conflux({
   url: 'https://test.confluxrpc.com',
   networkId: 1,
 })
@@ -24,27 +24,27 @@ const cfx = new Conflux({
 If want use websockts provider then provide a WSS URL.
 
 ```js
-const cfx = new Conflux({
+const cfxClient = new Conflux({
   url: 'wss://test.confluxrpc.com',
   networkId: 1,
 })
 ```
 
-## Connect through Conflux Portal
+## Connect through FluentWallet
 
-An Dapp can connect through Conflux Blockchain through [Portal](https://portal.conflux-chain.org/). Which is a browser extension that provides:
+An Dapp can connect through Conflux Blockchain through [Fluent](https://fluentwallet.com/). Which is a browser extension that provides:
 
 * A connection to the Conflux network (a Provider)
 * Holds your private key and can sign things (a Signer)
 
-js-conflux-sdk can work with Portal to talk with Conflux blockchain, simply by set `conflux` to `Conflux` instance's provider.
+js-conflux-sdk can work with Fluent to talk with Conflux blockchain, simply by set `conflux` to the `Conflux` instance's provider.
 
 ```js
 // Firstly initialize the Conflux object without url
-// Here Conflux indicate the SDK, Conflux.Conflux is the class used to talk with blockchain
-let cfx = new Conflux.Conflux({
+// Here Conflux indicate the SDK, TreeGraph.Conflux is the class used to talk with blockchain
+let cfxClient = new TreeGraph.Conflux({
   networkId: 1,
 });
-// "conflux" indicate the portal's browser object
-cfx.provider = conflux;
+// "conflux" indicate the fluent's browser object
+cfxClient.provider = conflux;
 ```
