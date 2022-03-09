@@ -1,6 +1,6 @@
 # Account
 
-Account can be used to sign `Transaction` or `Message`. Wallet like portal can help you manage your accounts (privateKeys) and provide signing functions to you.
+Account can be used to sign `Transaction` or `Message`. Wallet like Fluent can help you manage your accounts (privateKeys) and provide signing functions to you.
 SDK also provide account manage and signing functions.
 
 ## Send transaction
