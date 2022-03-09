@@ -16,7 +16,6 @@ const Trace = require('./rpc/trace');
 const TxPool = require('./rpc/txpool');
 const BatchRequester = require('./rpc/BatchRequester');
 const AdvancedRPCUtilities = require('./rpc/Advanced');
-const { epoch } = require('./util/format');
 
 /**
  * A sdk of conflux.
