@@ -1,6 +1,6 @@
 const { ACTION_TYPES, CALL_STATUS } = require('../CONST');
 const Contract = require('../contract/Contract');
-const { abi } = require('../contract/standard/error.json');
+const { ERROR_ABI: abi } = require('../contract/standard');
 const { decodeHexEncodedStr } = require('./index');
 
 // Reorg an traces array in tree structure

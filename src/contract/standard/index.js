@@ -14,6 +14,11 @@ const CRC20_ABI = [
   'event Approval(address indexed owner, address indexed spender, uint256 amount)',
 ];
 
+const ERROR_ABI = [
+  'function Error(string)',
+];
+
 module.exports = {
   CRC20_ABI,
+  ERROR_ABI,
 };
