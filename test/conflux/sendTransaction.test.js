@@ -1,5 +1,5 @@
-const { Conflux, format, CONST } = require('../../src');
-const { MockProvider } = require('../../mock');
+import { Conflux, format, CONST } from '../../src/index.js';
+import { MockProvider } from '../../mock/index.js';
 
 const PRIVATE_KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 // const ADDRESS = 'cfxtest:00eau2strcmx8tu567bf2593fsbazkhrfgw83tdrex';

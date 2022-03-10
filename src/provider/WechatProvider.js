@@ -1,9 +1,9 @@
-const BaseProvider = require('./BaseProvider');
+import BaseProvider from './BaseProvider.js';
 
 /**
  * Wechat provider
  */
-class WechatProvider extends BaseProvider {
+export default class WechatProvider extends BaseProvider {
   async _doRequest(data) {
     return new Promise((resolve, reject) => {
       let retryCount = this.retry;
@@ -42,5 +42,3 @@ class WechatProvider extends BaseProvider {
     return body || [];
   }
 }
-
-module.exports = WechatProvider;

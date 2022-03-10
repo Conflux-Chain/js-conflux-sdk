@@ -1,4 +1,4 @@
-const { Conflux } = require('../../src');
+import { Conflux } from '../../src/index.js';
 
 const conflux = new Conflux();
 

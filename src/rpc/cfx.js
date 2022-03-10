@@ -1,14 +1,17 @@
-const RPCMethodFactory = require('./index');
-const format = require('../util/format');
-const addressUtil = require('../util/address');
-const CONST = require('../CONST');
-const { assert } = require('../util');
-const { decodeCfxAddress, ADDRESS_TYPES } = require('../util/address');
-const PendingTransaction = require('../subscribe/PendingTransaction');
-const Contract = require('../contract');
-const RPCTypes = require('./types/index');
+import RPCMethodFactory from './index.js';
+import format from '../util/format.js';
+import CONST from '../CONST.js';
+import { assert } from '../util/index.js';
+import { 
+  decodeCfxAddress, 
+  ADDRESS_TYPES, 
+  hasNetworkPrefix, 
+} from '../util/address.js';
+import PendingTransaction from '../subscribe/PendingTransaction.js';
+import Contract from '../contract/index.js';
+import RPCTypes from './types/index.js';
 
-class CFX extends RPCMethodFactory {
+export default class CFX extends RPCMethodFactory {
   constructor(conflux) {
     super(conflux);
     this.conflux = conflux;
@@ -470,8 +473,8 @@ class CFX extends RPCMethodFactory {
    */
   async call(options, epochNumber) {
     try {
-      if (options.to && addressUtil.hasNetworkPrefix(options.to) && this.conflux.networkId) {
-        const { netId, type } = addressUtil.decodeCfxAddress(options.to);
+      if (options.to && hasNetworkPrefix(options.to) && this.conflux.networkId) {
+        const { netId, type } = decodeCfxAddress(options.to);
         // check target address's networkId with current RPC's networkId
         assert(netId === this.conflux.networkId, '`to` address\'s networkId is not match current RPC\'s networkId');
         // check target contract is exist
@@ -518,5 +521,3 @@ class CFX extends RPCMethodFactory {
     }
   }
 }
-
-module.exports = CFX;

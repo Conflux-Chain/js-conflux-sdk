@@ -1,11 +1,20 @@
-const {
-  encode,
-  decode,
-  ...rest
-} = require('@conflux-dev/conflux-address-js');
-const { checksumAddress, keccak256 } = require('./sign');
+import { checksumAddress, keccak256 } from './sign.js';
+import confluxAddressJs from "@conflux-dev/conflux-address-js";
 
-const ADDRESS_TYPES = {
+// export address utilities from conflux-address-js
+export const encodeCfxAddress = confluxAddressJs.encode;
+export const decodeCfxAddress = confluxAddressJs.decode;
+export const hasNetworkPrefix = confluxAddressJs.hasNetworkPrefix;
+export const isValidCfxAddress = confluxAddressJs.isValidCfxAddress;
+export const verifyCfxAddress = confluxAddressJs.verifyCfxAddress;
+export const simplifyCfxAddress = confluxAddressJs.simplifyCfxAddress;
+export const shortenCfxAddress = confluxAddressJs.shortenCfxAddress;
+export const isZeroAddress = confluxAddressJs.isZeroAddress;
+export const isInternalContractAddress = confluxAddressJs.isInternalContractAddress;
+export const isValidHexAddress = confluxAddressJs.isValidHexAddress;
+export const isValidCfxHexAddress = confluxAddressJs.isValidCfxHexAddress;
+
+export const ADDRESS_TYPES = {
   USER: 'user',
   CONTRACT: 'contract',
   BUILTIN: 'builtin',
@@ -25,7 +34,7 @@ const ADDRESS_TYPES = {
  * > ethChecksumAddress('0x1b716c51381e76900ebaa7999a488511a4e1fd0a')
  "0x1B716c51381e76900EBAA7999A488511A4E1fD0a"
  */
-function ethChecksumAddress(address) {
+export function ethChecksumAddress(address) {
   return checksumAddress(address);
 }
 
@@ -34,7 +43,7 @@ function ethChecksumAddress(address) {
  * @param address {string}
  * @return {string}
  */
-function ethAddressToCfxAddress(address) {
+export function ethAddressToCfxAddress(address) {
   return `0x1${address.toLowerCase().slice(3)}`;
 }
 
@@ -47,18 +56,18 @@ function ethAddressToCfxAddress(address) {
  * > cfxMappedEVMSpaceAddress(cfx:aak2rra2njvd77ezwjvx04kkds9fzagfe6ku8scz91)
  * "0x12Bf6283CcF8Ad6ffA63f7Da63EDc217228d839A"
  */
-function cfxMappedEVMSpaceAddress(address) {
+export function cfxMappedEVMSpaceAddress(address) {
   const { hexAddress } = decode(address);
   const mappedBuf = keccak256(hexAddress).slice(-20);
   return checksumAddress(`0x${mappedBuf.toString('hex')}`);
 }
 
-module.exports = {
-  encodeCfxAddress: encode,
-  decodeCfxAddress: decode,
+export default {
+  encodeCfxAddress,
+  decodeCfxAddress,
   ethChecksumAddress,
   ethAddressToCfxAddress,
   cfxMappedEVMSpaceAddress,
   ADDRESS_TYPES,
-  ...rest,
+  ...confluxAddressJs,
 };

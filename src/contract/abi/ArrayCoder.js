@@ -1,11 +1,11 @@
-const lodash = require('lodash');
-const { assert } = require('../../util');
-const format = require('../../util/format');
-const BaseCoder = require('./BaseCoder');
-const { uIntCoder } = require('./IntegerCoder');
-const { pack, unpack } = require('./TupleCoder');
+import { range } from 'lodash-es';
+import { assert } from '../../util/index.js';
+import format from '../../util/format.js';
+import BaseCoder from './BaseCoder.js';
+import uIntCoder from './IntegerCoder.js';
+import { pack, unpack } from './TupleCoder.js';
 
-class ArrayCoder extends BaseCoder {
+export default class ArrayCoder extends BaseCoder {
   static from({ type, components, ...options }, valueCoder) {
     const match = type.match(/^(.*)\[([0-9]*)]$/);
     if (!match) {
@@ -58,7 +58,7 @@ class ArrayCoder extends BaseCoder {
       });
     }
 
-    const coders = lodash.range(array.length).map(() => this.coder);
+    const coders = range(array.length).map(() => this.coder);
     let buffer = pack(coders, array);
     if (this.size === undefined) {
       buffer = Buffer.concat([uIntCoder.encode(array.length), buffer]);
@@ -77,7 +77,7 @@ class ArrayCoder extends BaseCoder {
       length = format.uInt(uIntCoder.decode(stream)); // XXX: BigInt => Number, for length is enough.
     }
 
-    const coders = lodash.range(length).map(() => this.coder);
+    const coders = range(length).map(() => this.coder);
     return unpack(coders, stream);
   }
 
@@ -95,4 +95,3 @@ class ArrayCoder extends BaseCoder {
   }
 }
 
-module.exports = ArrayCoder;

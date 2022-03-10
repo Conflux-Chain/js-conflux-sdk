@@ -1,10 +1,10 @@
-const lodash = require('lodash');
-const ContractMethod = require('./ContractMethod');
-const { WORD_CHARS } = require('../../CONST');
+import { defaults } from 'lodash-es';
+import ContractMethod from './ContractMethod.js';
+import { WORD_CHARS } from '../../CONST.js';
 
-class ContractConstructor extends ContractMethod {
+export default class ContractConstructor extends ContractMethod {
   constructor(fragment, bytecode, contract, conflux) {
-    super(lodash.defaults(fragment, { name: 'constructor', inputs: [] }), contract, conflux);
+    super(defaults(fragment, { name: 'constructor', inputs: [] }), contract, conflux);
 
     this.signature = ''; // MUST be '' for `super.encodeData`
     this.bytecode = bytecode;
@@ -48,5 +48,3 @@ class ContractConstructor extends ContractMethod {
     return undefined;
   }
 }
-
-module.exports = ContractConstructor;

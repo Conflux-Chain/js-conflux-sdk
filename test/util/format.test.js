@@ -1,6 +1,6 @@
-const Big = require('big.js');
-const { format, CONST } = require('../../src');
-const JSBI = require('../../src/util/jsbi');
+import Big from 'big.js';
+import { format, CONST } from '../../src/index.js';
+import JSBI from '../../src/util/jsbi.js';
 
 const HEX_64 = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 const HEX_40 = '0x0123456789012345678901234567890123456789';

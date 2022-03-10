@@ -1,10 +1,10 @@
-const superagent = require('superagent');
-const BaseProvider = require('./BaseProvider');
+import superagent from 'superagent';
+import BaseProvider from './BaseProvider.js';
 
 /**
  * Http protocol json rpc provider.
  */
-class HttpProvider extends BaseProvider {
+export default class HttpProvider extends BaseProvider {
   async _doRequest(data) {
     const { body } = await superagent
       .post(this.url)
@@ -25,5 +25,3 @@ class HttpProvider extends BaseProvider {
     return body || [];
   }
 }
-
-module.exports = HttpProvider;

@@ -1,10 +1,10 @@
-const { ACTION_TYPES, CALL_STATUS } = require('../CONST');
-const Contract = require('../contract/Contract');
-const { ERROR_ABI: abi } = require('../contract/standard');
-const { decodeHexEncodedStr } = require('./index');
+import { ACTION_TYPES, CALL_STATUS } from '../CONST.js';
+import Contract from '../contract/Contract.js';
+import { ERROR_ABI as abi } from '../contract/standard/index.js';
+import { decodeHexEncodedStr } from './index.js';
 
 // Reorg an traces array in tree structure
-function tracesInTree(txTrace) {
+export default function tracesInTree(txTrace) {
   const stack = [];
   const levelCalls = {};
   let maxLevel = 0;
@@ -78,7 +78,3 @@ function _decodeErrorMessage(action) {
   }
   return errorMessage;
 }
-
-module.exports = {
-  tracesInTree,
-};

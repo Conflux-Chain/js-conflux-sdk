@@ -1,6 +1,15 @@
 /* copy from koaflow@0.6.2/lib/parser */
-const lodash = require('lodash');
-const { PARSER_ERROR } = require('../ERROR_CODES');
+import { PARSER_ERROR } from '../ERROR_CODES.js';
+import { 
+  isString, 
+  flattenDeep, 
+  isObject, 
+  isPlainObject, 
+  pickBy, 
+  get, 
+  mapValues,
+  isFunction,
+} from 'lodash-es';
 
 class ParserError extends Error {
   constructor(message, options = {}) {
@@ -72,7 +81,7 @@ function $default(data) {
   return $before.call(this, value => (value === undefined ? data : value));
 }
 
-function $parse(func, condition = lodash.isString) {
+function $parse(func, condition = isString) {
   return $before.call(this, value => (condition(value) ? func(value) : value));
 }
 
@@ -111,7 +120,7 @@ function $or(schema) {
     }
 
     const or = errorArray.map(e => (e.or ? e.or : e));
-    const message = lodash.flattenDeep(or).map(e => `(${e.message})`).join(' or ');
+    const message = flattenDeep(or).map(e => `(${e.message})`).join(' or ');
     throw new ParserError(`not match any ${message}`, { or });
   });
 }
@@ -132,23 +141,23 @@ Parser.fromArray = function (schema, options) {
 Parser.fromObject = function (schema, options) {
   const { strict, pick } = options;
 
-  const keyToParser = lodash.mapValues(schema, s => Parser.from(s, options));
+  const keyToParser = mapValues(schema, s => Parser.from(s, options));
 
   return Parser(function (object) {
-    if (!lodash.isObject(object)) {
+    if (!isObject(object)) {
       const errMsg = `"${options.name ? options.name : ''}" expected plain object, got "${typeof object}"`;
       throw this.error(errMsg);
     }
 
-    const result = lodash.mapValues(keyToParser, (parser, k) => {
-      const v = lodash.get(object, k);
+    const result = mapValues(keyToParser, (parser, k) => {
+      const v = get(object, k);
       if (v === undefined && !strict) {
         return undefined;
       }
       return parser.call(this.child(k), v);
     });
 
-    return pick ? lodash.pickBy(result, v => v !== undefined) : { ...object, ...result };
+    return pick ? pickBy(result, v => v !== undefined) : { ...object, ...result };
   });
 };
 
@@ -179,10 +188,10 @@ Parser.from = function (schema, options = {}) {
   if (Array.isArray(schema)) {
     return Parser.fromArray(schema, options);
   }
-  if (lodash.isPlainObject(schema)) {
+  if (isPlainObject(schema)) {
     return Parser.fromObject(schema, options);
   }
-  if (lodash.isFunction(schema)) {
+  if (isFunction(schema)) {
     return Parser.fromFunction(schema, options);
   }
   return Parser.fromValue(schema);
@@ -196,4 +205,4 @@ function stringifyArgs(args) {
   return args.map(stringifyNullOrUndefined).join(',');
 }
 
-module.exports = Parser.from;
+export default Parser.from;

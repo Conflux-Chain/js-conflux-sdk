@@ -1,5 +1,5 @@
-const RPCMethodFactory = require('./index');
-const format = require('../util/format');
+import RPCMethodFactory from './index.js';
+import format from '../util/format.js';
 
 format.actionCall = format({
   space: format.any,
@@ -95,7 +95,7 @@ format.traceFilter = format({
   actionTypes: format([format.any]).$or(null),
 });
 
-class Trace extends RPCMethodFactory {
+export default class Trace extends RPCMethodFactory {
   constructor(conflux) {
     super(conflux, Trace.methods());
     this.conflux = conflux;
@@ -130,5 +130,3 @@ class Trace extends RPCMethodFactory {
     ];
   }
 }
-
-module.exports = Trace;

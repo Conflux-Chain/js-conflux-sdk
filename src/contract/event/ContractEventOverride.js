@@ -1,9 +1,9 @@
-const lodash = require('lodash');
-const callable = require('../../util/callable');
+import callable from '../../util/callable.js';
+import { keyBy } from 'lodash-es';
 
-class ContractEventOverride {
+export default class ContractEventOverride {
   constructor(events, contract, conflux) {
-    this.signatureToEvent = lodash.keyBy(events, 'signature');
+    this.signatureToEvent = keyBy(events, 'signature');
     this.contract = contract;
     this.conflux = conflux;
 
@@ -40,5 +40,3 @@ class ContractEventOverride {
     return event.decodeLog(log);
   }
 }
-
-module.exports = ContractEventOverride;

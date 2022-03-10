@@ -1,7 +1,7 @@
-const lodash = require('lodash');
+import { isFunction } from 'lodash-es';
 
-function callable(object, func) {
-  if (!lodash.isFunction(func)) {
+export default function callable(object, func) {
+  if (!isFunction(func)) {
     throw new Error('except to be function');
   }
 
@@ -21,5 +21,3 @@ function callable(object, func) {
     // construct
   });
 }
-
-module.exports = callable;

@@ -1,4 +1,4 @@
-const CRC20_ABI = [
+export const CRC20_ABI = [
   'function name() view returns (string)',
   'function symbol() view returns (string)',
   'function decimals() view returns (uint8)',
@@ -14,11 +14,11 @@ const CRC20_ABI = [
   'event Approval(address indexed owner, address indexed spender, uint256 amount)',
 ];
 
-const ERROR_ABI = [
+export const ERROR_ABI = [
   'function Error(string)',
 ];
 
-module.exports = {
+export default {
   CRC20_ABI,
   ERROR_ABI,
 };

@@ -1,8 +1,8 @@
-const callable = require('../../util/callable');
-const MethodTransaction = require('./MethodTransaction');
-const FunctionCoder = require('./FunctionCoder');
+import callable from '../../util/callable.js';
+import MethodTransaction from './MethodTransaction.js';
+import FunctionCoder from './FunctionCoder.js';
 
-class ContractMethod extends FunctionCoder {
+export default class ContractMethod extends FunctionCoder {
   constructor(fragment, contract, conflux) {
     super(fragment);
     this.contract = contract;
@@ -17,5 +17,3 @@ class ContractMethod extends FunctionCoder {
     return new MethodTransaction({ to, data }, this);
   }
 }
-
-module.exports = ContractMethod;

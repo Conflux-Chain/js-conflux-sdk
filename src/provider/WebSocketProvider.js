@@ -1,11 +1,12 @@
-const Websocket = require('websocket').w3cwebsocket;
-const BaseProvider = require('./BaseProvider');
-const { awaitTimeout } = require('../util');
+import websocket from 'websocket';
+import BaseProvider from './BaseProvider.js';
+import { awaitTimeout } from '../util/index.js';
+const Websocket = websocket.w3cwebsocket;
 
 /**
  * Websocket protocol json rpc provider.
  */
-class WebSocketProvider extends BaseProvider {
+export default class WebSocketProvider extends BaseProvider {
   /**
    * @param [options] {object} - See [W3CWebSocket](https://github.com/theturtle32/WebSocket-Node/blob/c91a6cb8f0cf896edf0d2d49faa0c9e0a9985172/docs/W3CWebSocket.md)
    * @param options.url {string} - Full json rpc http url
@@ -124,5 +125,3 @@ class WebSocketProvider extends BaseProvider {
     this.client = null;
   }
 }
-
-module.exports = WebSocketProvider;

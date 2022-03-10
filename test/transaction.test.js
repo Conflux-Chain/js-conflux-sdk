@@ -1,4 +1,4 @@
-const { Transaction, format } = require('../src');
+import { Transaction, format } from '../src/index.js';
 
 const KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 const ADDRESS = 'cfxtest:aasm4c231py7j34fghntcfkdt2nm9xv1tu6jd3r1s7';

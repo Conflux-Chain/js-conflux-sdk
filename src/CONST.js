@@ -1,14 +1,14 @@
-const JSBI = require('./util/jsbi');
+import JSBI from './util/jsbi.js';
 
 JSBI.prototype.toJSON = function () {
   // https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/BigInt
   return this.toString();
 };
 
-const WORD_BYTES = 32; // byte number pre abi word
-const WORD_CHARS = WORD_BYTES * 2;
-const UINT_BOUND = JSBI.leftShift(JSBI.BigInt(1), JSBI.BigInt(WORD_BYTES * 8)); // 2**256
-const MAX_UINT = JSBI.subtract(UINT_BOUND, JSBI.BigInt(1)); // 2**256-1
+export const WORD_BYTES = 32; // byte number pre abi word
+export const WORD_CHARS = WORD_BYTES * 2;
+export const UINT_BOUND = JSBI.leftShift(JSBI.BigInt(1), JSBI.BigInt(WORD_BYTES * 8)); // 2**256
+export const MAX_UINT = JSBI.subtract(UINT_BOUND, JSBI.BigInt(1)); // 2**256-1
 
 /**
  * epochNumber label
@@ -20,7 +20,7 @@ const MAX_UINT = JSBI.subtract(UINT_BOUND, JSBI.BigInt(1)); // 2**256-1
  * - `LATEST_CHECKPOINT` 'latest_checkpoint': latest check point epoch.
  * - `EARLIEST` 'earliest': earliest epoch number, same as 0.
  */
-const EPOCH_NUMBER = {
+export const EPOCH_NUMBER = {
   LATEST_MINED: 'latest_mined',
   LATEST_STATE: 'latest_state',
   LATEST_FINALIZED: 'latest_finalized',
@@ -37,7 +37,7 @@ const EPOCH_NUMBER = {
  * > CONST.MIN_GAS_PRICE
  1
  */
-const MIN_GAS_PRICE = 1;
+ export const MIN_GAS_PRICE = 1;
 
 /**
  * gas use for pure transfer transaction
@@ -47,7 +47,7 @@ const MIN_GAS_PRICE = 1;
  * > CONST.TRANSACTION_GAS
  21000
  */
-const TRANSACTION_GAS = 21000;
+ export const TRANSACTION_GAS = 21000;
 
 /**
  * storage limit for pure transfer transaction
@@ -56,7 +56,7 @@ const TRANSACTION_GAS = 21000;
  * > CONST.TRANSACTION_STORAGE_LIMIT
  0
  */
-const TRANSACTION_STORAGE_LIMIT = 0;
+ export const TRANSACTION_STORAGE_LIMIT = 0;
 
 /**
  * mainnet chainId
@@ -65,7 +65,7 @@ const TRANSACTION_STORAGE_LIMIT = 0;
  * > CONST.MAINNET_ID
  1029
  */
-const MAINNET_ID = 1029;
+ export const MAINNET_ID = 1029;
 
 /**
  * testnet chainId
@@ -74,7 +74,7 @@ const MAINNET_ID = 1029;
  * > CONST.TESTNET_ID
  1
  */
-const TESTNET_ID = 1;
+ export const TESTNET_ID = 1;
 
 /**
  * zero address
@@ -83,7 +83,7 @@ const TESTNET_ID = 1;
  * > ZERO_ADDRESS
  0x0000000000000000000000000000000000000000
  */
-const ZERO_ADDRESS_HEX = '0x0000000000000000000000000000000000000000';
+ export const ZERO_ADDRESS_HEX = '0x0000000000000000000000000000000000000000';
 
 /**
  * pending transaction status
@@ -91,7 +91,7 @@ const ZERO_ADDRESS_HEX = '0x0000000000000000000000000000000000000000';
  * - `FUTURE_NONCE` 'futureNonce': pending because future nonce
  * - `NOT_ENOUGH_CASH` 'notEnoughCash': pending because insufficient balance
  */
-const PENDING_TX_STATUS = {
+ export const PENDING_TX_STATUS = {
   FUTURE_NONCE: 'futureNonce',
   NOT_ENOUGH_CASH: 'notEnoughCash',
 };
@@ -101,7 +101,7 @@ const PENDING_TX_STATUS = {
  * @readonly
  * @enum {string}
  */
-const ACTION_TYPES = {
+ export const ACTION_TYPES = {
   CALL: 'call',
   CREATE: 'create',
   CALL_RESULT: 'call_result',
@@ -109,7 +109,7 @@ const ACTION_TYPES = {
   INTERNAL_TRANSFER_ACTION: 'internal_transfer_action',
 };
 
-const POCKET_ENUM = {
+export const POCKET_ENUM = {
   BALANCE: 'balance',
   STAKING_BALANCE: 'staking_balance',
   STORAGE_COLLATERAL: 'stroage_collateral',
@@ -124,7 +124,7 @@ const POCKET_ENUM = {
  * @readonly
  * @enum {string}
  */
-const CALL_TYPES = {
+ export const CALL_TYPES = {
   NONE: 'none',
   CALL: 'call',
   CALL_CODE: 'callcode',
@@ -137,13 +137,13 @@ const CALL_TYPES = {
  * @readonly
  * @enum {string}
  */
-const CREATE_TYPES = {
+export const CREATE_TYPES = {
   NONE: 'none',
   CREATE: 'create',
   CREATE2: 'create2',
 };
 
-const SPACE_ENUM = {
+export const SPACE_ENUM = {
   NONE: 'none',
   NATIVE: 'native',
   EVM: 'evm',
@@ -154,7 +154,7 @@ const SPACE_ENUM = {
  * @readonly
  * @enum {string}
  */
-const CALL_STATUS = {
+export const CALL_STATUS = {
   SUCCESS: 'success',
   REVERTED: 'reverted',
   FAIL: 'fail',
@@ -165,7 +165,7 @@ const CALL_STATUS = {
  * @readonly
  * @enum {number}
  */
-const TX_STATUS = {
+export const TX_STATUS = {
   /** If tx is not packed or in the defer state or executed in other block */
   UNEXECUTE: null,
   SUCCESS: 0,
@@ -174,9 +174,9 @@ const TX_STATUS = {
 };
 
 // KECCAK (i.e. Keccak) hash of the empty bytes string.
-const KECCAK_EMPTY = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
+export const KECCAK_EMPTY = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
 
-module.exports = {
+export default {
   WORD_BYTES,
   WORD_CHARS,
   UINT_BOUND,

@@ -1,11 +1,10 @@
 /* eslint-disable no-bitwise */
-
-const lodash = require('lodash');
-const { format, CONST } = require('../../src');
-const BaseCoder = require('../../src/contract/abi/BaseCoder');
-const { valueCoder } = require('../../src/contract/abi');
-const JSBI = require('../../src/util/jsbi');
-const HexStream = require('../../src/util/HexStream');
+import lodash from 'lodash-es';
+import { format, CONST } from '../../src/index.js';
+import BaseCoder from '../../src/contract/abi/BaseCoder.js';
+import { valueCoder } from '../../src/contract/abi/index.js';
+import JSBI from '../../src/util/jsbi.js';
+import HexStream from '../../src/util/HexStream.js';
 
 function testEncode(coder, value, string) {
   const hex = format.hex(coder.encode(value));

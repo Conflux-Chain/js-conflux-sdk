@@ -1,4 +1,4 @@
-const providerFactory = require('../src/provider');
+import providerFactory from '../src/provider/index.js';
 
 const HTTP_URL = 'http://main.confluxrpc.org';
 const WS_URL = 'ws://main.confluxrpc.org/ws';

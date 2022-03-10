@@ -20,7 +20,7 @@
  * > student.age = 19
  Error: can not change element to a NamedTuple
  */
-function namedTuple(...names) {
+export default function namedTuple(...names) {
   const _nameToIndex = {};
   names.forEach((name, index) => {
     _nameToIndex[name] = index;
@@ -68,5 +68,3 @@ function namedTuple(...names) {
 
   return NamedTuple;
 }
-
-module.exports = namedTuple;

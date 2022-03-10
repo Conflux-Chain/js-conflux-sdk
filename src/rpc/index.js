@@ -1,6 +1,6 @@
-const format = require('../util/format');
+import format from '../util/format.js'
 
-class RPCMethodFactory {
+export default class RPCMethodFactory {
   constructor(conflux, methods = []) {
     this.conflux = conflux;
     this.addMethods(methods);
@@ -41,5 +41,3 @@ class RPCMethodFactory {
     return rpcMethod;
   }
 }
-
-module.exports = RPCMethodFactory;

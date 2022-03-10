@@ -1,23 +1,23 @@
-const Big = require('big.js');
-const lodash = require('lodash');
-const CONST = require('../CONST');
-const JSBI = require('./jsbi');
-const parser = require('./parser');
-const sign = require('./sign');
-const addressUtil = require('./address');
-const { isHexString, isBytes, validAddressPrefix } = require('./index');
+import { isHexString, isBytes, validAddressPrefix } from './index.js';
+import sign from './sign.js';
+import parser from './parser.js';
+import JSBI from './jsbi.js';
+import CONST from '../CONST.js';
+import Big from 'big.js';
+import addressUtil from './address.js';
+import { isString, isBoolean, isObject } from 'lodash-es';
 
 // ----------------------------------------------------------------------------
 function toHex(value) {
   let hex;
 
-  if (lodash.isString(value)) {
+  if (isString(value)) {
     hex = value.toLowerCase(); // XXX: lower case for support checksum address
   } else if (Number.isInteger(value) || (typeof value === 'bigint') || (value instanceof JSBI)) {
     hex = `0x${value.toString(16)}`;
   } else if (Buffer.isBuffer(value)) {
     hex = `0x${value.toString('hex')}`;
-  } else if (lodash.isBoolean(value)) {
+  } else if (isBoolean(value)) {
     hex = value ? '0x01' : '0x00';
   } else if (value === null) {
     hex = '0x';
@@ -44,7 +44,7 @@ function toBigInt(value) {
   if (Number.isInteger(value) || (typeof value === 'bigint') || (value instanceof JSBI)) {
     return JSBI.BigInt(value);
   }
-  if (lodash.isBoolean(value)) {
+  if (isBoolean(value)) {
     throw new Error(`${value} not match "BigInt"`);
   }
   if (Buffer.isBuffer(value)) {
@@ -241,10 +241,10 @@ format.hex40 = format.hex.$validate(v => v.length === 2 + 40, 'hex40');
 
 function toAddress(address, networkId, verbose = false) {
   // if is an (Account) object, convert it to string (address)
-  if (lodash.isObject(address) && addressUtil.hasNetworkPrefix(address.toString())) {
+  if (isObject(address) && addressUtil.hasNetworkPrefix(address.toString())) {
     address = address.toString();
   }
-  if (lodash.isString(address) && addressUtil.hasNetworkPrefix(address)) {
+  if (isString(address) && addressUtil.hasNetworkPrefix(address)) {
     const _decodedAddress = addressUtil.decodeCfxAddress(address);
     address = _decodedAddress.hexAddress;
     networkId = networkId || _decodedAddress.netId;
@@ -296,7 +296,7 @@ format.netAddress = networkId => format(address => toAddress(address, networkId)
  0x0123456789012345678901234567890123456789
  */
 format.hexAddress = format.hex40.$before(address => {
-  if (lodash.isString(address) && addressUtil.hasNetworkPrefix(address)) {
+  if (isString(address) && addressUtil.hasNetworkPrefix(address)) {
     address = addressUtil.decodeCfxAddress(address).hexAddress;
   }
 
@@ -432,7 +432,7 @@ format.bytes = format(v => {
  * > format.boolean(false)
  false
  */
-format.boolean = format.any.$validate(lodash.isBoolean, 'boolean');
+format.boolean = format.any.$validate(isBoolean, 'boolean');
 
 /**
  * Compute the keccak256 cryptographic hash of a value, returned as a hex string.
@@ -451,7 +451,7 @@ format.boolean = format.any.$validate(lodash.isBoolean, 'boolean');
  * > format.keccak256('0x42') // "0x42" as string and transfer to <Buffer 30 78 34 32> by ascii
  "0x3c1b2d38851281e9a7b59d10973b0c87c340ff1e76bde7d06bf6b9f28df2b8c0"
  */
-format.keccak256 = format.bytes.$before(v => (lodash.isString(v) && !isHexString(v) ? Buffer.from(v) : v)).$after(sign.keccak256).$after(format.hex);
+format.keccak256 = format.bytes.$before(v => (isString(v) && !isHexString(v) ? Buffer.from(v) : v)).$after(sign.keccak256).$after(format.hex);
 
 // -------------------------- format method arguments -------------------------
 format.getLogs = format({
@@ -710,4 +710,4 @@ format.posEconomics = format({
   name: 'format.posEconomics',
 });
 
-module.exports = format;
+export default format;

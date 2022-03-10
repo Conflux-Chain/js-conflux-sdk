@@ -1,9 +1,9 @@
-const EventEmitter = require('events');
+import EventEmitter from 'events';
 
 /**
  * Subscription event emitter
  */
-class Subscription extends EventEmitter {
+export default class Subscription extends EventEmitter {
   constructor(id) {
     super();
     this.id = id;
@@ -13,5 +13,3 @@ class Subscription extends EventEmitter {
     return this.id;
   }
 }
-
-module.exports = Subscription;

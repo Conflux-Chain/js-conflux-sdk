@@ -1,6 +1,6 @@
-const FunctionCoder = require('./FunctionCoder');
+import FunctionCoder from './FunctionCoder.js';
 
-class ErrorCoder extends FunctionCoder {
+export default class ErrorCoder extends FunctionCoder {
   constructor() {
     super({ name: 'Error', inputs: [{ type: 'string', name: 'message' }] });
   }
@@ -14,5 +14,3 @@ class ErrorCoder extends FunctionCoder {
     }
   }
 }
-
-module.exports = ErrorCoder;

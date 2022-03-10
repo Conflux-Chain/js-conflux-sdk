@@ -1,8 +1,8 @@
-const lodash = require('lodash');
-const { assert } = require('../../util');
-const BytesCoder = require('./BytesCoder');
+import { assert } from '../../util/index.js';
+import BytesCoder from './BytesCoder.js';
+import { isString } from 'lodash-es';
 
-class StringCoder extends BytesCoder {
+export default class StringCoder extends BytesCoder {
   static from({ type, ...options }) {
     if (type !== 'string') {
       return undefined;
@@ -20,7 +20,7 @@ class StringCoder extends BytesCoder {
    * @return {Buffer}
    */
   encode(value) {
-    assert(lodash.isString(value), {
+    assert(isString(value), {
       message: 'value type error',
       expect: 'string',
       got: value.constructor.name,
@@ -40,7 +40,7 @@ class StringCoder extends BytesCoder {
   }
 
   encodeTopic(value) {
-    assert(lodash.isString(value), {
+    assert(isString(value), {
       message: 'value type error',
       expect: 'string',
       got: value.constructor.name,
@@ -50,5 +50,3 @@ class StringCoder extends BytesCoder {
     return super.encodeTopic(Buffer.from(value));
   }
 }
-
-module.exports = StringCoder;

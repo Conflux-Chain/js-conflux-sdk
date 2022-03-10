@@ -1,11 +1,11 @@
-const { WORD_BYTES } = require('../../CONST');
-const { assert, alignBuffer } = require('../../util');
-const format = require('../../util/format');
-const sign = require('../../util/sign');
-const BaseCoder = require('./BaseCoder');
-const { uIntCoder } = require('./IntegerCoder');
+import { WORD_BYTES } from '../../CONST.js';
+import { assert, alignBuffer } from '../../util/index.js';
+import format from '../../util/format.js';
+import sign from '../../util/sign.js';
+import BaseCoder from './BaseCoder.js';
+import uIntCoder from './IntegerCoder.js';
 
-class BytesCoder extends BaseCoder {
+export default class BytesCoder extends BaseCoder {
   static from({ type, ...options }) {
     const match = type.match(/^bytes([0-9]*)$/);
     if (!match) {
@@ -96,5 +96,3 @@ class BytesCoder extends BaseCoder {
     return hex;
   }
 }
-
-module.exports = BytesCoder;

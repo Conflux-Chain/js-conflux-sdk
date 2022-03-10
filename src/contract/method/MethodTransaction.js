@@ -1,6 +1,6 @@
-const Transaction = require('../../Transaction');
+import Transaction from '../../Transaction.js';
 
-class MethodTransaction extends Transaction {
+export default class MethodTransaction extends Transaction {
   constructor(options, method) {
     super(options);
     Reflect.defineProperty(this, 'method', { value: method }); // XXX: use defineProperty to avoid from JSON.stringify
@@ -89,5 +89,3 @@ class MethodTransaction extends Transaction {
     }
   }
 }
-
-module.exports = MethodTransaction;

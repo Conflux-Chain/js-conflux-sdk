@@ -1,6 +1,6 @@
-const HexStream = require('../../util/HexStream');
+import HexStream from '../../util/HexStream.js';
 
-class BaseCoder {
+export default class BaseCoder {
   static from(component) {} // eslint-disable-line no-unused-vars
 
   constructor({ type, name }) {
@@ -34,5 +34,3 @@ class BaseCoder {
     return this.decode(stream);
   }
 }
-
-module.exports = BaseCoder;

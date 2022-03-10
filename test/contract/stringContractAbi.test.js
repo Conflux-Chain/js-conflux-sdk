@@ -1,9 +1,9 @@
-const JSBI = require('../../src/util/jsbi');
-const { Conflux, Contract, format } = require('../../src');
-const { MockProvider } = require('../../mock');
-const { bytecode, address } = require('./contract.json');
-const { abi } = require('./stringAbi');
-const ContractConstructor = require('../../src/contract/method/ContractConstructor');
+import JSBI from '../../src/util/jsbi.js';
+import { Conflux, Contract, format } from '../../src/index.js';
+import { MockProvider } from '../../mock.js';
+import { bytecode, address } from './contract.json';
+import { abi } from './stringAbi.js';
+import ContractConstructor from '../../src/contract/method/ContractConstructor.js';
 
 const ADDRESS = '0x1cad0b19bb29d4674531d6f115237e16afce377c';
 const HEX64 = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';

@@ -1,7 +1,8 @@
-const EventEmitter = require('events');
-const RPCError = require('./RPCError');
+import EventEmitter from 'events';
+import RPCError from './RPCError.js';
+export { default as RPCError } from './RPCError.js';
 
-class BaseProvider extends EventEmitter {
+export default class BaseProvider extends EventEmitter {
   /**
    * @param [options] {object}
    * @param options.url {string} - Full json rpc http url
@@ -136,6 +137,3 @@ class BaseProvider extends EventEmitter {
 
   close() {}
 }
-
-module.exports = BaseProvider;
-module.exports.RPCError = RPCError;

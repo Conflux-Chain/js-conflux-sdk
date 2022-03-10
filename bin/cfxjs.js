@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-const { program } = require('commander');
-const sign = require('../src/util/sign');
-const format = require('../src/util/format');
+import { program } from 'commander';
+import sign from '../src/util/sign.js';
+import format from '../src/util/format.js';
 
 program.version('0.0.1')
   .name('cfxjs');

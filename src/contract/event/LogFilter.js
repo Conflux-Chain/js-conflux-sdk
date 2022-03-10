@@ -1,4 +1,4 @@
-class LogFilter {
+export default class LogFilter {
   constructor({ address, topics }, event) {
     this.address = address;
     this.topics = topics;
@@ -25,5 +25,3 @@ class LogFilter {
     return subscription;
   }
 }
-
-module.exports = LogFilter;

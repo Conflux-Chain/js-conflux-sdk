@@ -1,7 +1,7 @@
-const { keccak256, ecdsaSign, ecdsaRecover, publicKeyToAddress } = require('./util/sign');
-const format = require('./util/format');
+import { keccak256, ecdsaSign, ecdsaRecover, publicKeyToAddress } from './util/sign.js';
+import format from './util/format.js';
 
-class Message {
+export default class Message {
   /**
    * Signs the hash with the privateKey.
    *
@@ -140,5 +140,3 @@ class Message {
     }
   }
 }
-
-module.exports = Message;

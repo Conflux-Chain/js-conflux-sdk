@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
-const EventEmitter = require('events');
-const lodash = require('lodash');
-const { toHex, padHex, randomPick, randomHex, HexStruct } = require('./util');
+import EventEmitter from 'events';
+import lodash from 'lodash-es';
+import { toHex, padHex, randomPick, randomHex, HexStruct } from './util.js';
 
 const addressStruct = new HexStruct('0xa0', { address: 4 }, 40);
 const blockHashStruct = new HexStruct('0xb0', { epochNumber: 6, blockIndex: 2 }, 64);
@@ -104,7 +104,7 @@ function mockLogsByEpochNumber(self, epochNumber) {
 }
 
 // ----------------------------------------------------------------------------
-class MockProvider extends EventEmitter {
+export default class MockProvider extends EventEmitter {
   constructor({
     startTimestamp = Math.floor(Date.now() / 1000) - 2 * 30 * 24 * 3600,
     blockDelta = 1,
@@ -427,5 +427,3 @@ class MockProvider extends EventEmitter {
     return randomPick(true, false);
   }
 }
-
-module.exports = MockProvider;

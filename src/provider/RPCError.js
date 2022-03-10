@@ -1,15 +1,13 @@
-const { isHexString } = require('../util');
-const format = require('../util/format');
+import { isHexString } from '../util/index.js';
+import format from '../util/format.js';
 
-class RPCError extends Error {
+export default class RPCError extends Error {
   constructor(object, payload = {}) {
     supplementErrorInfo(object, payload);
     super(object);
     Object.assign(this, object);
   }
 }
-
-module.exports = RPCError;
 
 function supplementErrorInfo(object, payload) {
   // If use base32 address with full node before v1.1.1, will encounter this error

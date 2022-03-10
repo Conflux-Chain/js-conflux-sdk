@@ -10,7 +10,7 @@ const lodash = require('lodash');
 const HEX_CHARS = '0123456789abcdef';
 
 // ----------------------------------------------------------------------------
-function toHex(value) {
+export function toHex(value) {
   if (Number.isFinite(value)) {
     return `0x${value.toString(16)}`;
   }
@@ -22,7 +22,7 @@ function toHex(value) {
   throw new Error(`can not get hex from ${value}`);
 }
 
-function padHex(value = 0, length = undefined, alignLeft = false) {
+export function padHex(value = 0, length = undefined, alignLeft = false) {
   let nakedHex = toHex(value).replace('0x', '');
 
   nakedHex = alignLeft
@@ -36,11 +36,11 @@ function padHex(value = 0, length = undefined, alignLeft = false) {
   return `0x${nakedHex}`;
 }
 
-function concatHex(...hexArray) {
+export function concatHex(...hexArray) {
   return `0x${hexArray.map(hex => hex.replace('0x', '')).join('')}`;
 }
 
-class HexStruct {
+export class HexStruct {
   constructor(prefix, template, length) {
     this.prefix = prefix;
     this.template = template;
@@ -64,18 +64,18 @@ class HexStruct {
 }
 
 // ----------------------------------------------------------------------------
-function randomPick(...args) {
+export function randomPick(...args) {
   return args[lodash.random(0, args.length - 1)];
 }
 
-function randomHex(size) {
+export function randomHex(size) {
   const body = lodash.range(size)
     .map(() => HEX_CHARS.charAt(lodash.random(0, HEX_CHARS.length - 1)))
     .join('');
   return `0x${body}`;
 }
 
-module.exports = {
+export default {
   toHex,
   padHex,
   HexStruct,

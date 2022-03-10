@@ -1,9 +1,9 @@
-const { assert } = require('../util');
-const format = require('../util/format');
-const sign = require('../util/sign');
-const Account = require('./Account');
+import { assert } from '../util/index.js';
+import format from '../util/format.js';
+import sign from '../util/sign.js';
+import Account from './Account.js';
 
-class PrivateKeyAccount extends Account {
+export default class PrivateKeyAccount extends Account {
   /**
    * Create a new PrivateKeyAccount with random privateKey.
    *
@@ -196,5 +196,3 @@ class PrivateKeyAccount extends Account {
     return message;
   }
 }
-
-module.exports = PrivateKeyAccount;

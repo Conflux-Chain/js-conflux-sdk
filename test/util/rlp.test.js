@@ -1,6 +1,6 @@
-const lodash = require('lodash');
-const { format } = require('../../src');
-const { encode } = require('../../src/util/rlp');
+import lodash from 'lodash';
+import { format } from '../../src/index.js';
+import { encode } from '../../src/util/rlp.js';
 
 test('zero', () => {
   const value = format.hexBuffer(0);

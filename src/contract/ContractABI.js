@@ -1,4 +1,4 @@
-class ContractABI {
+export default class ContractABI {
   constructor(contract) {
     this.contract = contract;
   }
@@ -38,5 +38,3 @@ class ContractABI {
     };
   }
 }
-
-module.exports = ContractABI;

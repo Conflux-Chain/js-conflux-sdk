@@ -1,4 +1,4 @@
-const AdminControl = {
+export const AdminControl = {
   abi: [
     'function getAdmin(address contractAddr) public view returns (address)',
     'function setAdmin(address contractAddr, address newAdmin)',
@@ -7,7 +7,7 @@ const AdminControl = {
   address: '0x0888000000000000000000000000000000000000',
 };
 
-const SponsorWhitelistControl = {
+export const SponsorWhitelistControl = {
   abi: [
     'function getSponsorForGas(address contractAddr) public view returns (address)',
     'function getSponsoredBalanceForGas(address contractAddr) public view returns (uint256)',
@@ -26,7 +26,7 @@ const SponsorWhitelistControl = {
   address: '0x0888000000000000000000000000000000000001',
 };
 
-const Staking = {
+export const Staking = {
   abi: [
     'function getStakingBalance(address user) public view returns (uint256)',
     'function getLockedStakingBalance(address user, uint256 blockNumber) public view returns (uint256)',
@@ -38,7 +38,7 @@ const Staking = {
   address: '0x0888000000000000000000000000000000000002',
 };
 
-const ConfluxContext = {
+export const ConfluxContext = {
   abi: [
     'function epochNumber() public view returns (uint256)',
     'function posHeight() public view returns (uint256)',
@@ -47,7 +47,7 @@ const ConfluxContext = {
   address: '0x0888000000000000000000000000000000000004',
 };
 
-const PoSRegister = {
+export const PoSRegister = {
   abi: [
     'function register(bytes32 indentifier, uint64 votePower, bytes calldata blsPubKey, bytes calldata vrfPubKey, bytes[2] calldata blsPubKeyProof)',
     'function increaseStake(uint64 votePower)',
@@ -62,7 +62,7 @@ const PoSRegister = {
   address: '0x0888000000000000000000000000000000000005',
 };
 
-const CrossSpaceCall = {
+export const CrossSpaceCall = {
   abi: [
     'event Call(bytes20 indexed sender, bytes20 indexed receiver, uint256 value, uint256 nonce, bytes data)',
     'event Create(bytes20 indexed sender, bytes20 indexed contract_address, uint256 value, uint256 nonce, bytes init)',
@@ -79,7 +79,7 @@ const CrossSpaceCall = {
   address: '0x0888000000000000000000000000000000000006',
 };
 
-module.exports = {
+export default {
   AdminControl,
   SponsorWhitelistControl,
   Staking,

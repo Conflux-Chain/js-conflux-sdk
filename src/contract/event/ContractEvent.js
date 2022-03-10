@@ -1,8 +1,8 @@
-const callable = require('../../util/callable');
-const EventCoder = require('./EventCoder');
-const LogFilter = require('./LogFilter');
+import callable from '../../util/callable.js';
+import EventCoder from './EventCoder.js';
+import LogFilter from './LogFilter.js';
 
-class ContractEvent extends EventCoder {
+export default class ContractEvent extends EventCoder {
   constructor(fragment, contract, conflux) {
     super(fragment);
     this.contract = contract;
@@ -17,5 +17,3 @@ class ContractEvent extends EventCoder {
     return new LogFilter({ address, topics }, this);
   }
 }
-
-module.exports = ContractEvent;

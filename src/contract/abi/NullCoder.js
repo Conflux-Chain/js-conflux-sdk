@@ -1,7 +1,7 @@
-const { assert } = require('../../util');
-const BaseCoder = require('./BaseCoder');
+import { assert } from '../../util/index.js';
+import BaseCoder from './BaseCoder.js';
 
-class NullCoder extends BaseCoder {
+export default class NullCoder extends BaseCoder {
   static from({ type, ...options }) {
     if (type !== '') {
       return undefined;
@@ -31,5 +31,3 @@ class NullCoder extends BaseCoder {
     return null;
   }
 }
-
-module.exports = NullCoder;

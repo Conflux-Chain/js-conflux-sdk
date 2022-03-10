@@ -1,5 +1,5 @@
-const { Conflux } = require('../../src');
-const MockProvider = require('../../mock/MockProvider');
+import { Conflux } from '../../src/index.js';
+import MockProvider from '../../mock/MockProvider.js';
 
 const conflux = new Conflux({
   defaultGasPrice: 1000000,

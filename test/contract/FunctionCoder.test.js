@@ -1,5 +1,5 @@
-const JSBI = require('../../src/util/jsbi');
-const FunctionCoder = require('../../src/contract/method/FunctionCoder');
+import JSBI from '../../src/util/jsbi.js';
+import FunctionCoder from '../../src/contract/method/FunctionCoder.js';
 
 test('function', () => {
   const abi = {

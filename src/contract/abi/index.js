@@ -3,16 +3,16 @@
  @see https://solidity.readthedocs.io/en/v0.5.13/abi-spec.html#encoding-of-indexed-event-parameters
  */
 
-const { assert } = require('../../util');
-const BaseCoder = require('./BaseCoder');
-const NullCoder = require('./NullCoder');
-const AddressCoder = require('./AddressCoder');
-const IntegerCoder = require('./IntegerCoder');
-const BoolCoder = require('./BoolCoder');
-const BytesCoder = require('./BytesCoder');
-const StringCoder = require('./StringCoder');
-const TupleCoder = require('./TupleCoder');
-const ArrayCoder = require('./ArrayCoder');
+import { assert } from '../../util/index.js';
+import BaseCoder from './BaseCoder.js';
+import NullCoder from './NullCoder.js';
+import AddressCoder from './AddressCoder.js';
+import IntegerCoder from './IntegerCoder.js';
+import BoolCoder from './BoolCoder.js';
+import BytesCoder from './BytesCoder.js';
+import StringCoder from './StringCoder.js';
+import TupleCoder from './TupleCoder.js';
+import ArrayCoder from './ArrayCoder.js';
 // TODO FixedCoder
 
 /**
@@ -24,7 +24,7 @@ const ArrayCoder = require('./ArrayCoder');
  * @param [component.components] {array} - For TupleCoder
  * @return {BaseCoder}
  */
-function valueCoder(component) {
+export function valueCoder(component) {
   // must parse ArrayCoder first, others sorted by probability
   const coder = ArrayCoder.from(component, valueCoder) // recursion
     || TupleCoder.from(component, valueCoder) // recursion
@@ -43,15 +43,15 @@ function valueCoder(component) {
   return coder;
 }
 
-function formatType({ name, inputs }) {
+export function formatType({ name, inputs }) {
   return `${name}(${inputs.map(param => valueCoder(param).type).join(',')})`;
 }
 
-function formatFullName({ name, inputs }) {
+export function formatFullName({ name, inputs }) {
   return `${name}(${inputs.map(param => `${valueCoder(param).type} ${param.indexed ? 'indexed ' : ''}${param.name}`).join(', ')})`;
 }
 
-module.exports = {
+export default {
   valueCoder,
   formatType,
   formatFullName,

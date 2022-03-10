@@ -1,5 +1,5 @@
-const format = require('../../util/format');
-const CONST = require('../../CONST');
+import format from '../../util/format.js';
+import { KECCAK_EMPTY } from '../../CONST.js';
 
 const formatAccount = format({
   accumulatedInterestReturn: format.bigUInt,
@@ -11,7 +11,7 @@ const formatAccount = format({
   name: 'format.account',
 });
 
-class Account {
+export default class Account {
   static format(data) {
     return formatAccount(data);
   }
@@ -22,8 +22,6 @@ class Account {
   }
 
   isExternalAccount() {
-    return this.codeHash === CONST.KECCAK_EMPTY;
+    return this.codeHash === KECCAK_EMPTY;
   }
 }
-
-module.exports = Account;

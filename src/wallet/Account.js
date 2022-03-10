@@ -1,7 +1,7 @@
-const Transaction = require('../Transaction');
-const Message = require('../Message');
+import Transaction from '../Transaction.js';
+import Message from '../Message.js';
 
-class Account {
+export default class Account {
   /**
    * @param address {string}
    */
@@ -36,5 +36,3 @@ class Account {
     return this.address;
   }
 }
-
-module.exports = Account;

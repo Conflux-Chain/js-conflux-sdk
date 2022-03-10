@@ -1,10 +1,10 @@
-const { UINT_BOUND } = require('../../CONST');
-const { assert, alignBuffer } = require('../../util');
-const format = require('../../util/format');
-const JSBI = require('../../util/jsbi');
-const BaseCoder = require('./BaseCoder');
+import { UINT_BOUND } from '../../CONST.js';
+import { assert, alignBuffer } from '../../util/index.js';
+import format from '../../util/format.js';
+import JSBI from '../../util/jsbi.js';
+import BaseCoder from './BaseCoder.js';
 
-class IntegerCoder extends BaseCoder {
+export default class IntegerCoder extends BaseCoder {
   static from({ type, ...options }) {
     const match = type.match(/^(int|uint)([0-9]*)$/);
     if (!match) {
@@ -75,5 +75,4 @@ class IntegerCoder extends BaseCoder {
   }
 }
 
-module.exports = IntegerCoder;
-module.exports.uIntCoder = new IntegerCoder({ type: 'uint' });
+export const uIntCoder = new IntegerCoder({ type: 'uint' });

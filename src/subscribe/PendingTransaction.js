@@ -2,7 +2,7 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-class PendingTransaction {
+export default class PendingTransaction {
   constructor(conflux, func, args) {
     this.conflux = conflux;
     this.func = func;
@@ -132,5 +132,3 @@ class PendingTransaction {
     throw new Error(`wait transaction "${transactionHash}" confirmed timeout after ${Date.now() - startTime} ms`);
   }
 }
-
-module.exports = PendingTransaction;

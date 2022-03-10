@@ -1,4 +1,5 @@
-const { decode } = require('rlp');
+export { decode } from 'rlp';
+import { decode } from 'rlp';
 /*
   prefix    | delta | note          | code
   ----------|-------|---------------|--------------------------------------------------------------
@@ -33,7 +34,7 @@ function concat(...args) {
  * @param value {Array|Buffer}
  * @return {Buffer}
  */
-function encode(value) {
+export function encode(value) {
   if (Buffer.isBuffer(value)) {
     return encodeBuffer(value);
   }
@@ -82,6 +83,7 @@ function encodeArray(array) {
   return concat(encodeLength(buffer.length, ARRAY_OFFSET), buffer);
 }
 
-// TODO decode
-
-module.exports = { encode, decode };
+export default {
+  encode,
+  decode,
+}

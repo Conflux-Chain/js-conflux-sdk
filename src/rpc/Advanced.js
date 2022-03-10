@@ -1,8 +1,8 @@
-const Big = require('big.js');
-const CONST = require('../CONST');
-const format = require('../util/format');
+import Big from 'big.js';
+import format from '../util/format.js';
+import CONST from '../CONST.js';
 
-class AdvancedRPCUtilities {
+export default class AdvancedRPCUtilities {
   constructor(conflux) {
     this.conflux = conflux;
   }
@@ -95,5 +95,3 @@ class AdvancedRPCUtilities {
     return estimateResult;
   }
 }
-
-module.exports = AdvancedRPCUtilities;

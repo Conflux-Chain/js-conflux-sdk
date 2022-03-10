@@ -1,5 +1,5 @@
-const lodash = require('lodash');
-const { format, sign, CONST } = require('../../src');
+import lodash from 'lodash-es';
+import { format, sign, CONST } from '../../src/index.js';
 
 const {
   checksumAddress,

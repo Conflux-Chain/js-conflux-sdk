@@ -1,6 +1,6 @@
-const lodash = require('lodash');
-const { Conflux, format, CONST } = require('../../src');
-const { MockProvider } = require('../../mock');
+import lodash from 'lodash-es';
+import { Conflux, format, CONST } from '../../src/index.js';
+import { MockProvider } from '../../mock/index.js';
 
 // const HEX_ADDRESS = '0x1cad0b19bb29d4674531d6f115237e16afce377c';
 const ADDRESS = 'cfxtest:aasm4c231py7j34fghntcfkdt2nm9xv1tu6jd3r1s7';

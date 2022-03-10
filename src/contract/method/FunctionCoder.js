@@ -1,9 +1,9 @@
-const { assert } = require('../../util');
-const format = require('../../util/format');
-const HexStream = require('../../util/HexStream');
-const { formatType, formatFullName, valueCoder } = require('../abi');
+import { assert } from '../../util/index.js';
+import format from '../../util/format.js';
+import HexStream from '../../util/HexStream.js';
+import { formatType, formatFullName, valueCoder } from '../abi/index.js';
 
-class FunctionCoder {
+export default class FunctionCoder {
   /**
    * Function coder
    *
@@ -121,5 +121,3 @@ class FunctionCoder {
     return tuple.length <= 1 ? tuple[0] : tuple;
   }
 }
-
-module.exports = FunctionCoder;

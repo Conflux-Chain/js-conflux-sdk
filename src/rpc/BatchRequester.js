@@ -1,10 +1,10 @@
-const RPCError = require('../provider/RPCError');
-const Transaction = require('../Transaction');
+import Transaction from '../Transaction.js';
+import RPCError from '../provider/RPCError.js';
 
 const SEND_TX_METHOD = 'cfx_sendTransaction';
 const SEND_RAW_TX_METHOD = 'cfx_sendRawTransaction';
 
-class BatchRequester {
+export default class BatchRequester {
   /**
    * BatchRequester constructor.
    *
@@ -207,5 +207,3 @@ class BatchRequester {
     return _nonce;
   }
 }
-
-module.exports = BatchRequester;

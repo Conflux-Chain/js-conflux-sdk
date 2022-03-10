@@ -1,8 +1,8 @@
-const { keccak256, ecdsaSign, ecdsaRecover, privateKeyToAddress, publicKeyToAddress } = require('./util/sign');
-const rlp = require('./util/rlp');
-const format = require('./util/format');
+import { keccak256, ecdsaSign, ecdsaRecover, privateKeyToAddress, publicKeyToAddress } from './util/sign.js';
+import rlp from './util/rlp.js';
+import format from './util/format.js';
 
-class Transaction {
+export default class Transaction {
   /**
    * Decode rlp encoded raw transaction hex string
    *
@@ -148,5 +148,3 @@ class Transaction {
     return format.hex(this.encode(true));
   }
 }
-
-module.exports = Transaction;

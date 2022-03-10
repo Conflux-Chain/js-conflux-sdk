@@ -1,4 +1,4 @@
-const HexStream = require('../../src/util/HexStream');
+import HexStream from '../../src/util/HexStream.js';
 
 test('HexStream', () => {
   const stream = new HexStream(

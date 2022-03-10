@@ -1,7 +1,7 @@
 /* eslint-disable no-bitwise,no-self-compare */
 
-const JSBI = require('jsbi');
-const NodeBI = require('../../src/util/jsbi');
+import JSBI from 'jsbi';
+import NodeBI from '../../src/util/jsbi.js';
 
 JSBI.prototype.toJSON = function () {
   return this.toString();

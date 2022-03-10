@@ -1,4 +1,4 @@
-const abi = [
+export const abi = [
   'constructor(uint256 num)',
   'function count() public view returns (uint256)',
   'function self() public',
@@ -15,6 +15,6 @@ const abi = [
   'event OverrideEvent(uint256 indexed num, string memory str)',
 ];
 
-module.exports = {
+export default {
   abi,
 };

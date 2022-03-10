@@ -10,6 +10,10 @@
     "sdk"
   ],
   "main": "src/index.js",
+  "type": "module",
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "bin": {
     "cfxjs": "bin/cfxjs.js"
   },
@@ -32,7 +36,7 @@
     "big.js": "^5.2.2",
     "commander": "^8.0.0",
     "keccak": "^2.0.0",
-    "lodash": "^4.17.19",
+    "lodash-es": "^4.17.21",
     "rlp": "^2.2.7",
     "scrypt-js": "^3.0.1",
     "secp256k1": "^3.7.1",
@@ -74,7 +78,7 @@
     "jest/jest-cli/jest-config/jest-environment-jsdom/jsdom/acorn-globals/acorn": "6.4.1"
   },
   "scripts": {
-    "eslint": "npx eslint ./src ./test ./mock",
+    "eslint": "npx eslint -c ./.eslintrc.mjs ./src ./test ./mock",
     "build": "node scripts/build-frontend.js",
     "document": "node scripts/document.js",
     "jsdocToMd": "node scripts/jsdoc-to-md.js",

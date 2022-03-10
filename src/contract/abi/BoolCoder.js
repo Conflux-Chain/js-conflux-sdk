@@ -1,9 +1,9 @@
-const lodash = require('lodash');
-const { assert } = require('../../util');
-const JSBI = require('../../util/jsbi');
-const IntegerCoder = require('./IntegerCoder');
+import { isBoolean } from 'lodash-es';
+import { assert } from '../../util/index.js';
+import JSBI from '../../util/jsbi.js';
+import IntegerCoder from './IntegerCoder.js';
 
-class BoolCoder extends IntegerCoder {
+export default class BoolCoder extends IntegerCoder {
   static from({ type, ...options }) {
     if (type !== 'bool') {
       return undefined;
@@ -21,7 +21,7 @@ class BoolCoder extends IntegerCoder {
    * @return {Buffer}
    */
   encode(value) {
-    assert(lodash.isBoolean(value), {
+    assert(isBoolean(value), {
       message: 'unexpected type',
       expect: 'boolean',
       got: value,
@@ -39,5 +39,3 @@ class BoolCoder extends IntegerCoder {
     return JSBI.notEqual(super.decode(stream), JSBI.BigInt(0));
   }
 }
-
-module.exports = BoolCoder;

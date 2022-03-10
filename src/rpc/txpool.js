@@ -1,11 +1,11 @@
-const RPCMethodFactory = require('./index');
-const format = require('../util/format');
+import RPCMethodFactory from './index.js';
+import format from '../util/format.js';
 
 /**
  * Class contains txpool RPC methods
  * @class
  */
-class TxPool extends RPCMethodFactory {
+export default class TxPool extends RPCMethodFactory {
   /**
    * TxPool constructor.
    * @param {object} conflux A Conflux instance
@@ -40,5 +40,3 @@ class TxPool extends RPCMethodFactory {
     ];
   }
 }
-
-module.exports = TxPool;

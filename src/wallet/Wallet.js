@@ -1,12 +1,12 @@
-const { assert } = require('../util');
-const format = require('../util/format');
-const Account = require('./Account');
-const PrivateKeyAccount = require('./PrivateKeyAccount');
+import { assert } from '../util/index.js';
+import format from '../util/format.js';
+import Account from './Account.js';
+import PrivateKeyAccount from './PrivateKeyAccount.js';
 
 /**
  * Wallet to manager accounts.
  */
-class Wallet extends Map {
+export default class Wallet extends Map {
   constructor(networkId) {
     super();
     this.networkId = networkId;
@@ -112,5 +112,3 @@ class Wallet extends Map {
     return account;
   }
 }
-
-module.exports = Wallet;

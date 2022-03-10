@@ -1,7 +1,7 @@
-const { assert } = require('./index');
-const { WORD_CHARS } = require('../CONST');
+import { assert } from './index.js';
+import { WORD_CHARS } from '../CONST.js';
 
-class HexStream {
+export default class HexStream {
   constructor(hex) {
     this.string = hex;
     this.index = hex.startsWith('0x') ? 2 : 0;
@@ -35,5 +35,3 @@ class HexStream {
     return string;
   }
 }
-
-module.exports = HexStream;

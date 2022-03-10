@@ -1,8 +1,8 @@
-const lodash = require('lodash');
-const BaseProvider = require('./BaseProvider');
-const HttpProvider = require('./HttpProvider');
-const WechatProvider = require('./WechatProvider');
-const WebsocketProvider = require('./WebSocketProvider');
+import { startsWith } from 'lodash-es';
+import BaseProvider from './BaseProvider.js';
+import HttpProvider from './HttpProvider.js';
+import WebsocketProvider from './WebSocketProvider.js';
+import WechatProvider from './WechatProvider.js';
 
 /**
  * @param options {object}
@@ -35,20 +35,18 @@ const WebsocketProvider = require('./WebSocketProvider');
     logger: {...}
   }
  */
-function providerFactory({ url, useWechatProvider, ...rest }) {
+export default function providerFactory({ url, useWechatProvider, ...rest }) {
   if (!url) {
     return new BaseProvider(rest); // empty provider
   }
 
-  if (lodash.startsWith(url, 'http')) {
+  if (startsWith(url, 'http')) {
     return useWechatProvider ? new WechatProvider({ url, ...rest }) : new HttpProvider({ url, ...rest });
   }
 
-  if (lodash.startsWith(url, 'ws')) {
+  if (startsWith(url, 'ws')) {
     return new WebsocketProvider({ url, ...rest }); // FIXME: support ws in browser
   }
 
   throw new Error('Invalid provider options');
 }
-
-module.exports = providerFactory;

@@ -1,4 +1,4 @@
-const { address } = require('../../src');
+import { address } from '../../src/index.js';
 
 const MAINNET_ADDRESS = 'cfx:aak2rra2njvd77ezwjvx04kkds9fzagfe6ku8scz91';
 const TESTNET_ADDRESS = 'cfxtest:aak2rra2njvd77ezwjvx04kkds9fzagfe6d5r8e957';

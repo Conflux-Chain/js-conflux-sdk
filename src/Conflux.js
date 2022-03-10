@@ -1,26 +1,32 @@
-const CONST = require('./CONST');
-const { assert } = require('./util');
-const format = require('./util/format');
-const { decodeCfxAddress, ADDRESS_TYPES } = require('./util/address');
-const providerFactory = require('./provider');
-const Wallet = require('./wallet');
-const Contract = require('./contract');
-const INTERNAL_CONTRACTS = require('./contract/internal');
-const { CRC20_ABI } = require('./contract/standard');
-const PendingTransaction = require('./subscribe/PendingTransaction');
-const Subscription = require('./subscribe/Subscription');
-const pkg = require('../package.json');
-const PoS = require('./rpc/pos');
-const CFX = require('./rpc/cfx');
-const Trace = require('./rpc/trace');
-const TxPool = require('./rpc/txpool');
-const BatchRequester = require('./rpc/BatchRequester');
-const AdvancedRPCUtilities = require('./rpc/Advanced');
+import CONST from './CONST.js';
+import { assert, readJSON } from './util/index.js';
+import format from './util/format.js';
+import { decodeCfxAddress, ADDRESS_TYPES } from './util/address.js';
+import providerFactory from './provider/index.js';
+import Wallet from './wallet/index.js';
+import Contract from './contract/index.js';
+import INTERNAL_CONTRACTS from './contract/internal/index.js';
+import { CRC20_ABI } from './contract/standard/index.js';
+import PendingTransaction from './subscribe/PendingTransaction.js';
+import Subscription from './subscribe/Subscription.js';
+import PoS from './rpc/pos.js';
+import CFX from './rpc/cfx.js';
+import Trace from './rpc/trace.js';
+import TxPool from './rpc/txpool.js';
+import BatchRequester from './rpc/BatchRequester.js';
+import AdvancedRPCUtilities from './rpc/Advanced.js';
+
+// read pkg info from package.json
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const pkg = readJSON(join(__dirname,'../package.json'));
 
 /**
  * A sdk of conflux.
  */
-class Conflux {
+export default class Conflux {
   /**
    * Create a Conflux instance with networdId set up
    */
@@ -1524,5 +1530,3 @@ class Conflux {
     return this.request({ method: 'cfx_unsubscribe', params: [`${id}`] });
   }
 }
-
-module.exports = Conflux;

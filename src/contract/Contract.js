@@ -1,16 +1,16 @@
-const lodash = require('lodash');
-const { parseABIFromString } = require('abi-util-lite');
-const ContractABI = require('./ContractABI');
-const ContractConstructor = require('./method/ContractConstructor');
-const ContractMethod = require('./method/ContractMethod');
-const ContractMethodOverride = require('./method/ContractMethodOverride');
-const ContractEvent = require('./event/ContractEvent');
-const ContractEventOverride = require('./event/ContractEventOverride');
+import { groupBy, map, first, forEach } from 'lodash-es';
+import { parseABIFromString } from 'abi-util-lite';
+import ContractABI from './ContractABI.js';
+import ContractConstructor from './method/ContractConstructor.js';
+import ContractMethod from './method/ContractMethod.js';
+import ContractMethodOverride from './method/ContractMethodOverride.js';
+import ContractEvent from './event/ContractEvent.js';
+import ContractEventOverride from './event/ContractEventOverride.js';
 
 /**
  * Contract with all its methods and events defined in its abi.
  */
-class Contract {
+export default class Contract {
   /**
    * > contract "code" definition:
    * ```
@@ -139,18 +139,18 @@ class Contract {
     }
     _feedAddressNetId(abi, conflux);
     _feedByteOption(abi, decodeByteToHex);
-    const abiTable = lodash.groupBy(abi, 'type');
+    const abiTable = groupBy(abi, 'type');
     this.abi = new ContractABI(this); // XXX: Create a method named `abi` in solidity is a `Warning`.
 
     this.address = address; // XXX: Create a method named `address` in solidity is a `ParserError`
 
     // constructor
-    this.constructor = new ContractConstructor(lodash.first(abiTable.constructor), bytecode, this, conflux);
+    this.constructor = new ContractConstructor(first(abiTable.constructor), bytecode, this, conflux);
 
     // method
-    const methodArray = lodash.map(abiTable.function, fragment => new ContractMethod(fragment, this, conflux));
-    lodash.forEach(lodash.groupBy(methodArray, 'name'), (array, name) => {
-      this[name] = array.length === 1 ? lodash.first(array) : new ContractMethodOverride(array, this, conflux);
+    const methodArray = map(abiTable.function, fragment => new ContractMethod(fragment, this, conflux));
+    forEach(groupBy(methodArray, 'name'), (array, name) => {
+      this[name] = array.length === 1 ? first(array) : new ContractMethodOverride(array, this, conflux);
 
       array.forEach(method => {
         this[method.type] = method;
@@ -159,9 +159,9 @@ class Contract {
     });
 
     // event
-    const eventArray = lodash.map(abiTable.event, fragment => new ContractEvent(fragment, this, conflux));
-    lodash.forEach(lodash.groupBy(eventArray, 'name'), (array, name) => {
-      this[name] = array.length === 1 ? lodash.first(array) : new ContractEventOverride(array, this, conflux);
+    const eventArray = map(abiTable.event, fragment => new ContractEvent(fragment, this, conflux));
+    forEach(groupBy(eventArray, 'name'), (array, name) => {
+      this[name] = array.length === 1 ? first(array) : new ContractEventOverride(array, this, conflux);
 
       array.forEach(event => {
         this[event.type] = event;
@@ -214,5 +214,3 @@ function _feedByteOption(abi, decodeByteToHex = false) {
     }
   }
 }
-
-module.exports = Contract;

@@ -1,10 +1,10 @@
 const PREFIX = '\x19Conflux Signed Message:\n';
-const format = require('./util/format');
-const Message = require('./Message');
-const { keccak256 } = require('./util/sign');
-const { isHexString } = require('./util');
+import format from './util/format.js';
+import Message from './Message.js';
+import { keccak256 } from './util/sign.js';
+import { isHexString } from './util/index.js';
 
-class PersonalMessage extends Message {
+export default class PersonalMessage extends Message {
   static personalMessage(message) {
     const msgBuf = isHexString(message) ? format.hexBuffer(message) : Buffer.from(message);
     return PREFIX + msgBuf.length + msgBuf.toString();
@@ -88,5 +88,3 @@ class PersonalMessage extends Message {
     this._prefix = PREFIX;
   }
 }
-
-module.exports = PersonalMessage;

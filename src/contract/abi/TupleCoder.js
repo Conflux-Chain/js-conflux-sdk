@@ -1,10 +1,10 @@
-const lodash = require('lodash');
-const { WORD_BYTES } = require('../../CONST');
-const { assert } = require('../../util');
-const format = require('../../util/format');
-const namedTuple = require('../../util/namedTuple');
-const BaseCoder = require('./BaseCoder');
-const { uIntCoder } = require('./IntegerCoder');
+import { WORD_BYTES } from '../../CONST.js';
+import { assert } from '../../util/index.js';
+import format from '../../util/format.js';
+import namedTuple from '../../util/namedTuple.js';
+import BaseCoder from './BaseCoder.js';
+import { uIntCoder } from './IntegerCoder.js';
+import { zip, some, isPlainObject } from 'lodash-es';
 
 class Pointer extends Number {}
 
@@ -13,12 +13,12 @@ class Pointer extends Number {}
  * @param array {array}
  * @return {Buffer}
  */
-function pack(coders, array) {
+export function pack(coders, array) {
   let offset = 0;
   const staticList = [];
   const dynamicList = [];
 
-  lodash.zip(coders, array)
+  zip(coders, array)
     .forEach(([coder, value]) => {
       const buffer = coder.encode(value);
 
@@ -49,7 +49,7 @@ function pack(coders, array) {
  * @param stream {HexStream}
  * @return {array}
  */
-function unpack(coders, stream) {
+export function unpack(coders, stream) {
   const startIndex = stream.index;
 
   const array = coders.map(coder => {
@@ -61,7 +61,7 @@ function unpack(coders, stream) {
     }
   });
 
-  lodash.zip(coders, array)
+  zip(coders, array)
     .forEach(([coder, value], index) => {
       if (value instanceof Pointer) {
         assert(Number(value) === stream.index, {
@@ -79,7 +79,7 @@ function unpack(coders, stream) {
   return array;
 }
 
-class TupleCoder extends BaseCoder {
+export default class TupleCoder extends BaseCoder {
   static from({ type, components, ...options }, valueCoder) {
     if (type !== 'tuple') {
       return undefined;
@@ -92,7 +92,7 @@ class TupleCoder extends BaseCoder {
     this.type = `(${coders.map(coder => coder.type).join(',')})`;
     this.size = coders.length;
     this.coders = coders;
-    this.dynamic = lodash.some(coders, coder => coder.dynamic);
+    this.dynamic = some(coders, coder => coder.dynamic);
     this.names = coders.map((coder, index) => coder.name || `${index}`);
     this.NamedTuple = namedTuple(...this.names);
   }
@@ -102,7 +102,7 @@ class TupleCoder extends BaseCoder {
    * @return {Buffer}
    */
   encode(array) {
-    if (lodash.isPlainObject(array)) {
+    if (isPlainObject(array)) {
       array = this.NamedTuple.fromObject(array);
     }
 
@@ -145,7 +145,3 @@ class TupleCoder extends BaseCoder {
     return hex;
   }
 }
-
-module.exports = TupleCoder;
-module.exports.pack = pack;
-module.exports.unpack = unpack;

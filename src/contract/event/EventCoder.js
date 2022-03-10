@@ -1,10 +1,10 @@
-const { assert } = require('../../util');
-const format = require('../../util/format');
-const HexStream = require('../../util/HexStream');
-const namedTuple = require('../../util/namedTuple');
-const { formatType, formatFullName, valueCoder } = require('../abi');
+import { assert } from '../../util/index.js';
+import format from '../../util/format.js';
+import HexStream from '../../util/HexStream.js';
+import namedTuple from '../../util/namedTuple.js';
+import { formatType, formatFullName, valueCoder } from '../abi/index.js';
 
-class EventCoder {
+export default class EventCoder {
   /**
    * Event coder
    *
@@ -141,5 +141,3 @@ class EventCoder {
     return new this.NamedTuple(...array);
   }
 }
-
-module.exports = EventCoder;

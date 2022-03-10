@@ -1,4 +1,4 @@
-const format = require('./util/format');
+import format from './util/format.js';
 
 /**
  * Positive decimal integer string in `Drip`
@@ -75,7 +75,7 @@ class Drip extends String {
   }
 }
 
-module.exports = new Proxy(Drip, {
+export default new Proxy(Drip, {
   apply(target, thisArg, argArray) {
     return new Drip(...argArray);
   },

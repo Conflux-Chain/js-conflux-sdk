@@ -1,8 +1,8 @@
-const { alignBuffer } = require('../../util');
-const format = require('../../util/format');
-const BaseCoder = require('./BaseCoder');
+import { alignBuffer } from '../../util/index.js';
+import format from '../../util/format.js';
+import BaseCoder from './BaseCoder.js';
 
-class AddressCoder extends BaseCoder {
+export default class AddressCoder extends BaseCoder {
   static from({ type, ...options }) {
     if (type !== 'address') {
       return undefined;
@@ -33,5 +33,3 @@ class AddressCoder extends BaseCoder {
     return (isConfluxAddress && this.networkId) ? format.address(`0x${hexAddress}`, this.networkId) : format.hexAddress(`0x${hexAddress}`);
   }
 }
-
-module.exports = AddressCoder;

@@ -1,5 +1,5 @@
-const RPCMethodFactory = require('./index');
-const format = require('../util/format');
+import RPCMethodFactory from './index.js';
+import format from '../util/format.js';
 
 const LATEST_COMMITTED = 'latest_committed';
 const LATEST_VOTED = 'latest_voted';
@@ -192,7 +192,7 @@ format.rewardsByEpoch = format({
  * For the detail meaning of fields, please refer to the PoS RPC document:
  * @class
  */
-class PoS extends RPCMethodFactory {
+export default class PoS extends RPCMethodFactory {
   /**
    * Create PoS instance
    * @param {object} conflux The Conflux object
@@ -413,5 +413,3 @@ class PoS extends RPCMethodFactory {
     ];
   }
 }
-
-module.exports = PoS;

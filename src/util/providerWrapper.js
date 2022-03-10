@@ -1,7 +1,7 @@
-const Transaction = require('../Transaction');
-const { MIN_GAS_PRICE } = require('../CONST');
-const sign = require('./sign');
-const format = require('./format');
+import { MIN_GAS_PRICE } from '../CONST.js';
+import { keccak256 } from './sign.js';
+import format from './format.js';
+import Transaction from '../Transaction.js';
 
 function parseSignature(sig) {
   return {
@@ -13,7 +13,7 @@ function parseSignature(sig) {
 
 async function signWithMetaMask(txInfo) {
   const tx = new Transaction(txInfo);
-  const unsignedHash = format.hex(sign.keccak256(tx.encode(false)));
+  const unsignedHash = format.hex(keccak256(tx.encode(false)));
   /* eslint-disable */
   const signature = await ethereum.request({
     method: 'eth_sign',
@@ -41,7 +41,7 @@ async function useEthereumPrepareTx(txInfo, callRPC) {
   }
 }
 
-function wrapEthereum(provider) {
+export function wrapEthereum(provider) {
   if (typeof ethereum === 'undefined') {
     throw new Error('MetaMask is not installed!');
   }
@@ -98,7 +98,7 @@ async function useConfluxPrepareTx(txInfo, callRPC) {
   return txInfo;
 }
 
-function wrapConflux(provider) {
+export function wrapConflux(provider) {
   if (typeof ethereum === 'undefined') {
     throw new Error('MetaMask is not installed!');
   }
@@ -116,8 +116,3 @@ function wrapConflux(provider) {
 
   provider.call = request.bind(provider);
 }
-
-module.exports = {
-  wrapEthereum,
-  wrapConflux,
-};

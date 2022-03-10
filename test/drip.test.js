@@ -1,4 +1,4 @@
-const { Drip } = require('../src');
+import { Drip } from '../src/index.js';
 
 test('Drip.fromCFX', () => {
   expect(() => Drip.fromCFX(null)).toThrow('Invalid number');

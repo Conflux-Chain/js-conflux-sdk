@@ -1,4 +1,4 @@
-const { Conflux, format } = require('../src');
+import { Conflux, format } from '../src/index.js';
 
 const conflux = new Conflux({
   url: 'http://localhost:12537',

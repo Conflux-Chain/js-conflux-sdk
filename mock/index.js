@@ -1,1 +1,1 @@
-module.exports.MockProvider = require('./MockProvider');
+export { default as MockProvider } from './MockProvider.js';

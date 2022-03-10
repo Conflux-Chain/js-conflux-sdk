@@ -1,5 +1,5 @@
-const { alignBuffer, awaitTimeout } = require('../../src/util');
-const format = require('../../src/util/format');
+import { alignBuffer, awaitTimeout } from '../../src/util/index.js';
+import format from '../../src/util/format.js';
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));

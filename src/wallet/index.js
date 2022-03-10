@@ -1,1 +1,1 @@
-module.exports = require('./Wallet');
+export { default } from './Wallet.js';

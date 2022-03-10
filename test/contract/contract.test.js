@@ -1,8 +1,14 @@
-const JSBI = require('../../src/util/jsbi');
-const { Conflux, Contract, format } = require('../../src');
-const { MockProvider } = require('../../mock');
-const { abi, bytecode, address } = require('./contract.json');
-const ContractConstructor = require('../../src/contract/method/ContractConstructor');
+import JSBI from '../../src/util/jsbi.js';
+import { Conflux, Contract, format } from '../../src/index.js';
+import { MockProvider } from '../../mock/index.js';
+import ContractConstructor from '../../src/contract/method/ContractConstructor.js';
+
+// read ABI info
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const { abi, bytecode, address } = readJSON(join(__dirname, './contract.json'));
 
 const ADDRESS = '0x1cad0b19bb29d4674531d6f115237e16afce377c';
 const HEX64 = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
