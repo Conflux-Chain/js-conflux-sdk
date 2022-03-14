@@ -1,16 +1,24 @@
-const { ACTION_TYPES, CALL_STATUS } = require('../CONST');
+const { ACTION_TYPES, CALL_STATUS, POCKET_ENUM } = require('../CONST');
 const Contract = require('../contract/Contract');
 const { abi } = require('../contract/standard/error.json');
 const { decodeHexEncodedStr } = require('./index');
 
 // Reorg an traces array in tree structure
 function tracesInTree(txTrace) {
+  const result = [];
   const stack = [];
   const levelCalls = {};
   let maxLevel = 0;
-  if (txTrace.length === 0) return {};
+  if (!txTrace || txTrace.length === 0) return [];
   // If the first trace's type is 'internal_transfer_action'(gas_payment) then remove it from array
   if (txTrace[0].type === ACTION_TYPES.INTERNAL_TRANSFER_ACTION) {
+    const tLen = txTrace.length;
+    result.push(txTrace[0]); // gas_payment
+    if (txTrace[tLen - 2].type === ACTION_TYPES.INTERNAL_TRANSFER_ACTION && txTrace[tLen - 2].action.toPocket === POCKET_ENUM.STORAGE_COLLATERAL) {
+      result.push(txTrace[tLen - 2]); // storage_collateral
+      txTrace = txTrace.slice(0, tLen - 1);
+    }
+    result.push(txTrace[txTrace.length - 1]); // gas_refund
     txTrace = txTrace.slice(1, txTrace.length - 1);
   }
   // eslint-disable-next-line no-plusplus
@@ -55,7 +63,8 @@ function tracesInTree(txTrace) {
       _cleanTrace(item);
     }
   }
-  return txTrace[0];
+  result.splice(1, 0, txTrace[0]);
+  return result;
 }
 
 function _cleanTrace(trace) {
