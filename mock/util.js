@@ -5,7 +5,7 @@
 0xffffffff  ‭4,294,967,295‬
  */
 
-const lodash = require('lodash');
+import lodash from 'lodash-es';
 
 const HEX_CHARS = '0123456789abcdef';
 

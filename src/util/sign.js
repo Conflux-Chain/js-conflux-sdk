@@ -1,8 +1,8 @@
-import { isHexString } from './index.js';
 import secp256k1 from 'secp256k1';
 import keccak from 'keccak';
 import crypto from 'crypto';
 import scryptjs from 'scrypt-js';
+import { isHexString } from './index.js';
 
 // ----------------------------------------------------------------------------
 /**
@@ -33,7 +33,7 @@ export function keccak256(buffer) {
  * > checksumAddress('0x1b716c51381e76900ebaa7999a488511a4e1fd0a')
  "0x1B716c51381e76900EBAA7999A488511A4E1fD0a"
  */
- export function checksumAddress(address) {
+export function checksumAddress(address) {
   const string = address.toLowerCase().replace('0x', '');
 
   const hash = keccak256(Buffer.from(string)).toString('hex');
@@ -60,7 +60,7 @@ export function keccak256(buffer) {
  * > randomBuffer(1)
  <Buffer 5a>
  */
- export function randomBuffer(size) {
+export function randomBuffer(size) {
   return crypto.randomBytes(size);
 }
 
@@ -83,7 +83,7 @@ export function keccak256(buffer) {
  * > randomPrivateKey(entropy) // same `entropy`
  <Buffer 89 44 ef 31 d4 9c d0 25 9f b0 de 61 99 12 4a 21 57 43 d4 4b af ae ef ae e1 3a ba 05 c3 e6 ad 21>
  */
- export function randomPrivateKey(entropy = randomBuffer(32)) {
+export function randomPrivateKey(entropy = randomBuffer(32)) {
   if (!(Buffer.isBuffer(entropy) && entropy.length === 32)) {
     throw new Error(`entropy must be 32 length Buffer, got "${typeof entropy}"`);
   }
@@ -97,7 +97,7 @@ export function keccak256(buffer) {
  * @param privateKey {Buffer}
  * @return {Buffer}
  */
- export function privateKeyToPublicKey(privateKey) {
+export function privateKeyToPublicKey(privateKey) {
   return secp256k1.publicKeyCreate(privateKey, false).slice(1);
 }
 
@@ -113,7 +113,7 @@ export function keccak256(buffer) {
  * > publicKeyToAddress(Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1]))
  <Buffer 4c 6f a3 22 12 5f a3 1a 42 cb dd a8 73 0d 4c f0 20 0d 72 db>
  */
- export function publicKeyToAddress(publicKey) {
+export function publicKeyToAddress(publicKey) {
   if (isHexString(publicKey)) publicKey = Buffer.from(publicKey.slice(2), 'hex');
   if (!Buffer.isBuffer(publicKey)) throw new Error('publicKey should be a buffer');
   if (publicKey.length === 65) publicKey = publicKey.slice(1);
@@ -133,7 +133,7 @@ export function keccak256(buffer) {
  * > privateKeyToAddress(Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1]))
  <Buffer 0d b9 e0 02 85 67 52 28 8b ef 47 60 fa 67 94 ec 83 a8 53 b9>
  */
- export function privateKeyToAddress(privateKey) {
+export function privateKeyToAddress(privateKey) {
   return publicKeyToAddress(privateKeyToPublicKey(privateKey));
 }
 
@@ -157,7 +157,7 @@ export function keccak256(buffer) {
   v: 0
  }
  */
- export function ecdsaSign(hash, privateKey) {
+export function ecdsaSign(hash, privateKey) {
   const sig = secp256k1.sign(hash, privateKey);
   return {
     r: sig.signature.slice(0, 32),
@@ -184,7 +184,7 @@ export function keccak256(buffer) {
  * > publicKeyToAddress(ecdsaRecover(buffer32, ecdsaSign(buffer32, privateKey)))
  <Buffer 0d b9 e0 02 85 67 52 28 8b ef 47 60 fa 67 94 ec 83 a8 53 b9>
  */
- export function ecdsaRecover(hash, { r, s, v }) {
+export function ecdsaRecover(hash, { r, s, v }) {
   const senderPublic = secp256k1.recover(hash, Buffer.concat([r, s]), v);
   return secp256k1.publicKeyConvert(senderPublic, false).slice(1);
 }
@@ -282,7 +282,7 @@ export function encrypt(privateKey, password) {
   }, 'password')
  <Buffer 01 23 45 67 89 ab cd ef 01 23 45 67 89 ab cd ef 01 23 45 67 89 ab cd ef 01 23 45 67 89 ab cd ef>
  */
- export function decrypt({
+export function decrypt({
   version,
   crypto: {
     ciphertext,

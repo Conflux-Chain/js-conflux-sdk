@@ -1,7 +1,13 @@
 import { assert } from '../util/index.js';
 import format from '../util/format.js';
-import sign from '../util/sign.js';
 import Account from './Account.js';
+import {
+  randomPrivateKey,
+  decrypt,
+  encrypt,
+  privateKeyToPublicKey,
+  publicKeyToAddress,
+} from '../util/sign.js';
 
 export default class PrivateKeyAccount extends Account {
   /**
@@ -39,7 +45,7 @@ export default class PrivateKeyAccount extends Account {
     }
    */
   static random(entropy, networkId) {
-    const privateKeyBuffer = sign.randomPrivateKey(entropy === undefined ? undefined : format.hexBuffer(entropy));
+    const privateKeyBuffer = randomPrivateKey(entropy === undefined ? undefined : format.hexBuffer(entropy));
     return new this(privateKeyBuffer, networkId);
   }
 
@@ -78,7 +84,7 @@ export default class PrivateKeyAccount extends Account {
   }
    */
   static decrypt(keystore, password, networkId) {
-    const privateKeyBuffer = sign.decrypt(keystore, password);
+    const privateKeyBuffer = decrypt(keystore, password);
     return new this(privateKeyBuffer, networkId);
   }
 
@@ -99,8 +105,8 @@ export default class PrivateKeyAccount extends Account {
    */
   constructor(privateKey, networkId) {
     const privateKeyBuffer = format.hexBuffer(privateKey);
-    const publicKeyBuffer = sign.privateKeyToPublicKey(privateKeyBuffer);
-    const addressBuffer = sign.publicKeyToAddress(publicKeyBuffer);
+    const publicKeyBuffer = privateKeyToPublicKey(privateKeyBuffer);
+    const addressBuffer = publicKeyToAddress(publicKeyBuffer);
 
     super(format.address(addressBuffer, networkId));
     this.publicKey = format.publicKey(publicKeyBuffer);
@@ -120,7 +126,7 @@ export default class PrivateKeyAccount extends Account {
    {version:3, id:..., address:..., crypto:...}
    */
   encrypt(password) {
-    return sign.encrypt(format.hexBuffer(this.privateKey), password);
+    return encrypt(format.hexBuffer(this.privateKey), password);
   }
 
   /**

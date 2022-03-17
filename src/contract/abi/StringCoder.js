@@ -1,6 +1,6 @@
+import { isString } from 'lodash-es';
 import { assert } from '../../util/index.js';
 import BytesCoder from './BytesCoder.js';
-import { isString } from 'lodash-es';
 
 export default class StringCoder extends BytesCoder {
   static from({ type, ...options }) {

@@ -1,5 +1,5 @@
-import callable from '../../util/callable.js';
 import { keyBy } from 'lodash-es';
+import callable from '../../util/callable.js';
 
 export default class ContractEventOverride {
   constructor(events, contract, conflux) {

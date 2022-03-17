@@ -1,10 +1,10 @@
+import { zip, some, isPlainObject } from 'lodash-es';
 import { WORD_BYTES } from '../../CONST.js';
 import { assert } from '../../util/index.js';
 import format from '../../util/format.js';
 import namedTuple from '../../util/namedTuple.js';
 import BaseCoder from './BaseCoder.js';
 import { uIntCoder } from './IntegerCoder.js';
-import { zip, some, isPlainObject } from 'lodash-es';
 
 class Pointer extends Number {}
 

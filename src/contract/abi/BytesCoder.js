@@ -1,9 +1,9 @@
 import { WORD_BYTES } from '../../CONST.js';
 import { assert, alignBuffer } from '../../util/index.js';
 import format from '../../util/format.js';
-import sign from '../../util/sign.js';
+import { keccak256 } from '../../util/sign.js';
 import BaseCoder from './BaseCoder.js';
-import uIntCoder from './IntegerCoder.js';
+import { uIntCoder } from './IntegerCoder.js';
 
 export default class BytesCoder extends BaseCoder {
   static from({ type, ...options }) {
@@ -89,7 +89,7 @@ export default class BytesCoder extends BaseCoder {
       coder: this,
     });
 
-    return sign.keccak256(value);
+    return keccak256(value);
   }
 
   decodeTopic(hex) {

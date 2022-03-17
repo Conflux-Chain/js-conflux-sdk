@@ -1,4 +1,4 @@
-import format from '../util/format.js'
+import format from '../util/format.js';
 
 export default class RPCMethodFactory {
   constructor(conflux, methods = []) {

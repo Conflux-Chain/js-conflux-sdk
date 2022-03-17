@@ -1,9 +1,10 @@
-export default {
+module.exports = {
   env: {
     commonjs: true,
     es6: true,
     node: true,
     jest: true,
+    es2021: true,
   },
   extends: 'airbnb-base',
   globals: {
@@ -16,6 +17,7 @@ export default {
     ecmaVersion: 2018,
   },
   rules: {
+    'import/extensions': 0,
     'arrow-parens': ['error', 'as-needed'],
     'arrow-body-style': 0, // for readable lambda
     'class-methods-use-this': 0,

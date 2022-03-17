@@ -1,5 +1,6 @@
-export { decode } from 'rlp';
 import { decode } from 'rlp';
+
+export { decode } from 'rlp';
 /*
   prefix    | delta | note          | code
   ----------|-------|---------------|--------------------------------------------------------------
@@ -86,4 +87,4 @@ function encodeArray(array) {
 export default {
   encode,
   decode,
-}
+};

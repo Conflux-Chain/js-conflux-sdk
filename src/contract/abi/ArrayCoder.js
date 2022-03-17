@@ -2,7 +2,7 @@ import { range } from 'lodash-es';
 import { assert } from '../../util/index.js';
 import format from '../../util/format.js';
 import BaseCoder from './BaseCoder.js';
-import uIntCoder from './IntegerCoder.js';
+import { uIntCoder } from './IntegerCoder.js';
 import { pack, unpack } from './TupleCoder.js';
 
 export default class ArrayCoder extends BaseCoder {
@@ -94,4 +94,3 @@ export default class ArrayCoder extends BaseCoder {
     return hex;
   }
 }
-

@@ -1,8 +1,9 @@
-const PREFIX = '\x19Conflux Signed Message:\n';
 import format from './util/format.js';
 import Message from './Message.js';
 import { keccak256 } from './util/sign.js';
 import { isHexString } from './util/index.js';
+
+const PREFIX = '\x19Conflux Signed Message:\n';
 
 export default class PersonalMessage extends Message {
   static personalMessage(message) {

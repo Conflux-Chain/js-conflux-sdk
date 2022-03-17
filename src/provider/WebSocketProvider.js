@@ -1,6 +1,7 @@
 import websocket from 'websocket';
 import BaseProvider from './BaseProvider.js';
 import { awaitTimeout } from '../util/index.js';
+
 const Websocket = websocket.w3cwebsocket;
 
 /**

@@ -1,14 +1,14 @@
 import RPCMethodFactory from './index.js';
 import format from '../util/format.js';
-import CONST from '../CONST.js';
+import { MIN_GAS_PRICE, TRANSACTION_GAS, TRANSACTION_STORAGE_LIMIT } from '../CONST.js';
 import { assert } from '../util/index.js';
-import { 
-  decodeCfxAddress, 
-  ADDRESS_TYPES, 
-  hasNetworkPrefix, 
+import {
+  decodeCfxAddress,
+  ADDRESS_TYPES,
+  hasNetworkPrefix,
 } from '../util/address.js';
 import PendingTransaction from '../subscribe/PendingTransaction.js';
-import Contract from '../contract/index.js';
+import { decodeError } from '../contract/index.js';
 import RPCTypes from './types/index.js';
 
 export default class CFX extends RPCMethodFactory {
@@ -380,7 +380,7 @@ export default class CFX extends RPCMethodFactory {
     if (options.gasPrice === undefined) {
       if (defaultGasPrice === undefined) {
         const gasPrice = await this.gasPrice();
-        options.gasPrice = Number(gasPrice) === 0 ? CONST.MIN_GAS_PRICE : gasPrice;
+        options.gasPrice = Number(gasPrice) === 0 ? MIN_GAS_PRICE : gasPrice;
       } else {
         options.gasPrice = defaultGasPrice;
       }
@@ -400,8 +400,8 @@ export default class CFX extends RPCMethodFactory {
         }
         storageLimit = format.big(storageCollateralized).times(defaultStorageRatio).toFixed(0);
       } else {
-        gas = CONST.TRANSACTION_GAS;
-        storageLimit = CONST.TRANSACTION_STORAGE_LIMIT;
+        gas = TRANSACTION_GAS;
+        storageLimit = TRANSACTION_STORAGE_LIMIT;
       }
 
       if (options.gas === undefined) {
@@ -492,7 +492,7 @@ export default class CFX extends RPCMethodFactory {
         ],
       });
     } catch (e) {
-      throw Contract.decodeError(e);
+      throw decodeError(e);
     }
   }
 
@@ -517,7 +517,7 @@ export default class CFX extends RPCMethodFactory {
       });
       return format.estimate(result);
     } catch (e) {
-      throw Contract.decodeError(e);
+      throw decodeError(e);
     }
   }
 }

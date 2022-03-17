@@ -1,4 +1,4 @@
-import lodash from 'lodash';
+import lodash from 'lodash-es';
 import { format } from '../../src/index.js';
 import { encode } from '../../src/util/rlp.js';
 

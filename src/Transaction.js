@@ -1,5 +1,5 @@
 import { keccak256, ecdsaSign, ecdsaRecover, privateKeyToAddress, publicKeyToAddress } from './util/sign.js';
-import rlp from './util/rlp.js';
+import { encode, decode } from './util/rlp.js';
 import format from './util/format.js';
 
 export default class Transaction {
@@ -15,7 +15,7 @@ export default class Transaction {
       v,
       r,
       s,
-    ] = rlp.decode(raw);
+    ] = decode(raw);
 
     const netId = format.uInt(chainId);
     const tx = new Transaction({
@@ -136,7 +136,7 @@ export default class Transaction {
       ? [[nonce, gasPrice, gas, to, value, storageLimit, epochHeight, chainId, data], v, r, s]
       : [nonce, gasPrice, gas, to, value, storageLimit, epochHeight, chainId, data];
 
-    return rlp.encode(raw);
+    return encode(raw);
   }
 
   /**

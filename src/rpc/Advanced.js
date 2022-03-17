@@ -1,6 +1,6 @@
 import Big from 'big.js';
 import format from '../util/format.js';
-import CONST from '../CONST.js';
+import { ZERO_ADDRESS_HEX } from '../CONST.js';
 
 export default class AdvancedRPCUtilities {
   constructor(conflux) {
@@ -34,7 +34,7 @@ export default class AdvancedRPCUtilities {
     const batchRequest = this.conflux.BatchRequest();
     batchRequest.add(this.conflux.cfx.getSupplyInfo.request());
     batchRequest.add(this.conflux.cfx.getPoSEconomics.request());
-    batchRequest.add(this.conflux.cfx.getBalance.request(CONST.ZERO_ADDRESS_HEX));
+    batchRequest.add(this.conflux.cfx.getBalance.request(ZERO_ADDRESS_HEX));
     const [
       { totalCirculating },
       { totalPosStakingTokens },

@@ -1,9 +1,11 @@
 import JSBI from '../../src/util/jsbi.js';
 import { Conflux, Contract, format } from '../../src/index.js';
-import { MockProvider } from '../../mock.js';
+import Mock from '../../mock/index.js';
 import { bytecode, address } from './contract.json';
 import { abi } from './stringAbi.js';
 import ContractConstructor from '../../src/contract/method/ContractConstructor.js';
+
+const { MockProvider } = Mock;
 
 const ADDRESS = '0x1cad0b19bb29d4674531d6f115237e16afce377c';
 const HEX64 = '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';

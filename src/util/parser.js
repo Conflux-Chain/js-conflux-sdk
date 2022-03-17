@@ -1,15 +1,15 @@
 /* copy from koaflow@0.6.2/lib/parser */
-import { PARSER_ERROR } from '../ERROR_CODES.js';
-import { 
-  isString, 
-  flattenDeep, 
-  isObject, 
-  isPlainObject, 
-  pickBy, 
-  get, 
+import {
+  isString,
+  flattenDeep,
+  isObject,
+  isPlainObject,
+  pickBy,
+  get,
   mapValues,
   isFunction,
 } from 'lodash-es';
+import { PARSER_ERROR } from '../ERROR_CODES.js';
 
 class ParserError extends Error {
   constructor(message, options = {}) {

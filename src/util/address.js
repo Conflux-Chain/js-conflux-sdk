@@ -1,5 +1,5 @@
+import confluxAddressJs from '@conflux-dev/conflux-address-js';
 import { checksumAddress, keccak256 } from './sign.js';
-import confluxAddressJs from "@conflux-dev/conflux-address-js";
 
 // export address utilities from conflux-address-js
 export const encodeCfxAddress = confluxAddressJs.encode;
@@ -57,7 +57,7 @@ export function ethAddressToCfxAddress(address) {
  * "0x12Bf6283CcF8Ad6ffA63f7Da63EDc217228d839A"
  */
 export function cfxMappedEVMSpaceAddress(address) {
-  const { hexAddress } = decode(address);
+  const { hexAddress } = decodeCfxAddress(address);
   const mappedBuf = keccak256(hexAddress).slice(-20);
   return checksumAddress(`0x${mappedBuf.toString('hex')}`);
 }

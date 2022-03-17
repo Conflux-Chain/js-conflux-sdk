@@ -37,7 +37,7 @@ export const EPOCH_NUMBER = {
  * > CONST.MIN_GAS_PRICE
  1
  */
- export const MIN_GAS_PRICE = 1;
+export const MIN_GAS_PRICE = 1;
 
 /**
  * gas use for pure transfer transaction
@@ -47,7 +47,7 @@ export const EPOCH_NUMBER = {
  * > CONST.TRANSACTION_GAS
  21000
  */
- export const TRANSACTION_GAS = 21000;
+export const TRANSACTION_GAS = 21000;
 
 /**
  * storage limit for pure transfer transaction
@@ -56,7 +56,7 @@ export const EPOCH_NUMBER = {
  * > CONST.TRANSACTION_STORAGE_LIMIT
  0
  */
- export const TRANSACTION_STORAGE_LIMIT = 0;
+export const TRANSACTION_STORAGE_LIMIT = 0;
 
 /**
  * mainnet chainId
@@ -65,7 +65,7 @@ export const EPOCH_NUMBER = {
  * > CONST.MAINNET_ID
  1029
  */
- export const MAINNET_ID = 1029;
+export const MAINNET_ID = 1029;
 
 /**
  * testnet chainId
@@ -74,7 +74,7 @@ export const EPOCH_NUMBER = {
  * > CONST.TESTNET_ID
  1
  */
- export const TESTNET_ID = 1;
+export const TESTNET_ID = 1;
 
 /**
  * zero address
@@ -83,7 +83,7 @@ export const EPOCH_NUMBER = {
  * > ZERO_ADDRESS
  0x0000000000000000000000000000000000000000
  */
- export const ZERO_ADDRESS_HEX = '0x0000000000000000000000000000000000000000';
+export const ZERO_ADDRESS_HEX = '0x0000000000000000000000000000000000000000';
 
 /**
  * pending transaction status
@@ -91,7 +91,7 @@ export const EPOCH_NUMBER = {
  * - `FUTURE_NONCE` 'futureNonce': pending because future nonce
  * - `NOT_ENOUGH_CASH` 'notEnoughCash': pending because insufficient balance
  */
- export const PENDING_TX_STATUS = {
+export const PENDING_TX_STATUS = {
   FUTURE_NONCE: 'futureNonce',
   NOT_ENOUGH_CASH: 'notEnoughCash',
 };
@@ -101,7 +101,7 @@ export const EPOCH_NUMBER = {
  * @readonly
  * @enum {string}
  */
- export const ACTION_TYPES = {
+export const ACTION_TYPES = {
   CALL: 'call',
   CREATE: 'create',
   CALL_RESULT: 'call_result',
@@ -124,7 +124,7 @@ export const POCKET_ENUM = {
  * @readonly
  * @enum {string}
  */
- export const CALL_TYPES = {
+export const CALL_TYPES = {
   NONE: 'none',
   CALL: 'call',
   CALL_CODE: 'callcode',

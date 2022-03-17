@@ -1,11 +1,11 @@
+import { isString, isBoolean, isObject } from 'lodash-es';
+import Big from 'big.js';
 import { isHexString, isBytes, validAddressPrefix } from './index.js';
-import sign from './sign.js';
+import { checksumAddress, keccak256 } from './sign.js';
 import parser from './parser.js';
 import JSBI from './jsbi.js';
-import CONST from '../CONST.js';
-import Big from 'big.js';
-import addressUtil from './address.js';
-import { isString, isBoolean, isObject } from 'lodash-es';
+import { MAX_UINT, EPOCH_NUMBER } from '../CONST.js';
+import { hasNetworkPrefix, decodeCfxAddress, encodeCfxAddress } from './address.js';
 
 // ----------------------------------------------------------------------------
 function toHex(value) {
@@ -191,7 +191,7 @@ format.big = format(toBig, { name: 'format.big' });
  * > format.fixed64('0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')
  0.5
  */
-format.fixed64 = format.big.$after(v => Number(v.div(CONST.MAX_UINT)));
+format.fixed64 = format.big.$after(v => Number(v.div(MAX_UINT)));
 
 /**
  * @param arg {number|string} - number or label, See [EPOCH_NUMBER](Misc.md#CONST.js/EPOCH_NUMBER)
@@ -206,12 +206,12 @@ format.fixed64 = format.big.$after(v => Number(v.div(CONST.MAX_UINT)));
  "latest_mined"
  */
 format.epochNumber = format.bigUIntHex
-  .$or(CONST.EPOCH_NUMBER.LATEST_MINED)
-  .$or(CONST.EPOCH_NUMBER.LATEST_STATE)
-  .$or(CONST.EPOCH_NUMBER.LATEST_FINALIZED)
-  .$or(CONST.EPOCH_NUMBER.LATEST_CONFIRMED)
-  .$or(CONST.EPOCH_NUMBER.LATEST_CHECKPOINT)
-  .$or(CONST.EPOCH_NUMBER.EARLIEST);
+  .$or(EPOCH_NUMBER.LATEST_MINED)
+  .$or(EPOCH_NUMBER.LATEST_STATE)
+  .$or(EPOCH_NUMBER.LATEST_FINALIZED)
+  .$or(EPOCH_NUMBER.LATEST_CONFIRMED)
+  .$or(EPOCH_NUMBER.LATEST_CHECKPOINT)
+  .$or(EPOCH_NUMBER.EARLIEST);
 
 format.epochNumberOrUndefined = format.epochNumber.$or(undefined);
 
@@ -241,11 +241,11 @@ format.hex40 = format.hex.$validate(v => v.length === 2 + 40, 'hex40');
 
 function toAddress(address, networkId, verbose = false) {
   // if is an (Account) object, convert it to string (address)
-  if (isObject(address) && addressUtil.hasNetworkPrefix(address.toString())) {
+  if (isObject(address) && hasNetworkPrefix(address.toString())) {
     address = address.toString();
   }
-  if (isString(address) && addressUtil.hasNetworkPrefix(address)) {
-    const _decodedAddress = addressUtil.decodeCfxAddress(address);
+  if (isString(address) && hasNetworkPrefix(address)) {
+    const _decodedAddress = decodeCfxAddress(address);
     address = _decodedAddress.hexAddress;
     networkId = networkId || _decodedAddress.netId;
   }
@@ -256,7 +256,7 @@ function toAddress(address, networkId, verbose = false) {
   if (typeof networkId === 'undefined') {
     throw new Error('expected parameter: networkId');
   }
-  return addressUtil.encodeCfxAddress(address, networkId, verbose);
+  return encodeCfxAddress(address, networkId, verbose);
 }
 
 /**
@@ -296,8 +296,8 @@ format.netAddress = networkId => format(address => toAddress(address, networkId)
  0x0123456789012345678901234567890123456789
  */
 format.hexAddress = format.hex40.$before(address => {
-  if (isString(address) && addressUtil.hasNetworkPrefix(address)) {
-    address = addressUtil.decodeCfxAddress(address).hexAddress;
+  if (isString(address) && hasNetworkPrefix(address)) {
+    address = decodeCfxAddress(address).hexAddress;
   }
 
   if (isHexString(address) && address.length !== 2 + 40) {
@@ -307,7 +307,7 @@ format.hexAddress = format.hex40.$before(address => {
   if (isHexString(address)
     && address !== address.toLowerCase()
     && address !== address.toUpperCase()
-    && address !== sign.checksumAddress(address)
+    && address !== checksumAddress(address)
   ) {
     throw new Error(`address "${address}" checksum error`);
   }
@@ -330,7 +330,7 @@ format.hexAddress = format.hex40.$before(address => {
  * > format.checksumAddress('0x1B716c51381e76900EBAA7999A488511A4E1fD0A')
  "0x1B716c51381e76900EBAA7999A488511A4E1fD0a"
  */
-format.checksumAddress = format.hex40.$after(sign.checksumAddress);
+format.checksumAddress = format.hex40.$after(checksumAddress);
 
 format.hex64 = format.hex.$validate(v => v.length === 2 + 64, 'hex64');
 
@@ -451,7 +451,7 @@ format.boolean = format.any.$validate(isBoolean, 'boolean');
  * > format.keccak256('0x42') // "0x42" as string and transfer to <Buffer 30 78 34 32> by ascii
  "0x3c1b2d38851281e9a7b59d10973b0c87c340ff1e76bde7d06bf6b9f28df2b8c0"
  */
-format.keccak256 = format.bytes.$before(v => (isString(v) && !isHexString(v) ? Buffer.from(v) : v)).$after(sign.keccak256).$after(format.hex);
+format.keccak256 = format.bytes.$before(v => (isString(v) && !isHexString(v) ? Buffer.from(v) : v)).$after(keccak256).$after(format.hex);
 
 // -------------------------- format method arguments -------------------------
 format.getLogs = format({

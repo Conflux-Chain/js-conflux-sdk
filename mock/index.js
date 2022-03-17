@@ -1,1 +1,5 @@
-export { default as MockProvider } from './MockProvider.js';
+import MockProvider from './MockProvider.js';
+
+export default {
+  MockProvider,
+};

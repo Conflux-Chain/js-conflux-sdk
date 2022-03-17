@@ -1,10 +1,9 @@
-import CONST from './CONST.js';
-import { assert, readJSON } from './util/index.js';
+import { assert } from './util/index.js';
 import format from './util/format.js';
 import { decodeCfxAddress, ADDRESS_TYPES } from './util/address.js';
 import providerFactory from './provider/index.js';
 import Wallet from './wallet/index.js';
-import Contract from './contract/index.js';
+import Contract, { decodeError } from './contract/index.js';
 import INTERNAL_CONTRACTS from './contract/internal/index.js';
 import { CRC20_ABI } from './contract/standard/index.js';
 import PendingTransaction from './subscribe/PendingTransaction.js';
@@ -15,13 +14,21 @@ import Trace from './rpc/trace.js';
 import TxPool from './rpc/txpool.js';
 import BatchRequester from './rpc/BatchRequester.js';
 import AdvancedRPCUtilities from './rpc/Advanced.js';
+import {
+  MIN_GAS_PRICE,
+  TRANSACTION_GAS,
+  TRANSACTION_STORAGE_LIMIT,
+  EPOCH_NUMBER,
+} from './CONST.js';
 
+// import { fileURLToPath } from "url";
+// import { dirname, join } from "path";
 // read pkg info from package.json
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
-const __filename = fileURLToPath(import.meta.url);
+/* const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const pkg = readJSON(join(__dirname,'../package.json'));
+const pkg = readJSON(join(__dirname,'../package.json')); */
+
+const pkg = { version: '2.0.0' };
 
 /**
  * A sdk of conflux.
@@ -828,7 +835,7 @@ export default class Conflux {
     if (options.gasPrice === undefined) {
       if (this.defaultGasPrice === undefined) {
         const gasPrice = await this.getGasPrice();
-        options.gasPrice = Number(gasPrice) === 0 ? CONST.MIN_GAS_PRICE : gasPrice;
+        options.gasPrice = Number(gasPrice) === 0 ? MIN_GAS_PRICE : gasPrice;
       } else {
         options.gasPrice = this.defaultGasPrice;
       }
@@ -844,8 +851,8 @@ export default class Conflux {
         gas = format.big(gasUsed).times(this.defaultGasRatio).toFixed(0);
         storageLimit = format.big(storageCollateralized).times(this.defaultStorageRatio).toFixed(0);
       } else {
-        gas = CONST.TRANSACTION_GAS;
-        storageLimit = CONST.TRANSACTION_STORAGE_LIMIT;
+        gas = TRANSACTION_GAS;
+        storageLimit = TRANSACTION_STORAGE_LIMIT;
       }
 
       if (options.gas === undefined) {
@@ -1110,7 +1117,7 @@ export default class Conflux {
         ],
       });
     } catch (e) {
-      throw Contract.decodeError(e);
+      throw decodeError(e);
     }
   }
 
@@ -1135,7 +1142,7 @@ export default class Conflux {
       });
       return format.estimate(result);
     } catch (e) {
-      throw Contract.decodeError(e);
+      throw decodeError(e);
     }
   }
 
@@ -1406,7 +1413,7 @@ export default class Conflux {
      ]
    }
    */
-  async subscribeEpochs(sub_epoch = CONST.EPOCH_NUMBER.LATEST_MINED) {
+  async subscribeEpochs(sub_epoch = EPOCH_NUMBER.LATEST_MINED) {
     const id = await this.subscribe('epochs', sub_epoch);
     const subscription = new Subscription(id);
 

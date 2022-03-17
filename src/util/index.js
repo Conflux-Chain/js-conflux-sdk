@@ -1,6 +1,6 @@
-import { WORD_BYTES } from '../CONST.js';
 import { isPlainObject, isString } from 'lodash-es';
 import { readFileSync } from 'fs';
+import { WORD_BYTES } from '../CONST.js';
 
 export function assert(bool, value) {
   if (!bool) {
@@ -67,7 +67,7 @@ export function validAddressPrefix(addressBuf) {
 
 export function readJSON(jsonFilePath) {
   const json = JSON.parse(readFileSync(jsonFilePath), 'utf8');
-  return json
+  return json;
 }
 
 export default {

@@ -1,5 +1,6 @@
 import EventEmitter from 'events';
 import RPCError from './RPCError.js';
+
 export { default as RPCError } from './RPCError.js';
 
 export default class BaseProvider extends EventEmitter {
