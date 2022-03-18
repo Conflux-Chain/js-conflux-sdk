@@ -21,14 +21,7 @@ import {
   EPOCH_NUMBER,
 } from './CONST.js';
 
-// import { fileURLToPath } from "url";
-// import { dirname, join } from "path";
-// read pkg info from package.json
-/* const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const pkg = readJSON(join(__dirname,'../package.json')); */
-
-const pkg = { version: '2.0.0' };
+const pkg = { version: '2.0.4' };
 
 /**
  * A sdk of conflux.

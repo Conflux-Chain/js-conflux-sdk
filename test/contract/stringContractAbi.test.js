@@ -1,9 +1,12 @@
+import { jest } from '@jest/globals';
 import JSBI from '../../src/util/jsbi.js';
 import { Conflux, Contract, format } from '../../src/index.js';
 import Mock from '../../mock/index.js';
-import { bytecode, address } from './contract.json';
 import { abi } from './stringAbi.js';
 import ContractConstructor from '../../src/contract/method/ContractConstructor.js';
+import contractABI from './contractABI.js';
+
+const { bytecode, address } = contractABI;
 
 const { MockProvider } = Mock;
 

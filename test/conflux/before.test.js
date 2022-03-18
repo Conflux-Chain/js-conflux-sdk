@@ -1,4 +1,5 @@
 import lodash from 'lodash-es';
+import { jest } from '@jest/globals';
 import { Conflux, CONST } from '../../src/index.js';
 import Mock from '../../mock/index.js';
 import format from '../../src/util/format.js';

@@ -232,7 +232,7 @@ export function encrypt(privateKey, password) {
   const iv = randomBuffer(16);
 
   password = Buffer.from(password);
-  const derived = scryptjs.scrypt(password, salt, n, r, p, dklen);
+  const derived = scryptjs.syncScrypt(password, salt, n, r, p, dklen);
   const ciphertext = crypto.createCipheriv(cipher, derived.slice(0, 16), iv).update(privateKey);
   const mac = keccak256(Buffer.concat([derived.slice(16, 32), ciphertext]));
   const publicKey = privateKeyToPublicKey(privateKey);
@@ -306,7 +306,7 @@ export function decrypt({
   salt = Buffer.from(salt, 'hex');
   mac = Buffer.from(mac, 'hex');
 
-  const derived = scryptjs.scrypt(password, salt, n, r, p, dklen);
+  const derived = scryptjs.syncScrypt(password, salt, n, r, p, dklen);
   if (!keccak256(Buffer.concat([derived.slice(16, 32), ciphertext])).equals(mac)) {
     throw new Error('Key derivation failed, possibly wrong password!');
   }

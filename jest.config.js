@@ -5,4 +5,5 @@ export default {
 
   testEnvironment: 'node',
   testRegex: 'test/.*test.js',
+  // transform: {},
 };

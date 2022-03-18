@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { Conflux, format, CONST } from '../../src/index.js';
 import Mock from '../../mock/index.js';
 
