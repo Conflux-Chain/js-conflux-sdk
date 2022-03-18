@@ -21,7 +21,7 @@ import {
   EPOCH_NUMBER,
 } from './CONST.js';
 
-const pkg = { version: '2.0.4' };
+const pkg = { version: '2.1.0' };
 
 /**
  * A sdk of conflux.
