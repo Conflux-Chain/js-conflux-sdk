@@ -1,5 +1,10 @@
-import { keccak256, ecdsaSign, ecdsaRecover, publicKeyToAddress } from './util/sign.js';
 import format from './util/format.js';
+import {
+  keccak256,
+  ecdsaSign,
+  ecdsaRecover,
+  publicKeyToAddress,
+} from './util/sign.js';
 
 export default class Message {
   /**

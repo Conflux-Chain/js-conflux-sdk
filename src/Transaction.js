@@ -1,6 +1,12 @@
-import { keccak256, ecdsaSign, ecdsaRecover, privateKeyToAddress, publicKeyToAddress } from './util/sign.js';
 import { encode, decode } from './util/rlp.js';
 import format from './util/format.js';
+import {
+  keccak256,
+  ecdsaSign,
+  ecdsaRecover,
+  privateKeyToAddress,
+  publicKeyToAddress,
+} from './util/sign.js';
 
 export default class Transaction {
   /**

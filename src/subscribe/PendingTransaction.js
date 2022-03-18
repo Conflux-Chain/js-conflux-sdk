@@ -1,6 +1,4 @@
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+import { sleep } from '../util/index.js';
 
 export default class PendingTransaction {
   constructor(conflux, func, args) {

@@ -35,6 +35,10 @@ export function awaitTimeout(promise, timeout) {
   });
 }
 
+export function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 export function decodeHexEncodedStr(hexEncodedStr) {
   return Buffer.from(hexEncodedStr.slice(2), 'hex').toString();
 }
@@ -76,6 +80,7 @@ export default {
   isHexString,
   decodeHexEncodedStr,
   awaitTimeout,
+  sleep,
   alignBuffer,
   assert,
   readJSON,
