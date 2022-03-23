@@ -112,7 +112,7 @@ const ACTION_TYPES = {
 const POCKET_ENUM = {
   BALANCE: 'balance',
   STAKING_BALANCE: 'staking_balance',
-  STORAGE_COLLATERAL: 'stroage_collateral',
+  STORAGE_COLLATERAL: 'storage_collateral',
   SPONSOR_BALANCE_FOR_GAS: 'sponsor_balance_for_gas',
   SPONSOR_BALANCE_FOR_COLLATERAL: 'sponsor_balance_for_collateral',
   MINT_BURN: 'mint_burn',
