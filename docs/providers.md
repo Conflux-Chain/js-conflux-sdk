@@ -6,7 +6,6 @@ The provider is how blockchain SDK talks to the blockchain. Providers take JSON-
 
 Most nodes have a variety of ways to connect to them. The most common ways to connect to your node are:
 
-* IPC (uses local filesystem: fastest and most secure)
 * Websockets (works remotely, faster than HTTP)
 * HTTP (more nodes support it)
 
@@ -37,7 +36,9 @@ An Dapp can connect through Conflux Blockchain through [Fluent](https://fluentwa
 * A connection to the Conflux network (a Provider)
 * Holds your private key and can sign things (a Signer)
 
-js-conflux-sdk can work with Fluent to talk with Conflux blockchain, simply by set `conflux` to the `Conflux` instance's provider.
+js-conflux-sdk (v2) can work with Fluent to talk with Conflux blockchain, simply by set `conflux` to the `Conflux` instance's provider.
+
+Note: The Fluent wallet won't export `window.confluxJS` any more, Dapp developers need install `js-conflux-sdk` by themself and set Fluent provider to `Conflux` instance's provider.
 
 ```js
 // Firstly initialize the Conflux object without url

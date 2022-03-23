@@ -67,3 +67,33 @@ let txHash = await pendingTx;
 let tx = await pendingTx.mined();
 // tx
 ```
+
+## Work with Wallet Plugin
+
+`js-conflux-sdk` can be used in browser, and co-work with [FluentWallet](https://fluentwallet.com/), by simply set the Fluent exported `window.conflux` as SDK instance's provider.
+
+```js
+// Step1 - initialize the Conflux object without url
+// If you load the js-conflux-sdk through script tag:
+let cfxClient = new TreeGraph.Conflux({
+  networkId: 1,
+});
+// If you use bundler to develop your frontend project, 
+import { Conflux } from 'js-conflux-sdk';
+let cfxClient = new Conflux({
+  networkId: 1,
+});
+
+// Step2 - set window.conflux (provided by Fluent wallet) as client's provider
+cfxClient.provider = window.conflux;
+
+// Then you can retrive blockchain data and send transaction with the cfxClient
+
+cfxClient.cfx.getStatus().then(console.log);
+
+cfxClient.cfx.sendTransaction({
+  from: 'Your fluent wallet choosen account address',
+  to: 'The target address',
+  value: 1
+})
+```
