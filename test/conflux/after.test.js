@@ -28,16 +28,6 @@ test('getSupplyInfo', async () => {
   expect(typeof info.totalCollateral).toEqual('bigint');
 });
 
-test('getStatus', async () => {
-  const status = await conflux.getStatus();
-
-  expect(Number.isInteger(status.chainId)).toEqual(true);
-  expect(Number.isInteger(status.epochNumber)).toEqual(true);
-  expect(Number.isInteger(status.blockNumber)).toEqual(true);
-  expect(Number.isInteger(status.pendingTxNumber)).toEqual(true);
-  expect(status.bestHash.startsWith('0x')).toEqual(true);
-});
-
 test('getGasPrice', async () => {
   const gasPrice = await conflux.getGasPrice();
 
