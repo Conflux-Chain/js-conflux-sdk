@@ -65,7 +65,7 @@ class MethodTransaction extends Transaction {
           epochNumber,
         ],
       },
-      decoder: this.method.decodeOutputs,
+      decoder: this.method.decodeOutputs.bind(this.method),
     };
   }
 
