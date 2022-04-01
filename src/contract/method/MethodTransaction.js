@@ -55,18 +55,9 @@ class MethodTransaction extends Transaction {
   }
 
   request(options, epochNumber) {
-    return {
-      request: {
-        method: 'cfx_call',
-        params: [
-          {
-            ...this, ...options,
-          },
-          epochNumber,
-        ],
-      },
-      decoder: this.method.decodeOutputs.bind(this.method),
-    };
+    const methodMeta = this.method.conflux.cfx.call.request({ ...this, ...options }, epochNumber);
+    methodMeta.decoder = this.method.decodeOutputs.bind(this.method);
+    return methodMeta;
   }
 
   async then(resolve, reject) {

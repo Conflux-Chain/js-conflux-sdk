@@ -1,5 +1,9 @@
 # change log
 
+## v2.0.5
+
+* Fix contract method batch call bug
+
 ## v2.0.3
 
 * Change trace `epochNumber`, `transactionPosition` from BigInt to Int
