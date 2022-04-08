@@ -1,5 +1,9 @@
 # change log
 
+## v2.0.7
+
+* Fix logFilter formater bug
+
 ## v2.0.6
 
 * Fix contract method batch call bug

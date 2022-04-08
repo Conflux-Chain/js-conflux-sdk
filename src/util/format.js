@@ -459,7 +459,7 @@ format.getLogs = format({
   offset: format.bigUIntHex,
   fromEpoch: format.epochNumber,
   toEpoch: format.epochNumber,
-  blockHashes: format.blockHash.$or([format.blockHash]),
+  blockHashes: [format.blockHash],
   address: format.address.$or([format.address]),
   topics: format([format.hex64.$or([format.hex64]).$or(null)]),
 }, {
@@ -475,7 +475,7 @@ format.getLogsAdvance = function (networkId, toHexAddress = false) {
     offset: format.bigUIntHex,
     fromEpoch: format.epochNumber,
     toEpoch: format.epochNumber,
-    blockHashes: format.blockHash.$or([format.blockHash]),
+    blockHashes: [format.blockHash],
     address: fromatAddress.$or([fromatAddress]),
     topics: format([format.hex64.$or([format.hex64]).$or(null)]),
   }, {
