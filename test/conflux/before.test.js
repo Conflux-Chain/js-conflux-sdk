@@ -418,7 +418,7 @@ test('getLogs', async () => {
     fromEpoch: undefined,
     toEpoch: undefined,
     address: ADDRESS,
-    blockHashes: BLOCK_HASH,
+    blockHashes: [BLOCK_HASH],
     topics: [TX_HASH, null],
     limit: '0x64',
   });
