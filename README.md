@@ -5,7 +5,7 @@
 
 JavaScript Conflux Software Development Kit is a complete library for interacting with the [Conflux Blockchain](https://developer.confluxnetwork.org/) in both Node.js and browser environment.
 
-Please read the [documentation](https://confluxnetwork.gitbook.io/js-conflux-sdk/) for more.
+Please read the [documentation](https://docs.confluxnetwork.org/js-conflux-sdk) for more.
 
 ## Install
 
