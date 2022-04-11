@@ -3,33 +3,9 @@
 [![npm](https://img.shields.io/npm/v/js-conflux-sdk.svg)](https://www.npmjs.com/package/js-conflux-sdk)
 [![npm](https://img.shields.io/npm/dm/js-conflux-sdk.svg)](https://www.npmjs.com/package/js-conflux-sdk)
 
-JavaScript Conflux Software Development Kit is a complete library for interacting with the Conflux Blockchain in both Node.js and browser environment.
+JavaScript Conflux Software Development Kit is a complete library for interacting with the [Conflux Blockchain](https://developer.confluxnetwork.org/) in both Node.js and browser environment.
 
-Features:
-
-* Can be used in both browser and Node.js environment
-* Connect to Conflux node over HTTP/Websocket JSON-RPC
-* Meta-classes create JavaScript objects from any contract ABI
-* Account utilities
-* Type converter, sign and hash utilities
-* Extensive [documentation](https://confluxnetwork.gitbook.io/js-conflux-sdk/)
-* Builtin support for CRC20 and Internal Contracts
-* Batch RPC support
-
-## Docs
-
-* [Overview](docs/overview.md)
-* [Complete document for sending transaction](docs/how_to_send_tx.md)
-* [Interact with contract](docs/interact_with_contract.md)
-* [SDK support for CIP37 address](docs/conflux_checksum_address.md)
-* [API](docs/api/README.md)
-* [Error handling](docs/error_handling.md)
-* [Conflux Official document](https://developer.conflux-chain.org/docs/introduction/en/conflux_overview)
-* [Public available RPC service](https://github.com/conflux-fans/conflux-rpc-endpoints)
-* [Examples](https://github.com/conflux-fans/js-sdk-example)
-* [Fullnode RPC document](https://developer.confluxnetwork.org/conflux-doc/docs/json_rpc)
-
-Check [SDK's documentation](https://confluxnetwork.gitbook.io/js-conflux-sdk/) site for more info.
+Please read the [documentation](https://confluxnetwork.gitbook.io/js-conflux-sdk/) for more.
 
 ## Install
 
@@ -50,7 +26,7 @@ const { Conflux } = require('js-conflux-sdk');
 
 const conflux = new Conflux({
   url: 'https://test.confluxrpc.com',
-  networkId: 1,
+  networkId: 1,  // Note: network is required
   logger: console, // for debug
 });
 ```
