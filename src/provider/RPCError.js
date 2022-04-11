@@ -6,6 +6,7 @@ class RPCError extends Error {
     supplementErrorInfo(object, payload);
     super(object);
     Object.assign(this, object);
+    Object.assign(this, payload);
   }
 }
 

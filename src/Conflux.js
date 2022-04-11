@@ -59,6 +59,7 @@ class Conflux {
     defaultStorageRatio = 1.1,
     networkId,
     useHexAddressInParameter = false,
+    useVerboseAddress = false,
     ...rest
   } = {}) {
     this.version = pkg.version;
@@ -123,6 +124,7 @@ class Conflux {
     }
 
     this.useHexAddressInParameter = useHexAddressInParameter;
+    this.useVerboseAddress = useVerboseAddress;
 
     /**
      * pos RPC methods
@@ -171,15 +173,15 @@ class Conflux {
     if (!this.networkId) {
       console.warn('Conflux address: networkId is not set properly, please set it');
     }
-    return this.useHexAddressInParameter ? format.hexAddress(address) : format.address(address, this.networkId);
+    return this.useHexAddressInParameter ? format.hexAddress(address) : format.address(address, this.networkId, this.useVerboseAddress);
   }
 
   _formatCallTx(options) {
-    return format.callTxAdvance(this.networkId, this.useHexAddressInParameter)(options);
+    return format.callTxAdvance(this.networkId, this.useHexAddressInParameter, this.useVerboseAddress)(options);
   }
 
   _formatGetLogs(options) {
-    return format.getLogsAdvance(this.networkId, this.useHexAddressInParameter)(options);
+    return format.getLogsAdvance(this.networkId, this.useHexAddressInParameter, this.useVerboseAddress)(options);
   }
 
   /**

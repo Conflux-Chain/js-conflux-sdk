@@ -64,7 +64,7 @@ test('getBlockByEpochNumber', async () => {
     expect(block.deferredStateRoot.length).toEqual(66);
     expect(block.posReference === null || isHash(block.posReference)).toEqual(true);
     if (params[0] === 'latest_mined') {
-      expect(block.gasUsed).toEqual('0x0');
+      expect(block.gasUsed).toEqual(BigInt(0));
     }
 
     // check transaction index
@@ -76,11 +76,6 @@ test('getBlockByEpochNumber', async () => {
       }
     }
   }
-
-  /* const errorCases = cases.filter(c => c.error !== undefined);
-  for (const c of errorCases) {
-    console.log(c);
-  } */
 });
 
 test('cfx_getBlockByHash', async () => {
@@ -117,25 +112,13 @@ test('cfx_getBlockByBlockNumber', async () => {
   for (const c of normalCases) {
     const { params, result } = c;
     const block = await cfxClient.cfx.getBlockByBlockNumber(...params);
-    if (params[0] === '0x11111111111111' || params[0] === '0x0') {
-      expect(block === null).toEqual(true);
-      continue;
+    if (result) {
+      expect(block.hash).toEqual(result.hash);
+      expect(blockBasicCheck(block)).toEqual(true);
+    } else {
+      expect(block).toEqual(null);
     }
-    expect(block.hash).toEqual(result.hash);
-    expect(blockBasicCheck(block)).toEqual(true);
   }
-});
-
-test('cfx_getTransactionByHash', async () => {
-
-});
-
-test('cfx_getTransactionReceipt', async () => {
-
-});
-
-test('cfx_getLogs', async () => {
-
 });
 
 function blockBasicCheck(block) {

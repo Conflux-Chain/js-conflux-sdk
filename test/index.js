@@ -1,12 +1,14 @@
 const TESTNET_MOCK_SERVER = 'http://47.93.101.243';
+const CONST = require('../src/CONST');
+const util = require('../src/util');
 
 function isHash(hash) {
-  return typeof hash === 'string' && hash.startsWith('0x') && hash.length === 66;
+  return util.isHexString(hash) && hash.length === 66;
 }
 
 module.exports = {
   TESTNET_MOCK_SERVER,
-  TESTNET_NETWORK_ID: 1,
-  ZERO_HASH: '0x0000000000000000000000000000000000000000000000000000000000000000',
+  TESTNET_NETWORK_ID: CONST.TESTNET_ID,
+  ZERO_HASH: CONST.ZERO_HASH,
   isHash,
 };
