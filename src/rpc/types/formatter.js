@@ -7,7 +7,7 @@ format.getLogs = format({
   fromEpoch: format.epochNumber,
   toEpoch: format.epochNumber,
   blockHashes: format([format.blockHash]).$or(null),
-  address: format([format.address]).$or(null),
+  address: format.address.$or([format.address]).$or(null),
   topics: format([format.hex64.$or([format.hex64]).$or(null)]),
 }, {
   pick: true,
