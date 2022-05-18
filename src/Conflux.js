@@ -930,15 +930,6 @@ class Conflux {
       options.epochHeight = await this.getEpochNumber();
     }
 
-    if (options.gasPrice === undefined) {
-      if (this.defaultGasPrice === undefined) {
-        const gasPrice = await this.getGasPrice();
-        options.gasPrice = Number(gasPrice) === 0 ? CONST.MIN_GAS_PRICE : gasPrice;
-      } else {
-        options.gasPrice = this.defaultGasPrice;
-      }
-    }
-
     if (options.gas === undefined || options.storageLimit === undefined) {
       let gas;
       let storageLimit;
@@ -959,6 +950,15 @@ class Conflux {
 
       if (options.storageLimit === undefined) {
         options.storageLimit = storageLimit;
+      }
+    }
+
+    if (options.gasPrice === undefined) {
+      if (this.defaultGasPrice === undefined) {
+        const gasPrice = await this.getGasPrice();
+        options.gasPrice = Number(gasPrice) === 0 ? CONST.MIN_GAS_PRICE : gasPrice;
+      } else {
+        options.gasPrice = this.defaultGasPrice;
       }
     }
 

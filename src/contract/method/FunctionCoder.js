@@ -82,7 +82,7 @@ class FunctionCoder {
     const stream = new HexStream(data);
     const tuple = this.inputCoder.decode(stream);
     assert(stream.eof(), {
-      message: 'hex length to large',
+      message: 'hex length too large',
       expect: `${stream.string.length}`,
       got: stream.index,
       coder: this.fullName,
@@ -112,7 +112,7 @@ class FunctionCoder {
     const tuple = this.outputCoder.decode(stream);
 
     assert(stream.eof(), {
-      message: 'hex length to large',
+      message: 'hex length too large',
       expect: `${stream.string.length}`,
       got: stream.index,
       coder: this.fullName,
