@@ -59,6 +59,7 @@ class Conflux {
     defaultStorageRatio = 1.1,
     networkId,
     useHexAddressInParameter = false,
+    useVerboseAddress = false,
     ...rest
   } = {}) {
     this.version = pkg.version;
@@ -123,6 +124,7 @@ class Conflux {
     }
 
     this.useHexAddressInParameter = useHexAddressInParameter;
+    this.useVerboseAddress = useVerboseAddress;
 
     /**
      * pos RPC methods
@@ -171,15 +173,15 @@ class Conflux {
     if (!this.networkId) {
       console.warn('Conflux address: networkId is not set properly, please set it');
     }
-    return this.useHexAddressInParameter ? format.hexAddress(address) : format.address(address, this.networkId);
+    return this.useHexAddressInParameter ? format.hexAddress(address) : format.address(address, this.networkId, this.useVerboseAddress);
   }
 
   _formatCallTx(options) {
-    return format.callTxAdvance(this.networkId, this.useHexAddressInParameter)(options);
+    return format.callTxAdvance(this.networkId, this.useHexAddressInParameter, this.useVerboseAddress)(options);
   }
 
   _formatGetLogs(options) {
-    return format.getLogsAdvance(this.networkId, this.useHexAddressInParameter)(options);
+    return format.getLogsAdvance(this.networkId, this.useHexAddressInParameter, this.useVerboseAddress)(options);
   }
 
   /**
@@ -270,7 +272,7 @@ class Conflux {
    * @return {Promise<string>}
    */
   async getClientVersion() {
-    return this.request({ method: 'cfx_clientVersion' });
+    return this.cfx.clientVersion();
   }
 
   /**
@@ -292,11 +294,7 @@ class Conflux {
    }
    */
   async getSupplyInfo(epochNumber) {
-    const result = await this.request({
-      method: 'cfx_getSupplyInfo',
-      params: [format.epochNumber.$or(undefined)(epochNumber)],
-    });
-    return format.supplyInfo(result);
+    return this.cfx.getSupplyInfo(epochNumber);
   }
 
   /**
@@ -320,8 +318,7 @@ class Conflux {
    }
    */
   async getStatus() {
-    const result = await this.request({ method: 'cfx_getStatus' });
-    return format.status(result);
+    return this.cfx.getStatus();
   }
 
   /**
@@ -334,8 +331,7 @@ class Conflux {
    1n
    */
   async getGasPrice() {
-    const result = await this.request({ method: 'cfx_gasPrice' });
-    return format.bigUInt(result);
+    return this.cfx.gasPrice();
   }
 
   /**
@@ -349,11 +345,7 @@ class Conflux {
    2522880000000n
    */
   async getInterestRate(epochNumber) {
-    const result = await this.request({
-      method: 'cfx_getInterestRate',
-      params: [format.epochNumber.$or(undefined)(epochNumber)],
-    });
-    return format.bigUInt(result);
+    return this.cfx.getInterestRate(epochNumber);
   }
 
   /**
@@ -367,11 +359,7 @@ class Conflux {
    76357297457647044505744908994993n
    */
   async getAccumulateInterestRate(epochNumber) {
-    const result = await this.request({
-      method: 'cfx_getAccumulateInterestRate',
-      params: [format.epochNumber.$or(undefined)(epochNumber)],
-    });
-    return format.bigUInt(result);
+    return this.cfx.getAccumulateInterestRate(epochNumber);
   }
 
   // ------------------------------- address ----------------------------------
@@ -417,14 +405,7 @@ class Conflux {
    824812401057514588670n
    */
   async getBalance(address, epochNumber) {
-    const result = await this.request({
-      method: 'cfx_getBalance',
-      params: [
-        this._formatAddress(address),
-        format.epochNumber.$or(undefined)(epochNumber),
-      ],
-    });
-    return format.bigUInt(result);
+    return this.cfx.getBalance(address, epochNumber);
   }
 
   /**
@@ -439,14 +420,7 @@ class Conflux {
    0n
    */
   async getStakingBalance(address, epochNumber) {
-    const result = await this.request({
-      method: 'cfx_getStakingBalance',
-      params: [
-        this._formatAddress(address),
-        format.epochNumber.$or(undefined)(epochNumber),
-      ],
-    });
-    return format.bigUInt(result);
+    return this.cfx.getStakingBalance(address, epochNumber);
   }
 
   /**
@@ -461,14 +435,7 @@ class Conflux {
    1449n
    */
   async getNextNonce(address, epochNumber) {
-    const result = await this.request({
-      method: 'cfx_getNextNonce',
-      params: [
-        this._formatAddress(address),
-        format.epochNumber.$or(undefined)(epochNumber),
-      ],
-    });
-    return format.bigUInt(result);
+    return this.cfx.getNextNonce(address, epochNumber);
   }
 
   /**
@@ -483,13 +450,7 @@ class Conflux {
    "CFXTEST:TYPE.USER:AASB661U2R60UZN5H0C4H63HJ76WTGF552R9GHU7A4"
    */
   async getAdmin(address, epochNumber) {
-    return this.request({
-      method: 'cfx_getAdmin',
-      params: [
-        this._formatAddress(address),
-        format.epochNumber.$or(undefined)(epochNumber),
-      ],
-    });
+    return this.cfx.getAdmin(address, epochNumber);
   }
 
   /**
@@ -503,14 +464,7 @@ class Conflux {
    *   - unlockBlockNumber `number`: This is the timestamp when the vote right will be invalid, measured in, the number of past blocks.
    */
   async getVoteList(address, epochNumber) {
-    const result = await this.request({
-      method: 'cfx_getVoteList',
-      params: [
-        this._formatAddress(address),
-        format.epochNumber.$or(undefined)(epochNumber),
-      ],
-    });
-    return format.voteList(result);
+    return this.cfx.getVoteList(address, epochNumber);
   }
 
   /**
@@ -524,14 +478,7 @@ class Conflux {
    *   - depositTime `number`: the time of the deposit
    */
   async getDepositList(address, epochNumber) {
-    const result = await this.request({
-      method: 'cfx_getDepositList',
-      params: [
-        this._formatAddress(address),
-        format.epochNumber.$or(undefined)(epochNumber),
-      ],
-    });
-    return format.depositList(result);
+    return this.cfx.getDepositList(address, epochNumber);
   }
 
   // -------------------------------- epoch -----------------------------------
@@ -546,11 +493,7 @@ class Conflux {
    443
    */
   async getEpochNumber(epochNumber) {
-    const result = await this.request({
-      method: 'cfx_epochNumber',
-      params: [format.epochNumber.$or(undefined)(epochNumber)],
-    });
-    return format.uInt(result);
+    return this.cfx.epochNumber(epochNumber);
   }
 
   /**
@@ -565,14 +508,7 @@ class Conflux {
    {...}
    */
   async getBlockByEpochNumber(epochNumber, detail = false) {
-    const result = await this.request({
-      method: 'cfx_getBlockByEpochNumber',
-      params: [
-        format.epochNumber(epochNumber),
-        format.boolean(detail),
-      ],
-    });
-    return format.block.$or(null)(result);
+    return this.cfx.getBlockByEpochNumber(epochNumber, detail);
   }
 
   /**
@@ -587,14 +523,7 @@ class Conflux {
    {...}
    */
   async getBlockByBlockNumber(blockNumber, detail = false) {
-    const result = await this.request({
-      method: 'cfx_getBlockByBlockNumber',
-      params: [
-        format.bigUIntHex(blockNumber),
-        format.boolean(detail),
-      ],
-    });
-    return format.block.$or(null)(result);
+    return this.cfx.getBlockByBlockNumber(blockNumber, detail);
   }
 
   /**
@@ -608,10 +537,7 @@ class Conflux {
    ['0xe677ae5206a5d67d9efa183d867b4b986ed82a3e62174a1488cf8364d58534ec']
    */
   async getBlocksByEpochNumber(epochNumber) {
-    return this.request({
-      method: 'cfx_getBlocksByEpoch',
-      params: [format.epochNumber(epochNumber)],
-    });
+    return this.cfx.getBlocksByEpoch(epochNumber);
   }
 
   /**
@@ -646,11 +572,7 @@ class Conflux {
    ]
    */
   async getBlockRewardInfo(epochNumber) {
-    const result = await this.request({
-      method: 'cfx_getBlockRewardInfo',
-      params: [format.epochNumber(epochNumber)],
-    });
-    return format.rewardInfo(result);
+    return this.cfx.getBlockRewardInfo(epochNumber);
   }
 
   // -------------------------------- block -----------------------------------
@@ -664,7 +586,7 @@ class Conflux {
    "0xb8bb355bfeaf055a032d5b7df719917c090ee4fb6fee42383004dfe8911d7daf"
    */
   async getBestBlockHash() {
-    return this.request({ method: 'cfx_getBestBlockHash' });
+    return this.cfx.getBestBlockHash();
   }
 
   /**
@@ -724,14 +646,7 @@ class Conflux {
     }
    */
   async getBlockByHash(blockHash, detail = false) {
-    const result = await this.request({
-      method: 'cfx_getBlockByHash',
-      params: [
-        format.blockHash(blockHash),
-        format.boolean(detail),
-      ],
-    });
-    return format.block.$or(null)(result);
+    return this.cfx.getBlockByHash(blockHash, detail);
   }
 
   /**
@@ -744,15 +659,7 @@ class Conflux {
    * @return {Promise<object>} See `getBlockByHash`
    */
   async getBlockByHashWithPivotAssumption(blockHash, pivotBlockHash, epochNumber) {
-    const result = await this.request({
-      method: 'cfx_getBlockByHashWithPivotAssumption',
-      params: [
-        format.blockHash(blockHash),
-        format.blockHash(pivotBlockHash),
-        format.epochNumber(epochNumber),
-      ],
-    });
-    return format.block(result);
+    return this.cfx.getBlockByHashWithPivotAssumption(blockHash, pivotBlockHash, epochNumber);
   }
 
   /**
@@ -767,11 +674,7 @@ class Conflux {
    1e-8
    */
   async getConfirmationRiskByHash(blockHash) {
-    const result = await this.request({
-      method: 'cfx_getConfirmationRiskByHash',
-      params: [format.blockHash(blockHash)],
-    });
-    return format.fixed64.$or(null)(result);
+    return this.cfx.getConfirmationRiskByHash(blockHash);
   }
 
   // ----------------------------- transaction --------------------------------
@@ -823,11 +726,7 @@ class Conflux {
     }
    */
   async getTransactionByHash(transactionHash) {
-    const result = await this.request({
-      method: 'cfx_getTransactionByHash',
-      params: [format.transactionHash(transactionHash)],
-    });
-    return format.transaction.$or(null)(result);
+    return this.cfx.getTransactionByHash(transactionHash);
   }
 
   /**
@@ -881,11 +780,7 @@ class Conflux {
     }
    */
   async getTransactionReceipt(transactionHash) {
-    const result = await this.request({
-      method: 'cfx_getTransactionReceipt',
-      params: [format.transactionHash(transactionHash)],
-    });
-    return format.receipt.$or(null)(result);
+    return this.cfx.getTransactionReceipt(transactionHash);
   }
 
   /**
@@ -899,11 +794,7 @@ class Conflux {
    "0xbe007c3eca92d01f3917f33ae983f40681182cf618defe75f490a65aac016914"
    */
   async sendRawTransaction(hex) {
-    const result = await this.request({
-      method: 'cfx_sendRawTransaction',
-      params: [format.hex(hex)],
-    });
-    return result;
+    return this.cfx.sendRawTransaction(hex);
   }
 
   /**
@@ -1088,13 +979,7 @@ class Conflux {
    "0x6080604052348015600f57600080fd5b506004361060325760003560e01c806306661abd1460375780638..."
    */
   async getCode(address, epochNumber) {
-    return this.request({
-      method: 'cfx_getCode',
-      params: [
-        this._formatAddress(address),
-        format.epochNumber.$or(undefined)(epochNumber),
-      ],
-    });
+    return this.cfx.getCode(address, epochNumber);
   }
 
   /**
@@ -1110,14 +995,7 @@ class Conflux {
    "0x000000000000000000000000000000000000000000000000000000000000162e"
    */
   async getStorageAt(address, position, epochNumber) {
-    return this.request({
-      method: 'cfx_getStorageAt',
-      params: [
-        this._formatAddress(address),
-        format.hex64(position),
-        format.epochNumber.$or(undefined)(epochNumber),
-      ],
-    });
+    return this.cfx.getStorageAt(address, position, epochNumber);
   }
 
   /**
@@ -1139,13 +1017,7 @@ class Conflux {
    }
    */
   async getStorageRoot(address, epochNumber) {
-    return this.request({
-      method: 'cfx_getStorageRoot',
-      params: [
-        this._formatAddress(address),
-        format.epochNumber.$or(undefined)(epochNumber),
-      ],
-    });
+    return this.cfx.getStorageRoot(address, epochNumber);
   }
 
   /**
@@ -1171,14 +1043,7 @@ class Conflux {
    }
    */
   async getSponsorInfo(address, epochNumber) {
-    const result = await this.request({
-      method: 'cfx_getSponsorInfo',
-      params: [
-        this._formatAddress(address),
-        format.epochNumber.$or(undefined)(epochNumber),
-      ],
-    });
-    return format.sponsorInfo(result);
+    return this.cfx.getSponsorInfo(address, epochNumber);
   }
 
   /**
@@ -1193,11 +1058,7 @@ class Conflux {
    *
    */
   async getAccountPendingInfo(address) {
-    const result = await this.request({
-      method: 'cfx_getAccountPendingInfo',
-      params: [this._formatAddress(address)],
-    });
-    return format.accountPendingInfo(result);
+    return this.cfx.getAccountPendingInfo(address);
   }
 
   /**
@@ -1210,15 +1071,7 @@ class Conflux {
    * - pendingCount `BigInt`: the count of pending transactions
    */
   async getAccountPendingTransactions(address, startNonce, limit) {
-    const result = await this.request({
-      method: 'cfx_getAccountPendingTransactions',
-      params: [
-        this._formatAddress(address),
-        format.bigUIntHex.$or(undefined)(startNonce),
-        format.bigUIntHex.$or(undefined)(limit),
-      ],
-    });
-    return format.accountPendingTransactions(result);
+    return this.cfx.getAccountPendingTransactions(address, startNonce, limit);
   }
 
   /**
@@ -1233,14 +1086,7 @@ class Conflux {
    89375000000000000000n
    */
   async getCollateralForStorage(address, epochNumber) {
-    const result = await this.request({
-      method: 'cfx_getCollateralForStorage',
-      params: [
-        this._formatAddress(address),
-        format.epochNumber.$or(undefined)(epochNumber),
-      ],
-    });
-    return format.bigUInt(result);
+    return this.cfx.getCollateralForStorage(address, epochNumber);
   }
 
   /**
@@ -1321,18 +1167,7 @@ class Conflux {
    * - `Boolean` willPayTxFee: false if the transaction is eligible for gas sponsorship, true otherwise
    */
   async checkBalanceAgainstTransaction(from, to, gas, gasPrice, storageLimit, epochNumber) {
-    const result = await this.request({
-      method: 'cfx_checkBalanceAgainstTransaction',
-      params: [
-        this._formatAddress(from),
-        this._formatAddress(to),
-        format.bigUIntHex(gas),
-        format.bigUIntHex(gasPrice),
-        format.bigUIntHex(storageLimit),
-        format.epochNumber.$or(undefined)(epochNumber),
-      ],
-    });
-    return result;
+    return this.cfx.checkBalanceAgainstTransaction(from, to, gas, gasPrice, storageLimit, epochNumber);
   }
 
   /**
@@ -1481,8 +1316,7 @@ class Conflux {
    * > await conflux.getEpochReceipts('0x6')
    */
   async getEpochReceipts(epochNumber) {
-    const result = await this.request({ method: 'cfx_getEpochReceipts', params: [format.epochNumber(epochNumber)] });
-    return format.epochReceipts(result);
+    return this.cfx.getEpochReceipts(epochNumber);
   }
 
   /**
@@ -1494,8 +1328,7 @@ class Conflux {
    * > await conflux.getEpochReceiptsByPivotBlockHash('0x12291776d632d966896b6c580f3201cd2e2a3fd672378fc7965aa7f7058282b2')
    */
   async getEpochReceiptsByPivotBlockHash(pivotBlockHash) {
-    const result = await this.request({ method: 'cfx_getEpochReceipts', params: [`hash:${pivotBlockHash}`] });
-    return format.epochReceipts(result);
+    return this.cfx.getEpochReceiptsByPivotBlockHash(pivotBlockHash);
   }
 
   /**
@@ -1507,8 +1340,7 @@ class Conflux {
    *
    */
   async getPoSEconomics() {
-    const result = await this.request({ method: 'cfx_getPoSEconomics' });
-    return format.posEconomics(result);
+    return this.cfx.getPoSEconomics();
   }
 
   // ----------------------------- subscription -------------------------------

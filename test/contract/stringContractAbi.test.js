@@ -168,8 +168,7 @@ test('contract.getLogs', async () => {
 
   const result = await contract.StringEvent('string').getLogs();
   expect(result[0].arguments).toEqual([topics[1]]);
-
-  expect(call).toHaveBeenLastCalledWith('cfx_getLogs', { address, topics });
+  expect(call).toHaveBeenLastCalledWith('cfx_getLogs', { address: [address], topics });
 
   call.mockRestore();
 });

@@ -410,14 +410,14 @@ test('getLogs', async () => {
 
   await conflux.getLogs({
     blockHashes: [BLOCK_HASH],
-    address: ADDRESS,
+    address: [ADDRESS],
     topics: [[TX_HASH], null],
     limit: 100,
   });
   expect(call).toHaveBeenLastCalledWith('cfx_getLogs', {
     fromEpoch: undefined,
     toEpoch: undefined,
-    address: ADDRESS,
+    address: [ADDRESS],
     blockHashes: [BLOCK_HASH],
     topics: [TX_HASH, null],
     limit: '0x64',
@@ -458,11 +458,11 @@ test('subscribeLogs', async () => {
   expect(call).toHaveBeenLastCalledWith('cfx_subscribe', 'logs', {});
 
   await conflux.subscribeLogs({
-    address: ADDRESS,
+    address: [ADDRESS],
     topics: [[TX_HASH], null],
   });
   expect(call).toHaveBeenLastCalledWith('cfx_subscribe', 'logs', {
-    address: ADDRESS,
+    address: [ADDRESS],
     topics: [TX_HASH, null],
   });
 
