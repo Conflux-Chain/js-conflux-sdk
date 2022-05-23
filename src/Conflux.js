@@ -805,7 +805,7 @@ class Conflux {
    * @param options.from {string} - Key of account in conflux.wallet
    * @return {Promise<Transaction>}
    */
-  async _signTransaction(options) {
+  async populateAndSignTransaction(options) {
     const account = await this.wallet.get(`${options.from}`);
 
     if (options.nonce === undefined) {
@@ -953,7 +953,7 @@ class Conflux {
    */
   async sendTransaction(options, ...extra) {
     if (this.wallet.has(`${options.from}`)) {
-      const transaction = await this._signTransaction(options);
+      const transaction = await this.populateAndSignTransaction(options);
       return this.sendRawTransaction(transaction.serialize());
     }
 
