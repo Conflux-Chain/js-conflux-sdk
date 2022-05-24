@@ -5,7 +5,7 @@ class BaseProvider extends EventEmitter {
   /**
    * @param [options] {object}
    * @param options.url {string} - Full json rpc http url
-   * @param [options.timeout=5*60*1000] {number} - Request time out in ms
+   * @param [options.timeout=530*1000] {number} - Request time out in ms
    * @param [options.retry=1] {number} - Retry number
    * @param [options.keepAlive=false] {boolean} - Whether open the http keep-alive option
    * @param [options.logger] {object} - Logger with `info` and `error`
@@ -14,7 +14,7 @@ class BaseProvider extends EventEmitter {
   constructor({
     url,
     retry = 1,
-    timeout = 5 * 60 * 1000,
+    timeout = 30 * 1000,
     keepAlive = false,
     logger = { info: () => undefined, error: () => undefined },
   }) {
