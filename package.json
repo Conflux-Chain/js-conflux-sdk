@@ -28,6 +28,7 @@
   "scripts": {
     "eslint": "npx eslint ./src ./test ./mock",
     "build": "node scripts/build-frontend.js",
+    "genDTS": "npx tsc",
     "document": "node scripts/document.js",
     "jsdocToMd": "node scripts/jsdoc-to-md.js",
     "prepublishOnly": "npm run build",
@@ -70,7 +71,8 @@
     "jsdoc-to-markdown": "^7.1.0",
     "minify-stream": "^2.0.1",
     "mold-source-map": "^0.4.0",
-    "solc": "^0.6.10"
+    "solc": "^0.6.10",
+    "typescript": "^4.6.4"
   },
   "resolutions": {
     "tinyify/acorn-node/acorn": "7.1.1",

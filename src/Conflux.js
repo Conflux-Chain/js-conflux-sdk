@@ -17,11 +17,12 @@ const BatchRequester = require('./rpc/BatchRequester');
 const AdvancedRPCUtilities = require('./rpc/Advanced');
 
 /**
- * A sdk of conflux.
+ * The Client class that provides an interface to the Conflux network.
  */
 class Conflux {
   /**
    * Create a Conflux instance with networdId set up
+   * @param {object} options
    */
   static async create(options) {
     const cfx = new Conflux(options);
@@ -31,16 +32,16 @@ class Conflux {
   }
 
   /**
-   * @param [options] {object} - Conflux and Provider constructor options.
-   * @param [options.defaultGasPrice] {string|number} - The default gas price in drip to use for transactions.
-   * @param [options.defaultGasRatio=1.1] {number} - The ratio to multiply by gas.
-   * @param [options.defaultStorageRatio=1.1] {number} - The ratio to multiply by storageLimit.
-   * @param [options.url] {string} - Url of Conflux node to connect.
-   * @param [options.retry] {number} - Retry times if request error occurs.
-   * @param [options.timeout] {number} - Request time out in ms
-   * @param [options.logger] {Object} - Logger object with 'info' and 'error' method.
-   * @param [options.networkId] {number} - Connected RPC's networkId
-   * @param [options.useWechatProvider] {boolean} - Use wechat provider
+   * @param {object} [options] - Conflux and Provider constructor options.
+   * @param {string|number} [options.defaultGasPrice] - The default gas price in drip to use for transactions.
+   * @param {number} [options.defaultGasRatio=1.1] - The ratio to multiply by gas.
+   * @param {number} [options.defaultStorageRatio=1.1] - The ratio to multiply by storageLimit.
+   * @param {string} [options.url] - Url of Conflux node to connect.
+   * @param {number} [options.retry] - Retry times if request error occurs.
+   * @param {number} [options.timeout] - Request time out in ms
+   * @param {Object} [options.logger] - Logger object with 'info' and 'error' method.
+   * @param {number} [options.networkId] - Connected RPC's networkId
+   * @param {boolean} [options.useWechatProvider] - Use wechat provider
    * @example
    * > const { Conflux } = require('js-conflux-sdk');
    * > const conflux = new Conflux({url:'https://test.confluxrpc.com', networkId: 1});
@@ -147,7 +148,10 @@ class Conflux {
     this.advanced = new AdvancedRPCUtilities(this);
   }
 
-  // different kind provider API wrapper
+  /**
+   * Different kind provider API wrapper
+   * @private
+   */
   request(req) {
     if (this.provider.request) {
       return this.provider.request(req);
@@ -161,6 +165,9 @@ class Conflux {
     throw new Error('Provider does not support request');
   }
 
+  /**
+   * @private
+   */
   _decoratePendingTransaction(func) {
     const conflux = this;
     return function (...args) {
@@ -168,6 +175,9 @@ class Conflux {
     };
   }
 
+  /**
+   * @private
+   */
   _formatAddress(address) {
     if (!this.networkId) {
       console.warn('Conflux address: networkId is not set properly, please set it');
@@ -175,10 +185,16 @@ class Conflux {
     return this.useHexAddressInParameter ? format.hexAddress(address) : format.address(address, this.networkId, this.useVerboseAddress);
   }
 
+  /**
+   * @private
+   */
   _formatCallTx(options) {
     return format.callTxAdvance(this.networkId, this.useHexAddressInParameter, this.useVerboseAddress)(options);
   }
 
+  /**
+   * @private
+   */
   _formatGetLogs(options) {
     return format.getLogsAdvance(this.networkId, this.useHexAddressInParameter, this.useVerboseAddress)(options);
   }
@@ -186,7 +202,7 @@ class Conflux {
   /**
    * A shout cut for `new Contract(options, conflux);`
    *
-   * @param options {object} - See [Contract.constructor](Contract.md#Contract.js/constructor)
+   * @param {object} options - See [Contract.constructor](Contract.md#Contract.js/constructor)
    * @return {Contract} - A Contract instance
    */
   Contract(options) {
@@ -200,7 +216,7 @@ class Conflux {
    * - [SponsorWhitelistControl](https://github.com/Conflux-Chain/conflux-rust/blob/master/internal_contract/contracts/SponsorWhitelistControl.sol)
    * - [Staking](https://github.com/Conflux-Chain/conflux-rust/blob/master/internal_contract/contracts/Staking.sol)
    *
-   * @param name {"AdminControl"|"SponsorWhitelistControl"|"Staking"} Internal contract name
+   * @param {"AdminControl"|"SponsorWhitelistControl"|"Staking"|"ConfluxContext"|"PoSRegister"|"CrossSpaceCall"} name - Internal contract name
    * @return {Contract}
    *
    * @example
@@ -229,8 +245,8 @@ class Conflux {
   /**
    * Create an token CRC20 contract with standard CRC20 abi
    *
-   * @param address {string}
-   * @returns  {Contract} - A token contract instance
+   * @param {string} address
+   * @returns  {Contract} A token contract instance
    */
   CRC20(address) {
     return this.Contract({ address, abi: CRC20_ABI });
@@ -266,8 +282,6 @@ class Conflux {
 
   /**
    * Get node client version
-   *
-   * @private
    * @return {Promise<string>}
    */
   async getClientVersion() {
@@ -277,7 +291,7 @@ class Conflux {
   /**
    * Get supply info
    *
-   * @param [epochNumber='latest_state'] {string|number} - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
+   * @param {string|number} [epochNumber='latest_state'] - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
    * @return {Promise<object>} Return supply info
    * - totalIssued `BigInt`: Total issued balance in `Drip`
    * - totalStaking `BigInt`: Total staking balance in `Drip`
@@ -336,7 +350,7 @@ class Conflux {
   /**
    * Returns the interest rate of given parameter.
    *
-   * @param [epochNumber='latest_state'] {string|number} - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
+   * @param {string|number} [epochNumber='latest_state'] - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
    * @return {Promise<BigInt>} The interest rate of given parameter.
    *
    * @example
@@ -350,7 +364,7 @@ class Conflux {
   /**
    * Returns the accumulate interest rate of given parameter.
    *
-   * @param [epochNumber='latest_state'] {string|number} - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
+   * @param {string|number} [epochNumber='latest_state'] - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
    * @return {Promise<BigInt>} The accumulate interest rate of given parameter.
    *
    * @example
@@ -365,8 +379,8 @@ class Conflux {
   /**
    * Return account related states of the given account
    *
-   * @param address {string} - address to get account.
-   * @param [epochNumber='latest_state'] {string|number} - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
+   * @param {string} address - address to get account.
+   * @param {string|number} [epochNumber='latest_state'] - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
    * @return {Promise<object>} Return the states of the given account:
    * - balance `BigInt`: the balance of the account.
    * - nonce `BigInt`: the nonce of the account's next transaction.
@@ -395,8 +409,8 @@ class Conflux {
   /**
    * Returns the balance of the account of given address.
    *
-   * @param address {string} - The address to get the balance of.
-   * @param [epochNumber='latest_state'] {string|number} - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
+   * @param {string} address - The address to get the balance of.
+   * @param {string|number} [epochNumber='latest_state'] - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
    * @return {Promise<BigInt>} The balance in Drip.
    *
    * @example
@@ -410,8 +424,8 @@ class Conflux {
   /**
    * Returns the balance of the staking account of given address.
    *
-   * @param address {string} - Address to check for staking balance.
-   * @param [epochNumber='latest_state'] {string|number} - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
+   * @param {string} address - Address to check for staking balance.
+   * @param {string|number} [epochNumber='latest_state'] - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
    * @return {Promise<BigInt>} The staking balance in Drip.
    *
    * @example
@@ -425,8 +439,8 @@ class Conflux {
   /**
    * Returns the next nonce should be used by given address.
    *
-   * @param address {string} - The address to get the numbers of transactions from.
-   * @param [epochNumber] {string|number} - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
+   * @param {string} address - The address to get the numbers of transactions from.
+   * @param {string|number} [epochNumber] - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
    * @return {Promise<BigInt>} The next nonce should be used by given address.
    *
    * @example
@@ -440,8 +454,8 @@ class Conflux {
   /**
    * Returns the admin of given contract.
    *
-   * @param address {string} - Address to contract.
-   * @param [epochNumber='latest_state'] {string|number} - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
+   * @param {string} address - Address to contract.
+   * @param {string|number} [epochNumber='latest_state'] - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
    * @return {Promise<string>} Address to admin, or `null` if the contract does not exist.
    *
    * @example
@@ -455,8 +469,8 @@ class Conflux {
   /**
    * Returns vote list of the given account.
    *
-   * @param address {string} - Address to contract.
-   * @param [epochNumber='latest_state'] {string|number} - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
+   * @param {string} address - Address to contract.
+   * @param {string|number} [epochNumber='latest_state'] - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
    * @return {Promise<object[]>} Vote list
    * - `array`:
    *   - amount `BigInt`: This is the number of tokens should be locked before
@@ -468,8 +482,8 @@ class Conflux {
 
   /**
    * Returns deposit list of the given account.
-   * @param address {string} - Address to contract.
-   * @param [epochNumber='latest_state'] {string|number} - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
+   * @param {string} address - Address to contract.
+   * @param {string|number} [epochNumber='latest_state'] - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
    * @return {Promise<object[]>} Deposit list
    * - `array`:
    *   - amount `BigInt`: the number of tokens deposited
@@ -484,7 +498,7 @@ class Conflux {
   /**
    * Returns the epoch number of given parameter.
    *
-   * @param [epochNumber='latest_state'] {string|number} - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
+   * @param {string|number} [epochNumber='latest_state'] - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
    * @return {Promise<number>} integer of the current epoch number of given parameter.
    *
    * @example
@@ -498,8 +512,8 @@ class Conflux {
   /**
    * Returns information about a block by epoch number.
    *
-   * @param epochNumber {string|number} - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
-   * @param [detail=false] {boolean} - If `true` it returns the full transaction objects, if `false` only the hashes of the transactions.
+   * @param {string|number} epochNumber - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
+   * @param {boolean} [detail=false] - If `true` it returns the full transaction objects, if `false` only the hashes of the transactions.
    * @return {Promise<object|null>} See `getBlockByHash`
    *
    * @example
@@ -513,8 +527,8 @@ class Conflux {
   /**
    * Returns information about a block by block number.
    *
-   * @param blockNumber {string|number}
-   * @param [detail=false] {boolean} - If `true` it returns the full transaction objects, if `false` only the hashes of the transactions.
+   * @param {string|number} blockNumber
+   * @param {boolean} [detail=false] - If `true` it returns the full transaction objects, if `false` only the hashes of the transactions.
    * @return {Promise<object|null>} See `getBlockByHash`
    *
    * @example
@@ -528,7 +542,7 @@ class Conflux {
   /**
    * Returns hashes of blocks located in some epoch.
    *
-   * @param epochNumber {string|number} - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
+   * @param {string|number} epochNumber - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
    * @return {Promise<string[]>} Array of block hashes, sorted by execution(topological) order.
    *
    * @example
@@ -543,7 +557,7 @@ class Conflux {
    * Get epoch blocks reward info
    *
    * @private
-   * @param epochNumber {string|number} - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
+   * @param {string|number} epochNumber - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
    * @return {Promise<object[]>} List of block reward info
    * - blockHash `string`: Hash of the block.
    * - author `string`: The address of the beneficiary to whom the mining rewards were given.
@@ -591,8 +605,8 @@ class Conflux {
   /**
    * Returns information about a block by hash.
    *
-   * @param blockHash {string} - hash of a block.
-   * @param [detail=false] {boolean} - If `true` it returns the full transaction objects, if `false` only the hashes of the transactions.
+   * @param {string} blockHash - hash of a block.
+   * @param {boolean} [detail=false] - If `true` it returns the full transaction objects, if `false` only the hashes of the transactions.
    * @return {Promise<object|null>} A block object, or null when no block was found:
    * - adaptive `boolean`: If `true` the weight of the block is adaptive under GHAST rule, if `false` otherwise.
    * - blame `number`: If 0, then no blocks are blamed on its parent path, If greater than 0, then the nearest blamed block on the parent path is blame steps away.
@@ -652,9 +666,9 @@ class Conflux {
    * Get block by `blockHash` if pivot block of `epochNumber` is `pivotBlockHash`.
    *
    * @private
-   * @param blockHash {string} - Block hash which epochNumber expect to be `epochNumber`.
-   * @param pivotBlockHash {string} - Block hash which expect to be the pivot block of `epochNumber`.
-   * @param epochNumber {number} - Epoch number
+   * @param {string} blockHash - Block hash which epochNumber expect to be `epochNumber`.
+   * @param {string} pivotBlockHash - Block hash which expect to be the pivot block of `epochNumber`.
+   * @param {number} epochNumber - Epoch number
    * @return {Promise<object>} See `getBlockByHash`
    */
   async getBlockByHashWithPivotAssumption(blockHash, pivotBlockHash, epochNumber) {
@@ -665,7 +679,7 @@ class Conflux {
    * Get the risk of the block could be reverted.
    * All block in one same epoch returned same risk number
    *
-   * @param blockHash {string} - Hash of a block
+   * @param {string} blockHash - Hash of a block
    * @return {Promise<number|null>} Number >0 and <1
    *
    * @example
@@ -680,7 +694,7 @@ class Conflux {
   /**
    * Returns the information about a transaction requested by transaction hash.
    *
-   * @param transactionHash {string} - hash of a transaction
+   * @param {string} transactionHash - hash of a transaction
    * @return {Promise<object|null>} transaction object, or `null` when no transaction was found:
    * - blockHash `string`: hash of the block where this transaction was in and got executed. `null` when its pending.
    * - contractCreated `string|null`: address of created contract. `null` when it's not a contract creating transaction
@@ -731,7 +745,7 @@ class Conflux {
   /**
    * Returns the information about a transaction receipt requested by transaction hash.
    *
-   * @param transactionHash {string} - Hash of a transaction
+   * @param {string} transactionHash - Hash of a transaction
    * @return {Promise<object|null>} A transaction receipt object, or null when no transaction was found or the transaction was not executed yet:
    * - transactionHash `string`: Hash of the given transaction.
    * - index `number`: Transaction index within the block.
@@ -785,7 +799,7 @@ class Conflux {
   /**
    * Creates new message call transaction or a contract creation for signed transactions.
    *
-   * @param hex {string|Buffer} - The signed transaction data.
+   * @param {string|Buffer} hex - The signed transaction data.
    * @return {Promise<PendingTransaction>} The transaction hash, or the zero hash if the transaction is not yet available.
    *
    * @example
@@ -804,8 +818,8 @@ class Conflux {
    * if `from` field in `conflux.wallet`, sign by local account and send raw transaction,
    * else call `cfx_sendTransaction` and sign by remote wallet
    *
-   * @param options {object} - See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**)
-   * @param [password] {string} - Password for remote node.
+   * @param {object} options - See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**)
+   * @param {string} [password] - Password for remote node.
    * @return {Promise<PendingTransaction>} The PendingTransaction object.
    *
    * @example
@@ -913,8 +927,8 @@ class Conflux {
   /**
    * Returns the code of given contract.
    *
-   * @param address {string} - Address to contract.
-   * @param [epochNumber='latest_state'] {string|number} - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
+   * @param {string} address - Address to contract.
+   * @param {string|number} [epochNumber='latest_state'] - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
    * @return {Promise<string>} Byte code of contract, or 0x if the contract does not exist.
    *
    * @example
@@ -928,9 +942,9 @@ class Conflux {
   /**
    * Returns storage entries from a given contract.
    *
-   * @param address {string} - Address to contract.
-   * @param position {string} - The given position.
-   * @param [epochNumber='latest_state'] {string|number} - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
+   * @param {string} address - Address to contract.
+   * @param {string} position - The given position.
+   * @param {string|number} [epochNumber='latest_state'] - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
    * @return {Promise<string|null>} Storage entry of given query, or null if the it does not exist.
    *
    * @example
@@ -944,8 +958,8 @@ class Conflux {
   /**
    * Returns the storage root of a given contract.
    *
-   * @param address {string} - Address to contract.
-   * @param [epochNumber='latest_state'] {string|number} - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
+   * @param {string} address - Address to contract.
+   * @param {string|number} [epochNumber='latest_state'] - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
    * @return {Promise<object>} A storage root object, or `null` if the contract does not exist
    * - delta `string`: storage root in the delta trie.
    * - intermediate `string`: storage root in the intermediate trie.
@@ -966,8 +980,8 @@ class Conflux {
   /**
    * Returns the sponsor info of given contract.
    *
-   * @param address {string} - Address to contract.
-   * @param [epochNumber='latest_state'] {string|number} - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
+   * @param {string} address - Address to contract.
+   * @param {string|number} [epochNumber='latest_state'] - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
    * @return {Promise<object>} A sponsor info object, if the contract doesn't have a sponsor, then the all fields in returned object will be 0:
    * - sponsorBalanceForCollateral `BigInt`: the sponsored balance for storage.
    * - sponsorBalanceForGas `BigInt`: the sponsored balance for gas.
@@ -992,7 +1006,7 @@ class Conflux {
   /**
    * Return pending info of an account
    *
-   * @param address {string} - Address to account
+   * @param {string} address - Address to account
    * @returns {Promise<object>} An account pending info object.
    * - localNonce `BigInt`: then next nonce can use in the transaction pool
    * - nextPendingTx `string`: the hash of next pending transaction
@@ -1007,7 +1021,7 @@ class Conflux {
   /**
    * Return pending transactions of one account
    *
-   * @param address {string} - base32 address
+   * @param {string} address - base32 address
    * @returns {Promise<object>} An account's pending transactions and info.
    * - pendingTransactions `Array`: pending transactions
    * - firstTxStatus `Object`: the status of first pending tx
@@ -1020,7 +1034,7 @@ class Conflux {
   /**
    * Returns the size of the collateral storage of given address, in Byte.
    *
-   * @param address {string} - Address to check for collateral storage.
+   * @param {string} address - Address to check for collateral storage.
    * @param [epochNumber='latest_state'] - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
    * @return {Promise<BigInt>} - The collateral storage in Byte.
    *
@@ -1035,8 +1049,8 @@ class Conflux {
   /**
    * Virtually call a contract, return the output data.
    *
-   * @param options {object} - See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**)
-   * @param [epochNumber='latest_state'] {string|number} - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
+   * @param {object} options - See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**)
+   * @param {string|number} [epochNumber='latest_state'] - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
    * @return {Promise<string>} The output data.
    */
   async call(options, epochNumber) {
@@ -1056,8 +1070,8 @@ class Conflux {
   /**
    * Virtually call a contract, return the estimate gas used and storage collateralized.
    *
-   * @param options {object} - See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**)
-   * @param [epochNumber='latest_state'] {string|number} - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
+   * @param {object} options - See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**)
+   * @param {string|number} [epochNumber='latest_state'] - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
    * @return {Promise<object>} A estimate result object:
    * - `BigInt` gasUsed: The gas used.
    * - `BigInt` gasLimit: The gas limit.
@@ -1080,8 +1094,8 @@ class Conflux {
 
   /**
    * Estimate a transaction's gas and storageCollateralize, check whether user's balance is enough for fee and value
-   * @param options {object} - See [estimateGasAndCollateral](#Conflux.js/Conflux/estimateGasAndCollateral)
-   * @param [epochNumber='latest_state'] {string|number} - See [estimateGasAndCollateral](#Conflux.js/Conflux/estimateGasAndCollateral)
+   * @param {object} options - See [estimateGasAndCollateral](#Conflux.js/Conflux/estimateGasAndCollateral)
+   * @param {string|number} [epochNumber='latest_state'] - See [estimateGasAndCollateral](#Conflux.js/Conflux/estimateGasAndCollateral)
    * @return {Promise<object>} A estimate result with advance info object:
    * - `BigInt` gasUsed: The gas used.
    * - `BigInt` gasLimit: The gas limit.
@@ -1098,12 +1112,12 @@ class Conflux {
 
   /**
    * Check whether transaction sender's balance is enough for gas and storage fee
-   * @param from {address} sender address
-   * @param to {address} target address
-   * @param gas {string|number} gas limit (in drip)
-   * @param gasPrice {string|number} gas price (in drip)
-   * @param storageLimit {string|number} storage limit (in byte)
-   * @param [epochNumber] {string|number} optional epoch number
+   * @param {address} from - sender address
+   * @param {address} to - target address
+   * @param {string|number} gas - gas limit (in drip)
+   * @param {string|number} gasPrice - gas price (in drip)
+   * @param {string|number} storageLimit - storage limit (in byte)
+   * @param {string|number} [epochNumber] - optional epoch number
    * @return {Promise<object>} A check result object:
    * - `Boolean` isBalanceEnough: indicate balance is enough for gas and storage fee
    * - `Boolean` willPayCollateral: false if the transaction is eligible for storage collateral sponsorship, true otherwise
@@ -1116,13 +1130,13 @@ class Conflux {
   /**
    * Returns logs matching the filter provided.
    *
-   * @param [options] {object}
-   * @param [options.fromEpoch='latest_checkpoint'] {string|number} - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber). Search will be applied from this epoch number.
-   * @param [options.toEpoch='latest_state'] {string|number} - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber). Search will be applied up until (and including) this epoch number.
-   * @param [options.blockHashes] {string[]} -  Array of up to 128 block hashes that the search will be applied to. This will override from/to epoch fields if it's not null
-   * @param [options.address] {string|string[]} - Search contract addresses. If null, match all. If specified, log must be produced by one of these addresses.
-   * @param [options.topics] {array} - Search topics. Logs can have 4 topics: the function signature and up to 3 indexed event arguments. The elements of topics match the corresponding log topics. Example: ["0xA", null, ["0xB", "0xC"], null] matches logs with "0xA" as the 1st topic AND ("0xB" OR "0xC") as the 3rd topic. If null, match all.
-   * @param [options.limit] {number} - Return the last limit logs
+   * @param {object} [options]
+   * @param {string|number} [options.fromEpoch='latest_checkpoint'] - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber). Search will be applied from this epoch number.
+   * @param {string|number} [options.toEpoch='latest_state'] - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber). Search will be applied up until (and including) this epoch number.
+   * @param {string[]} [options.blockHashes] -  Array of up to 128 block hashes that the search will be applied to. This will override from/to epoch fields if it's not null
+   * @param {string|string[]} [options.address] - Search contract addresses. If null, match all. If specified, log must be produced by one of these addresses.
+   * @param {array} [options.topics] - Search topics. Logs can have 4 topics: the function signature and up to 3 indexed event arguments. The elements of topics match the corresponding log topics. Example: ["0xA", null, ["0xB", "0xC"], null] matches logs with "0xA" as the 1st topic AND ("0xB" OR "0xC") as the 3rd topic. If null, match all.
+   * @param {number} [options.limit] - Return the last limit logs
    * @return {Promise<object[]>} Array of log, that the logs matching the filter provided:
    * - address `string`: Address this event originated from.
    * - topics `string[]`: Array of topics.
@@ -1176,7 +1190,7 @@ class Conflux {
    *
    * > Note: need RPC server open trace_block method
    *
-   * @param blockHash {string} block hash
+   * @param {string}blockHash - block hash
    * @return {Promise<object[]>} Array of transaction traces.
    *
    * @example
@@ -1221,7 +1235,7 @@ class Conflux {
 
   /**
    * Return transaction's trace
-   * @param txHash {string} transaction hash
+   * @param {string} txHash - transaction hash
    * @returns {Promise<object[]>} Array of traces.
    *
    * @example
@@ -1233,7 +1247,7 @@ class Conflux {
 
   /**
    * Return traces that satisfy an filter
-   * @param options {object} trace filters
+   * @param {object} options - trace filters
    * @returns {Promise<object[]>} Array of traces.
    *
    * @example
@@ -1252,7 +1266,7 @@ class Conflux {
 
   /**
    * Return one epoch's all receipts
-   * @param epochNumber {number|string} epoch number
+   * @param {number|string} epochNumber - epoch number
    * @returns {Promise<object[][]>} Array of array receipts.
    *
    * @example
@@ -1264,7 +1278,7 @@ class Conflux {
 
   /**
    * Return one epoch's all receipts by pivot block hash
-   * @param pivotBlockHash {string} epoch pivot block hash
+   * @param {string} pivotBlockHash - epoch pivot block hash
    * @returns {Promise<object[][]>} Array of array receipts.
    *
    * @example
@@ -1292,8 +1306,8 @@ class Conflux {
    *
    * > Note: suggest use `conflux.subscribeXXX` to subscribe
    *
-   * @param name {string} - Subscription name
-   * @param args {array} - Subscription arguments
+   * @param {string} name - Subscription name
+   * @param {array} args - Subscription arguments
    * @return {Promise<string>} Id of subscription
    *
    * @example
@@ -1319,7 +1333,7 @@ class Conflux {
    * If you see the same epoch twice, this suggests a pivot chain reorg has happened (this might happen for recent epochs).
    * For each epoch, the last hash in epochHashesOrdered is the hash of the pivot block.
    *
-   * @param [sub_epoch] {string} Available values are latest_mined(default value) and latest_state
+   * @param {string} [sub_epoch] - Available values are latest_mined(default value) and latest_state
    *
    * @return {Promise<Subscription>} EventEmitter instance with the follow events:
    * - 'data':
@@ -1401,9 +1415,9 @@ class Conflux {
    * In case of a pivot chain reorg (which might affect recent logs), a special revert message is sent.
    * All logs received previously that belong to epochs larger than the one in this message should be considered invalid.
    *
-   * @param [options] {object}
-   * @param [options.address] {string|string[]} - Search contract addresses. If null, match all. If specified, log must be produced by one of these addresses.
-   * @param [options.topics] {array} - Search topics. Logs can have 4 topics: the function signature and up to 3 indexed event arguments. The elements of topics match the corresponding log topics. Example: ["0xA", null, ["0xB", "0xC"], null] matches logs with "0xA" as the 1st topic AND ("0xB" OR "0xC") as the 3rd topic. If null, match all.
+   * @param {object} [options]
+   * @param {string|string[]} [options.address] - Search contract addresses. If null, match all. If specified, log must be produced by one of these addresses.
+   * @param {array} [options.topics] - Search topics. Logs can have 4 topics: the function signature and up to 3 indexed event arguments. The elements of topics match the corresponding log topics. Example: ["0xA", null, ["0xB", "0xC"], null] matches logs with "0xA" as the 1st topic AND ("0xB" OR "0xC") as the 3rd topic. If null, match all.
    * @return {Promise<Subscription>} EventEmitter instance with the follow events:
    * - 'data': see `getLogs`
    * - 'revert':
@@ -1450,7 +1464,7 @@ class Conflux {
   /**
    * Unsubscribe subscription.
    *
-   * @param id {string|Subscription} - Subscription id
+   * @param {string|Subscription} id - Subscription id
    * @return {Promise<boolean>} Is success
    *
    * @example

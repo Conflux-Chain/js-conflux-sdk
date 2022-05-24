@@ -1,17 +1,28 @@
 const JSBI = require('./util/jsbi');
 
+/**
+ * @see https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/BigInt
+ */
 JSBI.prototype.toJSON = function () {
-  // https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/BigInt
   return this.toString();
 };
 
+/** @constant {number} */
 const WORD_BYTES = 32; // byte number pre abi word
+
+/** @constant {number} */
 const WORD_CHARS = WORD_BYTES * 2;
+
+/** @constant {BigInt} */
 const UINT_BOUND = JSBI.leftShift(JSBI.BigInt(1), JSBI.BigInt(WORD_BYTES * 8)); // 2**256
+
+/** @constant {BigInt} */
 const MAX_UINT = JSBI.subtract(UINT_BOUND, JSBI.BigInt(1)); // 2**256-1
 
 /**
- * epochNumber label
+ * Enum for epochNumber tag
+ * @readonly
+ * @enum {string}
  *
  * - `LATEST_MINED` 'latest_mined': latest epoch.
  * - `LATEST_STATE` 'latest_state': latest state, about 5 epoch less then `LATEST_MINED`
@@ -30,19 +41,17 @@ const EPOCH_NUMBER = {
 };
 
 /**
- * min gas price for transaction
- *
- * @type {number}
+ * Min gas price for transaction
+ * @constant {number}
  * @example
  * > CONST.MIN_GAS_PRICE
- 1
+ 1000000000
  */
-const MIN_GAS_PRICE = 1;
+const MIN_GAS_PRICE = 1000000000; // 1Gdrip
 
 /**
- * gas use for pure transfer transaction
- *
- * @type {number}
+ * Gas use for pure transfer transaction
+ * @constant {number}
  * @example
  * > CONST.TRANSACTION_GAS
  21000
@@ -50,45 +59,48 @@ const MIN_GAS_PRICE = 1;
 const TRANSACTION_GAS = 21000;
 
 /**
- * storage limit for pure transfer transaction
- *
- * @type {number}
+ * Storage limit for pure transfer transaction
+ * @constant {number}
+ * @example
  * > CONST.TRANSACTION_STORAGE_LIMIT
  0
  */
 const TRANSACTION_STORAGE_LIMIT = 0;
 
 /**
- * mainnet chainId
- *
- * @type {number}
+ * Mainnet chainId
+ * @constant {number}
+ * @example
  * > CONST.MAINNET_ID
  1029
  */
 const MAINNET_ID = 1029;
 
 /**
- * testnet chainId
- *
- * @type {number}
+ * Testnet chainId
+ * @constant {number}
+ * @example
  * > CONST.TESTNET_ID
  1
  */
 const TESTNET_ID = 1;
 
 /**
- * zero address
- *
- * @type {string}
+ * Zero address
+ * @constant {string}
+ * @example
  * > ZERO_ADDRESS
  0x0000000000000000000000000000000000000000
  */
 const ZERO_ADDRESS_HEX = '0x0000000000000000000000000000000000000000';
 
+/** @constant {string} */
 const ZERO_HASH = '0x0000000000000000000000000000000000000000000000000000000000000000';
 
 /**
- * pending transaction status
+ * Pending transaction status
+ * @readonly
+ * @enum {string}
  *
  * - `FUTURE_NONCE` 'futureNonce': pending because future nonce
  * - `NOT_ENOUGH_CASH` 'notEnoughCash': pending because insufficient balance
@@ -111,6 +123,11 @@ const ACTION_TYPES = {
   INTERNAL_TRANSFER_ACTION: 'internal_transfer_action',
 };
 
+/**
+ * Enum for trace pocket types
+ * @readonly
+ * @enum {string}
+ */
 const POCKET_ENUM = {
   BALANCE: 'balance',
   STAKING_BALANCE: 'staking_balance',
@@ -145,6 +162,11 @@ const CREATE_TYPES = {
   CREATE2: 'create2',
 };
 
+/**
+ * Enum for space type
+ * @readonly
+ * @enum {string}
+ */
 const SPACE_ENUM = {
   NONE: 'none',
   NATIVE: 'native',
@@ -168,14 +190,16 @@ const CALL_STATUS = {
  * @enum {number}
  */
 const TX_STATUS = {
-  /** If tx is not packed or in the defer state or executed in other block */
-  UNEXECUTE: null,
+  UNEXECUTE: null, // If tx is not packed or in the defer state or executed in other block
   SUCCESS: 0,
   FAIL: 1,
   SKIP: 2,
 };
 
-// KECCAK (i.e. Keccak) hash of the empty bytes string.
+/**
+ * KECCAK (i.e. Keccak) hash of the empty bytes string.
+ * @constant {string}
+ * */
 const KECCAK_EMPTY = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
 
 module.exports = {

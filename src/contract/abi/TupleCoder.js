@@ -94,6 +94,7 @@ class TupleCoder extends BaseCoder {
     this.coders = coders;
     this.dynamic = lodash.some(coders, coder => coder.dynamic);
     this.names = coders.map((coder, index) => coder.name || `${index}`);
+    /** @type {object} */
     this.NamedTuple = namedTuple(...this.names);
   }
 

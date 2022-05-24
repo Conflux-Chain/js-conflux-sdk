@@ -5,11 +5,21 @@ const { keccak256 } = require('./util/sign');
 const { isHexString } = require('./util');
 
 class PersonalMessage extends Message {
+  /**
+   * Assemble the personal message
+   * @param {string|buffer} message - The origin message
+   * @return {string}
+   */
   static personalMessage(message) {
     const msgBuf = isHexString(message) ? format.hexBuffer(message) : Buffer.from(message);
     return PREFIX + msgBuf.length + msgBuf.toString();
   }
 
+  /**
+   * Assemble the personal message hash
+   * @param {string|buffer} message - The origin message
+   * @return {string} The personal message hash
+   */
   static personalHash(message) {
     const personalMsg = this.personalMessage(message);
     return format.hex(keccak256(Buffer.from(personalMsg)));
@@ -18,8 +28,8 @@ class PersonalMessage extends Message {
   /**
    * Signs the hash with the privateKey.
    *
-   * @param privateKey {string|Buffer}
-   * @param message {string|Buffer}
+   * @param {string|Buffer} privateKey
+   * @param {string|Buffer} message
    * @return {string} The signature as hex string.
    *
    * @example
@@ -36,8 +46,8 @@ class PersonalMessage extends Message {
   /**
    * Recovers the signers publicKey from the signature.
    *
-   * @param signature {string|Buffer}
-   * @param message {string|Buffer}
+   * @param {string|Buffer} signature
+   * @param {string|Buffer} message
    * @return {string} The publicKey as hex string.
    *
    * @example
@@ -54,8 +64,8 @@ class PersonalMessage extends Message {
   /**
    * Recovers the wallet signers publicKey from the signature.
    *
-   * @param signature {string}
-   * @param message {string}
+   * @param {string} signature
+   * @param {string} message
    * @return {string} The publicKey as hex string.
    *
    * @example
@@ -79,9 +89,13 @@ class PersonalMessage extends Message {
     return Message.recover(signature, msg.hash);
   }
 
+  /**
+   * Assemble the personal message hash
+   * @param {string|buffer} message - The origin message
+   * @return {PersonalMessage}
+   */
   constructor(message) {
-    const msgBuf = isHexString(message) ? format.hexBuffer(message) : Buffer.from(message);
-    const personalMessage = PREFIX + msgBuf.length + msgBuf.toString();
+    const personalMessage = PersonalMessage.personalMessage(message);
     super(personalMessage);
     this._originMsg = message;
     this._personalMsg = personalMessage;

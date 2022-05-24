@@ -53,6 +53,7 @@ class EventCoder {
     this.inputCoders = inputs.map(valueCoder);
     this.dataCoder = valueCoder({ type: 'tuple', components: inputs.filter(component => !component.indexed) });
 
+    /** @type {object} */
     this.NamedTuple = namedTuple(...inputs.map((input, index) => input.name || `${index}`));
   }
 
