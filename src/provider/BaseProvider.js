@@ -3,9 +3,10 @@ const RPCError = require('./RPCError');
 
 class BaseProvider extends EventEmitter {
   /**
+
    * @param {object} [options]
    * @param {string} options.url - Full json rpc http url
-   * @param {number} [options.timeout=5*60*1000] - Request time out in ms
+   * @param {number} [options.timeout=30*1000] - Request time out in ms
    * @param {number} [options.retry=1] - Retry number
    * @param {boolean} [options.keepAlive=false] - Whether open the http keep-alive option
    * @param {object} [options.logger] - Logger with `info` and `error`
@@ -14,7 +15,7 @@ class BaseProvider extends EventEmitter {
   constructor({
     url,
     retry = 1,
-    timeout = 5 * 60 * 1000,
+    timeout = 30 * 1000,
     keepAlive = false,
     logger = { info: () => undefined, error: () => undefined },
   }) {

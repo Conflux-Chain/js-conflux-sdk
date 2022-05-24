@@ -9,7 +9,7 @@ class WebSocketProvider extends BaseProvider {
   /**
    * @param {object} [options] - See [W3CWebSocket](https://github.com/theturtle32/WebSocket-Node/blob/c91a6cb8f0cf896edf0d2d49faa0c9e0a9985172/docs/W3CWebSocket.md)
    * @param {string} options.url - Full json rpc http url
-   * @param {number} [options.timeout=60*1000] - Request time out in ms
+   * @param {number} [options.timeout=30*1000] - Request time out in ms
    * @param {object} [options.logger] - Logger with `info` and `error`
    * @param {string[]} [options.protocols] - See [w3](https://www.w3.org/TR/websockets/)
    * @param {string} [options.origin]
