@@ -4,6 +4,6 @@ module.exports = {
   coverageReporters: ['html'],
 
   testEnvironment: 'node',
-  testTimeout: 50000,
+  testTimeout: 100000,
   testRegex: 'test/.*test.js',
 };

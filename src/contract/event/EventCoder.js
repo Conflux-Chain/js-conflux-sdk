@@ -121,7 +121,7 @@ class EventCoder {
     const stream = new HexStream(data || '0x');
     const notIndexedNamedTuple = this.dataCoder.decode(stream);
     assert(stream.eof(), {
-      message: 'hex length to large',
+      message: 'hex length too large',
       expect: `${stream.string.length}`,
       got: stream.index,
       coder: this.fullName,

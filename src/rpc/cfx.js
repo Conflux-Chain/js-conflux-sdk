@@ -374,15 +374,6 @@ class CFX extends RPCMethodFactory {
       options.epochHeight = await this.epochNumber();
     }
 
-    if (options.gasPrice === undefined) {
-      if (defaultGasPrice === undefined) {
-        const gasPrice = await this.gasPrice();
-        options.gasPrice = Number(gasPrice) === 0 ? CONST.MIN_GAS_PRICE : gasPrice;
-      } else {
-        options.gasPrice = defaultGasPrice;
-      }
-    }
-
     if (options.gas === undefined || options.storageLimit === undefined) {
       let gas;
       let storageLimit;
@@ -407,6 +398,15 @@ class CFX extends RPCMethodFactory {
 
       if (options.storageLimit === undefined) {
         options.storageLimit = storageLimit;
+      }
+    }
+
+    if (options.gasPrice === undefined) {
+      if (defaultGasPrice === undefined) {
+        const gasPrice = await this.gasPrice();
+        options.gasPrice = Number(gasPrice) === 0 ? CONST.MIN_GAS_PRICE : gasPrice;
+      } else {
+        options.gasPrice = defaultGasPrice;
       }
     }
 
