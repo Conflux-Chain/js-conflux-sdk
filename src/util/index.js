@@ -11,8 +11,8 @@ function assert(bool, value) {
 }
 
 /**
- * @param buffer {Buffer}
- * @param alignLeft {boolean}
+ * @param {Buffer} buffer
+ * @param {boolean} alignLeft
  * @return {Buffer}
  */
 function alignBuffer(buffer, alignLeft = false) {

@@ -4,13 +4,7 @@ const {
   ...rest
 } = require('@conflux-dev/conflux-address-js');
 const { checksumAddress, keccak256 } = require('./sign');
-
-const ADDRESS_TYPES = {
-  USER: 'user',
-  CONTRACT: 'contract',
-  BUILTIN: 'builtin',
-  NULL: 'null',
-};
+const { ADDRESS_TYPES } = require('../CONST');
 
 /**
  * Makes a ethereum checksum address
@@ -18,7 +12,7 @@ const ADDRESS_TYPES = {
  * > Note: support [EIP-55](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-55.md)
  * > Note: not support [RSKIP60](https://github.com/rsksmart/RSKIPs/blob/master/IPs/RSKIP60.md) yet
  *
- * @param address {string} - Hex string
+ * @param {string} address - Hex string
  * @return {string}
  *
  * @example
@@ -31,7 +25,7 @@ function ethChecksumAddress(address) {
 
 /**
  * Convert an ethereum address to conflux hex address by replace it's first letter to 1
- * @param address {string}
+ * @param {string} address
  * @return {string}
  */
 function ethAddressToCfxAddress(address) {
@@ -40,7 +34,7 @@ function ethAddressToCfxAddress(address) {
 
 /**
  * Calculate CFX space address's mapped EVM address
- * @param address {string} - base32 string
+ * @param {string} address - base32 string
  * @returns {string}
  *
  * @example

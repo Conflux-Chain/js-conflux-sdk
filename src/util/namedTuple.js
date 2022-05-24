@@ -2,7 +2,7 @@
  * Make a NamedTuple Class
  * @typedef {Object} NamedTuple
  * @template NamedTuple
- * @param names {string[]}
+ * @param {string[]} names
  * @returns {NamedTuple}
  *
  * @example

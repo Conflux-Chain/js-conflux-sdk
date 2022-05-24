@@ -197,6 +197,18 @@ const TX_STATUS = {
 };
 
 /**
+ * Enum for address types
+ * @readonly
+ * @enum {string}
+ */
+const ADDRESS_TYPES = {
+  USER: 'user',
+  CONTRACT: 'contract',
+  BUILTIN: 'builtin',
+  NULL: 'null',
+};
+
+/**
  * KECCAK (i.e. Keccak) hash of the empty bytes string.
  * @constant {string}
  * */
@@ -224,4 +236,5 @@ module.exports = {
   SPACE_ENUM,
   KECCAK_EMPTY,
   ZERO_HASH,
+  ADDRESS_TYPES,
 };
