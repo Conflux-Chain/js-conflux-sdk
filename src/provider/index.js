@@ -5,8 +5,8 @@ const WechatProvider = require('./WechatProvider');
 const WebsocketProvider = require('./WebSocketProvider');
 
 /**
- * @param options {object}
- * @param options.url {string}
+ * @param {object} options
+ * @param {string} options.url
  * @return {WebsocketProvider|HttpProvider|BaseProvider}
  *
  * @example

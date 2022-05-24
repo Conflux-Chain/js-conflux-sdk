@@ -3,12 +3,12 @@ const RPCError = require('./RPCError');
 
 class BaseProvider extends EventEmitter {
   /**
-   * @param [options] {object}
-   * @param options.url {string} - Full json rpc http url
-   * @param [options.timeout=5*60*1000] {number} - Request time out in ms
-   * @param [options.retry=1] {number} - Retry number
-   * @param [options.keepAlive=false] {boolean} - Whether open the http keep-alive option
-   * @param [options.logger] {object} - Logger with `info` and `error`
+   * @param {object} [options]
+   * @param {string} options.url - Full json rpc http url
+   * @param {number} [options.timeout=5*60*1000] - Request time out in ms
+   * @param {number} [options.retry=1] - Retry number
+   * @param {boolean} [options.keepAlive=false] - Whether open the http keep-alive option
+   * @param {object} [options.logger] - Logger with `info` and `error`
    * @return {BaseProvider}
    */
   constructor({
@@ -52,8 +52,8 @@ class BaseProvider extends EventEmitter {
   /**
    * Call a json rpc method with params
    *
-   * @param method {string} - Json rpc method name.
-   * @param [params] {array} - Json rpc method params.
+   * @param {string} method - Json rpc method name.
+   * @param {array} [params] - Json rpc method params.
    * @return {Promise<*>} Json rpc method return value.
    *
    * @example
@@ -79,8 +79,8 @@ class BaseProvider extends EventEmitter {
   /**
    * Call a json rpc method with params
    *
-   * @param method {string} - Json rpc method name.
-   * @param [params] {array} - Json rpc method params.
+   * @param {string} method - Json rpc method name.
+   * @param {array} [params] - Json rpc method params.
    * @return {Promise<*>} Json rpc method return value.
    *
    * @example
@@ -94,8 +94,8 @@ class BaseProvider extends EventEmitter {
   /**
    * Send a json rpc method request
    *
-   * @param method {string} - Json rpc method name.
-   * @param [params] {array} - Json rpc method params.
+   * @param {string} method - Json rpc method name.
+   * @param {array} [params] - Json rpc method params.
    * @return {Promise<*>} Json rpc method return value.
    *
    * @example
@@ -109,7 +109,7 @@ class BaseProvider extends EventEmitter {
   /**
    * Batch call json rpc methods with params
    *
-   * @param array {object[]} - Array of object with "method" and "params"
+   * @param {object[]} array - Array of object with "method" and "params"
    * @return {Promise<Array>}
    *
    * @example

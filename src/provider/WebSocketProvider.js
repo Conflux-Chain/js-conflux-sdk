@@ -7,18 +7,18 @@ const { awaitTimeout } = require('../util');
  */
 class WebSocketProvider extends BaseProvider {
   /**
-   * @param [options] {object} - See [W3CWebSocket](https://github.com/theturtle32/WebSocket-Node/blob/c91a6cb8f0cf896edf0d2d49faa0c9e0a9985172/docs/W3CWebSocket.md)
-   * @param options.url {string} - Full json rpc http url
-   * @param [options.timeout=60*1000] {number} - Request time out in ms
-   * @param [options.logger] {object} - Logger with `info` and `error`
-   * @param [options.protocols] {string[]} - See [w3](https://www.w3.org/TR/websockets/)
-   * @param [options.origin] {string}
-   * @param [options.headers] {object}
-   * @param [options.requestOptions] {object}
-   * @param [options.clientConfig] {object} - See [websocket/lib/WebSocketClient](https://github.com/theturtle32/WebSocket-Node/blob/c91a6cb8f0cf896edf0d2d49faa0c9e0a9985172/docs/WebSocketClient.md)
-   * @param [options.clientConfig.maxReceivedFrameSize=0x100000] {number} - 1MiB max frame size.
-   * @param [options.clientConfig.maxReceivedMessageSize=0x800000] {number} - 8MiB max message size, only applicable if assembleFragments is true
-   * @param [options.clientConfig.closeTimeout=5000] {number} - The number of milliseconds to wait after sending a close frame for an acknowledgement to come back before giving up and just closing the socket.
+   * @param {object} [options] - See [W3CWebSocket](https://github.com/theturtle32/WebSocket-Node/blob/c91a6cb8f0cf896edf0d2d49faa0c9e0a9985172/docs/W3CWebSocket.md)
+   * @param {string} options.url - Full json rpc http url
+   * @param {number} [options.timeout=60*1000] - Request time out in ms
+   * @param {object} [options.logger] - Logger with `info` and `error`
+   * @param {string[]} [options.protocols] - See [w3](https://www.w3.org/TR/websockets/)
+   * @param {string} [options.origin]
+   * @param {object} [options.headers]
+   * @param {object} [options.requestOptions]
+   * @param {object} [options.clientConfig] - See [websocket/lib/WebSocketClient](https://github.com/theturtle32/WebSocket-Node/blob/c91a6cb8f0cf896edf0d2d49faa0c9e0a9985172/docs/WebSocketClient.md)
+   * @param {number} [options.clientConfig.maxReceivedFrameSize=0x100000] - 1MiB max frame size.
+   * @param {number} [options.clientConfig.maxReceivedMessageSize=0x800000] - 8MiB max message size, only applicable if assembleFragments is true
+   * @param {number} [options.clientConfig.closeTimeout=5000] - The number of milliseconds to wait after sending a close frame for an acknowledgement to come back before giving up and just closing the socket.
    * @return {WebSocketProvider}
    */
   constructor(options) {
