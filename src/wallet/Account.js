@@ -1,16 +1,19 @@
 const Transaction = require('../Transaction');
 const Message = require('../Message');
 
+/**
+ * Account abstract class
+ */
 class Account {
   /**
-   * @param address {string}
+   * @param {string} address
    */
   constructor(address) {
     this.address = address;
   }
 
   /**
-   * @param options {object}
+   * @param {object} options
    * @return {Promise<Transaction>}
    */
   async signTransaction(options) {
@@ -18,7 +21,7 @@ class Account {
   }
 
   /**
-   * @param message {string}
+   * @param {string} message
    * @return {Promise<Message>}
    */
   async signMessage(message) {
@@ -32,6 +35,9 @@ class Account {
     return this.address;
   }
 
+  /**
+   * @return {string} Address as JSON string.
+   */
   toJSON() {
     return this.address;
   }

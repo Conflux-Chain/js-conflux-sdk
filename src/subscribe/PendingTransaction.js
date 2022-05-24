@@ -1,8 +1,13 @@
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+const { sleep } = require('../util');
 
 class PendingTransaction {
+  /**
+   * PendingTransaction constructor.
+   * @param {object} conflux
+   * @param {function} func
+   * @param {array} args
+   * @return {PendingTransaction}
+   */
   constructor(conflux, func, args) {
     this.conflux = conflux;
     this.func = func;
@@ -36,8 +41,8 @@ class PendingTransaction {
   /**
    * Get transaction by hash.
    *
-   * @param [options] {object}
-   * @param [options.delay=0] {number} - Defer execute after `delay` ms.
+   * @param {object} [options]
+   * @param {number} [options.delay=0] - Defer execute after `delay` ms.
    * @return {Promise<Object|null>} See [Conflux.getTransactionByHash](#Conflux.js/getTransactionByHash)
    */
   async get({ delay = 0 } = {}) {
@@ -51,9 +56,9 @@ class PendingTransaction {
    *
    * - blockHash !== null
    *
-   * @param [options] {object}
-   * @param [options.delta=1000] {number} - Loop transaction interval in ms.
-   * @param [options.timeout=60*1000] {number} - Loop timeout in ms.
+   * @param {object} [options]
+   * @param {number} [options.delta=1000] - Loop transaction interval in ms.
+   * @param {number} [options.timeout=60*1000] - Loop timeout in ms.
    * @return {Promise<object>} See [Conflux.getTransactionByHash](#Conflux.js/getTransactionByHash)
    */
   async mined({ delta = 1000, timeout = 60 * 1000 } = {}) {
@@ -79,9 +84,9 @@ class PendingTransaction {
    * - receipt !== null
    * - receipt.outcomeStatus === 0
    *
-   * @param [options] {object}
-   * @param [options.delta=1000] {number} - Loop transaction interval in ms.
-   * @param [options.timeout=5*60*1000] {number} - Loop timeout in ms.
+   * @param {object} [options]
+   * @param {number} [options.delta=1000] - Loop transaction interval in ms.
+   * @param {number} [options.timeout=5*60*1000] - Loop timeout in ms.
    * @return {Promise<object>} See [Conflux.getTransactionReceipt](#Conflux.js/getTransactionReceipt)
    */
   async executed({ delta = 1000, timeout = 5 * 60 * 1000 } = {}) {
@@ -109,10 +114,10 @@ class PendingTransaction {
    * - executed
    * - transaction block risk coefficient < threshold
    *
-   * @param [options] {object}
-   * @param [options.delta=1000] {number} - Loop transaction interval in ms.
-   * @param [options.timeout=30*60*1000] {number} - Loop timeout in ms.
-   * @param [options.threshold=1e-8] {number} - Number in range (0,1)
+   * @param {object} [options]
+   * @param {number} [options.delta=1000] - Loop transaction interval in ms.
+   * @param {number} [options.timeout=30*60*1000] - Loop timeout in ms.
+   * @param {number} [options.threshold=1e-8] - Number in range (0,1)
    * @return {Promise<object>} See [Conflux.getTransactionReceipt](#Conflux.js/getTransactionReceipt)
    */
   async confirmed({ delta = 1000, timeout = 30 * 60 * 1000, threshold = 1e-8 } = {}) {

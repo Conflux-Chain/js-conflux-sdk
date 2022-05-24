@@ -34,6 +34,10 @@ function awaitTimeout(promise, timeout) {
   });
 }
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 function decodeHexEncodedStr(hexEncodedStr) {
   return Buffer.from(hexEncodedStr.slice(2), 'hex').toString();
 }
@@ -72,4 +76,5 @@ module.exports = {
   isHexString,
   isBytes,
   validAddressPrefix,
+  sleep,
 };
