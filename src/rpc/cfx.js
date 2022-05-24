@@ -464,8 +464,8 @@ class CFX extends RPCMethodFactory {
   /**
    * Virtually call a contract, return the output data.
    *
-   * @param options {object} - See [Transaction](#Transaction.js/Transaction/**constructor**)
-   * @param [epochNumber='latest_state'] {string|number} - See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+   * @param {object} options - See [Transaction](#Transaction.js/Transaction/**constructor**)
+   * @param {string|number} [epochNumber='latest_state'] - See [format.epochNumber](#util/format.js/format/(static)epochNumber)
    * @return {Promise<string>} The output data.
    */
   async call(options, epochNumber) {
@@ -496,8 +496,8 @@ class CFX extends RPCMethodFactory {
   /**
    * Virtually call a contract, return the estimate gas used and storage collateralized.
    *
-   * @param options {object} - See [Transaction](#Transaction.js/Transaction/**constructor**)
-   * @param [epochNumber='latest_state'] {string|number} - See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+   * @param {object} options - See [Transaction](#Transaction.js/Transaction/**constructor**)
+   * @param {string|number} [epochNumber='latest_state'] - See [format.epochNumber](#util/format.js/format/(static)epochNumber)
    * @return {Promise<object>} A estimate result object:
    * - `BigInt` gasUsed: The gas used.
    * - `BigInt` gasLimit: The gas limit.
