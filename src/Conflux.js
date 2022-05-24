@@ -1,7 +1,6 @@
 const CONST = require('./CONST');
 const { assert } = require('./util');
 const format = require('./util/format');
-const { decodeCfxAddress, ADDRESS_TYPES } = require('./util/address');
 const providerFactory = require('./provider');
 const Wallet = require('./wallet');
 const Contract = require('./contract');
@@ -794,66 +793,10 @@ class Conflux {
    "0xbe007c3eca92d01f3917f33ae983f40681182cf618defe75f490a65aac016914"
    */
   async sendRawTransaction(hex) {
-    return this.cfx.sendRawTransaction(hex);
-  }
-
-  /**
-   * Create `Transaction` and sign by account which key by `from` filed in `conflux.wallet`, then send transaction
-   *
-   * @private
-   * @param options {object}
-   * @param options.from {string} - Key of account in conflux.wallet
-   * @return {Promise<Transaction>}
-   */
-  async populateAndSignTransaction(options) {
-    const account = await this.wallet.get(`${options.from}`);
-
-    if (options.nonce === undefined) {
-      options.nonce = await this.getNextNonce(account);
-    }
-
-    if (options.chainId === undefined) {
-      const status = await this.getStatus();
-      options.chainId = status.chainId;
-    }
-
-    if (options.epochHeight === undefined) {
-      options.epochHeight = await this.getEpochNumber();
-    }
-
-    if (options.gas === undefined || options.storageLimit === undefined) {
-      let gas;
-      let storageLimit;
-
-      const isContract = decodeCfxAddress(account.address).type === ADDRESS_TYPES.CONTRACT;
-      if (options.data || isContract) {
-        const { gasUsed, storageCollateralized } = await this.estimateGasAndCollateral(options);
-        gas = format.big(gasUsed).times(this.defaultGasRatio).toFixed(0);
-        storageLimit = format.big(storageCollateralized).times(this.defaultStorageRatio).toFixed(0);
-      } else {
-        gas = CONST.TRANSACTION_GAS;
-        storageLimit = CONST.TRANSACTION_STORAGE_LIMIT;
-      }
-
-      if (options.gas === undefined) {
-        options.gas = gas;
-      }
-
-      if (options.storageLimit === undefined) {
-        options.storageLimit = storageLimit;
-      }
-    }
-
-    if (options.gasPrice === undefined) {
-      if (this.defaultGasPrice === undefined) {
-        const gasPrice = await this.getGasPrice();
-        options.gasPrice = Number(gasPrice) === 0 ? CONST.MIN_GAS_PRICE : gasPrice;
-      } else {
-        options.gasPrice = this.defaultGasPrice;
-      }
-    }
-
-    return account.signTransaction(options);
+    return this.request({
+      method: 'cfx_sendRawTransaction',
+      params: [format.hex(hex)],
+    });
   }
 
   /**
@@ -953,8 +896,8 @@ class Conflux {
    */
   async sendTransaction(options, ...extra) {
     if (this.wallet.has(`${options.from}`)) {
-      const transaction = await this.populateAndSignTransaction(options);
-      return this.sendRawTransaction(transaction.serialize());
+      const rawTx = await this.cfx.populateAndSignTransaction(options);
+      return this.sendRawTransaction(rawTx);
     }
 
     return this.request({

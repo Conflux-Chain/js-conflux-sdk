@@ -81,16 +81,13 @@ test('sendTransaction defaultGasPrice', async () => {
   });
 
   expect(signTransaction).toHaveBeenLastCalledWith({
-    from: account,
+    from: account.address,
     nonce: 100,
     gasPrice: conflux.defaultGasPrice,
     gas: format.bigUInt(1024),
-    to: undefined,
-    value: undefined,
     storageLimit: format.bigUInt(2048),
     epochHeight: 1000,
     chainId: 1,
-    data: undefined,
   });
 
   signTransaction.mockRestore();
@@ -100,7 +97,7 @@ test('sendTransaction defaultGasPrice', async () => {
 test('sendTransaction MIN_GAS_PRICE', async () => {
   const signTransaction = jest.spyOn(account, 'signTransaction');
 
-  const getGasPrice = jest.spyOn(conflux, 'getGasPrice');
+  const getGasPrice = jest.spyOn(conflux.cfx, 'gasPrice');
   getGasPrice.mockReturnValue('0');
 
   await conflux.sendTransaction({
@@ -114,16 +111,13 @@ test('sendTransaction MIN_GAS_PRICE', async () => {
   });
 
   expect(signTransaction).toHaveBeenLastCalledWith({
-    from: account,
+    from: account.address,
     nonce: 100,
     gasPrice: CONST.MIN_GAS_PRICE,
     gas: format.bigUInt(1024),
-    to: undefined,
-    value: undefined,
     storageLimit: format.bigUInt(2048),
     epochHeight: 1000,
     chainId: 1,
-    data: undefined,
   });
 
   getGasPrice.mockRestore();
@@ -131,19 +125,19 @@ test('sendTransaction MIN_GAS_PRICE', async () => {
 });
 
 test('sendTransaction auto', async () => {
-  const getNextNonce = jest.spyOn(conflux, 'getNextNonce');
+  const getNextNonce = jest.spyOn(conflux.cfx, 'getNextNonce');
   getNextNonce.mockReturnValue('100');
 
-  const getStatus = jest.spyOn(conflux, 'getStatus');
+  const getStatus = jest.spyOn(conflux.cfx, 'getStatus');
   getStatus.mockReturnValue({ chainId: format.uInt(1) });
 
-  const getEpochNumber = jest.spyOn(conflux, 'getEpochNumber');
+  const getEpochNumber = jest.spyOn(conflux.cfx, 'epochNumber');
   getEpochNumber.mockReturnValue(1000);
 
-  const getGasPrice = jest.spyOn(conflux, 'getGasPrice');
+  const getGasPrice = jest.spyOn(conflux.cfx, 'gasPrice');
   getGasPrice.mockReturnValue('10');
 
-  const estimateGasAndCollateral = jest.spyOn(conflux, 'estimateGasAndCollateral');
+  const estimateGasAndCollateral = jest.spyOn(conflux.cfx, 'estimateGasAndCollateral');
   estimateGasAndCollateral.mockReturnValue({
     gasUsed: format.bigUInt(1024),
     storageCollateralized: format.bigUInt(2048),
@@ -157,7 +151,6 @@ test('sendTransaction auto', async () => {
     to: account.address,
   });
   expect(getNextNonce).toHaveBeenCalledTimes(1);
-  expect(getStatus).toHaveBeenCalledTimes(1);
   expect(getEpochNumber).toHaveBeenCalledTimes(1);
   expect(getGasPrice).toHaveBeenCalledTimes(1);
   expect(estimateGasAndCollateral).toHaveBeenCalledTimes(0);
@@ -177,7 +170,6 @@ test('sendTransaction auto', async () => {
     data: '0xabcd',
   });
   expect(getNextNonce).toHaveBeenCalledTimes(2);
-  expect(getStatus).toHaveBeenCalledTimes(2);
   expect(getEpochNumber).toHaveBeenCalledTimes(2);
   expect(getGasPrice).toHaveBeenCalledTimes(2);
   expect(estimateGasAndCollateral).toHaveBeenCalledTimes(1);
