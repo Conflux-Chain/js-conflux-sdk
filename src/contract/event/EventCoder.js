@@ -8,10 +8,11 @@ class EventCoder {
   /**
    * Event coder
    *
-   * @param options {object}
-   * @param options.anonymous {boolean}
-   * @param options.name {string}
-   * @param options.inputs {array}
+   * @param {object} options
+   * @param {boolean} options.anonymous
+   * @param {string} options.name
+   * @param {array} options.inputs
+   * @return {EventCoder}
    *
    * @example
    * > abi = {
@@ -60,7 +61,7 @@ class EventCoder {
   /**
    * Encode topics by params
    *
-   * @param args {*[]}
+   * @param {any[]} args
    * @return {string[]}
    * @example
    * > coder = new EventCoder(abi)
@@ -90,8 +91,8 @@ class EventCoder {
   /**
    * Decode log
    *
-   * @param topics {array} - Array of hex sting
-   * @param data {string} - Hex string
+   * @param {array} topics - Array of hex sting
+   * @param {string} data - Hex string
    * @return {array} NamedTuple
    *
    * @example

@@ -514,7 +514,7 @@ class Conflux {
    *
    * @param {string|number} epochNumber - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
    * @param {boolean} [detail=false] - If `true` it returns the full transaction objects, if `false` only the hashes of the transactions.
-   * @return {Promise<object|null>} See `getBlockByHash`
+   * @return {Promise<Block|null>} See `getBlockByHash`
    *
    * @example
    * > await conflux.getBlockByEpochNumber('latest_mined', true);
@@ -529,7 +529,7 @@ class Conflux {
    *
    * @param {string|number} blockNumber
    * @param {boolean} [detail=false] - If `true` it returns the full transaction objects, if `false` only the hashes of the transactions.
-   * @return {Promise<object|null>} See `getBlockByHash`
+   * @return {Promise<Block|null>} See `getBlockByHash`
    *
    * @example
    * > await conflux.getBlockByBlockNumber('0x123', true);
@@ -607,7 +607,7 @@ class Conflux {
    *
    * @param {string} blockHash - hash of a block.
    * @param {boolean} [detail=false] - If `true` it returns the full transaction objects, if `false` only the hashes of the transactions.
-   * @return {Promise<object|null>} A block object, or null when no block was found:
+   * @return {Promise<Block|null>} A block object, or null when no block was found:
    * - adaptive `boolean`: If `true` the weight of the block is adaptive under GHAST rule, if `false` otherwise.
    * - blame `number`: If 0, then no blocks are blamed on its parent path, If greater than 0, then the nearest blamed block on the parent path is blame steps away.
    * - deferredLogsBloomHash `string`: The bloom hash of deferred logs.
@@ -695,7 +695,7 @@ class Conflux {
    * Returns the information about a transaction requested by transaction hash.
    *
    * @param {string} transactionHash - hash of a transaction
-   * @return {Promise<object|null>} transaction object, or `null` when no transaction was found:
+   * @return {Promise<Transaction|null>} transaction object, or `null` when no transaction was found:
    * - blockHash `string`: hash of the block where this transaction was in and got executed. `null` when its pending.
    * - contractCreated `string|null`: address of created contract. `null` when it's not a contract creating transaction
    * - data `string`: the data send along with the transaction.
@@ -746,7 +746,7 @@ class Conflux {
    * Returns the information about a transaction receipt requested by transaction hash.
    *
    * @param {string} transactionHash - Hash of a transaction
-   * @return {Promise<object|null>} A transaction receipt object, or null when no transaction was found or the transaction was not executed yet:
+   * @return {Promise<TransactionReceipt|null>} A transaction receipt object, or null when no transaction was found or the transaction was not executed yet:
    * - transactionHash `string`: Hash of the given transaction.
    * - index `number`: Transaction index within the block.
    * - blockHash `string`: Hash of the block where this transaction was in and got executed.
