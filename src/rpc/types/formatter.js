@@ -1,7 +1,14 @@
 const format = require('../../util/format');
 const { validAddressPrefix } = require('../../util');
+const parser = require('../../util/parser');
 
-format.getLogs = format({
+const cfxFormat = new Proxy(() => undefined, {
+  apply(target, thisArg, argArray) {
+    return parser(...argArray);
+  },
+});
+
+cfxFormat.getLogs = format({
   limit: format.bigUIntHex,
   offset: format.bigUIntHex,
   fromEpoch: format.epochNumber,
@@ -15,7 +22,7 @@ format.getLogs = format({
 });
 
 // configure getLogs formatter with networkId and toHexAddress
-format.getLogsAdvance = function (networkId, toHexAddress = false, useVerboseAddress = false) {
+cfxFormat.getLogsAdvance = function (networkId, toHexAddress = false, useVerboseAddress = false) {
   const fromatAddress = toHexAddress ? format.hexAddress : format.netAddress(networkId, useVerboseAddress);
   return format({
     limit: format.bigUIntHex,
@@ -31,15 +38,15 @@ format.getLogsAdvance = function (networkId, toHexAddress = false, useVerboseAdd
   });
 };
 
-format.transactionToAddress = format(format.hexAddress.$or(null).$default(null))
+cfxFormat.transactionToAddress = format(format.hexAddress.$or(null).$default(null))
   .$after(format.hexBuffer)
   .$validate(hBuf => hBuf.length === 0 || validAddressPrefix(hBuf), 'transactionToAddress');
 
-format.signTx = format({
+cfxFormat.signTx = format({
   nonce: format.bigUInt.$after(format.hexBuffer),
   gasPrice: format.bigUInt.$after(format.hexBuffer),
   gas: format.bigUInt.$after(format.hexBuffer),
-  to: format.transactionToAddress,
+  to: cfxFormat.transactionToAddress,
   value: format.bigUInt.$default(0).$after(format.hexBuffer),
   storageLimit: format.bigUInt.$after(format.hexBuffer),
   epochHeight: format.bigUInt.$after(format.hexBuffer),
@@ -67,7 +74,7 @@ format.signTx = format({
  * @property {number} [epochHeight]
  * @property {number} [chainId]
  */
-format.callTx = format({
+cfxFormat.callTx = format({
   from: format.address,
   nonce: format.bigUIntHex,
   gasPrice: format.bigUIntHex,
@@ -84,7 +91,7 @@ format.callTx = format({
 });
 
 // configure callTx formatter with networkId and toHexAddress
-format.callTxAdvance = function (networkId, toHexAddress = false, useVerboseAddress = false) {
+cfxFormat.callTxAdvance = function (networkId, toHexAddress = false, useVerboseAddress = false) {
   const fromatAddress = toHexAddress ? format.hexAddress : format.netAddress(networkId, useVerboseAddress);
   return format({
     from: fromatAddress,
@@ -104,7 +111,7 @@ format.callTxAdvance = function (networkId, toHexAddress = false, useVerboseAddr
 };
 
 // ----------------------------- parse rpc returned ---------------------------
-format.status = format({
+cfxFormat.status = format({
   networkId: format.uInt,
   chainId: format.uInt,
   epochNumber: format.uInt,
@@ -119,7 +126,7 @@ format.status = format({
   name: 'format.status',
 });
 
-format.estimate = format({
+cfxFormat.estimate = format({
   gasUsed: format.bigUInt,
   gasLimit: format.bigUInt,
   storageCollateralized: format.bigUInt,
@@ -148,7 +155,7 @@ format.estimate = format({
  * @prop {number} [transactionIndex=null] - the transaction's position in the block. null when the transaction is pending.
  * @prop {number} [status=null] - 0 for success, 1 if an error occurred, 2 for skiped, null when the transaction is skipped or not packed.
  */
-format.transaction = format({
+cfxFormat.transaction = format({
   nonce: format.bigUInt,
   gasPrice: format.bigUInt,
   gas: format.bigUInt,
@@ -191,7 +198,7 @@ format.transaction = format({
  * @prop {string} prop1 - a string property of SpecialType
  * @prop {number} [prop5=42] - an optional number property of SpecialType with default
  */
-format.block = format({
+cfxFormat.block = format({
   epochNumber: format.uInt.$or(null),
   blockNumber: format.uInt.$or(null),
   blame: format.uInt,
@@ -201,7 +208,7 @@ format.block = format({
   gasLimit: format.bigUInt,
   gasUsed: format.bigUInt.$or(null).$or(undefined), // XXX: undefined before main net upgrade
   difficulty: format.bigUInt,
-  transactions: [(format.transaction).$or(format.transactionHash)],
+  transactions: [(cfxFormat.transaction).$or(format.transactionHash)],
 }, {
   name: 'format.block',
 });
@@ -226,7 +233,7 @@ format.block = format({
  * @prop {string} logsBloom - bloom filter for light clients to quickly retrieve related logs.
  * @prop {Log[]} logs - array of log objects that this transaction generated
  */
-format.receipt = format({
+cfxFormat.receipt = format({
   index: format.uInt,
   epochNumber: format.uInt,
   outcomeStatus: format.uInt.$or(null),
@@ -240,7 +247,7 @@ format.receipt = format({
   name: 'format.receipt',
 });
 
-format.epochReceipts = format([[format.receipt]]).$or(null);
+cfxFormat.epochReceipts = format([[cfxFormat.receipt]]).$or(null);
 
 /**
  * @typedef {Object} Log - Log
@@ -254,7 +261,7 @@ format.epochReceipts = format([[format.receipt]]).$or(null);
  * @prop {number} logIndex
  * @prop {number} transactionLogIndex
  */
-format.log = format({
+cfxFormat.log = format({
   epochNumber: format.uInt,
   logIndex: format.uInt,
   transactionIndex: format.uInt,
@@ -263,9 +270,9 @@ format.log = format({
   name: 'format.log',
 });
 
-format.logs = format([format.log]);
+cfxFormat.logs = format([cfxFormat.log]);
 
-format.supplyInfo = format({
+cfxFormat.supplyInfo = format({
   totalCirculating: format.bigUInt,
   totalIssued: format.bigUInt,
   totalStaking: format.bigUInt,
@@ -275,7 +282,7 @@ format.supplyInfo = format({
   name: 'format.supplyInfo',
 });
 
-format.sponsorInfo = format({
+cfxFormat.sponsorInfo = format({
   sponsorBalanceForCollateral: format.bigUInt,
   sponsorBalanceForGas: format.bigUInt,
   sponsorGasBound: format.bigUInt,
@@ -283,7 +290,7 @@ format.sponsorInfo = format({
   name: 'format.sponsorInfo',
 });
 
-format.rewardInfo = format([
+cfxFormat.rewardInfo = format([
   {
     baseReward: format.bigUInt,
     totalReward: format.bigUInt,
@@ -291,13 +298,13 @@ format.rewardInfo = format([
   },
 ]);
 
-format.voteList = format([
+cfxFormat.voteList = format([
   {
     amount: format.bigUInt,
   },
 ]);
 
-format.depositList = format([
+cfxFormat.depositList = format([
   {
     amount: format.bigUInt,
     accumulatedInterestRate: format.bigUInt,
@@ -305,7 +312,7 @@ format.depositList = format([
 ]);
 
 // ---------------------------- parse subscribe event -------------------------
-format.head = format({
+cfxFormat.head = format({
   difficulty: format.bigUInt,
   epochNumber: format.uInt.$or(null),
   gasLimit: format.bigUInt,
@@ -315,20 +322,20 @@ format.head = format({
   name: 'format.head',
 });
 
-format.revert = format({
+cfxFormat.revert = format({
   revertTo: format.uInt,
 }, {
   name: 'format.revert',
 });
 
-format.epoch = format({
+cfxFormat.epoch = format({
   epochNumber: format.uInt,
 }, {
   name: 'format.epoch',
 });
 
 // --------------------------- accountPendingInfo & transactions --------------
-format.accountPendingInfo = format({
+cfxFormat.accountPendingInfo = format({
   localNonce: format.bigUInt,
   pendingCount: format.bigUInt,
   pendingNonce: format.bigUInt,
@@ -336,14 +343,14 @@ format.accountPendingInfo = format({
   name: 'format.accountPendingInfo',
 });
 
-format.accountPendingTransactions = format({
+cfxFormat.accountPendingTransactions = format({
   pendingCount: format.bigUInt,
-  pendingTransactions: [format.transaction],
+  pendingTransactions: [cfxFormat.transaction],
 }, {
   name: 'format.accountPendingTransactions',
 });
 
-format.posEconomics = format({
+cfxFormat.posEconomics = format({
   distributablePosInterest: format.bigUInt,
   lastDistributeBlock: format.bigUInt,
   totalPosStakingTokens: format.bigUInt,
@@ -351,4 +358,4 @@ format.posEconomics = format({
   name: 'format.posEconomics',
 });
 
-module.exports = format;
+module.exports = cfxFormat;

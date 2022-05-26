@@ -1,4 +1,5 @@
 const { Conflux, format } = require('../src');
+const cfxFormat = require('../src/rpc/types/formatter');
 
 const conflux = new Conflux({
   url: 'http://localhost:12537',
@@ -39,7 +40,7 @@ test('RPC methods request builder', () => {
       method: 'cfx_getStatus',
       params: [],
     },
-    decoder: format.status,
+    decoder: cfxFormat.status,
   });
 
   expect(conflux.cfx.getBalance.request(format.hexAddress(account.address))).toEqual({

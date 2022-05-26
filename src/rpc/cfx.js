@@ -1,5 +1,6 @@
 const RPCMethodFactory = require('./index');
 const format = require('../util/format');
+const cfxFormat = require('./types/formatter');
 const addressUtil = require('../util/address');
 const CONST = require('../CONST');
 const { assert } = require('../util');
@@ -32,11 +33,11 @@ class CFX extends RPCMethodFactory {
         requestFormatters: [
           format.epochNumberOrUndefined,
         ],
-        responseFormatter: format.supplyInfo,
+        responseFormatter: cfxFormat.supplyInfo,
       },
       {
         method: 'cfx_getStatus',
-        responseFormatter: format.status,
+        responseFormatter: cfxFormat.status,
       },
       {
         method: 'cfx_gasPrice',
@@ -102,7 +103,7 @@ class CFX extends RPCMethodFactory {
           formatAddressWithNetworkId,
           format.epochNumberOrUndefined,
         ],
-        responseFormatter: format.voteList,
+        responseFormatter: cfxFormat.voteList,
       },
       {
         method: 'cfx_getDepositList',
@@ -110,7 +111,7 @@ class CFX extends RPCMethodFactory {
           formatAddressWithNetworkId,
           format.epochNumberOrUndefined,
         ],
-        responseFormatter: format.depositList,
+        responseFormatter: cfxFormat.depositList,
       },
       {
         method: 'cfx_epochNumber',
@@ -126,7 +127,7 @@ class CFX extends RPCMethodFactory {
           format.epochNumber,
           format.boolean, // TODO default false
         ],
-        responseFormatter: format.block.$or(null),
+        responseFormatter: cfxFormat.block.$or(null),
       },
       {
         method: 'cfx_getBlockByBlockNumber',
@@ -134,7 +135,7 @@ class CFX extends RPCMethodFactory {
           format.bigUIntHex,
           format.boolean,
         ],
-        responseFormatter: format.block.$or(null),
+        responseFormatter: cfxFormat.block.$or(null),
       },
       {
         method: 'cfx_getBlocksByEpoch',
@@ -148,7 +149,7 @@ class CFX extends RPCMethodFactory {
         requestFormatters: [
           format.epochNumber,
         ],
-        responseFormatter: format.rewardInfo,
+        responseFormatter: cfxFormat.rewardInfo,
       },
       {
         method: 'cfx_getBestBlockHash',
@@ -159,7 +160,7 @@ class CFX extends RPCMethodFactory {
           format.blockHash,
           format.boolean,
         ],
-        responseFormatter: format.block.$or(null),
+        responseFormatter: cfxFormat.block.$or(null),
       },
       {
         method: 'cfx_getBlockByHashWithPivotAssumption',
@@ -168,7 +169,7 @@ class CFX extends RPCMethodFactory {
           format.blockHash,
           format.epochNumber,
         ],
-        responseFormatter: format.block,
+        responseFormatter: cfxFormat.block,
       },
       {
         method: 'cfx_getConfirmationRiskByHash',
@@ -182,14 +183,14 @@ class CFX extends RPCMethodFactory {
         requestFormatters: [
           format.transactionHash,
         ],
-        responseFormatter: format.transaction.$or(null),
+        responseFormatter: cfxFormat.transaction.$or(null),
       },
       {
         method: 'cfx_getTransactionReceipt',
         requestFormatters: [
           format.transactionHash,
         ],
-        responseFormatter: format.receipt.$or(null),
+        responseFormatter: cfxFormat.receipt.$or(null),
       },
       {
         method: 'cfx_sendRawTransaction',
@@ -226,14 +227,14 @@ class CFX extends RPCMethodFactory {
           formatAddressWithNetworkId,
           format.epochNumberOrUndefined,
         ],
-        responseFormatter: format.sponsorInfo,
+        responseFormatter: cfxFormat.sponsorInfo,
       },
       {
         method: 'cfx_getAccountPendingInfo',
         requestFormatters: [
           formatAddressWithNetworkId,
         ],
-        responseFormatter: format.accountPendingInfo,
+        responseFormatter: cfxFormat.accountPendingInfo,
       },
       {
         method: 'cfx_getAccountPendingTransactions',
@@ -242,7 +243,7 @@ class CFX extends RPCMethodFactory {
           format.bigUIntHex.$or(undefined),
           format.bigUIntHex.$or(undefined),
         ],
-        responseFormatter: format.accountPendingTransactions,
+        responseFormatter: cfxFormat.accountPendingTransactions,
       },
       {
         method: 'cfx_getCollateralForStorage',
@@ -278,7 +279,7 @@ class CFX extends RPCMethodFactory {
           this.conflux._formatCallTx,
           format.epochNumberOrUndefined,
         ],
-        responseFormatter: format.estimate,
+        responseFormatter: cfxFormat.estimate,
       }, */
       {
         method: 'cfx_getLogs',
@@ -290,18 +291,18 @@ class CFX extends RPCMethodFactory {
         requestFormatters: [
           this.conflux._formatGetLogs.bind(this.conflux),
         ],
-        responseFormatter: format.logs,
+        responseFormatter: cfxFormat.logs,
       },
       {
         method: 'cfx_getEpochReceipts',
         requestFormatters: [
           format.epochNumber,
         ],
-        responseFormatter: format.epochReceipts,
+        responseFormatter: cfxFormat.epochReceipts,
       },
       {
         method: 'cfx_getPoSEconomics',
-        responseFormatter: format.posEconomics,
+        responseFormatter: cfxFormat.posEconomics,
       },
     ];
   }
@@ -337,7 +338,7 @@ class CFX extends RPCMethodFactory {
             format.epochNumber.$or(undefined)(epochNumber),
           ],
         },
-        decoder: format.estimate,
+        decoder: cfxFormat.estimate,
       };
     };
   }
@@ -458,7 +459,7 @@ class CFX extends RPCMethodFactory {
    */
   async getEpochReceiptsByPivotBlockHash(pivotBlockHash) {
     const result = await this.conflux.request({ method: 'cfx_getEpochReceipts', params: [`hash:${pivotBlockHash}`] });
-    return format.epochReceipts(result);
+    return cfxFormat.epochReceipts(result);
   }
 
   /**
@@ -512,7 +513,7 @@ class CFX extends RPCMethodFactory {
           format.epochNumber.$or(undefined)(epochNumber),
         ],
       });
-      return format.estimate(result);
+      return cfxFormat.estimate(result);
     } catch (e) {
       throw Contract.decodeError(e);
     }

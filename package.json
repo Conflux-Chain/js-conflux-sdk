@@ -31,6 +31,7 @@
     "genDTS": "npx tsc",
     "document": "node scripts/document.js",
     "jsdocToMd": "node scripts/jsdoc-to-md.js",
+    "jsdoc": "jsdoc --readme README.md -c jsdoc.json",
     "prepublishOnly": "npm run build",
     "test": "jest --coverage",
     "react": "npm run build & cd react & yarn build & yarn start"
@@ -72,6 +73,7 @@
     "minify-stream": "^2.0.1",
     "mold-source-map": "^0.4.0",
     "solc": "^0.6.10",
+    "tidy-jsdoc": "^1.4.1",
     "typescript": "^4.6.4"
   },
   "resolutions": {

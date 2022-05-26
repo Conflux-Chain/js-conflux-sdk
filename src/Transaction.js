@@ -1,6 +1,7 @@
 const { keccak256, ecdsaSign, ecdsaRecover, privateKeyToAddress, publicKeyToAddress } = require('./util/sign');
 const rlp = require('./util/rlp');
 const format = require('./util/format');
+const cfxFormat = require('./rpc/types/formatter');
 
 class Transaction {
   /**
@@ -130,7 +131,7 @@ class Transaction {
    * @return {Buffer}
    */
   encode(includeSignature) {
-    const { nonce, gasPrice, gas, to, value, storageLimit, epochHeight, chainId, data, v, r, s } = format.signTx(this);
+    const { nonce, gasPrice, gas, to, value, storageLimit, epochHeight, chainId, data, v, r, s } = cfxFormat.signTx(this);
 
     const raw = includeSignature
       ? [[nonce, gasPrice, gas, to, value, storageLimit, epochHeight, chainId, data], v, r, s]

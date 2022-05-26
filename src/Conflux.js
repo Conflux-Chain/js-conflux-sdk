@@ -1,6 +1,7 @@
 const CONST = require('./CONST');
 const { assert } = require('./util');
 const format = require('./util/format');
+const cfxFormat = require('./rpc/types/formatter');
 const providerFactory = require('./provider');
 const Wallet = require('./wallet');
 const Contract = require('./contract');
@@ -189,14 +190,14 @@ class Conflux {
    * @private
    */
   _formatCallTx(options) {
-    return format.callTxAdvance(this.networkId, this.useHexAddressInParameter, this.useVerboseAddress)(options);
+    return cfxFormat.callTxAdvance(this.networkId, this.useHexAddressInParameter, this.useVerboseAddress)(options);
   }
 
   /**
    * @private
    */
   _formatGetLogs(options) {
-    return format.getLogsAdvance(this.networkId, this.useHexAddressInParameter, this.useVerboseAddress)(options);
+    return cfxFormat.getLogsAdvance(this.networkId, this.useHexAddressInParameter, this.useVerboseAddress)(options);
   }
 
   /**
@@ -1086,7 +1087,7 @@ class Conflux {
           format.epochNumber.$or(undefined)(epochNumber),
         ],
       });
-      return format.estimate(result);
+      return cfxFormat.estimate(result);
     } catch (e) {
       throw Contract.decodeError(e);
     }
@@ -1182,7 +1183,7 @@ class Conflux {
 
     const result = await this.request({ method: 'cfx_getLogs', params: [this._formatGetLogs(options)] });
 
-    return format.logs(result);
+    return cfxFormat.logs(result);
   }
 
   /**
@@ -1364,7 +1365,7 @@ class Conflux {
     const subscription = new Subscription(id);
 
     this.provider.on(id, data => {
-      subscription.emit('data', format.epoch(data));
+      subscription.emit('data', cfxFormat.epoch(data));
     });
 
     return subscription;
@@ -1404,7 +1405,7 @@ class Conflux {
     const subscription = new Subscription(id);
 
     this.provider.on(id, data => {
-      subscription.emit('data', format.head(data));
+      subscription.emit('data', cfxFormat.head(data));
     });
 
     return subscription;
@@ -1452,9 +1453,9 @@ class Conflux {
     const subscription = new Subscription(id);
     this.provider.on(id, data => {
       if (data.revertTo) {
-        subscription.emit('revert', format.revert(data));
+        subscription.emit('revert', cfxFormat.revert(data));
       } else {
-        subscription.emit('data', format.log(data));
+        subscription.emit('data', cfxFormat.log(data));
       }
     });
 
