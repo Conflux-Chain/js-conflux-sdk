@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const EventEmitter = require('events');
 const RPCError = require('./RPCError');
 
@@ -42,19 +43,28 @@ class BaseProvider extends EventEmitter {
     return `${Date.now().toString(16)}${Math.random().toString(16).slice(2)}`;
   }
 
-  _request() {
+  /**
+   * @param {any}
+   * @return {Promise<*>}
+   */
+  _request(_any) {
     throw new Error(`NotImplementError: ${this.constructor.name}.request not implement.`);
   }
 
-  _requestBatch() {
+  /**
+   * @param {any}
+   * @return {Promise<*>}
+   */
+  _requestBatch(_any) {
     throw new Error(`NotImplementError: ${this.constructor.name}.requestBatch not implement.`);
   }
 
   /**
    * Call a json rpc method with params
    *
-   * @param {string} method - Json rpc method name.
-   * @param {array} [params] - Json rpc method params.
+   * @param {object} data
+   * @param {string} data.method - Json rpc method name.
+   * @param {array} [data.params] - Json rpc method params.
    * @return {Promise<*>} Json rpc method return value.
    *
    * @example

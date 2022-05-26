@@ -8,7 +8,7 @@ class Transaction {
    * Decode rlp encoded raw transaction hex string
    *
    * @param {string} raw - rlp encoded transaction hex string
-   * @returns {object} A Transaction instance
+   * @returns {Transaction} A Transaction instance
    */
   static decodeRaw(raw) {
     const [

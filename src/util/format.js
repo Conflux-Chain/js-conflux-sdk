@@ -263,7 +263,7 @@ function toAddress(address, networkId, verbose = false) {
  * Checks if a given string is a valid address.
  *
  * @param {string|Buffer} address
- * @param {integer} networkId
+ * @param {number} networkId
  * @param {boolean} [verbose=false] - if you want a address with type info, pass true
  * @return {string} Hex string
  *

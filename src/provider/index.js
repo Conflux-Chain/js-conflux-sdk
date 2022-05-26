@@ -7,7 +7,8 @@ const WebsocketProvider = require('./WebSocketProvider');
 /**
  * @param {object} options
  * @param {string} options.url
- * @return {WebsocketProvider|HttpProvider|BaseProvider}
+ * @param {boolean} [options.useWechatProvider] - Whether use wechat provider.
+ * @return {WebsocketProvider|HttpProvider|BaseProvider|WechatProvider}
  *
  * @example
  * > providerFactory()

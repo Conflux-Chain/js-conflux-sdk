@@ -7,7 +7,7 @@ const { isHexString } = require('./util');
 class PersonalMessage extends Message {
   /**
    * Assemble the personal message
-   * @param {string|buffer} message - The origin message
+   * @param {string|Buffer} message - The origin message
    * @return {string}
    */
   static personalMessage(message) {
@@ -17,7 +17,7 @@ class PersonalMessage extends Message {
 
   /**
    * Assemble the personal message hash
-   * @param {string|buffer} message - The origin message
+   * @param {string|Buffer} message - The origin message
    * @return {string} The personal message hash
    */
   static personalHash(message) {
@@ -91,7 +91,7 @@ class PersonalMessage extends Message {
 
   /**
    * Assemble the personal message hash
-   * @param {string|buffer} message - The origin message
+   * @param {string|Buffer} message - The origin message
    * @return {PersonalMessage}
    */
   constructor(message) {

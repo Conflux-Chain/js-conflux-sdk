@@ -108,7 +108,7 @@ class Message {
    * Sign message and set 'r','s','v' and 'hash'.
    *
    * @param {string} privateKey - Private key hex string.
-   * @param {Integer} networkId - Network id of account
+   * @param {number} networkId - Network id of account
    * @return {Message}
    */
   sign(privateKey, networkId) {

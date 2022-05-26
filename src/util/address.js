@@ -1,7 +1,15 @@
 const {
   encode,
   decode,
-  ...rest
+  isValidCfxAddress,
+  verifyCfxAddress,
+  hasNetworkPrefix,
+  simplifyCfxAddress,
+  shortenCfxAddress,
+  isZeroAddress,
+  isInternalContractAddress,
+  isValidHexAddress,
+  isValidCfxHexAddress,
 } = require('@conflux-dev/conflux-address-js');
 const { checksumAddress, keccak256 } = require('./sign');
 const { ADDRESS_TYPES } = require('../CONST');
@@ -54,5 +62,13 @@ module.exports = {
   ethAddressToCfxAddress,
   cfxMappedEVMSpaceAddress,
   ADDRESS_TYPES,
-  ...rest,
+  isValidCfxAddress,
+  verifyCfxAddress,
+  hasNetworkPrefix,
+  simplifyCfxAddress,
+  shortenCfxAddress,
+  isZeroAddress,
+  isInternalContractAddress,
+  isValidHexAddress,
+  isValidCfxHexAddress,
 };

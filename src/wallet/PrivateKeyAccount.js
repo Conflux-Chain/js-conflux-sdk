@@ -8,7 +8,7 @@ class PrivateKeyAccount extends Account {
    * Create a new PrivateKeyAccount with random privateKey.
    *
    * @param {string|Buffer} entropy - Entropy of random account, if pass undefined will random generate a buffer
-   * @param {Integer} networkId - network id of account
+   * @param {number} networkId - network id of account
    * @return {PrivateKeyAccount}
    *
    * @example
@@ -48,7 +48,7 @@ class PrivateKeyAccount extends Account {
    *
    * @param {object} keystore - Keystore version 3 object.
    * @param {string|Buffer} password - Password for keystore to decrypt with.
-   * @param {Integer} networkId - Network id of account
+   * @param {number} networkId - Network id of account
    * @return {PrivateKeyAccount}
    *
    * @example
@@ -86,7 +86,7 @@ class PrivateKeyAccount extends Account {
    * Create a account by privateKey.
    *
    * @param {string|Buffer} privateKey - Private key of account
-   * @param {Integer} networkId - Network id of account
+   * @param {number} networkId - Network id of account
    * @return {PrivateKeyAccount}
    *
    * @example
@@ -127,7 +127,7 @@ class PrivateKeyAccount extends Account {
    * Sign a transaction.
    *
    * @param {object} options - See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**)
-   * @return {Promise<Transaction>}
+   * @return {Promise<typeof import('../Transaction')>}
    *
    * @example
    * > account = new PrivateKeyAccount('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
@@ -173,7 +173,7 @@ class PrivateKeyAccount extends Account {
    * Sign a string.
    *
    * @param {string} options
-   * @return {Promise<Message>}
+   * @return {Promise<typeof import('../Message')>}
    *
    * @example
    * > account = new PrivateKeyAccount('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')

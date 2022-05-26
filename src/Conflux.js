@@ -43,6 +43,8 @@ class Conflux {
    * @param {Object} [options.logger] - Logger object with 'info' and 'error' method.
    * @param {number} [options.networkId] - Connected RPC's networkId
    * @param {boolean} [options.useWechatProvider] - Use wechat provider
+   * @param {boolean} [options.useHexAddressInParameter] - Use hex address in parameter
+   * @param {boolean} [options.useVerboseAddress] - Use verbose address
    * @example
    * > const { Conflux } = require('js-conflux-sdk');
    * > const conflux = new Conflux({url:'https://test.confluxrpc.com', networkId: 1});
