@@ -1,5 +1,10 @@
 # change log
 
+## v2.1.0
+
+* Add more jsdoc comment to generate ts `d.ts` files
+* Move `cfx` related formatters (block, transaction, receipt, log and etc) to independent file `./src/rpc/types/formmatter.js`.
+
 ## v2.0.7
 
 * Fix logFilter formater bug
