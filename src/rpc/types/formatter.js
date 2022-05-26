@@ -8,6 +8,16 @@ const cfxFormat = new Proxy(() => undefined, {
   },
 });
 
+/**
+ * @typedef {Object} LogFilter
+ * @property {number} [limit]
+ * @property {number} [offset]
+ * @property {string|number} [fromEpoch]
+ * @property {string|number} [toEpoch]
+ * @property {string[]} [blockHashes]
+ * @property {string[]|string} [address]
+ * @property {string[]} [topics]
+ */
 cfxFormat.getLogs = format({
   limit: format.bigUIntHex,
   offset: format.bigUIntHex,
@@ -111,6 +121,20 @@ cfxFormat.callTxAdvance = function (networkId, toHexAddress = false, useVerboseA
 };
 
 // ----------------------------- parse rpc returned ---------------------------
+/**
+ * @typedef {Object} ChainStatus
+ * @property {string} bestHash
+ * @property {number} networkId
+ * @property {number} chainId
+ * @property {number} epochNumber
+ * @property {number} blockNumber
+ * @property {number} pendingTxNumber
+ * @property {number} latestCheckpoint
+ * @property {number} latestConfirmed
+ * @property {number} latestFinalized
+ * @property {number} latestState
+ * @property {number} ethereumSpaceChainId
+ */
 cfxFormat.status = format({
   networkId: format.uInt,
   chainId: format.uInt,
@@ -126,6 +150,12 @@ cfxFormat.status = format({
   name: 'format.status',
 });
 
+/**
+ * @typedef {Object} EstimateResult
+ * @property {number} gasUsed
+ * @property {number} gasLimit
+ * @property {number} storageCollateralized
+ */
 cfxFormat.estimate = format({
   gasUsed: format.bigUInt,
   gasLimit: format.bigUInt,
@@ -272,6 +302,14 @@ cfxFormat.log = format({
 
 cfxFormat.logs = format([cfxFormat.log]);
 
+/**
+ * @typedef {Object} SupplyInfo
+ * @property {BigInt} totalCirculating
+ * @property {BigInt} totalIssued
+ * @property {BigInt} totalStaking
+ * @property {BigInt} totalCollateral
+ * @property {BigInt} [totalEspaceTokens]
+ */
 cfxFormat.supplyInfo = format({
   totalCirculating: format.bigUInt,
   totalIssued: format.bigUInt,
@@ -282,6 +320,14 @@ cfxFormat.supplyInfo = format({
   name: 'format.supplyInfo',
 });
 
+/**
+ * @typedef {Object} SponsorInfo
+ * @property {BigInt} sponsorBalanceForCollateral
+ * @property {BigInt} sponsorBalanceForGas
+ * @property {BigInt} sponsorGasBound
+ * @property {string} sponsorForCollateral
+ * @property {string} sponsorForGas
+ */
 cfxFormat.sponsorInfo = format({
   sponsorBalanceForCollateral: format.bigUInt,
   sponsorBalanceForGas: format.bigUInt,
@@ -290,6 +336,12 @@ cfxFormat.sponsorInfo = format({
   name: 'format.sponsorInfo',
 });
 
+/**
+ * @typedef {Object} RewardInfo
+ * @property {BigInt} baseReward
+ * @property {BigInt} totalReward
+ * @property {BigInt} txFee
+ */
 cfxFormat.rewardInfo = format([
   {
     baseReward: format.bigUInt,
@@ -350,6 +402,12 @@ cfxFormat.accountPendingTransactions = format({
   name: 'format.accountPendingTransactions',
 });
 
+/**
+ * @typedef {Object} PoSEconomics
+ * @property {BigInt} distributablePosInterest
+ * @property {BigInt} lastDistributeBlock
+ * @property {BigInt} totalPosStakingTokens
+ */
 cfxFormat.posEconomics = format({
   distributablePosInterest: format.bigUInt,
   lastDistributeBlock: format.bigUInt,
