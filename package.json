@@ -1,7 +1,7 @@
 {
   "name": "js-conflux-sdk",
   "description": "JavaScript Conflux Software Development Kit",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "license": "LGPL-3.0",
   "author": "pan.wang@confluxnetwork.org",
   "repository": "https://github.com/Conflux-Chain/js-conflux-sdk.git",
@@ -27,7 +27,7 @@
   ],
   "scripts": {
     "eslint": "npx eslint ./src ./test ./mock",
-    "build": "node scripts/build-frontend.js",
+    "build": "node scripts/build-frontend.js & npm run genDTS",
     "genDTS": "npx tsc",
     "document": "node scripts/document.js",
     "jsdocToMd": "node scripts/jsdoc-to-md.js",
