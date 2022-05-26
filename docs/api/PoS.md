@@ -154,7 +154,7 @@ PoS status
 | pivotDecision | [<code>PivotDecision</code>](#PivotDecision) | 
 | round | <code>number</code> | 
 | timestamp | <code>number</code> | 
-| nextTxNumber | <code>number</code> | 
+| lastTxNumber | <code>number</code> | 
 | signatures | [<code>Signature</code>](#Signature) | 
 
 <a name="CommitteeNode"></a>
@@ -303,7 +303,7 @@ await conflux.pos.getBlockByNumber(8235);
   hash: '0x1daf5443b7556cc39c3d4fe5e208fa77c3f5c053ea4bd637f5e43dfa7f0a95cb',
   height: 8235,
   miner: '0x0f0ccf5ee5276b102316acb3943a2750085f85ac7b94bdbf9d8901f03a7d7cc3',
-  nextTxNumber: 42467,
+  lastTxNumber: 42467,
   parentHash: '0x308699b307c81906ab97cbf213532c196f2d718f4641266aa444209349d9e31c',
   pivotDecision: {
     blockHash: '0x97625d04ece6fe322ae38010ac877447927b4d5963af7eaea7db9befb615e510',

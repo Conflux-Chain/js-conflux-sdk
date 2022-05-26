@@ -1,7 +1,7 @@
 {
   "name": "js-conflux-sdk",
   "description": "JavaScript Conflux Software Development Kit",
-  "version": "2.0.8",
+  "version": "2.1.0",
   "license": "LGPL-3.0",
   "author": "pan.wang@confluxnetwork.org",
   "repository": "https://github.com/Conflux-Chain/js-conflux-sdk.git",
@@ -13,7 +13,7 @@
   "bin": {
     "cfxjs": "bin/cfxjs.js"
   },
-  "types": "./types/index.d.ts",
+  "types": "./dist/types/index.d.ts",
   "browser": "dist/js-conflux-sdk.umd.min.js",
   "browserify-browser": {
     "secp256k1": "secp256k1/elliptic",
