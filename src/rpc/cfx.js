@@ -471,14 +471,17 @@ class CFX extends RPCMethodFactory {
   async call(options, epochNumber) {
     try {
       if (options.to && addressUtil.hasNetworkPrefix(options.to) && this.conflux.networkId) {
-        const { netId, type } = addressUtil.decodeCfxAddress(options.to);
+        const {
+          netId,
+          // type,
+        } = addressUtil.decodeCfxAddress(options.to);
         // check target address's networkId with current RPC's networkId
         assert(netId === this.conflux.networkId, '`to` address\'s networkId is not match current RPC\'s networkId');
         // check target contract is exist
-        if (type === ADDRESS_TYPES.CONTRACT) {
+        /* if (type === ADDRESS_TYPES.CONTRACT) {
           const code = await this.getCode(options.to);
           assert(code !== '0x', 'Contract not exist!');
-        }
+        } */
       }
 
       return await this.conflux.request({
