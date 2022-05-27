@@ -27,8 +27,8 @@
   ],
   "scripts": {
     "eslint": "npx eslint ./src ./test ./mock",
-    "build": "node scripts/build-frontend.js & npm run genDTS",
-    "genDTS": "npx tsc",
+    "build": "node scripts/build-frontend.js && npm run gendts",
+    "gendts": "npx tsc && node scripts/deal-dts.js",
     "document": "node scripts/document.js",
     "jsdocToMd": "node scripts/jsdoc-to-md.js",
     "jsdoc": "jsdoc --readme README.md -c jsdoc.json",

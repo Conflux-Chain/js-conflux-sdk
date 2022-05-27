@@ -18,12 +18,28 @@ const BatchRequester = require('./rpc/BatchRequester');
 const AdvancedRPCUtilities = require('./rpc/Advanced');
 
 /**
+ * @typedef {Object} ConfluxOption
+ * @property {string|number} [options.defaultGasPrice] - The default gas price in drip to use for transactions.
+ * @property {number} [options.defaultGasRatio=1.1] - The ratio to multiply by gas.
+ * @property {number} [options.defaultStorageRatio=1.1] - The ratio to multiply by storageLimit.
+ * @property {string} [options.url] - Url of Conflux node to connect.
+ * @property {number} [options.retry] - Retry times if request error occurs.
+ * @property {number} [options.timeout] - Request time out in ms
+ * @property {Object} [options.logger] - Logger object with 'info' and 'error' method.
+ * @property {number} [options.networkId] - Connected RPC's networkId
+ * @property {boolean} [options.useWechatProvider] - Use wechat provider
+ * @property {boolean} [options.useHexAddressInParameter] - Use hex address in parameter
+ * @property {boolean} [options.useVerboseAddress] - Use verbose address
+ */
+
+/**
  * The Client class that provides an interface to the Conflux network.
  */
 class Conflux {
   /**
    * Create a Conflux instance with networdId set up
-   * @param {object} options
+   * @param {ConfluxOption} options
+   * @return {Conflux}
    */
   static async create(options) {
     const cfx = new Conflux(options);
@@ -33,18 +49,8 @@ class Conflux {
   }
 
   /**
-   * @param {object} [options] - Conflux and Provider constructor options.
-   * @param {string|number} [options.defaultGasPrice] - The default gas price in drip to use for transactions.
-   * @param {number} [options.defaultGasRatio=1.1] - The ratio to multiply by gas.
-   * @param {number} [options.defaultStorageRatio=1.1] - The ratio to multiply by storageLimit.
-   * @param {string} [options.url] - Url of Conflux node to connect.
-   * @param {number} [options.retry] - Retry times if request error occurs.
-   * @param {number} [options.timeout] - Request time out in ms
-   * @param {Object} [options.logger] - Logger object with 'info' and 'error' method.
-   * @param {number} [options.networkId] - Connected RPC's networkId
-   * @param {boolean} [options.useWechatProvider] - Use wechat provider
-   * @param {boolean} [options.useHexAddressInParameter] - Use hex address in parameter
-   * @param {boolean} [options.useVerboseAddress] - Use verbose address
+   * @param {ConfluxOption} [options] - Conflux and Provider constructor options.
+   * @return {Conflux}
    * @example
    * > const { Conflux } = require('js-conflux-sdk');
    * > const conflux = new Conflux({url:'https://test.confluxrpc.com', networkId: 1});
@@ -65,6 +71,7 @@ class Conflux {
     useVerboseAddress = false,
     ...rest
   } = {}) {
+    /** @type {string} */
     this.version = pkg.version;
 
     /**
@@ -77,7 +84,7 @@ class Conflux {
     /**
      * Wallet for `sendTransaction` to get `Account` by `from` field
      *
-     * @type {typeof import("./wallet/Wallet")}
+     * @type {import("./wallet/Wallet")}
      */
     this.wallet = new Wallet();
 
@@ -131,29 +138,33 @@ class Conflux {
 
     /**
      * pos RPC methods
+     * @type {import('./rpc/pos')}
      */
     this.pos = new PoS(this);
     /**
      * trace RPC methods
+     * @type {import('./rpc/trace')}
      */
     this.trace = new Trace(this);
     /**
      * txpool RPC methods
+     * @type {import('./rpc/txpool')}
      */
     this.txpool = new TxPool(this);
     /**
      * cfx RPC methods
+     * @type {import('./rpc/cfx')}
      */
     this.cfx = new CFX(this);
     /**
      * Advanced RPC compose methods
+     * @type {import('./rpc/Advanced')}
      */
     this.advanced = new AdvancedRPCUtilities(this);
   }
 
   /**
    * Different kind provider API wrapper
-   * @private
    */
   request(req) {
     if (this.provider.request) {
@@ -257,7 +268,7 @@ class Conflux {
 
   /**
    * Return a BatchRequester instance which can used to build batch request and decode response data
-   * @returns {BatchRequester} - A BatchRequester instance
+   * @returns {import('./rpc/BatchRequester')} - A BatchRequester instance
    */
   BatchRequest() {
     return new BatchRequester(this);
@@ -295,7 +306,7 @@ class Conflux {
    * Get supply info
    *
    * @param {string|number} [epochNumber='latest_state'] - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
-   * @return {Promise<object>} Return supply info
+   * @return {Promise<import('./rpc/types/formatter').SupplyInfo>} Return supply info
    * - totalIssued `BigInt`: Total issued balance in `Drip`
    * - totalStaking `BigInt`: Total staking balance in `Drip`
    * - totalCollateral `BigInt`: Total collateral balance in `Drip`
@@ -315,7 +326,7 @@ class Conflux {
 
   /**
    * Get status
-   * @return {Promise<object>} Status information object
+   * @return {Promise<import('./rpc/types/formatter').ChainStatus>} Status information object
    * - chainId `number`: Chain id
    * - epochNumber `number`: Epoch number
    * - blockNumber `number`: Block number
@@ -561,7 +572,7 @@ class Conflux {
    *
    * @private
    * @param {string|number} epochNumber - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
-   * @return {Promise<object[]>} List of block reward info
+   * @return {Promise<import('./rpc/types/formatter').RewardInfo[]>} List of block reward info
    * - blockHash `string`: Hash of the block.
    * - author `string`: The address of the beneficiary to whom the mining rewards were given.
    * - baseReward `BigInt`: Block base reward in `Drip`
@@ -985,7 +996,7 @@ class Conflux {
    *
    * @param {string} address - Address to contract.
    * @param {string|number} [epochNumber='latest_state'] - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
-   * @return {Promise<object>} A sponsor info object, if the contract doesn't have a sponsor, then the all fields in returned object will be 0:
+   * @return {Promise<import('./rpc/types/formatter').SponsorInfo>} A sponsor info object, if the contract doesn't have a sponsor, then the all fields in returned object will be 0:
    * - sponsorBalanceForCollateral `BigInt`: the sponsored balance for storage.
    * - sponsorBalanceForGas `BigInt`: the sponsored balance for gas.
    * - sponsorGasBound `BigInt`: the max gas could be sponsored for one transaction.
@@ -1075,7 +1086,7 @@ class Conflux {
    *
    * @param {object} options - See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**)
    * @param {string|number} [epochNumber='latest_state'] - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
-   * @return {Promise<object>} A estimate result object:
+   * @return {Promise<import('./rpc/types/formatter').EstimateResult>} A estimate result object:
    * - `BigInt` gasUsed: The gas used.
    * - `BigInt` gasLimit: The gas limit.
    * - `BigInt` storageCollateralized: The storage collateralized in Byte.
@@ -1140,7 +1151,7 @@ class Conflux {
    * @param {string|string[]} [options.address] - Search contract addresses. If null, match all. If specified, log must be produced by one of these addresses.
    * @param {array} [options.topics] - Search topics. Logs can have 4 topics: the function signature and up to 3 indexed event arguments. The elements of topics match the corresponding log topics. Example: ["0xA", null, ["0xB", "0xC"], null] matches logs with "0xA" as the 1st topic AND ("0xB" OR "0xC") as the 3rd topic. If null, match all.
    * @param {number} [options.limit] - Return the last limit logs
-   * @return {Promise<object[]>} Array of log, that the logs matching the filter provided:
+   * @return {Promise<import('./rpc/types/formatter').Log[]>} Array of log, that the logs matching the filter provided:
    * - address `string`: Address this event originated from.
    * - topics `string[]`: Array of topics.
    * - data `string`: The data containing non-indexed log parameter.
@@ -1293,7 +1304,7 @@ class Conflux {
 
   /**
    * Return PoS summary info
-   * @returns {Promise<object>} PoS summary info
+   * @returns {Promise<import('./rpc/types/formatter').PoSEconomics>} PoS summary info
    * - distributablePosInterest `number`: Currently total distributable PoS interest (Drip)
    * - lastDistributeBlock `number`: Last distribute block number
    * - totalPosStakingTokens `number`: Total token amount (Drip) staked in PoS

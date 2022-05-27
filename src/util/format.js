@@ -336,7 +336,6 @@ format.checksumAddress = format.hex40.$after(sign.checksumAddress);
 format.hex64 = format.hex.$validate(v => v.length === 2 + 64, 'hex64');
 
 /**
- * @type {(a: string|Buffer) => string}
  * @param {string|Buffer} arg
  * @return {string} Hex string
  *
@@ -346,7 +345,7 @@ format.hex64 = format.hex.$validate(v => v.length === 2 + 64, 'hex64');
  * > format.privateKey('0x0123456789012345678901234567890123456789')
  Error("not match hex64")
  */
-format.blockHash = format.hex64; // alias
+format.blockHash = v => format.hex64(v); // alias
 
 /**
  * @param {string|Buffer} arg
@@ -358,7 +357,7 @@ format.blockHash = format.hex64; // alias
  * > format.privateKey('0x0123456789012345678901234567890123456789')
  Error("not match hex64")
  */
-format.transactionHash = format.hex64; // alias
+format.transactionHash = v => format.hex64(v); // alias
 
 /**
  * @param {string|Buffer} arg
@@ -370,7 +369,7 @@ format.transactionHash = format.hex64; // alias
  * > format.privateKey('0x0123456789012345678901234567890123456789')
  Error("not match hex64")
  */
-format.privateKey = format.hex64; // alias
+format.privateKey = v => format.hex64(v); // alias
 
 /**
  * @param {string|Buffer} arg

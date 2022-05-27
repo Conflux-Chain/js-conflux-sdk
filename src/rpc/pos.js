@@ -386,6 +386,7 @@ class PoS extends RPCMethodFactory {
       /**
        * @instance
        * @async
+       * @method getRewardsByEpoch
        * @name getRewardsByEpoch
        * @param {number|string} epoch A PoS epoch number
        * @return {Promise<PoSEpochRewards>}
