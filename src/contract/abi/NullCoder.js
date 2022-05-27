@@ -10,7 +10,7 @@ class NullCoder extends BaseCoder {
   }
 
   /**
-   * @param value {null}
+   * @param {null} value
    * @return {Buffer}
    */
   encode(value) {

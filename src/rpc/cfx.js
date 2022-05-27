@@ -434,7 +434,7 @@ class CFX extends RPCMethodFactory {
    *
    * @param {Object} options transaction info
    * @param {string} [password] Optional password to unlock account in fullnode
-   * @return {Promise<hash>} Transaction hash
+   * @return {Promise<string>} Transaction hash
    */
   async sendTransaction(options, ...extra) {
     if (this.conflux.wallet.has(`${options.from}`)) {
@@ -454,7 +454,7 @@ class CFX extends RPCMethodFactory {
   /**
    * Get epoch's receipt through pivot block's hash
    *
-   * @param {hash} pivotBlockHash Hash of pivot block
+   * @param {string} pivotBlockHash Hash of pivot block
    * @returns {Promise<Array>} All receipts of one epoch
    */
   async getEpochReceiptsByPivotBlockHash(pivotBlockHash) {
@@ -499,7 +499,7 @@ class CFX extends RPCMethodFactory {
    *
    * @param {object} options - See [Transaction](#Transaction.js/Transaction/**constructor**)
    * @param {string|number} [epochNumber='latest_state'] - See [format.epochNumber](#util/format.js/format/(static)epochNumber)
-   * @return {Promise<object>} A estimate result object:
+   * @return {Promise<import('./types/formatter').EstimateResult>} A estimate result object:
    * - `BigInt` gasUsed: The gas used.
    * - `BigInt` gasLimit: The gas limit.
    * - `BigInt` storageCollateralized: The storage collateralized in Byte.

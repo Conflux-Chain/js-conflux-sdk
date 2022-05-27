@@ -17,7 +17,7 @@ class BoolCoder extends IntegerCoder {
   }
 
   /**
-   * @param value {*}
+   * @param {*} value
    * @return {Buffer}
    */
   encode(value) {
@@ -32,7 +32,7 @@ class BoolCoder extends IntegerCoder {
   }
 
   /**
-   * @param stream {HexStream}
+   * @param {import('../../util/HexStream')} stream
    * @return {boolean}
    */
   decode(stream) {

@@ -13,9 +13,9 @@ class MethodTransaction extends Transaction {
    *
    * > Note: This can alter the smart contract state.
    *
-   * @param options {object} - See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**)
-   * @param [password] {string} - See [conflux.sendTransaction](#Conflux.js/Conflux/sendTransaction)
-   * @return {Promise<PendingTransaction>} The PendingTransaction object.
+   * @param {object} options - See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**)
+   * @param {string} [password] - See [conflux.sendTransaction](#Conflux.js/Conflux/sendTransaction)
+   * @return {import('../../subscribe/PendingTransaction')} The PendingTransaction object.
    */
   sendTransaction(options, ...extra) {
     return this.method.conflux.cfx.sendTransaction({ ...this, ...options }, ...extra);
@@ -30,8 +30,8 @@ class MethodTransaction extends Transaction {
    * set contract.address as `to`,
    * set contract method encode as `data`.
    *
-   * @param options {object} - See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**)
-   * @param epochNumber {string|number} - See [Conflux.estimateGasAndCollateral](#Conflux.js/estimateGasAndCollateral)
+   * @param {object} options - See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**)
+   * @param {string|number} epochNumber - See [Conflux.estimateGasAndCollateral](#Conflux.js/estimateGasAndCollateral)
    * @return {Promise<object>} The gas used and storage occupied for the simulated call/transaction.
    */
   async estimateGasAndCollateral(options, epochNumber) {
@@ -45,8 +45,8 @@ class MethodTransaction extends Transaction {
    *
    * > Note: Can not alter the smart contract state.
    *
-   * @param options {object} - See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**)
-   * @param epochNumber {string|number} - See [Conflux.call](#Conflux.js/call)
+   * @param {object} options - See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**)
+   * @param {string|number} epochNumber - See [Conflux.call](#Conflux.js/call)
    * @return {Promise<*>} Decoded contact call return.
    */
   async call(options, epochNumber) {

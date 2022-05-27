@@ -26,7 +26,8 @@ class Contract {
    * @param {array} options.abi - The json interface for the contract to instantiate
    * @param {string} [options.address] - The address of the smart contract to call, can be added later using `contract.address = '0x1234...'`
    * @param {string} [options.bytecode] - The byte code of the contract, can be added later using `contract.constructor.code = '0x1234...'`
-   * @param {Conflux} conflux - Conflux instance.
+   * @param {boolean} [options.decodeByteToHex=false] - Whether decode bytes to hex string, default will decoe to Buffer.
+   * @param {import('../Conflux')} conflux - Conflux instance.
    * @return {object}
    *
    * @example

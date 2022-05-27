@@ -18,10 +18,10 @@ const ArrayCoder = require('./ArrayCoder');
 /**
  * Get coder by abi component.
  *
- * @param component {object}
- * @param component.type {string}
- * @param [component.name] {string}
- * @param [component.components] {array} - For TupleCoder
+ * @param {object} component
+ * @param {string} component.type
+ * @param {string} [component.name]
+ * @param {array} [component.components] - For TupleCoder
  * @return {BaseCoder}
  */
 function valueCoder(component) {

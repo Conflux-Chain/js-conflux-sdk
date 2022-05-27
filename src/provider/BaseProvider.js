@@ -91,7 +91,7 @@ class BaseProvider extends EventEmitter {
    * Call a json rpc method with params
    *
    * @param {string} method - Json rpc method name.
-   * @param {array} [params] - Json rpc method params.
+   * @param {any[]} params - Json rpc method params.
    * @return {Promise<*>} Json rpc method return value.
    *
    * @example

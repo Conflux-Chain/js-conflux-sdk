@@ -70,14 +70,14 @@ class Conflux {
     /**
      * Provider for rpc call
      *
-     * @type {WebsocketProvider|HttpProvider|BaseProvider}
+     * @type {import('./provider/BaseProvider')|import('./provider/WechatProvider')|import('./provider/HttpProvider')|import('./provider/WebsocketProvider')}
      */
     this.provider = providerFactory(rest);
 
     /**
      * Wallet for `sendTransaction` to get `Account` by `from` field
      *
-     * @type {Wallet}
+     * @type {typeof import("./wallet/Wallet")}
      */
     this.wallet = new Wallet();
 
@@ -206,7 +206,7 @@ class Conflux {
    * A shout cut for `new Contract(options, conflux);`
    *
    * @param {object} options - See [Contract.constructor](Contract.md#Contract.js/constructor)
-   * @return {Contract} - A Contract instance
+   * @return {import('./contract')}
    */
   Contract(options) {
     return new Contract(options, this);
@@ -220,7 +220,7 @@ class Conflux {
    * - [Staking](https://github.com/Conflux-Chain/conflux-rust/blob/master/internal_contract/contracts/Staking.sol)
    *
    * @param {"AdminControl"|"SponsorWhitelistControl"|"Staking"|"ConfluxContext"|"PoSRegister"|"CrossSpaceCall"} name - Internal contract name
-   * @return {Contract}
+   * @return {import('./contract')}
    *
    * @example
    * > conflux.InternalContract('AdminControl')
@@ -249,7 +249,7 @@ class Conflux {
    * Create an token CRC20 contract with standard CRC20 abi
    *
    * @param {string} address
-   * @returns  {Contract} A token contract instance
+   * @returns  {import('./contract')} A token contract instance
    */
   CRC20(address) {
     return this.Contract({ address, abi: CRC20_ABI });
@@ -384,7 +384,7 @@ class Conflux {
    *
    * @param {string} address - address to get account.
    * @param {string|number} [epochNumber='latest_state'] - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
-   * @return {Promise<object>} Return the states of the given account:
+   * @return {Promise<import('./rpc/types/Account')>} Return the states of the given account:
    * - balance `BigInt`: the balance of the account.
    * - nonce `BigInt`: the nonce of the account's next transaction.
    * - codeHash `string`: the code hash of the account.
@@ -517,7 +517,7 @@ class Conflux {
    *
    * @param {string|number} epochNumber - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
    * @param {boolean} [detail=false] - If `true` it returns the full transaction objects, if `false` only the hashes of the transactions.
-   * @return {Promise<Block|null>} See `getBlockByHash`
+   * @return {Promise<import('./rpc/types/formatter').Block|null>} See `getBlockByHash`
    *
    * @example
    * > await conflux.getBlockByEpochNumber('latest_mined', true);
@@ -532,7 +532,7 @@ class Conflux {
    *
    * @param {string|number} blockNumber
    * @param {boolean} [detail=false] - If `true` it returns the full transaction objects, if `false` only the hashes of the transactions.
-   * @return {Promise<Block|null>} See `getBlockByHash`
+   * @return {Promise<import('./rpc/types/formatter').Block|null>} See `getBlockByHash`
    *
    * @example
    * > await conflux.getBlockByBlockNumber('0x123', true);
@@ -610,7 +610,7 @@ class Conflux {
    *
    * @param {string} blockHash - hash of a block.
    * @param {boolean} [detail=false] - If `true` it returns the full transaction objects, if `false` only the hashes of the transactions.
-   * @return {Promise<Block|null>} A block object, or null when no block was found:
+   * @return {Promise<import('./rpc/types/formatter').Block|null>} A block object, or null when no block was found:
    * - adaptive `boolean`: If `true` the weight of the block is adaptive under GHAST rule, if `false` otherwise.
    * - blame `number`: If 0, then no blocks are blamed on its parent path, If greater than 0, then the nearest blamed block on the parent path is blame steps away.
    * - deferredLogsBloomHash `string`: The bloom hash of deferred logs.
@@ -672,7 +672,7 @@ class Conflux {
    * @param {string} blockHash - Block hash which epochNumber expect to be `epochNumber`.
    * @param {string} pivotBlockHash - Block hash which expect to be the pivot block of `epochNumber`.
    * @param {number} epochNumber - Epoch number
-   * @return {Promise<object>} See `getBlockByHash`
+   * @return {Promise<import('./rpc/types/formatter').Block|null>} See `getBlockByHash`
    */
   async getBlockByHashWithPivotAssumption(blockHash, pivotBlockHash, epochNumber) {
     return this.cfx.getBlockByHashWithPivotAssumption(blockHash, pivotBlockHash, epochNumber);
@@ -698,7 +698,7 @@ class Conflux {
    * Returns the information about a transaction requested by transaction hash.
    *
    * @param {string} transactionHash - hash of a transaction
-   * @return {Promise<Transaction|null>} transaction object, or `null` when no transaction was found:
+   * @return {Promise<import('./rpc/types/formatter').Transaction|null>} transaction object, or `null` when no transaction was found:
    * - blockHash `string`: hash of the block where this transaction was in and got executed. `null` when its pending.
    * - contractCreated `string|null`: address of created contract. `null` when it's not a contract creating transaction
    * - data `string`: the data send along with the transaction.
@@ -749,7 +749,7 @@ class Conflux {
    * Returns the information about a transaction receipt requested by transaction hash.
    *
    * @param {string} transactionHash - Hash of a transaction
-   * @return {Promise<TransactionReceipt|null>} A transaction receipt object, or null when no transaction was found or the transaction was not executed yet:
+   * @return {Promise<import('./rpc/types/formatter').TransactionReceipt|null>} A transaction receipt object, or null when no transaction was found or the transaction was not executed yet:
    * - transactionHash `string`: Hash of the given transaction.
    * - index `number`: Transaction index within the block.
    * - blockHash `string`: Hash of the block where this transaction was in and got executed.
@@ -803,7 +803,7 @@ class Conflux {
    * Creates new message call transaction or a contract creation for signed transactions.
    *
    * @param {string|Buffer} hex - The signed transaction data.
-   * @return {Promise<PendingTransaction>} The transaction hash, or the zero hash if the transaction is not yet available.
+   * @return {Promise<import('./subscribe/PendingTransaction')>} The transaction hash, or the zero hash if the transaction is not yet available.
    *
    * @example
    * > await conflux.sendRawTransaction('0xf85f800382520894bbd9e9b...');
@@ -823,7 +823,7 @@ class Conflux {
    *
    * @param {object} options - See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**)
    * @param {string} [password] - Password for remote node.
-   * @return {Promise<PendingTransaction>} The PendingTransaction object.
+   * @return {Promise<import('./subscribe/PendingTransaction')>} The PendingTransaction object.
    *
    * @example
    * > txHash = await conflux.sendTransaction({from:account, to:address, value:0}); // send and get transaction hash
@@ -1115,8 +1115,8 @@ class Conflux {
 
   /**
    * Check whether transaction sender's balance is enough for gas and storage fee
-   * @param {address} from - sender address
-   * @param {address} to - target address
+   * @param {string} from - sender address
+   * @param {string} to - target address
    * @param {string|number} gas - gas limit (in drip)
    * @param {string|number} gasPrice - gas price (in drip)
    * @param {string|number} storageLimit - storage limit (in byte)

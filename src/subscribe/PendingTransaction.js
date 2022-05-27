@@ -3,7 +3,7 @@ const { sleep } = require('../util');
 class PendingTransaction {
   /**
    * PendingTransaction constructor.
-   * @param {typeof import('../rpc/types/formatter')} conflux
+   * @param {import('../Conflux')} conflux
    * @param {function} func
    * @param {array} args
    * @return {PendingTransaction}

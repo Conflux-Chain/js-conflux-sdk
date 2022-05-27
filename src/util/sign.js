@@ -106,7 +106,7 @@ function privateKeyToPublicKey(privateKey) {
  *
  * > Account address hex starts with '0x1'
  *
- * @param {Buffer|HexString} publicKey
+ * @param {Buffer|string} publicKey
  * @return {Buffer}
  *
  * @example
@@ -257,6 +257,20 @@ function encrypt(privateKey, password) {
  * Decrypt account encrypt info.
  *
  * @param {object} keystoreV3
+ * @param {number} keystoreV3.version
+ * @param {object} keystoreV3.crypto
+ * @param {string} keystoreV3.crypto.ciphertext
+ * @param {object} keystoreV3.crypto.cipherparams
+ * @param {string} keystoreV3.crypto.cipherparams.iv
+ * @param {string} keystoreV3.crypto.cipher
+ * @param {string} keystoreV3.crypto.kdf
+ * @param {object} keystoreV3.crypto.kdfparams
+ * @param {number} keystoreV3.crypto.kdfparams.dklen
+ * @param {string} keystoreV3.crypto.kdfparams.salt
+ * @param {number} keystoreV3.crypto.kdfparams.n
+ * @param {number} keystoreV3.crypto.kdfparams.r
+ * @param {number} keystoreV3.crypto.kdfparams.p
+ * @param {string} keystoreV3.crypto.mac
  * @param {string|Buffer} password
  * @return {Buffer} Buffer of private key
  *

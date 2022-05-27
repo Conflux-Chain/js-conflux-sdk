@@ -16,7 +16,7 @@ class StringCoder extends BytesCoder {
   }
 
   /**
-   * @param value {string} - string in utf8
+   * @param {string} value - string in utf8
    * @return {Buffer}
    */
   encode(value) {
@@ -31,7 +31,7 @@ class StringCoder extends BytesCoder {
   }
 
   /**
-   * @param stream {HexStream}
+   * @param {import('../../util/HexStream')} stream
    * @return {string}
    */
   decode(stream) {

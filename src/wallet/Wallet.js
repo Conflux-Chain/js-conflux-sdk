@@ -62,9 +62,9 @@ class Wallet extends Map {
   }
 
   /**
-   * @param {string} address - Key of account, usually is `address`
-   * @param {Account} account - Account instance
-   * @return {Wallet}
+   * @param {any} address - Key of account, usually is `address`
+   * @param {any} account - Account instance
+   * @return {any}
    */
   set(address, account) {
     address = format.address(address, this.networkId);

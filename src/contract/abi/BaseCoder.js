@@ -10,7 +10,7 @@ class BaseCoder {
   }
 
   /**
-   * @param [value] {*}
+   * @param {*} [value]
    * @return {Buffer}
    */
   encode(value) { // eslint-disable-line no-unused-vars
@@ -18,7 +18,7 @@ class BaseCoder {
   }
 
   /**
-   * @param stream {HexStream}
+   * @param {import('../../util/HexStream')} stream
    * @return {*}
    */
   decode(stream) { // eslint-disable-line no-unused-vars

@@ -16,7 +16,7 @@ class AddressCoder extends BaseCoder {
   }
 
   /**
-   * @param address {string}
+   * @param {string} address
    * @return {Buffer}
    */
   encode(address) {
@@ -24,7 +24,7 @@ class AddressCoder extends BaseCoder {
   }
 
   /**
-   * @param stream {HexStream}
+   * @param {import('../../util/HexStream')} stream
    * @return {string}
    */
   decode(stream) {

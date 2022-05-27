@@ -7,10 +7,11 @@ class FunctionCoder {
   /**
    * Function coder
    *
-   * @param name {string}
-   * @param [inputs] {array}
-   * @param [outputs] {array}
-   * @param [stateMutability='nonpayable'] {string}
+   * @param {object} options
+   * @param {string} [options.name]
+   * @param {array} [options.inputs]
+   * @param {array} [options.outputs]
+   * @param {string} [options.stateMutability='nonpayable']
    *
    * @example
    * > abi = { name: 'func', inputs: [{ type: 'int' }, { type: 'bool' }], outputs: [{ type: 'int' }] }
@@ -37,7 +38,7 @@ class FunctionCoder {
   /**
    * Get function signature by abi (json interface)
    *
-   * @param args {array}
+   * @param {array} args
    * @return {string}
    *
    * @example
@@ -54,7 +55,7 @@ class FunctionCoder {
   /**
    * Decode data hex with inputs by abi (json interface)
    *
-   * @param hex {string} - Hex string
+   * @param {string} hex  - Hex string
    * @return {array} NamedTuple
    *
    * @example
@@ -94,7 +95,7 @@ class FunctionCoder {
   /**
    * Decode hex with outputs by abi (json interface)
    *
-   * @param hex {string} - Hex string
+   * @param {string} hex - Hex string
    * @return {array} NamedTuple
    *
    * @example

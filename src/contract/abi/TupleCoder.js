@@ -9,8 +9,8 @@ const { uIntCoder } = require('./IntegerCoder');
 class Pointer extends Number {}
 
 /**
- * @param coders {BaseCoder[]}
- * @param array {array}
+ * @param {BaseCoder[]} coders
+ * @param {array} array
  * @return {Buffer}
  */
 function pack(coders, array) {
@@ -45,8 +45,8 @@ function pack(coders, array) {
 
 /**
  *
- * @param coders {BaseCoder[]}
- * @param stream {HexStream}
+ * @param {BaseCoder[]} coders
+ * @param {import('../../util/HexStream')} stream
  * @return {array}
  */
 function unpack(coders, stream) {
@@ -99,7 +99,7 @@ class TupleCoder extends BaseCoder {
   }
 
   /**
-   * @param array {array}
+   * @param {array} array
    * @return {Buffer}
    */
   encode(array) {
@@ -125,7 +125,7 @@ class TupleCoder extends BaseCoder {
   }
 
   /**
-   * @param stream {HexStream}
+   * @param {import('../../util/HexStream')} stream
    * @return {NamedTuple}
    */
   decode(stream) {
