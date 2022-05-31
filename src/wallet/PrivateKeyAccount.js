@@ -127,7 +127,7 @@ class PrivateKeyAccount extends Account {
    * Sign a transaction.
    *
    * @param {object} options - See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**)
-   * @return {Promise<typeof import('../Transaction')>}
+   * @return {Promise<import('../Transaction')>}
    *
    * @example
    * > account = new PrivateKeyAccount('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
@@ -173,7 +173,7 @@ class PrivateKeyAccount extends Account {
    * Sign a string.
    *
    * @param {string} options
-   * @return {Promise<typeof import('../Message')>}
+   * @return {Promise<import('../Message')>}
    *
    * @example
    * > account = new PrivateKeyAccount('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')

@@ -14,7 +14,7 @@ class Account {
 
   /**
    * @param {object} options
-   * @return {Promise<typeof import('../Transaction')>}
+   * @return {Promise<import('../Transaction')>}
    */
   async signTransaction(options) {
     return new Transaction(options);
@@ -22,7 +22,7 @@ class Account {
 
   /**
    * @param {string} message
-   * @return {Promise<typeof import('../Message')>}
+   * @return {Promise<import('../Message')>}
    */
   async signMessage(message) {
     return new Message(message);

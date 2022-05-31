@@ -332,7 +332,7 @@ format.hexAddress = format.hex40.$before(address => {
  */
 format.checksumAddress = format.hex40.$after(sign.checksumAddress);
 
-/** @type {(a: string|Buffer) => string} */
+/** @type {function(string): string} */
 format.hex64 = format.hex.$validate(v => v.length === 2 + 64, 'hex64');
 
 /**

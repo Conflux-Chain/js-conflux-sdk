@@ -217,7 +217,7 @@ class Conflux {
    * A shout cut for `new Contract(options, conflux);`
    *
    * @param {object} options - See [Contract.constructor](Contract.md#Contract.js/constructor)
-   * @return {import('./contract')}
+   * @return {import('./contract/index')}
    */
   Contract(options) {
     return new Contract(options, this);
@@ -231,7 +231,7 @@ class Conflux {
    * - [Staking](https://github.com/Conflux-Chain/conflux-rust/blob/master/internal_contract/contracts/Staking.sol)
    *
    * @param {"AdminControl"|"SponsorWhitelistControl"|"Staking"|"ConfluxContext"|"PoSRegister"|"CrossSpaceCall"} name - Internal contract name
-   * @return {import('./contract')}
+   * @return {import('./contract/index')}
    *
    * @example
    * > conflux.InternalContract('AdminControl')
@@ -260,7 +260,7 @@ class Conflux {
    * Create an token CRC20 contract with standard CRC20 abi
    *
    * @param {string} address
-   * @returns  {import('./contract')} A token contract instance
+   * @returns  {import('./contract/index')} A token contract instance
    */
   CRC20(address) {
     return this.Contract({ address, abi: CRC20_ABI });

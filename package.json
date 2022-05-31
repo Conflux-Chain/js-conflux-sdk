@@ -31,7 +31,7 @@
     "gendts": "npx tsc && node scripts/deal-dts.js",
     "document": "node scripts/document.js",
     "jsdocToMd": "node scripts/jsdoc-to-md.js",
-    "jsdoc": "jsdoc --readme README.md -c jsdoc.json",
+    "jsdoc": "jsdoc -c jsdoc.json",
     "prepublishOnly": "npm run build",
     "test": "jest --coverage",
     "react": "npm run build & cd react & yarn build & yarn start"
@@ -70,6 +70,7 @@
     "jest": "26.6.0",
     "jsbi": "^3.1.4",
     "jsdoc-to-markdown": "^7.1.0",
+    "jsdoc-tsimport-plugin": "^1.0.5",
     "minify-stream": "^2.0.1",
     "mold-source-map": "^0.4.0",
     "solc": "^0.6.10",
