@@ -22,8 +22,7 @@
   "files": [
     "dist",
     "mock",
-    "src",
-    "types"
+    "src"
   ],
   "scripts": {
     "eslint": "npx eslint ./src ./test ./mock",

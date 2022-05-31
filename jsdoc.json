@@ -15,7 +15,7 @@
   },
   "opts": {
     "encoding": "utf8",
-    "destination": "./docs/apiv2",
+    "destination": "./apidoc",
     "recurse": true
   },
   "plugins": [
