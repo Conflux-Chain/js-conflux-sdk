@@ -195,7 +195,7 @@ format.rewardsByEpoch = format({
 class PoS extends RPCMethodFactory {
   /**
    * Create PoS instance
-   * @param {import('../Conflux')} conflux The Conflux object
+   * @param {import('../Conflux').Conflux} conflux The Conflux object
    * @return {PoS} The PoS instance
    */
   constructor(conflux) {

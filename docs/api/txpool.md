@@ -17,11 +17,11 @@ Class contains txpool RPC methods
 ### new TxPool(conflux)
 TxPool constructor.
 
-**Returns**: <code>object</code> - The TxPool instance  
+**Returns**: [<code>TxPool</code>](#TxPool) - The TxPool instance  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| conflux | <code>object</code> | A Conflux instance |
+| conflux | <code>Conflux</code> | A Conflux instance |
 
 <a name="nextNonce"></a>
 

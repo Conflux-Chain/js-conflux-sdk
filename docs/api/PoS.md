@@ -17,7 +17,7 @@ For the detail meaning of fields, please refer to the PoS RPC document:</p>
 </dd>
 <dt><a href="#VotePowerState">VotePowerState</a> : <code>Object</code></dt>
 <dd></dd>
-<dt><a href="#forceRetired">forceRetired</a> : <code>Object</code></dt>
+<dt><a href="#PoSAccountStatus">PoSAccountStatus</a> : <code>Object</code></dt>
 <dd></dd>
 <dt><a href="#PoSAccount">PoSAccount</a> : <code>Object</code></dt>
 <dd></dd>
@@ -53,11 +53,11 @@ For the detail meaning of fields, please refer to the PoS RPC document:
 ### new PoS(conflux)
 Create PoS instance
 
-**Returns**: <code>object</code> - The PoS instance  
+**Returns**: [<code>PoS</code>](#PoS) - The PoS instance  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| conflux | <code>object</code> | The Conflux object |
+| conflux | <code>Conflux</code> | The Conflux object |
 
 <a name="PivotDecision"></a>
 
@@ -68,7 +68,7 @@ Create PoS instance
 | Name | Type |
 | --- | --- |
 | height | <code>number</code> | 
-| blockHash | <code>hex</code> | 
+| blockHash | <code>string</code> | 
 
 <a name="PoSStatus"></a>
 
@@ -97,10 +97,22 @@ PoS status
 | endBlockNumber | <code>number</code> | 
 | power | <code>number</code> | 
 
-<a name="forceRetired"></a>
+<a name="PoSAccountStatus"></a>
 
-## forceRetired : <code>Object</code>
+## PoSAccountStatus : <code>Object</code>
 **Kind**: global typedef  
+**Properties**
+
+| Name | Type |
+| --- | --- |
+| availableVotes | <code>number</code> | 
+| forfeited | <code>number</code> | 
+| inQueue | [<code>Array.&lt;VotePowerState&gt;</code>](#VotePowerState) | 
+| outQueue | [<code>Array.&lt;VotePowerState&gt;</code>](#VotePowerState) | 
+| locked | <code>number</code> | 
+| unlocked | <code>number</code> | 
+| forceRetired | <code>number</code> \| <code>null</code> | 
+
 <a name="PoSAccount"></a>
 
 ## PoSAccount : <code>Object</code>
@@ -110,7 +122,7 @@ PoS status
 | Name | Type |
 | --- | --- |
 | blockNumber | <code>number</code> | 
-| status | <code>PoSAccountStatus</code> | 
+| status | [<code>PoSAccountStatus</code>](#PoSAccountStatus) | 
 
 <a name="PoSTransaction"></a>
 
@@ -139,7 +151,7 @@ PoS status
 | Name | Type |
 | --- | --- |
 | votes | <code>number</code> | 
-| account | <code>hash</code> | 
+| account | <code>string</code> | 
 
 <a name="PoSBlock"></a>
 
@@ -166,7 +178,7 @@ PoS status
 | Name | Type |
 | --- | --- |
 | votingPower | <code>number</code> | 
-| address | <code>hash</code> | 
+| address | <code>string</code> | 
 
 <a name="Election"></a>
 
@@ -176,7 +188,7 @@ PoS status
 
 | Name | Type |
 | --- | --- |
-| isFinalized | <code>bool</code> | 
+| isFinalized | <code>boolean</code> | 
 | startBlockNumber | <code>number</code> | 
 | topElectingNodes | [<code>Array.&lt;CommitteeNode&gt;</code>](#CommitteeNode) | 
 
@@ -213,7 +225,7 @@ PoS status
 | Name | Type |
 | --- | --- |
 | reward | <code>number</code> | 
-| posAddress | <code>hash</code> | 
+| posAddress | <code>string</code> | 
 | powAddress | <code>string</code> | 
 
 <a name="PoSEpochRewards"></a>
@@ -224,7 +236,7 @@ PoS status
 
 | Name | Type |
 | --- | --- |
-| powEpochHash | <code>hash</code> | 
+| powEpochHash | <code>string</code> | 
 | accountRewards | [<code>Array.&lt;PoSReward&gt;</code>](#PoSReward) | 
 
 <a name="getStatus"></a>
@@ -280,7 +292,7 @@ await conflux.pos.getAccount('0x0f0ccf5ee5276b102316acb3943a2750085f85ac7b94bdbf
 
 | Param | Type | Description |
 | --- | --- | --- |
-| hash | <code>Hash</code> | The hash of PoS block |
+| hash | <code>string</code> | The hash of PoS block |
 
 **Example**  
 ```js
@@ -369,7 +381,7 @@ await conflux.pos.getCommittee();
 
 | Param | Type | Description |
 | --- | --- | --- |
-| txNumber | <code>number</code> \| <code>hex</code> | The number of transaction |
+| txNumber | <code>number</code> \| <code>string</code> | The number of transaction |
 
 **Example**  
 ```js
@@ -388,12 +400,12 @@ await conflux.pos.getTransactionByNumber(8235);
 ```
 <a name="getRewardsByEpoch"></a>
 
-## .getRewardsByEpoch ⇒ [<code>Promise.&lt;PoSEpochRewards&gt;</code>](#PoSEpochRewards)
-**Kind**: instance member  
+## .getRewardsByEpoch(epoch) ⇒ [<code>Promise.&lt;PoSEpochRewards&gt;</code>](#PoSEpochRewards)
+**Kind**: instance function  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| epoch | <code>number</code> \| <code>hex</code> | A PoS epoch number |
+| epoch | <code>number</code> \| <code>string</code> | A PoS epoch number |
 
 **Example**  
 ```js

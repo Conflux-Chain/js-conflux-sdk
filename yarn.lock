@@ -929,6 +929,11 @@
   dependencies:
     jsbi "^3.1.4"
 
+"@conflux-dev/jsdoc-tsimport-plugin@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@conflux-dev/jsdoc-tsimport-plugin/-/jsdoc-tsimport-plugin-1.0.5.tgz#993d06970a38c2c858a41e3732528db8cbcca6fe"
+  integrity sha512-ZMz9GpegPwQq0nitk1bR0xsmCclfxELFeiCPag1Vu1zOZ1h6fD6FOqItt3peISViCj3tfWJE/VjiWpCfjBVehg==
+
 "@conflux-dev/jsonrpc-spec@^0.0.5":
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/@conflux-dev/jsonrpc-spec/-/jsonrpc-spec-0.0.5.tgz#18331aef82e4c45576708b646bbb24f657ac328c"

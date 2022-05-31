@@ -8,7 +8,7 @@ const format = require('../util/format');
 class TxPool extends RPCMethodFactory {
   /**
    * TxPool constructor.
-   * @param {import('../Conflux')} conflux A Conflux instance
+   * @param {import('../Conflux').Conflux} conflux A Conflux instance
    * @return {TxPool} The TxPool instance
    */
   constructor(conflux) {

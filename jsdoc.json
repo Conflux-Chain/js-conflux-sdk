@@ -14,8 +14,6 @@
     "excludePattern": "(^|\\/|\\\\)_"
   },
   "opts": {
-    "template": "./node_modules/tidy-jsdoc",
-    "prism-theme": "prism-custom",
     "encoding": "utf8",
     "destination": "./docs/apiv2",
     "recurse": true
