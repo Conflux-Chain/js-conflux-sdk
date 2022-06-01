@@ -225,8 +225,6 @@ cfxFormat.transaction = format({
  * @prop {string[]} custom - customized information. Note from v2.0 custom's type has changed from array of number array to array of hex string.
  * @prop {number} blockNumber - the number of this block's total order in the tree-graph. null when the order is not determined. Added from Conflux-rust v1.1.5
  * @prop {string} posReference - 32 Bytes - the hash of the PoS newest committed block. Added from Conflux-rust v2.0.0
- * @prop {string} prop1 - a string property of SpecialType
- * @prop {number} [prop5=42] - an optional number property of SpecialType with default
  */
 cfxFormat.block = format({
   epochNumber: format.uInt.$or(null),
@@ -375,6 +373,28 @@ cfxFormat.depositList = format([
 ]);
 
 // ---------------------------- parse subscribe event -------------------------
+/**
+ * @typedef {Object} BlockHead - BlockHead
+ * @prop {boolean} adaptive - true if the weight of the block is adaptive under the GHAST rule.
+ * @prop {number} blame - if 0, then this block does not blame any blocks on its parent path. If it is n > 0, then this block blames its n predecessors on its parent path, e.g. when n = 1, then the block blames its parent but not its parent's parent.
+ * @prop {string} deferredLogsBloomHash - the hash of the logs bloom after deferred execution at the block's epoch (assuming it is the pivot block).
+ * @prop {string} deferredReceiptsRoot - the Merkle root of the receipts after deferred execution at the block's epoch (assuming it is the pivot block).
+ * @prop {string} deferredStateRoot - the hash of the state trie root triplet after deferred execution at the block's epoch (assuming it is the pivot block).
+ * @prop {number} difficulty - the PoW difficulty of this block.
+ * @prop {number} [epochNumber] - the number of the epoch containing this block in the node's view of the ledger. null when the epoch number is not determined (e.g. the block is not in the best block's past set).
+ * @prop {number} gasLimit - the maximum gas allowed in this block.
+ * @prop {string} hash - hash of the block.
+ * @prop {number} height - the height of the block.
+ * @prop {string} miner - the address of the beneficiary to whom the mining rewards were given.
+ * @prop {number} nonce - the nonce of the block.
+ * @prop {string} parentHash - hash of the parent block.
+ * @prop {string} [powQuality] - the PoW quality. null when the block is pending.
+ * @prop {string[]} refereeHashes - array of referee block hashes.
+ * @prop {number} timestamp - the timestamp of the block.
+ * @prop {string} transactionsRoot - the Merkle root of the transactions in this block.
+ * @prop {number} blockNumber - the number of this block's total order in the tree-graph. null when the order is not determined. Added from Conflux-rust v1.1.5
+ * @prop {string} posReference - 32 Bytes - the hash of the PoS newest committed block. Added from Conflux-rust v2.0.0
+ */
 cfxFormat.head = format({
   difficulty: format.bigUInt,
   epochNumber: format.uInt.$or(null),
@@ -385,6 +405,10 @@ cfxFormat.head = format({
   name: 'format.head',
 });
 
+/**
+ * @typedef {object} RevertNotification
+ * @prop {number} revertTo
+ */
 cfxFormat.revert = format({
   revertTo: format.uInt,
 }, {
