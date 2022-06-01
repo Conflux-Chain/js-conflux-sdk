@@ -36,7 +36,7 @@ class IntegerCoder extends BaseCoder {
   }
 
   /**
-   * @param value {number|JSBI|string} - FIXME: it is not a good idea to accept string as number
+   * @param {number|JSBI|string} value - FIXME: it is not a good idea to accept string as number
    * @return {Buffer}
    */
   encode(value) {
@@ -60,7 +60,7 @@ class IntegerCoder extends BaseCoder {
   }
 
   /**
-   * @param stream {HexStream}
+   * @param {import('../../util/HexStream')} stream
    * @return {BigInt}
    */
   decode(stream) {

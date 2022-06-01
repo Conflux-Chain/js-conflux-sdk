@@ -1,14 +1,16 @@
+/* eslint-disable no-unused-vars */
 const EventEmitter = require('events');
 const RPCError = require('./RPCError');
 
 class BaseProvider extends EventEmitter {
   /**
-   * @param [options] {object}
-   * @param options.url {string} - Full json rpc http url
-   * @param [options.timeout=30*1000] {number} - Request time out in ms
-   * @param [options.retry=1] {number} - Retry number
-   * @param [options.keepAlive=false] {boolean} - Whether open the http keep-alive option
-   * @param [options.logger] {object} - Logger with `info` and `error`
+
+   * @param {object} [options]
+   * @param {string} options.url - Full json rpc http url
+   * @param {number} [options.timeout=30*1000] - Request time out in ms
+   * @param {number} [options.retry=1] - Retry number
+   * @param {boolean} [options.keepAlive=false] - Whether open the http keep-alive option
+   * @param {object} [options.logger] - Logger with `info` and `error`
    * @return {BaseProvider}
    */
   constructor({
@@ -41,19 +43,30 @@ class BaseProvider extends EventEmitter {
     return `${Date.now().toString(16)}${Math.random().toString(16).slice(2)}`;
   }
 
-  _request() {
+  /**
+   * @param {any}
+   * @private
+   * @return {Promise<*>}
+   */
+  _request(_any) {
     throw new Error(`NotImplementError: ${this.constructor.name}.request not implement.`);
   }
 
-  _requestBatch() {
+  /**
+   * @param {any[]}
+   * @return {Promise<*>}
+   * @private
+   */
+  _requestBatch(_any) {
     throw new Error(`NotImplementError: ${this.constructor.name}.requestBatch not implement.`);
   }
 
   /**
    * Call a json rpc method with params
    *
-   * @param method {string} - Json rpc method name.
-   * @param [params] {array} - Json rpc method params.
+   * @param {object} data
+   * @param {string} data.method - Json rpc method name.
+   * @param {array} [data.params] - Json rpc method params.
    * @return {Promise<*>} Json rpc method return value.
    *
    * @example
@@ -79,8 +92,8 @@ class BaseProvider extends EventEmitter {
   /**
    * Call a json rpc method with params
    *
-   * @param method {string} - Json rpc method name.
-   * @param [params] {array} - Json rpc method params.
+   * @param {string} method - Json rpc method name.
+   * @param {any[]} params - Json rpc method params.
    * @return {Promise<*>} Json rpc method return value.
    *
    * @example
@@ -94,8 +107,8 @@ class BaseProvider extends EventEmitter {
   /**
    * Send a json rpc method request
    *
-   * @param method {string} - Json rpc method name.
-   * @param [params] {array} - Json rpc method params.
+   * @param {string} method - Json rpc method name.
+   * @param {array} [params] - Json rpc method params.
    * @return {Promise<*>} Json rpc method return value.
    *
    * @example
@@ -109,7 +122,7 @@ class BaseProvider extends EventEmitter {
   /**
    * Batch call json rpc methods with params
    *
-   * @param array {object[]} - Array of object with "method" and "params"
+   * @param {object[]} array - Array of object with "method" and "params"
    * @return {Promise<Array>}
    *
    * @example

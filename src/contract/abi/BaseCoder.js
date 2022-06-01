@@ -10,7 +10,7 @@ class BaseCoder {
   }
 
   /**
-   * @param [value] {*}
+   * @param {boolean} [value]
    * @return {Buffer}
    */
   encode(value) { // eslint-disable-line no-unused-vars
@@ -18,8 +18,8 @@ class BaseCoder {
   }
 
   /**
-   * @param stream {HexStream}
-   * @return {*}
+   * @param {import('../../util/HexStream')} stream
+   * @return {boolean}
    */
   decode(stream) { // eslint-disable-line no-unused-vars
     throw new Error(`${this.constructor.name}.decode not implemented`);

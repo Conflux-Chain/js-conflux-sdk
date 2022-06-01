@@ -8,7 +8,7 @@ class BatchRequester {
   /**
    * BatchRequester constructor.
    *
-   * @param {Conflux} conflux - A Conflux instance
+   * @param {import('../Conflux')} conflux - A Conflux instance
    */
   constructor(conflux) {
     this.conflux = conflux;
@@ -20,9 +20,9 @@ class BatchRequester {
 
   /**
    * Add RPC method request to batch builder
-   * @param {object} A request meta info object, include 'request' and 'decoder'
-   * - request `object`: JSON-RPC request object, include `method` and `params` array
-   * - decoder `function`: Response decoder
+   * @param {object} A - request meta info object, include 'request' and 'decoder'
+   * @param {object} A.request - JSON-RPC request object, include `method` and `params` array
+   * @param {function} A.decoder - Response decoder
    * @example
    * Low level example:
    * batchRequester.add({

@@ -30,7 +30,7 @@ function concat(...args) {
 
 // ----------------------------------------------------------------------------
 /**
- * @param value {Array|Buffer}
+ * @param {Array|Buffer} value
  * @return {Buffer}
  */
 function encode(value) {
@@ -46,8 +46,8 @@ function encode(value) {
 }
 
 /**
- * @param length {number}
- * @param offset {number} - Enum of [BUFFER_OFFSET=0x80, ARRAY_OFFSET=0xc0]
+ * @param {number} length
+ * @param {number} offset - Enum of [BUFFER_OFFSET=0x80, ARRAY_OFFSET=0xc0]
  * @return {Buffer}
  */
 function encodeLength(length, offset) {
@@ -60,7 +60,7 @@ function encodeLength(length, offset) {
 }
 
 /**
- * @param buffer {Buffer}
+ * @param {Buffer} buffer
  * @return {Buffer}
  */
 function encodeBuffer(buffer) {
@@ -74,7 +74,7 @@ function encodeBuffer(buffer) {
 }
 
 /**
- * @param array {Array}
+ * @param {Array} array
  * @return {Buffer}
  */
 function encodeArray(array) {

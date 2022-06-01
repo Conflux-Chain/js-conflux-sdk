@@ -17,7 +17,32 @@ class Account {
   }
 
   constructor(accountMeta) {
-    Object.assign(this, Account.format(accountMeta));
+    const {
+      address,
+      balance,
+      nonce,
+      codeHash,
+      stakingBalance,
+      collateralForStorage,
+      accumulatedInterestReturn,
+      admin,
+    } = Account.format(accountMeta);
+    /** @type {string} */
+    this.address = address;
+    /** @type {BigInt} */
+    this.balance = balance;
+    /** @type {BigInt} */
+    this.nonce = nonce;
+    /** @type {string} */
+    this.codeHash = codeHash;
+    /** @type {BigInt} */
+    this.stakingBalance = stakingBalance;
+    /** @type {BigInt} */
+    this.collateralForStorage = collateralForStorage;
+    /** @type {BigInt} */
+    this.accumulatedInterestReturn = accumulatedInterestReturn;
+    /** @type {string} */
+    this.admin = admin;
     return this;
   }
 

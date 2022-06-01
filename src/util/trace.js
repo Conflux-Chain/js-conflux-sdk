@@ -1,5 +1,5 @@
 const { ACTION_TYPES, CALL_STATUS, POCKET_ENUM } = require('../CONST');
-const Contract = require('../contract/Contract');
+const Contract = require('../contract');
 const { ERROR_ABI: abi } = require('../contract/standard');
 const { decodeHexEncodedStr } = require('./index');
 

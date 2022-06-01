@@ -7,7 +7,7 @@ class Drip extends String {
   /**
    * Get `Drip` string from `CFX`
    *
-   * @param value {string|number}
+   * @param {string|number} value
    * @return {Drip}
    *
    * @example
@@ -23,7 +23,7 @@ class Drip extends String {
   /**
    * Get `Drip` string from `GDrip`
    *
-   * @param value {string|number}
+   * @param {string|number} value
    * @return {Drip}
    *
    * @example
@@ -37,7 +37,7 @@ class Drip extends String {
   }
 
   /**
-   * @param value {number|string}
+   * @param {number|string} value
    * @return {Drip}
    *
    * @example

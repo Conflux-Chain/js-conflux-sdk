@@ -11,8 +11,8 @@ function assert(bool, value) {
 }
 
 /**
- * @param buffer {Buffer}
- * @param alignLeft {boolean}
+ * @param {Buffer} buffer
+ * @param {boolean} alignLeft
  * @return {Buffer}
  */
 function alignBuffer(buffer, alignLeft = false) {
@@ -32,6 +32,10 @@ function awaitTimeout(promise, timeout) {
     const timer = setTimeout(() => reject(error), timeout);
     promise.then(resolve).catch(reject).finally(() => clearTimeout(timer));
   });
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 function decodeHexEncodedStr(hexEncodedStr) {
@@ -72,4 +76,5 @@ module.exports = {
   isHexString,
   isBytes,
   validAddressPrefix,
+  sleep,
 };

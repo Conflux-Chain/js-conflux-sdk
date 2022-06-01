@@ -70,7 +70,7 @@ const format = new Proxy(() => undefined, {
 });
 
 /**
- * @param arg {any}
+ * @param {any} arg
  * @return {any} arg
  *
  * @example
@@ -80,7 +80,7 @@ const format = new Proxy(() => undefined, {
 format.any = format(v => v, { name: 'format.any' });
 
 /**
- * @param arg {number|BigInt|string|boolean}
+ * @param {number|BigInt|string|boolean} arg
  * @return {Number}
  *
  * @example
@@ -108,7 +108,7 @@ format.any = format(v => v, { name: 'format.any' });
 format.uInt = format(toNumber, { name: 'format.uInt' }).$validate(v => Number.isSafeInteger(v) && v >= 0, 'uint');
 
 /**
- * @param arg {number|string|BigInt}
+ * @param {number|string|BigInt} arg
  * @return {BigInt}
  *
  * @example
@@ -132,7 +132,7 @@ format.bigInt = format(toBigInt, { name: 'format.bigInt' });
 format.bigIntFromBuffer = format.bigInt.$before(v => (v.length === 0 ? '0x0' : format.hex(v)));
 
 /**
- * @param arg {number|string|BigInt}
+ * @param {number|string|BigInt} arg
  * @return {BigInt}
  *
  * @example
@@ -146,7 +146,7 @@ format.bigUInt = format.bigInt.$validate(v => v >= 0, 'bigUInt');
 /**
  * When encoding QUANTITIES (integers, numbers): encode as hex, prefix with "0x", the most compact representation (slight exception: zero should be represented as "0x0")
  *
- * @param arg {number|string|BigInt}
+ * @param {number|string|BigInt} arg
  * @return {string} Hex string
  *
  * @example
@@ -160,7 +160,7 @@ format.bigUInt = format.bigInt.$validate(v => v >= 0, 'bigUInt');
 format.bigUIntHex = format.bigUInt.$after(v => `0x${v.toString(16)}`);
 
 /**
- * @param arg {number|string|BigInt}
+ * @param {number|string|BigInt} arg
  * @return {Big} Big instance
  *
  * @example
@@ -182,7 +182,7 @@ format.bigUIntHex = format.bigUInt.$after(v => `0x${v.toString(16)}`);
 format.big = format(toBig, { name: 'format.big' });
 
 /**
- * @param arg {string|number|BigInt|Big}
+ * @param {string|number|BigInt|Big} arg
  * @return {Number}
  *
  * @example
@@ -194,7 +194,7 @@ format.big = format(toBig, { name: 'format.big' });
 format.fixed64 = format.big.$after(v => Number(v.div(CONST.MAX_UINT)));
 
 /**
- * @param arg {number|string} - number or label, See [EPOCH_NUMBER](Misc.md#CONST.js/EPOCH_NUMBER)
+ * @param {number|string} arg - number or label, See [EPOCH_NUMBER](Misc.md#CONST.js/EPOCH_NUMBER)
  * @return {string}
  *
  * @example
@@ -218,7 +218,7 @@ format.epochNumberOrUndefined = format.epochNumber.$or(undefined);
 /**
  * When encoding UNFORMATTED DATA (byte arrays, account addresses, hashes, bytecode arrays): encode as hex, prefix with "0x", two hex digits per byte.
  *
- * @param arg {number|BigInt|string|Buffer|boolean|null}
+ * @param {number|BigInt|string|Buffer|boolean|null} arg
  * @return {string} Hex string
  *
  * @example
@@ -262,9 +262,9 @@ function toAddress(address, networkId, verbose = false) {
 /**
  * Checks if a given string is a valid address.
  *
- * @param address {string|Buffer}
- * @param networkId {integer}
- * @param [verbose=false] {boolean} if you want a address with type info, pass true
+ * @param {string|Buffer} address
+ * @param {number} networkId
+ * @param {boolean} [verbose=false] - if you want a address with type info, pass true
  * @return {string} Hex string
  *
  * @example
@@ -284,7 +284,7 @@ format.netAddress = (networkId, verbose = false) => format(address => toAddress(
  * Checks if a given string is a valid hex address.
  * It will also check the checksum, if the address has upper and lowercase letters.
  *
- * @param address {string|Buffer}
+ * @param {string|Buffer} address
  * @return {string} Hex string
  *
  * @example
@@ -319,7 +319,7 @@ format.hexAddress = format.hex40.$before(address => {
  * Will convert an upper or lowercase address to a checksum address.
  *
  * @deprecated Please use address.ethChecksumAddress
- * @param arg {string|Buffer}
+ * @param {string|Buffer} arg
  * @return {string} Checksum address hex string
  *
  * @example
@@ -332,10 +332,11 @@ format.hexAddress = format.hex40.$before(address => {
  */
 format.checksumAddress = format.hex40.$after(sign.checksumAddress);
 
+/** @type {function(string): string} */
 format.hex64 = format.hex.$validate(v => v.length === 2 + 64, 'hex64');
 
 /**
- * @param arg {string|Buffer}
+ * @param {string|Buffer} arg
  * @return {string} Hex string
  *
  * @example
@@ -344,10 +345,10 @@ format.hex64 = format.hex.$validate(v => v.length === 2 + 64, 'hex64');
  * > format.privateKey('0x0123456789012345678901234567890123456789')
  Error("not match hex64")
  */
-format.blockHash = format.hex64; // alias
+format.blockHash = v => format.hex64(v); // alias
 
 /**
- * @param arg {string|Buffer}
+ * @param {string|Buffer} arg
  * @return {string} Hex string
  *
  * @example
@@ -356,10 +357,10 @@ format.blockHash = format.hex64; // alias
  * > format.privateKey('0x0123456789012345678901234567890123456789')
  Error("not match hex64")
  */
-format.transactionHash = format.hex64; // alias
+format.transactionHash = v => format.hex64(v); // alias
 
 /**
- * @param arg {string|Buffer}
+ * @param {string|Buffer} arg
  * @return {string} Hex string
  *
  * @example
@@ -368,10 +369,10 @@ format.transactionHash = format.hex64; // alias
  * > format.privateKey('0x0123456789012345678901234567890123456789')
  Error("not match hex64")
  */
-format.privateKey = format.hex64; // alias
+format.privateKey = v => format.hex64(v); // alias
 
 /**
- * @param arg {string|Buffer}
+ * @param {string|Buffer} arg
  * @return {string} Hex string
  *
  * @example
@@ -383,7 +384,7 @@ format.privateKey = format.hex64; // alias
 format.publicKey = format.hex.$validate(v => v.length === 2 + 128, 'publicKey');
 
 /**
- * @param arg {number|string|BigInt|Buffer|boolean|null}
+ * @param {number|string|BigInt|Buffer|boolean|null} arg
  * @return {Buffer}
  *
  * @example
@@ -405,7 +406,7 @@ format.hexBuffer = format.hex.$after(v => Buffer.from(v.substr(2), 'hex'));
 /**
  * It can only be in hex format If want to pass a string
  *
- * @param arg {string|Buffer|array}
+ * @param {string|Buffer|array} arg
  * @return {Buffer}
  *
  * @example
@@ -423,7 +424,7 @@ format.bytes = format(v => {
 }, { name: 'format.bytes' });
 
 /**
- * @param arg {boolean}
+ * @param {boolean} arg
  * @return {boolean}
  *
  * @example
@@ -437,7 +438,7 @@ format.boolean = format.any.$validate(lodash.isBoolean, 'boolean');
 /**
  * Compute the keccak256 cryptographic hash of a value, returned as a hex string.
  *
- * @param arg {string|Buffer}
+ * @param {string|Buffer} arg
  * @return {string}
  *
  * @example

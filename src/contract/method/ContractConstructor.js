@@ -24,7 +24,7 @@ class ContractConstructor extends ContractMethod {
   /**
    * Encode contract deploy data
    *
-   * @param args {array}
+   * @param {array} args
    * @return {string}
    */
   encodeData(args) {
@@ -34,7 +34,7 @@ class ContractConstructor extends ContractMethod {
   /**
    * Reverse try to decode word by word
    *
-   * @param hex {string} - Hex string
+   * @param {string} hex - Hex string
    * @return {array} NamedTuple
    */
   decodeData(hex) {

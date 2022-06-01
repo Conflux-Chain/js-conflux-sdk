@@ -10,7 +10,7 @@ class AdvancedRPCUtilities {
   /**
    * First try to use txpool_nextNonce method, if failed use cfx_getNextNonce
    *
-   * @param {string} The address to get nonce
+   * @param {string} address - The address to get nonce
    * @returns {Promise<BigInt>}
    */
   async getNextUsableNonce(address) {
@@ -50,7 +50,7 @@ class AdvancedRPCUtilities {
    * A advance method to check whether user's balance is enough to pay one transaction
    *
    * @param {Object} options Transaction info
-   * @param {EpochNumber} [epochNumber] Optional epoch number
+   * @param {string|number} [epochNumber] Optional epoch number
    * @returns {Promise<Object>} A object indicate whether user's balance is capable to pay the transaction.
    * - `BigInt` gasUsed: The gas used.
    * - `BigInt` gasLimit: The gas limit.

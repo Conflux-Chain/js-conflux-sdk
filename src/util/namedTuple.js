@@ -1,8 +1,9 @@
 /**
  * Make a NamedTuple Class
- *
- * @param names {string[]}
- * @return {NamedTuple}
+ * @typedef {Object} NamedTuple
+ * @template NamedTuple
+ * @param {string[]} names
+ * @returns {NamedTuple}
  *
  * @example
  * > Student = namedTuple('name', 'age')

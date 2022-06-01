@@ -11,7 +11,7 @@ format.posBlockNumber = format.bigUIntHex
 /**
  * @typedef {Object} PivotDecision
  * @property {number} height
- * @property {hex} blockHash
+ * @property {string} blockHash
  */
 format.decision = format({
   height: format.uInt,
@@ -46,13 +46,13 @@ format.posVotePowerState = format({
 
 /**
  * @typedef {Object} PoSAccountStatus
- * @typedef {number} availableVotes
- * @typedef {number} forfeited
- * @typedef {VotePowerState[]} inQueue
- * @typedef {VotePowerState[]} outQueue
- * @typedef {number} locked
- * @typedef {number} unlocked
- * @typedef {number|null} forceRetired
+ * @property {number} availableVotes
+ * @property {number} forfeited
+ * @property {VotePowerState[]} inQueue
+ * @property {VotePowerState[]} outQueue
+ * @property {number} locked
+ * @property {number} unlocked
+ * @property {number|null} forceRetired
  */
 
 /**
@@ -103,7 +103,7 @@ format.posTransaction = format({
 /**
  * @typedef {Object} Signature
  * @property {number} votes
- * @property {hash} account
+ * @property {string} account
  */
 
 /**
@@ -129,7 +129,7 @@ format.posBlock = format({
 /**
  * @typedef {Object} CommitteeNode
  * @property {number} votingPower
- * @property {hash} address
+ * @property {string} address
  */
 format.committeeNode = format({
   votingPower: format.uInt,
@@ -137,7 +137,7 @@ format.committeeNode = format({
 
 /**
  * @typedef {Object} Election
- * @property {bool} isFinalized
+ * @property {boolean} isFinalized
  * @property {number} startBlockNumber
  * @property {CommitteeNode[]} topElectingNodes
  */
@@ -172,13 +172,13 @@ format.committee = format({
 /**
  * @typedef {Object} PoSReward
  * @property {number} reward
- * @property {hash} posAddress
+ * @property {string} posAddress
  * @property {string} powAddress
  */
 
 /**
  * @typedef {Object} PoSEpochRewards
- * @property {hash} powEpochHash
+ * @property {string} powEpochHash
  * @property {PoSReward[]} accountRewards
  */
 format.rewardsByEpoch = format({
@@ -195,8 +195,8 @@ format.rewardsByEpoch = format({
 class PoS extends RPCMethodFactory {
   /**
    * Create PoS instance
-   * @param {object} conflux The Conflux object
-   * @return {object} The PoS instance
+   * @param {import('../Conflux').Conflux} conflux The Conflux object
+   * @return {PoS} The PoS instance
    */
   constructor(conflux) {
     super(conflux, PoS.methods());
@@ -262,7 +262,7 @@ class PoS extends RPCMethodFactory {
        * @instance
        * @async
        * @name getBlockByHash
-       * @param {Hash} hash The hash of PoS block
+       * @param {string} hash The hash of PoS block
        * @return {Promise<PoSBlock>}
        * @example
        * await conflux.pos.getBlockByHash('0x97625d04ece6fe322ae38010ac877447927b4d5963af7eaea7db9befb615e510');
@@ -360,7 +360,7 @@ class PoS extends RPCMethodFactory {
        * @instance
        * @async
        * @name getTransactionByNumber
-       * @param {number|hex} txNumber The number of transaction
+       * @param {number|string} txNumber The number of transaction
        * @return {Promise<PoSTransaction>}
        * @example
        * await conflux.pos.getTransactionByNumber(8235);
@@ -386,8 +386,9 @@ class PoS extends RPCMethodFactory {
       /**
        * @instance
        * @async
+       * @method getRewardsByEpoch
        * @name getRewardsByEpoch
-       * @param {number|hex} epoch A PoS epoch number
+       * @param {number|string} epoch A PoS epoch number
        * @return {Promise<PoSEpochRewards>}
        * @example
        * await conflux.pos.getRewardsByEpoch(138);

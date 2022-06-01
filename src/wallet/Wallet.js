@@ -7,11 +7,19 @@ const PrivateKeyAccount = require('./PrivateKeyAccount');
  * Wallet to manager accounts.
  */
 class Wallet extends Map {
+  /**
+   * @param {number} networkId
+   * @return {Wallet}
+   */
   constructor(networkId) {
     super();
     this.networkId = networkId;
   }
 
+  /**
+   * Set network id
+   * @param {number} networkId
+   */
   setNetworkId(networkId) {
     this.networkId = networkId;
   }
@@ -19,7 +27,7 @@ class Wallet extends Map {
   /**
    * Check if address exist
    *
-   * @param address {string}
+   * @param {string} address
    * @return {boolean}
    */
   has(address) {
@@ -34,7 +42,7 @@ class Wallet extends Map {
   /**
    * Drop one account by address
    *
-   * @param address {string}
+   * @param {string} address
    * @return {boolean}
    */
   delete(address) {
@@ -54,9 +62,9 @@ class Wallet extends Map {
   }
 
   /**
-   * @param address {string} - Key of account, usually is `address`
-   * @param account {Account} - Account instance
-   * @return {Wallet}
+   * @param {any} address - Key of account, usually is `address`
+   * @param {any} account - Account instance
+   * @return {any}
    */
   set(address, account) {
     address = format.address(address, this.networkId);
@@ -67,7 +75,7 @@ class Wallet extends Map {
   }
 
   /**
-   * @param address {string}
+   * @param {string} address
    * @return {Account}
    */
   get(address) {
@@ -79,7 +87,7 @@ class Wallet extends Map {
   }
 
   /**
-   * @param privateKey {string|Buffer} - Private key of account
+   * @param {string|Buffer} privateKey - Private key of account
    * @return {PrivateKeyAccount}
    */
   addPrivateKey(privateKey) {
@@ -92,7 +100,7 @@ class Wallet extends Map {
   }
 
   /**
-   * @param [entropy] {string|Buffer} - Entropy of random account
+   * @param {string|Buffer} [entropy] - Entropy of random account
    * @return {PrivateKeyAccount}
    */
   addRandom(entropy) {
@@ -102,8 +110,8 @@ class Wallet extends Map {
   }
 
   /**
-   * @param keystore {object} - Keystore version 3 object.
-   * @param password {string|Buffer} - Password for keystore to decrypt with.
+   * @param {object} keystore - Keystore version 3 object.
+   * @param {string|Buffer} password - Password for keystore to decrypt with.
    * @return {PrivateKeyAccount}
    */
   addKeystore(keystore, password) {

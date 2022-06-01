@@ -1,6 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const jsdoc2md = require('jsdoc-to-markdown');
 const fs = require('fs');
+const { replaceTSImport } = require('./replaceTSimport');
 
 const DOC_FOLDER = './docs/api/';
 
@@ -13,7 +14,12 @@ const files = [{
 }];
 
 async function renderFile(fileMeta) {
-  const result = await jsdoc2md.render({ files: fileMeta.source });
+  let source = fs.readFileSync(fileMeta.source, 'utf8');
+  source = replaceTSImport({ source });
+  const result = await jsdoc2md.render({
+    // files: fileMeta.source,
+    source,
+  });
   fs.writeFileSync(`${DOC_FOLDER}${fileMeta.name}`, result);
 }
 

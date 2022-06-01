@@ -7,8 +7,8 @@ class PrivateKeyAccount extends Account {
   /**
    * Create a new PrivateKeyAccount with random privateKey.
    *
-   * @param entropy {string|Buffer} - Entropy of random account, if pass undefined will random generate a buffer
-   * @param networkId {Integer} - network id of account
+   * @param {string|Buffer} entropy - Entropy of random account, if pass undefined will random generate a buffer
+   * @param {number} networkId - network id of account
    * @return {PrivateKeyAccount}
    *
    * @example
@@ -46,9 +46,9 @@ class PrivateKeyAccount extends Account {
   /**
    * Decrypt account encrypt info.
    *
-   * @param keystore {object} - Keystore version 3 object.
-   * @param password {string|Buffer} - Password for keystore to decrypt with.
-   * @param networkId {Integer} - Network id of account
+   * @param {object} keystore - Keystore version 3 object.
+   * @param {string|Buffer} password - Password for keystore to decrypt with.
+   * @param {number} networkId - Network id of account
    * @return {PrivateKeyAccount}
    *
    * @example
@@ -85,8 +85,8 @@ class PrivateKeyAccount extends Account {
   /**
    * Create a account by privateKey.
    *
-   * @param privateKey {string|Buffer} - Private key of account
-   * @param networkId {Integer} - Network id of account
+   * @param {string|Buffer} privateKey - Private key of account
+   * @param {number} networkId - Network id of account
    * @return {PrivateKeyAccount}
    *
    * @example
@@ -111,7 +111,7 @@ class PrivateKeyAccount extends Account {
   /**
    * Encrypt account privateKey to object.
    *
-   * @param password {string}
+   * @param {string} password
    * @return {object} - keystoreV3 object
    *
    * @example
@@ -126,8 +126,8 @@ class PrivateKeyAccount extends Account {
   /**
    * Sign a transaction.
    *
-   * @param options {object} - See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**)
-   * @return {Promise<Transaction>}
+   * @param {object} options - See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**)
+   * @return {Promise<import('../Transaction')>}
    *
    * @example
    * > account = new PrivateKeyAccount('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')
@@ -172,8 +172,8 @@ class PrivateKeyAccount extends Account {
   /**
    * Sign a string.
    *
-   * @param options {string}
-   * @return {Promise<Message>}
+   * @param {string} options
+   * @return {Promise<import('../Message')>}
    *
    * @example
    * > account = new PrivateKeyAccount('0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef')

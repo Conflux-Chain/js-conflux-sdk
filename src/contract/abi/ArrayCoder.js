@@ -38,7 +38,7 @@ class ArrayCoder extends BaseCoder {
   }
 
   /**
-   * @param array {array}
+   * @param {array} array
    * @return {Buffer}
    */
   encode(array) {
@@ -67,7 +67,7 @@ class ArrayCoder extends BaseCoder {
   }
 
   /**
-   * @param stream {HexStream}
+   * @param {import('../../util/HexStream')} stream
    * @return {array}
    */
   decode(stream) {

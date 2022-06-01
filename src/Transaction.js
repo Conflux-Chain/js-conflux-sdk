@@ -1,13 +1,18 @@
 const { keccak256, ecdsaSign, ecdsaRecover, privateKeyToAddress, publicKeyToAddress } = require('./util/sign');
 const rlp = require('./util/rlp');
 const format = require('./util/format');
+const cfxFormat = require('./rpc/types/formatter');
+
+/**
+ * @typedef {import('./rpc/types/formatter').CallRequest} TransactionMeta
+ */
 
 class Transaction {
   /**
    * Decode rlp encoded raw transaction hex string
    *
    * @param {string} raw - rlp encoded transaction hex string
-   * @returns {object} A Transaction instance
+   * @returns {Transaction} A Transaction instance
    */
   static decodeRaw(raw) {
     const [
@@ -42,20 +47,20 @@ class Transaction {
   /**
    * Create a transaction.
    *
-   * @param options {object}
-   * @param [options.from] {string} - The sender address.
-   * @param [options.nonce] {string|number} - This allows to overwrite your own pending transactions that use the same nonce.
-   * @param [options.gasPrice] {string|number} - The price of gas for this transaction in drip.
-   * @param [options.gas] {string|number} - The amount of gas to use for the transaction (unused gas is refunded).
-   * @param [options.to] {string} - The destination address of the message, left undefined for a contract-creation transaction.
-   * @param [options.value] {string|number} - The value transferred for the transaction in drip, also the endowment if it’s a contract-creation transaction.
-   * @param [options.storageLimit] {string|number} - The storage limit specified by the sender.
-   * @param [options.epochHeight] {string|number} - The epoch proposed by the sender. Note that this is NOT the epoch of the block containing this transaction.
-   * @param [options.chainId] {string|number} - The chain ID specified by the sender.
-   * @param [options.data] {string|Buffer} - Either a ABI byte string containing the data of the function call on a contract, or in the case of a contract-creation transaction the initialisation code.
-   * @param [options.r] {string|Buffer} - ECDSA signature r
-   * @param [options.s] {string|Buffer} - ECDSA signature s
-   * @param [options.v] {number} - ECDSA recovery id
+   * @param {object} options
+   * @param {string} [options.from] - The sender address.
+   * @param {string|number} [options.nonce] - This allows to overwrite your own pending transactions that use the same nonce.
+   * @param {string|number} [options.gasPrice] - The price of gas for this transaction in drip.
+   * @param {string|number} [options.gas]- The amount of gas to use for the transaction (unused gas is refunded).
+   * @param {string} [options.to] - The destination address of the message, left undefined for a contract-creation transaction.
+   * @param {string|number} [options.value] - The value transferred for the transaction in drip, also the endowment if it’s a contract-creation transaction.
+   * @param {string|number} [options.storageLimit] - The storage limit specified by the sender.
+   * @param {string|number} [options.epochHeight] - The epoch proposed by the sender. Note that this is NOT the epoch of the block containing this transaction.
+   * @param {string|number} [options.chainId] - The chain ID specified by the sender.
+   * @param {string|Buffer} [options.data]- Either a ABI byte string containing the data of the function call on a contract, or in the case of a contract-creation transaction the initialisation code.
+   * @param {string|Buffer} [options.r] - ECDSA signature r
+   * @param {string|Buffer} [options.s] - ECDSA signature s
+   * @param {number} [options.v] - ECDSA recovery id
    * @return {Transaction}
    */
   constructor({ from, nonce, gasPrice, gas, to, value, storageLimit, epochHeight, chainId, data, v, r, s }) {
@@ -92,8 +97,8 @@ class Transaction {
   /**
    * Sign transaction and set 'r','s','v'.
    *
-   * @param privateKey {string} - Private key hex string.
-   * @param networkId {number} - fullnode's network id.
+   * @param {string} privateKey - Private key hex string.
+   * @param {number} networkId - fullnode's network id.
    * @return {Transaction}
    */
   sign(privateKey, networkId) {
@@ -126,11 +131,11 @@ class Transaction {
   /**
    * Encode rlp.
    *
-   * @param [includeSignature=false] {boolean} - Whether or not to include the signature.
+   * @param {boolean} [includeSignature=false] - Whether or not to include the signature.
    * @return {Buffer}
    */
   encode(includeSignature) {
-    const { nonce, gasPrice, gas, to, value, storageLimit, epochHeight, chainId, data, v, r, s } = format.signTx(this);
+    const { nonce, gasPrice, gas, to, value, storageLimit, epochHeight, chainId, data, v, r, s } = cfxFormat.signTx(this);
 
     const raw = includeSignature
       ? [[nonce, gasPrice, gas, to, value, storageLimit, epochHeight, chainId, data], v, r, s]

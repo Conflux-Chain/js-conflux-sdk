@@ -1,6 +1,16 @@
 const RPCMethodFactory = require('./index');
 const format = require('../util/format');
 
+/**
+ * @typedef {Object} ActionCall
+ * @prop {string} space
+ * @prop {string} from
+ * @prop {string} to
+ * @prop {BigInt} value
+ * @prop {string} callType
+ * @prop {string} input
+ * @prop {BigInt} gas
+ */
 format.actionCall = format({
   space: format.any,
   from: format.any,
@@ -11,12 +21,27 @@ format.actionCall = format({
   gas: format.bigUInt,
 });
 
+/**
+ * @typedef {Object} ActionCallResult
+ * @prop {string} space
+ * @prop {string} returnData
+ * @prop {BigInt} gasLeft
+ */
 format.actionCallResult = format({
   outcome: format.any,
   returnData: format.any,
   gasLeft: format.bigUInt,
 });
 
+/**
+ * @typedef {Object} ActionCreate
+ * @prop {string} space
+ * @prop {string} from
+ * @prop {string} init
+ * @prop {BigInt} value
+ * @prop {BigInt} gas
+ * @prop {string} createType
+ */
 format.actionCreate = format({
   space: format.any,
   from: format.any,
@@ -26,6 +51,13 @@ format.actionCreate = format({
   createType: format.any,
 });
 
+/**
+ * @typedef {Object} ActionCreateResult
+ * @prop {string} outcome
+ * @prop {string} returnData
+ * @prop {BigInt} gasLeft
+ * @prop {string} addr
+ */
 format.actionCreateResult = format({
   outcome: format.any,
   addr: format.any,
@@ -33,6 +65,16 @@ format.actionCreateResult = format({
   returnData: format.any,
 });
 
+/**
+ * @typedef {Object} ActionInternal
+ * @prop {string} from
+ * @prop {string} to
+ * @prop {string} fromPocket
+ * @prop {string} toPocket
+ * @prop {BigInt} value
+ * @prop {string} fromSpace
+ * @prop {string} toSpace
+ */
 format.actionInternalTrace = format({
   from: format.any,
   fromPocket: format.any,
@@ -43,6 +85,21 @@ format.actionInternalTrace = format({
   value: format.bigUInt,
 });
 
+/**
+ * @typedef {ActionCall|ActionCallResult|ActionCreate|ActionCreateResult|ActionInternal} Action
+ */
+
+/**
+ * @typedef {Object} Trace
+ * @prop {Action} action
+ * @prop {number} epochNumber
+ * @prop {string} epochHash
+ * @prop {string} blockHash
+ * @prop {string} transactionHash
+ * @prop {string} transactionPosition
+ * @prop {string} type
+ * @prop {boolean} valid
+ */
 format.action = format({
   action: {
     from: format.any,
@@ -86,6 +143,17 @@ format.blockTraces = format({
 // trace array
 format.traces = format([format.action]).$or(null);
 
+/**
+ * @typedef {object} TraceFilter
+ * @property {number} [fromEpoch]
+ * @property {number} [toEpoch]
+ * @property {string|string[]} [fromAddress]
+ * @property {string|string[]} [toAddress]
+ * @property {string[]} [blockHashes]
+ * @property {number} [after]
+ * @property {number} [count]
+ * @property {string[]|string} [actionTypes]
+ */
 format.traceFilter = format({
   fromEpoch: format.epochNumber.$or(null),
   toEpoch: format.epochNumber.$or(null),

@@ -37,7 +37,7 @@ class BytesCoder extends BaseCoder {
   }
 
   /**
-   * @param value {ArrayLike|string}
+   * @param {any[]|string} value
    * @return {Buffer}
    */
   encode(value) {
@@ -65,7 +65,7 @@ class BytesCoder extends BaseCoder {
   }
 
   /**
-   * @param stream {HexStream}
+   * @param {import('../../util/HexStream')} stream
    * @return {Buffer}
    */
   decode(stream) {

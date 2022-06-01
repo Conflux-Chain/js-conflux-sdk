@@ -1,12 +1,13 @@
 const { keccak256, ecdsaSign, ecdsaRecover, publicKeyToAddress } = require('./util/sign');
 const format = require('./util/format');
 
+/** Class provide message sign utilities. */
 class Message {
   /**
    * Signs the hash with the privateKey.
    *
-   * @param privateKey {string|Buffer}
-   * @param messageHash {string|Buffer}
+   * @param {string|Buffer} privateKey - Private key used to sign message
+   * @param {string|Buffer} messageHash - The message hash need to be signed
    * @return {string} The signature as hex string.
    *
    * @example
@@ -25,8 +26,8 @@ class Message {
   /**
    * Recovers the signers publicKey from the signature.
    *
-   * @param signature {string|Buffer}
-   * @param messageHash {string|Buffer}
+   * @param {string|Buffer} signature
+   * @param {string|Buffer} messageHash
    * @return {string} The publicKey as hex string.
    *
    * @example
@@ -46,7 +47,7 @@ class Message {
   }
 
   /**
-   * @param message {string}
+   * @param {string} message
    * @return {Message}
    *
    * @example
@@ -106,8 +107,8 @@ class Message {
   /**
    * Sign message and set 'r','s','v' and 'hash'.
    *
-   * @param privateKey {string} - Private key hex string.
-   * @param networkId {Integer} - Network id of account
+   * @param {string} privateKey - Private key hex string.
+   * @param {number} networkId - Network id of account
    * @return {Message}
    */
   sign(privateKey, networkId) {
@@ -116,6 +117,10 @@ class Message {
     return this;
   }
 
+  /**
+   * Get signatures r
+   * @return {string}
+   */
   get r() {
     try {
       return this.signature.slice(0, 2 + 64);
@@ -124,6 +129,10 @@ class Message {
     }
   }
 
+  /**
+   * Get signatures s
+   * @return {string}
+   */
   get s() {
     try {
       return `0x${this.signature.slice(2 + 64, 2 + 128)}`;
@@ -132,6 +141,10 @@ class Message {
     }
   }
 
+  /**
+   * Get signatures v
+   * @return {number}
+   */
   get v() {
     try {
       return parseInt(this.signature.slice(2 + 128, 2 + 130), 16);

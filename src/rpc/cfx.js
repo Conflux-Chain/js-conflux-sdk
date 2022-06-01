@@ -1,5 +1,6 @@
 const RPCMethodFactory = require('./index');
 const format = require('../util/format');
+const cfxFormat = require('./types/formatter');
 const addressUtil = require('../util/address');
 const CONST = require('../CONST');
 const { assert } = require('../util');
@@ -8,6 +9,9 @@ const PendingTransaction = require('../subscribe/PendingTransaction');
 const Contract = require('../contract');
 const RPCTypes = require('./types/index');
 
+/**
+ * @typedef { import('../Transaction').TransactionMeta } TransactionMeta
+ */
 class CFX extends RPCMethodFactory {
   constructor(conflux) {
     super(conflux);
@@ -32,11 +36,11 @@ class CFX extends RPCMethodFactory {
         requestFormatters: [
           format.epochNumberOrUndefined,
         ],
-        responseFormatter: format.supplyInfo,
+        responseFormatter: cfxFormat.supplyInfo,
       },
       {
         method: 'cfx_getStatus',
-        responseFormatter: format.status,
+        responseFormatter: cfxFormat.status,
       },
       {
         method: 'cfx_gasPrice',
@@ -102,7 +106,7 @@ class CFX extends RPCMethodFactory {
           formatAddressWithNetworkId,
           format.epochNumberOrUndefined,
         ],
-        responseFormatter: format.voteList,
+        responseFormatter: cfxFormat.voteList,
       },
       {
         method: 'cfx_getDepositList',
@@ -110,7 +114,7 @@ class CFX extends RPCMethodFactory {
           formatAddressWithNetworkId,
           format.epochNumberOrUndefined,
         ],
-        responseFormatter: format.depositList,
+        responseFormatter: cfxFormat.depositList,
       },
       {
         method: 'cfx_epochNumber',
@@ -126,7 +130,7 @@ class CFX extends RPCMethodFactory {
           format.epochNumber,
           format.boolean, // TODO default false
         ],
-        responseFormatter: format.block.$or(null),
+        responseFormatter: cfxFormat.block.$or(null),
       },
       {
         method: 'cfx_getBlockByBlockNumber',
@@ -134,7 +138,7 @@ class CFX extends RPCMethodFactory {
           format.bigUIntHex,
           format.boolean,
         ],
-        responseFormatter: format.block.$or(null),
+        responseFormatter: cfxFormat.block.$or(null),
       },
       {
         method: 'cfx_getBlocksByEpoch',
@@ -148,7 +152,7 @@ class CFX extends RPCMethodFactory {
         requestFormatters: [
           format.epochNumber,
         ],
-        responseFormatter: format.rewardInfo,
+        responseFormatter: cfxFormat.rewardInfo,
       },
       {
         method: 'cfx_getBestBlockHash',
@@ -159,7 +163,7 @@ class CFX extends RPCMethodFactory {
           format.blockHash,
           format.boolean,
         ],
-        responseFormatter: format.block.$or(null),
+        responseFormatter: cfxFormat.block.$or(null),
       },
       {
         method: 'cfx_getBlockByHashWithPivotAssumption',
@@ -168,7 +172,7 @@ class CFX extends RPCMethodFactory {
           format.blockHash,
           format.epochNumber,
         ],
-        responseFormatter: format.block,
+        responseFormatter: cfxFormat.block,
       },
       {
         method: 'cfx_getConfirmationRiskByHash',
@@ -182,14 +186,14 @@ class CFX extends RPCMethodFactory {
         requestFormatters: [
           format.transactionHash,
         ],
-        responseFormatter: format.transaction.$or(null),
+        responseFormatter: cfxFormat.transaction.$or(null),
       },
       {
         method: 'cfx_getTransactionReceipt',
         requestFormatters: [
           format.transactionHash,
         ],
-        responseFormatter: format.receipt.$or(null),
+        responseFormatter: cfxFormat.receipt.$or(null),
       },
       {
         method: 'cfx_sendRawTransaction',
@@ -226,14 +230,14 @@ class CFX extends RPCMethodFactory {
           formatAddressWithNetworkId,
           format.epochNumberOrUndefined,
         ],
-        responseFormatter: format.sponsorInfo,
+        responseFormatter: cfxFormat.sponsorInfo,
       },
       {
         method: 'cfx_getAccountPendingInfo',
         requestFormatters: [
           formatAddressWithNetworkId,
         ],
-        responseFormatter: format.accountPendingInfo,
+        responseFormatter: cfxFormat.accountPendingInfo,
       },
       {
         method: 'cfx_getAccountPendingTransactions',
@@ -242,7 +246,7 @@ class CFX extends RPCMethodFactory {
           format.bigUIntHex.$or(undefined),
           format.bigUIntHex.$or(undefined),
         ],
-        responseFormatter: format.accountPendingTransactions,
+        responseFormatter: cfxFormat.accountPendingTransactions,
       },
       {
         method: 'cfx_getCollateralForStorage',
@@ -278,7 +282,7 @@ class CFX extends RPCMethodFactory {
           this.conflux._formatCallTx,
           format.epochNumberOrUndefined,
         ],
-        responseFormatter: format.estimate,
+        responseFormatter: cfxFormat.estimate,
       }, */
       {
         method: 'cfx_getLogs',
@@ -290,18 +294,18 @@ class CFX extends RPCMethodFactory {
         requestFormatters: [
           this.conflux._formatGetLogs.bind(this.conflux),
         ],
-        responseFormatter: format.logs,
+        responseFormatter: cfxFormat.logs,
       },
       {
         method: 'cfx_getEpochReceipts',
         requestFormatters: [
           format.epochNumber,
         ],
-        responseFormatter: format.epochReceipts,
+        responseFormatter: cfxFormat.epochReceipts,
       },
       {
         method: 'cfx_getPoSEconomics',
-        responseFormatter: format.posEconomics,
+        responseFormatter: cfxFormat.posEconomics,
       },
     ];
   }
@@ -337,7 +341,7 @@ class CFX extends RPCMethodFactory {
             format.epochNumber.$or(undefined)(epochNumber),
           ],
         },
-        decoder: format.estimate,
+        decoder: cfxFormat.estimate,
       };
     };
   }
@@ -345,8 +349,8 @@ class CFX extends RPCMethodFactory {
   /**
    * Auto populate transaction info (chainId, epochNumber, nonce, gas, gasPrice, storageLimit)
    *
-   * @param {Object} options transaction info
-   * @returns {Promise<Object>} Polulated complete transaction
+   * @param {TransactionMeta} options transaction info
+   * @returns {Promise<TransactionMeta>} Polulated complete transaction
    */
   async populateTransaction(options) {
     const {
@@ -416,7 +420,7 @@ class CFX extends RPCMethodFactory {
   /**
    * Auto populate transaction and sign it with `from` 's privateKey in wallet
    *
-   * @param {Object} options transaction info
+   * @param {TransactionMeta} options transaction info
    * @returns {Promise<string>} Hex encoded raw transaction
    */
   async populateAndSignTransaction(options) {
@@ -431,9 +435,9 @@ class CFX extends RPCMethodFactory {
    * if from's privateKey is in wallet, directly sign and encode it then send the rawTransaction with `cfx_sendRawTransaction` method
    * if not, sent the transaction with `cfx_sendTransaction` method
    *
-   * @param {Object} options transaction info
+   * @param {TransactionMeta} options transaction info
    * @param {string} [password] Optional password to unlock account in fullnode
-   * @return {Promise<hash>} Transaction hash
+   * @return {Promise<string>} Transaction hash
    */
   async sendTransaction(options, ...extra) {
     if (this.conflux.wallet.has(`${options.from}`)) {
@@ -453,19 +457,19 @@ class CFX extends RPCMethodFactory {
   /**
    * Get epoch's receipt through pivot block's hash
    *
-   * @param {hash} pivotBlockHash Hash of pivot block
+   * @param {string} pivotBlockHash Hash of pivot block
    * @returns {Promise<Array>} All receipts of one epoch
    */
   async getEpochReceiptsByPivotBlockHash(pivotBlockHash) {
     const result = await this.conflux.request({ method: 'cfx_getEpochReceipts', params: [`hash:${pivotBlockHash}`] });
-    return format.epochReceipts(result);
+    return cfxFormat.epochReceipts(result);
   }
 
   /**
    * Virtually call a contract, return the output data.
    *
-   * @param options {object} - See [Transaction](#Transaction.js/Transaction/**constructor**)
-   * @param [epochNumber='latest_state'] {string|number} - See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+   * @param {TransactionMeta} options - See [Transaction](#Transaction.js/Transaction/**constructor**)
+   * @param {string|number} [epochNumber='latest_state'] - See [format.epochNumber](#util/format.js/format/(static)epochNumber)
    * @return {Promise<string>} The output data.
    */
   async call(options, epochNumber) {
@@ -499,9 +503,9 @@ class CFX extends RPCMethodFactory {
   /**
    * Virtually call a contract, return the estimate gas used and storage collateralized.
    *
-   * @param options {object} - See [Transaction](#Transaction.js/Transaction/**constructor**)
-   * @param [epochNumber='latest_state'] {string|number} - See [format.epochNumber](#util/format.js/format/(static)epochNumber)
-   * @return {Promise<object>} A estimate result object:
+   * @param {TransactionMeta} options - See [Transaction](#Transaction.js/Transaction/**constructor**)
+   * @param {string|number} [epochNumber='latest_state'] - See [format.epochNumber](#util/format.js/format/(static)epochNumber)
+   * @return {Promise<import('./types/formatter').EstimateResult>} A estimate result object:
    * - `BigInt` gasUsed: The gas used.
    * - `BigInt` gasLimit: The gas limit.
    * - `BigInt` storageCollateralized: The storage collateralized in Byte.
@@ -515,7 +519,7 @@ class CFX extends RPCMethodFactory {
           format.epochNumber.$or(undefined)(epochNumber),
         ],
       });
-      return format.estimate(result);
+      return cfxFormat.estimate(result);
     } catch (e) {
       throw Contract.decodeError(e);
     }

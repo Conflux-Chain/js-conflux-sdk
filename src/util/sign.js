@@ -8,7 +8,7 @@ const { isHexString } = require('./index');
 /**
  * keccak 256
  *
- * @param buffer {Buffer}
+ * @param {Buffer} buffer
  * @return {Buffer}
  *
  * @example
@@ -26,7 +26,7 @@ function keccak256(buffer) {
  * > Note: not support [RSKIP60](https://github.com/rsksmart/RSKIPs/blob/master/IPs/RSKIP60.md) yet
  *
  * @deprecated Please use address.ethChecksumAddress
- * @param address {string} - Hex string
+ * @param {string} address - Hex string
  * @return {string}
  *
  * @example
@@ -49,7 +49,7 @@ function checksumAddress(address) {
  *
  * > Note: call `crypto.randomBytes`
  *
- * @param size {number}
+ * @param {number} size
  * @return {Buffer}
  *
  * @example
@@ -67,7 +67,7 @@ function randomBuffer(size) {
 /**
  * Gen a random PrivateKey buffer.
  *
- * @param entropy {Buffer}
+ * @param {Buffer} entropy
  * @return {Buffer}
  *
  * @example
@@ -94,7 +94,7 @@ function randomPrivateKey(entropy = randomBuffer(32)) {
 }
 
 /**
- * @param privateKey {Buffer}
+ * @param {Buffer} privateKey
  * @return {Buffer}
  */
 function privateKeyToPublicKey(privateKey) {
@@ -106,7 +106,7 @@ function privateKeyToPublicKey(privateKey) {
  *
  * > Account address hex starts with '0x1'
  *
- * @param publicKey {Buffer|HexString}
+ * @param {Buffer|string} publicKey
  * @return {Buffer}
  *
  * @example
@@ -126,7 +126,7 @@ function publicKeyToAddress(publicKey) {
 /**
  * Get address by private key.
  *
- * @param privateKey {Buffer}
+ * @param {Buffer} privateKey
  * @return {Buffer}
  *
  * @example
@@ -140,8 +140,8 @@ function privateKeyToAddress(privateKey) {
 /**
  * Sign ecdsa
  *
- * @param hash {Buffer}
- * @param privateKey {Buffer}
+ * @param {Buffer} hash
+ * @param {Buffer} privateKey
  * @return {object} ECDSA signature object.
  * - r {Buffer}
  * - s {Buffer}
@@ -169,11 +169,11 @@ function ecdsaSign(hash, privateKey) {
 /**
  * Recover ecdsa
  *
- * @param hash {Buffer}
- * @param options {object}
- * @param options.r {Buffer}
- * @param options.s {Buffer}
- * @param options.v {number}
+ * @param {Buffer} hash
+ * @param {object} options
+ * @param {Buffer} options.r
+ * @param {Buffer} options.s
+ * @param {number} options.v
  * @return {Buffer} publicKey
  *
  * @example
@@ -196,8 +196,8 @@ function uuidV4() {
 
 /**
  *
- * @param privateKey {Buffer}
- * @param password {string|Buffer}
+ * @param {Buffer} privateKey
+ * @param {string|Buffer} password
  * @return {object} - keystoreV3 object
  *
  * @example
@@ -256,8 +256,22 @@ function encrypt(privateKey, password) {
 /**
  * Decrypt account encrypt info.
  *
- * @param keystoreV3 {object}
- * @param password {string|Buffer}
+ * @param {object} keystoreV3
+ * @param {number} keystoreV3.version
+ * @param {object} keystoreV3.crypto
+ * @param {string} keystoreV3.crypto.ciphertext
+ * @param {object} keystoreV3.crypto.cipherparams
+ * @param {string} keystoreV3.crypto.cipherparams.iv
+ * @param {string} keystoreV3.crypto.cipher
+ * @param {string} keystoreV3.crypto.kdf
+ * @param {object} keystoreV3.crypto.kdfparams
+ * @param {number} keystoreV3.crypto.kdfparams.dklen
+ * @param {string} keystoreV3.crypto.kdfparams.salt
+ * @param {number} keystoreV3.crypto.kdfparams.n
+ * @param {number} keystoreV3.crypto.kdfparams.r
+ * @param {number} keystoreV3.crypto.kdfparams.p
+ * @param {string} keystoreV3.crypto.mac
+ * @param {string|Buffer} password
  * @return {Buffer} Buffer of private key
  *
  * @example

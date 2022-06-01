@@ -12,7 +12,6 @@ const sign = require('./util/sign');
 const format = require('./util/format');
 const PrivateKeyAccount = require('./wallet/PrivateKeyAccount');
 const address = require('./util/address');
-const providerWrapper = require('./util/providerWrapper');
 
 module.exports = {
   CONST,
@@ -29,5 +28,4 @@ module.exports = {
   format,
   PrivateKeyAccount,
   address,
-  providerWrapper,
 };
