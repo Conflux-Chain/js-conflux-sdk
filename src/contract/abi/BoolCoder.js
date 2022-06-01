@@ -17,7 +17,7 @@ class BoolCoder extends IntegerCoder {
   }
 
   /**
-   * @param {*} value
+   * @param {boolean} value
    * @return {Buffer}
    */
   encode(value) {
