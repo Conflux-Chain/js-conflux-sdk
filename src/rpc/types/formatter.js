@@ -10,13 +10,13 @@ const cfxFormat = new Proxy(() => undefined, {
 
 /**
  * @typedef {Object} LogFilter
- * @property {number} [limit]
+ * @property {number} [limit] Return the last limit logs
  * @property {number} [offset]
- * @property {string|number} [fromEpoch]
- * @property {string|number} [toEpoch]
- * @property {string[]} [blockHashes]
- * @property {string[]|string} [address]
- * @property {string[]} [topics]
+ * @property {string|number} [fromEpoch] Search will be applied from this epoch number.
+ * @property {string|number} [toEpoch] Search will be applied up until (and including) this epoch number.
+ * @property {string[]} [blockHashes] Array of up to 128 block hashes that the search will be applied to. This will override from/to epoch fields if it's not null
+ * @property {string[]|string} [address] Search contract addresses. If null, match all. If specified, log must be produced by one of these addresses.
+ * @property {string[]} [topics] Search topics. Logs can have 4 topics: the function signature and up to 3 indexed event arguments. The elements of topics match the corresponding log topics. Example: ["0xA", null, ["0xB", "0xC"], null] matches logs with "0xA" as the 1st topic AND ("0xB" OR "0xC") as the 3rd topic. If null, match all.
  */
 cfxFormat.getLogs = format({
   limit: format.bigUIntHex,
@@ -350,12 +350,23 @@ cfxFormat.rewardInfo = format([
   },
 ]);
 
+/**
+ * @typedef {Object} Vote
+ * @prop {BigInt} amount
+ * @prop {number} unlockBlockNumber
+ */
 cfxFormat.voteList = format([
   {
     amount: format.bigUInt,
   },
 ]);
 
+/**
+ * @typedef {Object} Deposit
+ * @prop {BigInt} accumulatedInterestRate
+ * @prop {BigInt} amount
+ * @prop {number} depositTime
+ */
 cfxFormat.depositList = format([
   {
     amount: format.bigUInt,
@@ -380,6 +391,9 @@ cfxFormat.revert = format({
   name: 'format.revert',
 });
 
+/**
+ * @typedef {string|number} epochNumber
+ */
 cfxFormat.epoch = format({
   epochNumber: format.uInt,
 }, {
@@ -387,14 +401,26 @@ cfxFormat.epoch = format({
 });
 
 // --------------------------- accountPendingInfo & transactions --------------
+/**
+ * @typedef {Object} AccountPendingInfo
+ * @prop {number} localNonce
+ * @prop {number} pendingCount
+ * @prop {number} pendingNonce
+ */
 cfxFormat.accountPendingInfo = format({
-  localNonce: format.bigUInt,
-  pendingCount: format.bigUInt,
-  pendingNonce: format.bigUInt,
+  localNonce: format.uInt,
+  pendingCount: format.uInt,
+  pendingNonce: format.uInt,
 }, {
   name: 'format.accountPendingInfo',
 });
 
+/**
+ * @typedef {Object} AccountPendingTransactions
+ * @prop {number} pendingCount
+ * @prop {Transaction[]} pendingTransactions
+ * @prop {string|object} firstTxstatus
+ */
 cfxFormat.accountPendingTransactions = format({
   pendingCount: format.bigUInt,
   pendingTransactions: [cfxFormat.transaction],

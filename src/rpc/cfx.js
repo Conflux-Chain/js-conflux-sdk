@@ -9,6 +9,9 @@ const PendingTransaction = require('../subscribe/PendingTransaction');
 const Contract = require('../contract');
 const RPCTypes = require('./types/index');
 
+/**
+ * @typedef { import('../Transaction').TransactionMeta } TransactionMeta
+ */
 class CFX extends RPCMethodFactory {
   constructor(conflux) {
     super(conflux);
@@ -346,8 +349,8 @@ class CFX extends RPCMethodFactory {
   /**
    * Auto populate transaction info (chainId, epochNumber, nonce, gas, gasPrice, storageLimit)
    *
-   * @param {Object} options transaction info
-   * @returns {Promise<Object>} Polulated complete transaction
+   * @param {TransactionMeta} options transaction info
+   * @returns {Promise<TransactionMeta>} Polulated complete transaction
    */
   async populateTransaction(options) {
     const {
@@ -417,7 +420,7 @@ class CFX extends RPCMethodFactory {
   /**
    * Auto populate transaction and sign it with `from` 's privateKey in wallet
    *
-   * @param {Object} options transaction info
+   * @param {TransactionMeta} options transaction info
    * @returns {Promise<string>} Hex encoded raw transaction
    */
   async populateAndSignTransaction(options) {
@@ -432,7 +435,7 @@ class CFX extends RPCMethodFactory {
    * if from's privateKey is in wallet, directly sign and encode it then send the rawTransaction with `cfx_sendRawTransaction` method
    * if not, sent the transaction with `cfx_sendTransaction` method
    *
-   * @param {Object} options transaction info
+   * @param {TransactionMeta} options transaction info
    * @param {string} [password] Optional password to unlock account in fullnode
    * @return {Promise<string>} Transaction hash
    */
@@ -465,7 +468,7 @@ class CFX extends RPCMethodFactory {
   /**
    * Virtually call a contract, return the output data.
    *
-   * @param {object} options - See [Transaction](#Transaction.js/Transaction/**constructor**)
+   * @param {TransactionMeta} options - See [Transaction](#Transaction.js/Transaction/**constructor**)
    * @param {string|number} [epochNumber='latest_state'] - See [format.epochNumber](#util/format.js/format/(static)epochNumber)
    * @return {Promise<string>} The output data.
    */
@@ -500,7 +503,7 @@ class CFX extends RPCMethodFactory {
   /**
    * Virtually call a contract, return the estimate gas used and storage collateralized.
    *
-   * @param {object} options - See [Transaction](#Transaction.js/Transaction/**constructor**)
+   * @param {TransactionMeta} options - See [Transaction](#Transaction.js/Transaction/**constructor**)
    * @param {string|number} [epochNumber='latest_state'] - See [format.epochNumber](#util/format.js/format/(static)epochNumber)
    * @return {Promise<import('./types/formatter').EstimateResult>} A estimate result object:
    * - `BigInt` gasUsed: The gas used.

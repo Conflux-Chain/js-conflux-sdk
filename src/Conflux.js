@@ -485,7 +485,7 @@ class Conflux {
    *
    * @param {string} address - Address to contract.
    * @param {string|number} [epochNumber='latest_state'] - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
-   * @return {Promise<object[]>} Vote list
+   * @return {Promise<import('./rpc/types/formatter').Vote[]>} Vote list
    * - `array`:
    *   - amount `BigInt`: This is the number of tokens should be locked before
    *   - unlockBlockNumber `number`: This is the timestamp when the vote right will be invalid, measured in, the number of past blocks.
@@ -498,7 +498,7 @@ class Conflux {
    * Returns deposit list of the given account.
    * @param {string} address - Address to contract.
    * @param {string|number} [epochNumber='latest_state'] - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
-   * @return {Promise<object[]>} Deposit list
+   * @return {Promise<import('./rpc/types/formatter').Deposit[]>} Deposit list
    * - `array`:
    *   - amount `BigInt`: the number of tokens deposited
    *   - accumulatedInterestRate: `BigInt`: the accumulated interest rate at the time of the deposit
@@ -828,11 +828,15 @@ class Conflux {
   }
 
   /**
+  * @typedef { import('../Transaction').TransactionMeta } TransactionMeta
+  */
+
+  /**
    * Sign and send transaction
    * if `from` field in `conflux.wallet`, sign by local account and send raw transaction,
    * else call `cfx_sendTransaction` and sign by remote wallet
    *
-   * @param {object} options - See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**)
+   * @param {TransactionMeta} options - See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**)
    * @param {string} [password] - Password for remote node.
    * @return {Promise<import('./subscribe/PendingTransaction')>} The PendingTransaction object.
    *
@@ -922,7 +926,7 @@ class Conflux {
     "transactionHash": "0xb2ba6cca35f0af99a9601d09ee19c1949d8130312550e3f5413c520c6d828f88"
    }
    */
-  async sendTransaction(options, ...extra) {
+  async sendTransaction(options, ...password) {
     if (this.wallet.has(`${options.from}`)) {
       const rawTx = await this.cfx.populateAndSignTransaction(options);
       return this.sendRawTransaction(rawTx);
@@ -932,7 +936,7 @@ class Conflux {
       method: 'cfx_sendTransaction',
       params: [
         this._formatCallTx(options),
-        ...extra,
+        ...password,
       ],
     });
   }
@@ -1021,7 +1025,7 @@ class Conflux {
    * Return pending info of an account
    *
    * @param {string} address - Address to account
-   * @returns {Promise<object>} An account pending info object.
+   * @returns {Promise<import('./rpc/types/formatter').AccountPendingInfo>} An account pending info object.
    * - localNonce `BigInt`: then next nonce can use in the transaction pool
    * - nextPendingTx `string`: the hash of next pending transaction
    * - pendingCount `BigInt`: the count of pending transactions
@@ -1036,7 +1040,7 @@ class Conflux {
    * Return pending transactions of one account
    *
    * @param {string} address - base32 address
-   * @returns {Promise<object>} An account's pending transactions and info.
+   * @returns {Promise<import('./rpc/types/formatter').AccountPendingTransactions>} An account's pending transactions and info.
    * - pendingTransactions `Array`: pending transactions
    * - firstTxStatus `Object`: the status of first pending tx
    * - pendingCount `BigInt`: the count of pending transactions
@@ -1063,7 +1067,7 @@ class Conflux {
   /**
    * Virtually call a contract, return the output data.
    *
-   * @param {object} options - See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**)
+   * @param {TransactionMeta} options - See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**)
    * @param {string|number} [epochNumber='latest_state'] - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
    * @return {Promise<string>} The output data.
    */
@@ -1084,7 +1088,7 @@ class Conflux {
   /**
    * Virtually call a contract, return the estimate gas used and storage collateralized.
    *
-   * @param {object} options - See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**)
+   * @param {TransactionMeta} options - See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**)
    * @param {string|number} [epochNumber='latest_state'] - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
    * @return {Promise<import('./rpc/types/formatter').EstimateResult>} A estimate result object:
    * - `BigInt` gasUsed: The gas used.
@@ -1108,7 +1112,7 @@ class Conflux {
 
   /**
    * Estimate a transaction's gas and storageCollateralize, check whether user's balance is enough for fee and value
-   * @param {object} options - See [estimateGasAndCollateral](#Conflux.js/Conflux/estimateGasAndCollateral)
+   * @param {TransactionMeta} options - See [estimateGasAndCollateral](#Conflux.js/Conflux/estimateGasAndCollateral)
    * @param {string|number} [epochNumber='latest_state'] - See [estimateGasAndCollateral](#Conflux.js/Conflux/estimateGasAndCollateral)
    * @return {Promise<object>} A estimate result with advance info object:
    * - `BigInt` gasUsed: The gas used.
@@ -1144,13 +1148,7 @@ class Conflux {
   /**
    * Returns logs matching the filter provided.
    *
-   * @param {object} [options]
-   * @param {string|number} [options.fromEpoch='latest_checkpoint'] - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber). Search will be applied from this epoch number.
-   * @param {string|number} [options.toEpoch='latest_state'] - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber). Search will be applied up until (and including) this epoch number.
-   * @param {string[]} [options.blockHashes] -  Array of up to 128 block hashes that the search will be applied to. This will override from/to epoch fields if it's not null
-   * @param {string|string[]} [options.address] - Search contract addresses. If null, match all. If specified, log must be produced by one of these addresses.
-   * @param {array} [options.topics] - Search topics. Logs can have 4 topics: the function signature and up to 3 indexed event arguments. The elements of topics match the corresponding log topics. Example: ["0xA", null, ["0xB", "0xC"], null] matches logs with "0xA" as the 1st topic AND ("0xB" OR "0xC") as the 3rd topic. If null, match all.
-   * @param {number} [options.limit] - Return the last limit logs
+   * @param {import('./rpc/types/formatter').LogFilter} [options]
    * @return {Promise<import('./rpc/types/formatter').Log[]>} Array of log, that the logs matching the filter provided:
    * - address `string`: Address this event originated from.
    * - topics `string[]`: Array of topics.
@@ -1204,7 +1202,7 @@ class Conflux {
    *
    * > Note: need RPC server open trace_block method
    *
-   * @param {string}blockHash - block hash
+   * @param {string} blockHash - block hash
    * @return {Promise<object[]>} Array of transaction traces.
    *
    * @example
@@ -1250,7 +1248,7 @@ class Conflux {
   /**
    * Return transaction's trace
    * @param {string} txHash - transaction hash
-   * @returns {Promise<object[]>} Array of traces.
+   * @returns {Promise<import('./rpc/trace').Trace[]>} Array of traces.
    *
    * @example
    * > await conflux.traceTransaction('0xaf0e1d773dee28c95bcfa5480ed663fcc695b32c8c1dd81f57ff61ff09f55f88')
@@ -1261,8 +1259,8 @@ class Conflux {
 
   /**
    * Return traces that satisfy an filter
-   * @param {object} options - trace filters
-   * @returns {Promise<object[]>} Array of traces.
+   * @param {import('./rpc/trace').TraceFilter} filter - trace filters
+   * @returns {Promise<import('./rpc/trace').Trace[]>} Array of traces.
    *
    * @example
    * > await conflux.traceFilter({
@@ -1274,8 +1272,8 @@ class Conflux {
       actionTypes: ['call_result']
     })
    */
-  async traceFilter(options) {
-    return this.trace.filter(format.traceFilter(options));
+  async traceFilter(filter) {
+    return this.trace.filter(format.traceFilter(filter));
   }
 
   /**
@@ -1293,7 +1291,7 @@ class Conflux {
   /**
    * Return one epoch's all receipts by pivot block hash
    * @param {string} pivotBlockHash - epoch pivot block hash
-   * @returns {Promise<object[][]>} Array of array receipts.
+   * @returns {Promise<import('./rpc/types/formatter').TransactionReceipt[][]>} Array of array receipts.
    *
    * @example
    * > await conflux.getEpochReceiptsByPivotBlockHash('0x12291776d632d966896b6c580f3201cd2e2a3fd672378fc7965aa7f7058282b2')

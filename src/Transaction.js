@@ -3,6 +3,10 @@ const rlp = require('./util/rlp');
 const format = require('./util/format');
 const cfxFormat = require('./rpc/types/formatter');
 
+/**
+ * @typedef {import('./rpc/types/formatter').CallRequest} TransactionMeta
+ */
+
 class Transaction {
   /**
    * Decode rlp encoded raw transaction hex string

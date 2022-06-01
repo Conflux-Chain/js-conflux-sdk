@@ -45,6 +45,7 @@ class BaseProvider extends EventEmitter {
 
   /**
    * @param {any}
+   * @private
    * @return {Promise<*>}
    */
   _request(_any) {
@@ -52,8 +53,9 @@ class BaseProvider extends EventEmitter {
   }
 
   /**
-   * @param {any}
+   * @param {any[]}
    * @return {Promise<*>}
+   * @private
    */
   _requestBatch(_any) {
     throw new Error(`NotImplementError: ${this.constructor.name}.requestBatch not implement.`);
