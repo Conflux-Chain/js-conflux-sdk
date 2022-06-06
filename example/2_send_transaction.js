@@ -2,7 +2,7 @@
 const { Conflux, Transaction, Drip } = require('../src'); // require('js-conflux-sdk');
 
 const conflux = new Conflux({
-  url: 'http://test.confluxrpc.org/v2',
+  url: 'https://test.confluxrpc.com',
   networkId: 1,
   // logger: console, // use console to print log
 });

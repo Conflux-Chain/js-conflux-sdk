@@ -10,7 +10,7 @@ const JSBI = require('jsbi');
 const { Conflux, sign, format } = require('../src'); // require('js-conflux-sdk');
 
 const conflux = new Conflux({
-  url: 'http://test.confluxrpc.org/v2',
+  url: 'https://test.confluxrpc.com',
   networkId: 1,
 });
 

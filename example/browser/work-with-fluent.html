@@ -1,8 +1,8 @@
 <html>
   <head>
     <title>Test sign</title>
-    <script src='/dist/js-conflux-sdk.umd.min.js'></script>
-    <!-- <script src='https://cdn.jsdelivr.net/npm/js-conflux-sdk/dist/js-conflux-sdk.umd.min.js'></script> -->
+    <!-- <script src='/dist/js-conflux-sdk.umd.min.js'></script> -->
+    <script src='https://cdn.jsdelivr.net/npm/js-conflux-sdk/dist/js-conflux-sdk.umd.min.js'></script>
   </head>
   <body>
     <button class="enableConflux">Connect Fluent</button>
@@ -21,6 +21,9 @@
         const accounts = await conflux.request({
           method: 'cfx_accounts',
         });
+        if (accounts.length === 0) {
+          alert('No account found');
+        }
         account = accounts[0];
         showAccount.innerHTML = account;
       }
@@ -30,7 +33,6 @@
     <button class="sendTxBtn2">SendTx with js-conflux-sdk</button>
     <script>
       let cfxClient = new TreeGraph.Conflux({
-        url,
         networkId: 1,
         logger: console,
       });
@@ -42,7 +44,6 @@
       sendTxButton2.addEventListener('click', async () => {
         let nonce = await cfxClient.cfx.getStatus();
         console.log("status", nonce);
-        return;
         try {
           let b = await cfxClient.cfx.getBalance('cfxtest:aak2rra2njvd77ezwjvx04kkds9fzagfe6d5r8e957');
           console.log("balance", b.toString());
@@ -51,7 +52,7 @@
             to: '0x0000000000000000000000000000000000000000',
             value: '0x01',
           });
-          console.log(hash);
+          alert('Send success, tx hash: ' + hash)
         } catch(e) {
           console.error(e) ;
         }
