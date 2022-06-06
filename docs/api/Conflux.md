@@ -1,134 +1,147 @@
-- Conflux.js
-    - Conflux
-        - [(static)create](#Conflux.js/Conflux/(static)create)
-        - [**constructor**](#Conflux.js/Conflux/**constructor**)
-        - [provider](#Conflux.js/Conflux/provider)
-        - [wallet](#Conflux.js/Conflux/wallet)
-        - [defaultGasPrice](#Conflux.js/Conflux/defaultGasPrice)
-        - [defaultGasRatio](#Conflux.js/Conflux/defaultGasRatio)
-        - [defaultStorageRatio](#Conflux.js/Conflux/defaultStorageRatio)
-        - [pos](#Conflux.js/Conflux/pos)
-        - [trace](#Conflux.js/Conflux/trace)
-        - [txpool](#Conflux.js/Conflux/txpool)
-        - [cfx](#Conflux.js/Conflux/cfx)
-        - [advanced](#Conflux.js/Conflux/advanced)
-        - [Contract](#Conflux.js/Conflux/Contract)
-        - [InternalContract](#Conflux.js/Conflux/InternalContract)
-        - [CRC20](#Conflux.js/Conflux/CRC20)
-        - [BatchRequest](#Conflux.js/Conflux/BatchRequest)
-        - [close](#Conflux.js/Conflux/close)
-        - [updateNetworkId](#Conflux.js/Conflux/updateNetworkId)
-        - [getSupplyInfo](#Conflux.js/Conflux/getSupplyInfo)
-        - [getStatus](#Conflux.js/Conflux/getStatus)
-        - [getGasPrice](#Conflux.js/Conflux/getGasPrice)
-        - [getInterestRate](#Conflux.js/Conflux/getInterestRate)
-        - [getAccumulateInterestRate](#Conflux.js/Conflux/getAccumulateInterestRate)
-        - [getAccount](#Conflux.js/Conflux/getAccount)
-        - [getBalance](#Conflux.js/Conflux/getBalance)
-        - [getStakingBalance](#Conflux.js/Conflux/getStakingBalance)
-        - [getNextNonce](#Conflux.js/Conflux/getNextNonce)
-        - [getAdmin](#Conflux.js/Conflux/getAdmin)
-        - [getVoteList](#Conflux.js/Conflux/getVoteList)
-        - [getDepositList](#Conflux.js/Conflux/getDepositList)
-        - [getEpochNumber](#Conflux.js/Conflux/getEpochNumber)
-        - [getBlockByEpochNumber](#Conflux.js/Conflux/getBlockByEpochNumber)
-        - [getBlockByBlockNumber](#Conflux.js/Conflux/getBlockByBlockNumber)
-        - [getBlocksByEpochNumber](#Conflux.js/Conflux/getBlocksByEpochNumber)
-        - [getBestBlockHash](#Conflux.js/Conflux/getBestBlockHash)
-        - [getBlockByHash](#Conflux.js/Conflux/getBlockByHash)
-        - [getConfirmationRiskByHash](#Conflux.js/Conflux/getConfirmationRiskByHash)
-        - [getTransactionByHash](#Conflux.js/Conflux/getTransactionByHash)
-        - [getTransactionReceipt](#Conflux.js/Conflux/getTransactionReceipt)
-        - [sendRawTransaction](#Conflux.js/Conflux/sendRawTransaction)
-        - [sendTransaction](#Conflux.js/Conflux/sendTransaction)
-        - [getCode](#Conflux.js/Conflux/getCode)
-        - [getStorageAt](#Conflux.js/Conflux/getStorageAt)
-        - [getStorageRoot](#Conflux.js/Conflux/getStorageRoot)
-        - [getSponsorInfo](#Conflux.js/Conflux/getSponsorInfo)
-        - [getAccountPendingInfo](#Conflux.js/Conflux/getAccountPendingInfo)
-        - [getAccountPendingTransactions](#Conflux.js/Conflux/getAccountPendingTransactions)
-        - [getCollateralForStorage](#Conflux.js/Conflux/getCollateralForStorage)
-        - [call](#Conflux.js/Conflux/call)
-        - [estimateGasAndCollateral](#Conflux.js/Conflux/estimateGasAndCollateral)
-        - [estimateGasAndCollateralAdvance](#Conflux.js/Conflux/estimateGasAndCollateralAdvance)
-        - [checkBalanceAgainstTransaction](#Conflux.js/Conflux/checkBalanceAgainstTransaction)
-        - [getLogs](#Conflux.js/Conflux/getLogs)
-        - [traceBlock](#Conflux.js/Conflux/traceBlock)
-        - [traceTransaction](#Conflux.js/Conflux/traceTransaction)
-        - [traceFilter](#Conflux.js/Conflux/traceFilter)
-        - [getEpochReceipts](#Conflux.js/Conflux/getEpochReceipts)
-        - [getEpochReceiptsByPivotBlockHash](#Conflux.js/Conflux/getEpochReceiptsByPivotBlockHash)
-        - [getPoSEconomics](#Conflux.js/Conflux/getPoSEconomics)
-        - [subscribe](#Conflux.js/Conflux/subscribe)
-        - [subscribeEpochs](#Conflux.js/Conflux/subscribeEpochs)
-        - [subscribeNewHeads](#Conflux.js/Conflux/subscribeNewHeads)
-        - [subscribeLogs](#Conflux.js/Conflux/subscribeLogs)
-        - [unsubscribe](#Conflux.js/Conflux/unsubscribe)
+## Classes
 
-----------------------------------------
+<dl>
+<dt><a href="#Conflux">Conflux</a></dt>
+<dd><p>The Client class that provides an interface to the Conflux network.</p>
+</dd>
+</dl>
 
-## Conflux <a id="Conflux.js/Conflux"></a>
+## Typedefs
 
-A sdk of conflux.
+<dl>
+<dt><a href="#ConfluxOption">ConfluxOption</a> : <code>Object</code></dt>
+<dd></dd>
+<dt><a href="#TransactionMeta">TransactionMeta</a> : <code><a href="#TransactionMeta">TransactionMeta</a></code></dt>
+<dd></dd>
+</dl>
 
-### Conflux.create <a id="Conflux.js/Conflux/(static)create"></a>
+<a name="Conflux"></a>
 
-Create a Conflux instance with networdId set up
+## Conflux
+The Client class that provides an interface to the Conflux network.
 
-### Conflux.prototype.**constructor** <a id="Conflux.js/Conflux/**constructor**"></a>
+**Kind**: global class  
 
-* **Parameters**
+* [Conflux](#Conflux)
+    * [new Conflux([options])](#new_Conflux_new)
+    * _instance_
+        * [.version](#Conflux+version) : <code>string</code>
+        * [.provider](#Conflux+provider) : <code>undefined</code> \| <code>undefined</code> \| <code>undefined</code> \| <code>undefined</code>
+        * [.wallet](#Conflux+wallet) : <code>undefined</code>
+        * ~~[.defaultGasPrice](#Conflux+defaultGasPrice) : <code>number</code> \| <code>string</code>~~
+        * [.defaultGasRatio](#Conflux+defaultGasRatio) : <code>number</code>
+        * [.defaultStorageRatio](#Conflux+defaultStorageRatio) : <code>number</code>
+        * [.pos](#Conflux+pos) : <code>undefined</code>
+        * [.trace](#Conflux+trace) : <code>undefined</code>
+        * [.txpool](#Conflux+txpool) : <code>undefined</code>
+        * [.cfx](#Conflux+cfx) : <code>undefined</code>
+        * [.advanced](#Conflux+advanced) : <code>undefined</code>
+        * [.request()](#Conflux+request)
+        * [.Contract(options)](#Conflux+Contract) ⇒ <code>undefined</code>
+        * [.InternalContract(name)](#Conflux+InternalContract) ⇒ <code>undefined</code>
+        * [.CRC20(address)](#Conflux+CRC20) ⇒ <code>undefined</code>
+        * [.BatchRequest()](#Conflux+BatchRequest) ⇒ <code>undefined</code>
+        * [.close()](#Conflux+close)
+        * [.updateNetworkId()](#Conflux+updateNetworkId)
+        * [.getClientVersion()](#Conflux+getClientVersion) ⇒ <code>Promise.&lt;string&gt;</code>
+        * [.getSupplyInfo([epochNumber])](#Conflux+getSupplyInfo) ⇒ <code>Promise.&lt;SupplyInfo&gt;</code>
+        * [.getStatus()](#Conflux+getStatus) ⇒ <code>Promise.&lt;ChainStatus&gt;</code>
+        * [.getGasPrice()](#Conflux+getGasPrice) ⇒ <code>Promise.&lt;BigInt&gt;</code>
+        * [.getInterestRate([epochNumber])](#Conflux+getInterestRate) ⇒ <code>Promise.&lt;BigInt&gt;</code>
+        * [.getAccumulateInterestRate([epochNumber])](#Conflux+getAccumulateInterestRate) ⇒ <code>Promise.&lt;BigInt&gt;</code>
+        * [.getAccount(address, [epochNumber])](#Conflux+getAccount) ⇒ <code>Promise.&lt;undefined&gt;</code>
+        * [.getBalance(address, [epochNumber])](#Conflux+getBalance) ⇒ <code>Promise.&lt;BigInt&gt;</code>
+        * [.getStakingBalance(address, [epochNumber])](#Conflux+getStakingBalance) ⇒ <code>Promise.&lt;BigInt&gt;</code>
+        * [.getNextNonce(address, [epochNumber])](#Conflux+getNextNonce) ⇒ <code>Promise.&lt;BigInt&gt;</code>
+        * [.getAdmin(address, [epochNumber])](#Conflux+getAdmin) ⇒ <code>Promise.&lt;string&gt;</code>
+        * [.getVoteList(address, [epochNumber])](#Conflux+getVoteList) ⇒ <code>Promise.&lt;Array.&lt;Vote&gt;&gt;</code>
+        * [.getDepositList(address, [epochNumber])](#Conflux+getDepositList) ⇒ <code>Promise.&lt;Array.&lt;Deposit&gt;&gt;</code>
+        * [.getEpochNumber([epochNumber])](#Conflux+getEpochNumber) ⇒ <code>Promise.&lt;number&gt;</code>
+        * [.getBlockByEpochNumber(epochNumber, [detail])](#Conflux+getBlockByEpochNumber) ⇒ <code>Promise.&lt;(Block\|null)&gt;</code>
+        * [.getBlockByBlockNumber(blockNumber, [detail])](#Conflux+getBlockByBlockNumber) ⇒ <code>Promise.&lt;(Block\|null)&gt;</code>
+        * [.getBlocksByEpochNumber(epochNumber)](#Conflux+getBlocksByEpochNumber) ⇒ <code>Promise.&lt;Array.&lt;string&gt;&gt;</code>
+        * [.getBestBlockHash()](#Conflux+getBestBlockHash) ⇒ <code>Promise.&lt;string&gt;</code>
+        * [.getBlockByHash(blockHash, [detail])](#Conflux+getBlockByHash) ⇒ <code>Promise.&lt;(Block\|null)&gt;</code>
+        * [.getConfirmationRiskByHash(blockHash)](#Conflux+getConfirmationRiskByHash) ⇒ <code>Promise.&lt;(number\|null)&gt;</code>
+        * [.getTransactionByHash(transactionHash)](#Conflux+getTransactionByHash) ⇒ <code>Promise.&lt;(Transaction\|null)&gt;</code>
+        * [.getTransactionReceipt(transactionHash)](#Conflux+getTransactionReceipt) ⇒ <code>Promise.&lt;(TransactionReceipt\|null)&gt;</code>
+        * [.sendRawTransaction(hex)](#Conflux+sendRawTransaction) ⇒ <code>Promise.&lt;undefined&gt;</code>
+        * [.sendTransaction(options, [...password])](#Conflux+sendTransaction) ⇒ <code>Promise.&lt;undefined&gt;</code>
+        * [.getCode(address, [epochNumber])](#Conflux+getCode) ⇒ <code>Promise.&lt;string&gt;</code>
+        * [.getStorageAt(address, position, [epochNumber])](#Conflux+getStorageAt) ⇒ <code>Promise.&lt;(string\|null)&gt;</code>
+        * [.getStorageRoot(address, [epochNumber])](#Conflux+getStorageRoot) ⇒ <code>Promise.&lt;object&gt;</code>
+        * [.getSponsorInfo(address, [epochNumber])](#Conflux+getSponsorInfo) ⇒ <code>Promise.&lt;SponsorInfo&gt;</code>
+        * [.getAccountPendingInfo(address)](#Conflux+getAccountPendingInfo) ⇒ <code>Promise.&lt;AccountPendingInfo&gt;</code>
+        * [.getAccountPendingTransactions(address)](#Conflux+getAccountPendingTransactions) ⇒ <code>Promise.&lt;AccountPendingTransactions&gt;</code>
+        * [.getCollateralForStorage(address, [epochNumber])](#Conflux+getCollateralForStorage) ⇒ <code>Promise.&lt;BigInt&gt;</code>
+        * [.call(options, [epochNumber])](#Conflux+call) ⇒ <code>Promise.&lt;string&gt;</code>
+        * [.estimateGasAndCollateral(options, [epochNumber])](#Conflux+estimateGasAndCollateral) ⇒ <code>Promise.&lt;EstimateResult&gt;</code>
+        * [.estimateGasAndCollateralAdvance(options, [epochNumber])](#Conflux+estimateGasAndCollateralAdvance) ⇒ <code>Promise.&lt;object&gt;</code>
+        * [.checkBalanceAgainstTransaction(from, to, gas, gasPrice, storageLimit, [epochNumber])](#Conflux+checkBalanceAgainstTransaction) ⇒ <code>Promise.&lt;object&gt;</code>
+        * [.getLogs([options])](#Conflux+getLogs) ⇒ <code>Promise.&lt;Array.&lt;Log&gt;&gt;</code>
+        * [.traceBlock(blockHash)](#Conflux+traceBlock) ⇒ <code>Promise.&lt;Array.&lt;object&gt;&gt;</code>
+        * [.traceTransaction(txHash)](#Conflux+traceTransaction) ⇒ <code>Promise.&lt;Array.&lt;Trace&gt;&gt;</code>
+        * [.traceFilter(filter)](#Conflux+traceFilter) ⇒ <code>Promise.&lt;Array.&lt;Trace&gt;&gt;</code>
+        * [.getEpochReceipts(epochNumber)](#Conflux+getEpochReceipts) ⇒ <code>Promise.&lt;Array.&lt;Array.&lt;object&gt;&gt;&gt;</code>
+        * [.getEpochReceiptsByPivotBlockHash(pivotBlockHash)](#Conflux+getEpochReceiptsByPivotBlockHash) ⇒ <code>Promise.&lt;Array.&lt;Array.&lt;TransactionReceipt&gt;&gt;&gt;</code>
+        * [.getPoSEconomics()](#Conflux+getPoSEconomics) ⇒ <code>Promise.&lt;PoSEconomics&gt;</code>
+        * [.subscribe(name, ...args)](#Conflux+subscribe) ⇒ <code>Promise.&lt;string&gt;</code>
+        * [.subscribeEpochs([sub_epoch])](#Conflux+subscribeEpochs) ⇒ <code>Promise.&lt;Subscription&gt;</code>
+        * [.subscribeNewHeads()](#Conflux+subscribeNewHeads) ⇒ <code>Promise.&lt;Subscription&gt;</code>
+        * [.subscribeLogs([options])](#Conflux+subscribeLogs) ⇒ <code>Promise.&lt;Subscription&gt;</code>
+        * [.unsubscribe(id)](#Conflux+unsubscribe) ⇒ <code>Promise.&lt;boolean&gt;</code>
+    * _static_
+        * [.create(options)](#Conflux.create) ⇒ [<code>Conflux</code>](#Conflux)
 
-Name                        | Type            | Required | Default | Description
-----------------------------|-----------------|----------|---------|-------------------------------------------------------
-options                     | `object`        | false    |         | Conflux and Provider constructor options.
-options.defaultGasPrice     | `string,number` | false    |         | The default gas price in drip to use for transactions.
-options.defaultGasRatio     | `number`        | false    | 1.1     | The ratio to multiply by gas.
-options.defaultStorageRatio | `number`        | false    | 1.1     | The ratio to multiply by storageLimit.
-options.url                 | `string`        | false    |         | Url of Conflux node to connect.
-options.retry               | `number`        | false    |         | Retry times if request error occurs.
-options.timeout             | `number`        | false    |         | Request time out in ms
-options.logger              | `Object`        | false    |         | Logger object with 'info' and 'error' method.
-options.networkId           | `number`        | false    |         | Connected RPC's networkId
+<a name="new_Conflux_new"></a>
 
-* **Examples**
+### new Conflux([options])
 
-```
+| Param | Type | Description |
+| --- | --- | --- |
+| [options] | [<code>ConfluxOption</code>](#ConfluxOption) | Conflux and Provider constructor options. |
+
+**Example**  
+```js
 > const { Conflux } = require('js-conflux-sdk');
 > const conflux = new Conflux({url:'https://test.confluxrpc.com', networkId: 1});
 ```
-
-```
+**Example**  
+```js
 > const conflux = new Conflux({
      url: 'http://localhost:8000',
      defaultGasPrice: 100,
      logger: console,
    });
 ```
+<a name="Conflux+version"></a>
 
-### Conflux.prototype.provider <a id="Conflux.js/Conflux/provider"></a>
+### conflux.version : <code>string</code>
+**Kind**: instance property of [<code>Conflux</code>](#Conflux)  
+<a name="Conflux+provider"></a>
 
-`WebsocketProvider,HttpProvider,BaseProvider`
-
+### conflux.provider : <code>undefined</code> \| <code>undefined</code> \| <code>undefined</code> \| <code>undefined</code>
 Provider for rpc call
 
-### Conflux.prototype.wallet <a id="Conflux.js/Conflux/wallet"></a>
+**Kind**: instance property of [<code>Conflux</code>](#Conflux)  
+<a name="Conflux+wallet"></a>
 
-`Wallet`
-
+### conflux.wallet : <code>undefined</code>
 Wallet for `sendTransaction` to get `Account` by `from` field
 
-### ~~Conflux.prototype.defaultGasPrice~~ <a id="Conflux.js/Conflux/defaultGasPrice"></a>
+**Kind**: instance property of [<code>Conflux</code>](#Conflux)  
+<a name="Conflux+defaultGasPrice"></a>
 
-`number,string`
+### ~~conflux.defaultGasPrice : <code>number</code> \| <code>string</code>~~
+***Deprecated***
 
 Default gas price for following methods:
 - `Conflux.sendTransaction`
 
-### Conflux.prototype.defaultGasRatio <a id="Conflux.js/Conflux/defaultGasRatio"></a>
+**Kind**: instance property of [<code>Conflux</code>](#Conflux)  
+<a name="Conflux+defaultGasRatio"></a>
 
-`number`
-
+### conflux.defaultGasRatio : <code>number</code>
 If transaction.gas is undefined, gas will be set by estimate,
 cause gas used might be change during `estimateGasAndCollateral` and `sendTransaction`,
 estimate value need to multiply by defaultGasRatio (>1.0) in case of gas not enough.
@@ -138,10 +151,10 @@ estimate value need to multiply by defaultGasRatio (>1.0) in case of gas not eno
 Default gas price for following methods:
 - `Conflux.sendTransaction`
 
-### Conflux.prototype.defaultStorageRatio <a id="Conflux.js/Conflux/defaultStorageRatio"></a>
+**Kind**: instance property of [<code>Conflux</code>](#Conflux)  
+<a name="Conflux+defaultStorageRatio"></a>
 
-`number`
-
+### conflux.defaultStorageRatio : <code>number</code>
 If transaction.storageLimit is undefined, storageLimit will be set by estimate,
 cause storage limit might be change during `estimateGasAndCollateral` and `sendTransaction`,
 estimate value need to multiply by defaultStorageRatio (>1.0) in case of storageLimit not enough.
@@ -151,61 +164,71 @@ estimate value need to multiply by defaultStorageRatio (>1.0) in case of storage
 Default gas price for following methods:
 - `Conflux.sendTransaction`
 
-### Conflux.prototype.pos <a id="Conflux.js/Conflux/pos"></a>
+**Kind**: instance property of [<code>Conflux</code>](#Conflux)  
+<a name="Conflux+pos"></a>
 
+### conflux.pos : <code>undefined</code>
 pos RPC methods
 
-### Conflux.prototype.trace <a id="Conflux.js/Conflux/trace"></a>
+**Kind**: instance property of [<code>Conflux</code>](#Conflux)  
+<a name="Conflux+trace"></a>
 
+### conflux.trace : <code>undefined</code>
 trace RPC methods
 
-### Conflux.prototype.txpool <a id="Conflux.js/Conflux/txpool"></a>
+**Kind**: instance property of [<code>Conflux</code>](#Conflux)  
+<a name="Conflux+txpool"></a>
 
+### conflux.txpool : <code>undefined</code>
 txpool RPC methods
 
-### Conflux.prototype.cfx <a id="Conflux.js/Conflux/cfx"></a>
+**Kind**: instance property of [<code>Conflux</code>](#Conflux)  
+<a name="Conflux+cfx"></a>
 
+### conflux.cfx : <code>undefined</code>
 cfx RPC methods
 
-### Conflux.prototype.advanced <a id="Conflux.js/Conflux/advanced"></a>
+**Kind**: instance property of [<code>Conflux</code>](#Conflux)  
+<a name="Conflux+advanced"></a>
 
+### conflux.advanced : <code>undefined</code>
 Advanced RPC compose methods
 
-### Conflux.prototype.Contract <a id="Conflux.js/Conflux/Contract"></a>
+**Kind**: instance property of [<code>Conflux</code>](#Conflux)  
+<a name="Conflux+request"></a>
 
+### conflux.request()
+Different kind provider API wrapper
+
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+<a name="Conflux+Contract"></a>
+
+### conflux.Contract(options) ⇒ <code>undefined</code>
 A shout cut for `new Contract(options, conflux);`
 
-* **Parameters**
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
 
-Name    | Type     | Required | Default | Description
---------|----------|----------|---------|----------------------------------------------------------------
-options | `object` | true     |         | See [Contract.constructor](Contract.md#Contract.js/constructor)
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | See [Contract.constructor](Contract.md#Contract.js/constructor) |
 
-* **Returns**
+<a name="Conflux+InternalContract"></a>
 
-`Contract` - A Contract instance
-
-### Conflux.prototype.InternalContract <a id="Conflux.js/Conflux/InternalContract"></a>
-
+### conflux.InternalContract(name) ⇒ <code>undefined</code>
 Create internal contract by default abi and address
 
 - [AdminControl](https://github.com/Conflux-Chain/conflux-rust/blob/master/internal_contract/contracts/AdminControl.sol)
 - [SponsorWhitelistControl](https://github.com/Conflux-Chain/conflux-rust/blob/master/internal_contract/contracts/SponsorWhitelistControl.sol)
 - [Staking](https://github.com/Conflux-Chain/conflux-rust/blob/master/internal_contract/contracts/Staking.sol)
 
-* **Parameters**
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
 
-Name | Type                                                 | Required | Default | Description
------|------------------------------------------------------|----------|---------|-----------------------
-name | `"AdminControl","SponsorWhitelistControl","Staking"` | true     |         | Internal contract name
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>&quot;AdminControl&quot;</code> \| <code>&quot;SponsorWhitelistControl&quot;</code> \| <code>&quot;Staking&quot;</code> \| <code>&quot;ConfluxContext&quot;</code> \| <code>&quot;PoSRegister&quot;</code> \| <code>&quot;CrossSpaceCall&quot;</code> | Internal contract name |
 
-* **Returns**
-
-`Contract` 
-
-* **Examples**
-
-```
+**Example**  
+```js
 > conflux.InternalContract('AdminControl')
    {
     constructor: [Function: bound call],
@@ -222,63 +245,64 @@ name | `"AdminControl","SponsorWhitelistControl","Staking"` | true     |        
     '0xc55b6bb7': [Function: bound call]
   }
 ```
+<a name="Conflux+CRC20"></a>
 
-### Conflux.prototype.CRC20 <a id="Conflux.js/Conflux/CRC20"></a>
-
+### conflux.CRC20(address) ⇒ <code>undefined</code>
 Create an token CRC20 contract with standard CRC20 abi
 
-* **Parameters**
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>undefined</code> - A token contract instance  
 
-Name    | Type     | Required | Default | Description
---------|----------|----------|---------|------------
-address | `string` | true     |         |
+| Param | Type |
+| --- | --- |
+| address | <code>string</code> | 
 
-* **Returns**
+<a name="Conflux+BatchRequest"></a>
 
-`Contract` - A token contract instance
-
-### Conflux.prototype.BatchRequest <a id="Conflux.js/Conflux/BatchRequest"></a>
-
+### conflux.BatchRequest() ⇒ <code>undefined</code>
 Return a BatchRequester instance which can used to build batch request and decode response data
 
-* **Returns**
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>undefined</code> - - A BatchRequester instance  
+<a name="Conflux+close"></a>
 
-`BatchRequester` - A BatchRequester instance
-
-### Conflux.prototype.close <a id="Conflux.js/Conflux/close"></a>
-
+### conflux.close()
 close connection.
 
-* **Examples**
-
-```
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Example**  
+```js
 > conflux.close();
 ```
+<a name="Conflux+updateNetworkId"></a>
 
-### Conflux.prototype.updateNetworkId <a id="Conflux.js/Conflux/updateNetworkId"></a>
-
+### conflux.updateNetworkId()
 Update conflux networkId from RPC
 
-### Conflux.prototype.getSupplyInfo <a id="Conflux.js/Conflux/getSupplyInfo"></a>
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+<a name="Conflux+getClientVersion"></a>
 
+### conflux.getClientVersion() ⇒ <code>Promise.&lt;string&gt;</code>
+Get node client version
+
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+<a name="Conflux+getSupplyInfo"></a>
+
+### conflux.getSupplyInfo([epochNumber]) ⇒ <code>Promise.&lt;SupplyInfo&gt;</code>
 Get supply info
 
-* **Parameters**
-
-Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|-----------------------------------------------------------------------------
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
-
-* **Returns**
-
-`Promise.<object>` Return supply info
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;SupplyInfo&gt;</code> - Return supply info
 - totalIssued `BigInt`: Total issued balance in `Drip`
 - totalStaking `BigInt`: Total staking balance in `Drip`
-- totalCollateral `BigInt`: Total collateral balance in `Drip`
+- totalCollateral `BigInt`: Total collateral balance in `Drip`  
 
-* **Examples**
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [epochNumber] | <code>string</code> \| <code>number</code> | <code>&quot;&#x27;latest_state&#x27;&quot;</code> | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber) |
 
-```
+**Example**  
+```js
 > await conflux.getSupplyInfo()
    {
      totalCirculating: 28953062500000000000000n,
@@ -287,23 +311,20 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNum
      totalStaking: 25026010834970490328077641n
    }
 ```
+<a name="Conflux+getStatus"></a>
 
-### Conflux.prototype.getStatus <a id="Conflux.js/Conflux/getStatus"></a>
-
+### conflux.getStatus() ⇒ <code>Promise.&lt;ChainStatus&gt;</code>
 Get status
 
-* **Returns**
-
-`Promise.<object>` Status information object
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;ChainStatus&gt;</code> - Status information object
 - chainId `number`: Chain id
 - epochNumber `number`: Epoch number
 - blockNumber `number`: Block number
 - pendingTxNumber `number`: Pending transaction number
-- bestHash `string`: The block hash of best pivot block
-
-* **Examples**
-
-```
+- bestHash `string`: The block hash of best pivot block  
+**Example**  
+```js
 > await conflux.getStatus()
    {
       chainId: 1029,
@@ -314,89 +335,74 @@ Get status
       bestHash: '0x8d581f13fa0548f2751450a7dabd871777875c9ccdf0d8bd629e07a7a5a7917a'
    }
 ```
+<a name="Conflux+getGasPrice"></a>
 
-### Conflux.prototype.getGasPrice <a id="Conflux.js/Conflux/getGasPrice"></a>
-
+### conflux.getGasPrice() ⇒ <code>Promise.&lt;BigInt&gt;</code>
 Returns the current price per gas in Drip.
 
-* **Returns**
-
-`Promise.<BigInt>` Gas price in drip.
-
-* **Examples**
-
-```
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;BigInt&gt;</code> - Gas price in drip.  
+**Example**  
+```js
 > await conflux.getGasPrice();
    1n
 ```
+<a name="Conflux+getInterestRate"></a>
 
-### Conflux.prototype.getInterestRate <a id="Conflux.js/Conflux/getInterestRate"></a>
-
+### conflux.getInterestRate([epochNumber]) ⇒ <code>Promise.&lt;BigInt&gt;</code>
 Returns the interest rate of given parameter.
 
-* **Parameters**
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;BigInt&gt;</code> - The interest rate of given parameter.  
 
-Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|-----------------------------------------------------------------------------
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [epochNumber] | <code>string</code> \| <code>number</code> | <code>&quot;&#x27;latest_state&#x27;&quot;</code> | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber) |
 
-* **Returns**
-
-`Promise.<BigInt>` The interest rate of given parameter.
-
-* **Examples**
-
-```
+**Example**  
+```js
 > await conflux.getInterestRate();
    2522880000000n
 ```
+<a name="Conflux+getAccumulateInterestRate"></a>
 
-### Conflux.prototype.getAccumulateInterestRate <a id="Conflux.js/Conflux/getAccumulateInterestRate"></a>
-
+### conflux.getAccumulateInterestRate([epochNumber]) ⇒ <code>Promise.&lt;BigInt&gt;</code>
 Returns the accumulate interest rate of given parameter.
 
-* **Parameters**
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;BigInt&gt;</code> - The accumulate interest rate of given parameter.  
 
-Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|-----------------------------------------------------------------------------
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [epochNumber] | <code>string</code> \| <code>number</code> | <code>&quot;&#x27;latest_state&#x27;&quot;</code> | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber) |
 
-* **Returns**
-
-`Promise.<BigInt>` The accumulate interest rate of given parameter.
-
-* **Examples**
-
-```
+**Example**  
+```js
 > await conflux.getAccumulateInterestRate()
    76357297457647044505744908994993n
 ```
+<a name="Conflux+getAccount"></a>
 
-### Conflux.prototype.getAccount <a id="Conflux.js/Conflux/getAccount"></a>
-
+### conflux.getAccount(address, [epochNumber]) ⇒ <code>Promise.&lt;undefined&gt;</code>
 Return account related states of the given account
 
-* **Parameters**
-
-Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|-----------------------------------------------------------------------------
-address     | `string`        | true     |                | address to get account.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
-
-* **Returns**
-
-`Promise.<object>` Return the states of the given account:
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;undefined&gt;</code> - Return the states of the given account:
 - balance `BigInt`: the balance of the account.
 - nonce `BigInt`: the nonce of the account's next transaction.
 - codeHash `string`: the code hash of the account.
 - stakingBalance `BigInt`: the staking balance of the account.
 - collateralForStorage `BigInt`: the collateral storage of the account.
 - accumulatedInterestReturn `BigInt`: accumulated unterest return of the account.
-- admin `string`: admin of the account.
+- admin `string`: admin of the account.  
 
-* **Examples**
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| address | <code>string</code> |  | address to get account. |
+| [epochNumber] | <code>string</code> \| <code>number</code> | <code>&quot;&#x27;latest_state&#x27;&quot;</code> | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber) |
 
-```
+**Example**  
+```js
 > await conflux.getAccount('cfxtest:aasb661u2r60uzn5h0c4h63hj76wtgf552r9ghu7a4');
    {
       accumulatedInterestReturn: 0n,
@@ -408,247 +414,200 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNum
       codeHash: '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'
    }
 ```
+<a name="Conflux+getBalance"></a>
 
-### Conflux.prototype.getBalance <a id="Conflux.js/Conflux/getBalance"></a>
-
+### conflux.getBalance(address, [epochNumber]) ⇒ <code>Promise.&lt;BigInt&gt;</code>
 Returns the balance of the account of given address.
 
-* **Parameters**
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;BigInt&gt;</code> - The balance in Drip.  
 
-Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|-----------------------------------------------------------------------------
-address     | `string`        | true     |                | The address to get the balance of.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| address | <code>string</code> |  | The address to get the balance of. |
+| [epochNumber] | <code>string</code> \| <code>number</code> | <code>&quot;&#x27;latest_state&#x27;&quot;</code> | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber) |
 
-* **Returns**
-
-`Promise.<BigInt>` The balance in Drip.
-
-* **Examples**
-
-```
+**Example**  
+```js
 > await conflux.getBalance("cfxtest:aasb661u2r60uzn5h0c4h63hj76wtgf552r9ghu7a4");
    824812401057514588670n
 ```
+<a name="Conflux+getStakingBalance"></a>
 
-### Conflux.prototype.getStakingBalance <a id="Conflux.js/Conflux/getStakingBalance"></a>
-
+### conflux.getStakingBalance(address, [epochNumber]) ⇒ <code>Promise.&lt;BigInt&gt;</code>
 Returns the balance of the staking account of given address.
 
-* **Parameters**
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;BigInt&gt;</code> - The staking balance in Drip.  
 
-Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|-----------------------------------------------------------------------------
-address     | `string`        | true     |                | Address to check for staking balance.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| address | <code>string</code> |  | Address to check for staking balance. |
+| [epochNumber] | <code>string</code> \| <code>number</code> | <code>&quot;&#x27;latest_state&#x27;&quot;</code> | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber) |
 
-* **Returns**
-
-`Promise.<BigInt>` The staking balance in Drip.
-
-* **Examples**
-
-```
+**Example**  
+```js
 > await conflux.getStakingBalance('cfxtest:aasb661u2r60uzn5h0c4h63hj76wtgf552r9ghu7a4', 'latest_state');
    0n
 ```
+<a name="Conflux+getNextNonce"></a>
 
-### Conflux.prototype.getNextNonce <a id="Conflux.js/Conflux/getNextNonce"></a>
-
+### conflux.getNextNonce(address, [epochNumber]) ⇒ <code>Promise.&lt;BigInt&gt;</code>
 Returns the next nonce should be used by given address.
 
-* **Parameters**
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;BigInt&gt;</code> - The next nonce should be used by given address.  
 
-Name        | Type            | Required | Default | Description
-------------|-----------------|----------|---------|-----------------------------------------------------------------------------
-address     | `string`        | true     |         | The address to get the numbers of transactions from.
-epochNumber | `string,number` | false    |         | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
+| Param | Type | Description |
+| --- | --- | --- |
+| address | <code>string</code> | The address to get the numbers of transactions from. |
+| [epochNumber] | <code>string</code> \| <code>number</code> | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber) |
 
-* **Returns**
-
-`Promise.<BigInt>` The next nonce should be used by given address.
-
-* **Examples**
-
-```
+**Example**  
+```js
 > await conflux.getNextNonce("cfxtest:aasb661u2r60uzn5h0c4h63hj76wtgf552r9ghu7a4");
    1449n
 ```
+<a name="Conflux+getAdmin"></a>
 
-### Conflux.prototype.getAdmin <a id="Conflux.js/Conflux/getAdmin"></a>
-
+### conflux.getAdmin(address, [epochNumber]) ⇒ <code>Promise.&lt;string&gt;</code>
 Returns the admin of given contract.
 
-* **Parameters**
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;string&gt;</code> - Address to admin, or `null` if the contract does not exist.  
 
-Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|-----------------------------------------------------------------------------
-address     | `string`        | true     |                | Address to contract.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| address | <code>string</code> |  | Address to contract. |
+| [epochNumber] | <code>string</code> \| <code>number</code> | <code>&quot;&#x27;latest_state&#x27;&quot;</code> | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber) |
 
-* **Returns**
-
-`Promise.<string>` Address to admin, or `null` if the contract does not exist.
-
-* **Examples**
-
-```
+**Example**  
+```js
 > conflux.getAdmin('cfxtest:achc8nxj7r451c223m18w2dwjnmhkd6rxa2gc31euw')
    "CFXTEST:TYPE.USER:AASB661U2R60UZN5H0C4H63HJ76WTGF552R9GHU7A4"
 ```
+<a name="Conflux+getVoteList"></a>
 
-### Conflux.prototype.getVoteList <a id="Conflux.js/Conflux/getVoteList"></a>
-
+### conflux.getVoteList(address, [epochNumber]) ⇒ <code>Promise.&lt;Array.&lt;Vote&gt;&gt;</code>
 Returns vote list of the given account.
 
-* **Parameters**
-
-Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|-----------------------------------------------------------------------------
-address     | `string`        | true     |                | Address to contract.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
-
-* **Returns**
-
-`Promise.<Array.<object>>` Vote list
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;Array.&lt;Vote&gt;&gt;</code> - Vote list
 - `array`:
   - amount `BigInt`: This is the number of tokens should be locked before
-  - unlockBlockNumber `number`: This is the timestamp when the vote right will be invalid, measured in, the number of past blocks.
+  - unlockBlockNumber `number`: This is the timestamp when the vote right will be invalid, measured in, the number of past blocks.  
 
-### Conflux.prototype.getDepositList <a id="Conflux.js/Conflux/getDepositList"></a>
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| address | <code>string</code> |  | Address to contract. |
+| [epochNumber] | <code>string</code> \| <code>number</code> | <code>&quot;&#x27;latest_state&#x27;&quot;</code> | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber) |
 
+<a name="Conflux+getDepositList"></a>
+
+### conflux.getDepositList(address, [epochNumber]) ⇒ <code>Promise.&lt;Array.&lt;Deposit&gt;&gt;</code>
 Returns deposit list of the given account.
 
-* **Parameters**
-
-Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|-----------------------------------------------------------------------------
-address     | `string`        | true     |                | Address to contract.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
-
-* **Returns**
-
-`Promise.<Array.<object>>` Deposit list
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;Array.&lt;Deposit&gt;&gt;</code> - Deposit list
 - `array`:
   - amount `BigInt`: the number of tokens deposited
   - accumulatedInterestRate: `BigInt`: the accumulated interest rate at the time of the deposit
-  - depositTime `number`: the time of the deposit
+  - depositTime `number`: the time of the deposit  
 
-### Conflux.prototype.getEpochNumber <a id="Conflux.js/Conflux/getEpochNumber"></a>
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| address | <code>string</code> |  | Address to contract. |
+| [epochNumber] | <code>string</code> \| <code>number</code> | <code>&quot;&#x27;latest_state&#x27;&quot;</code> | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber) |
 
+<a name="Conflux+getEpochNumber"></a>
+
+### conflux.getEpochNumber([epochNumber]) ⇒ <code>Promise.&lt;number&gt;</code>
 Returns the epoch number of given parameter.
 
-* **Parameters**
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;number&gt;</code> - integer of the current epoch number of given parameter.  
 
-Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|-----------------------------------------------------------------------------
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [epochNumber] | <code>string</code> \| <code>number</code> | <code>&quot;&#x27;latest_state&#x27;&quot;</code> | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber) |
 
-* **Returns**
-
-`Promise.<number>` integer of the current epoch number of given parameter.
-
-* **Examples**
-
-```
+**Example**  
+```js
 > await conflux.getEpochNumber();
    443
 ```
+<a name="Conflux+getBlockByEpochNumber"></a>
 
-### Conflux.prototype.getBlockByEpochNumber <a id="Conflux.js/Conflux/getBlockByEpochNumber"></a>
-
+### conflux.getBlockByEpochNumber(epochNumber, [detail]) ⇒ <code>Promise.&lt;(Block\|null)&gt;</code>
 Returns information about a block by epoch number.
 
-* **Parameters**
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;(Block\|null)&gt;</code> - See `getBlockByHash`  
 
-Name        | Type            | Required | Default | Description
-------------|-----------------|----------|---------|---------------------------------------------------------------------------------------------------
-epochNumber | `string,number` | true     |         | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
-detail      | `boolean`       | false    | false   | If `true` it returns the full transaction objects, if `false` only the hashes of the transactions.
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| epochNumber | <code>string</code> \| <code>number</code> |  | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber) |
+| [detail] | <code>boolean</code> | <code>false</code> | If `true` it returns the full transaction objects, if `false` only the hashes of the transactions. |
 
-* **Returns**
-
-`Promise.<(object|null)>` See `getBlockByHash`
-
-* **Examples**
-
-```
+**Example**  
+```js
 > await conflux.getBlockByEpochNumber('latest_mined', true);
    {...}
 ```
+<a name="Conflux+getBlockByBlockNumber"></a>
 
-### Conflux.prototype.getBlockByBlockNumber <a id="Conflux.js/Conflux/getBlockByBlockNumber"></a>
-
+### conflux.getBlockByBlockNumber(blockNumber, [detail]) ⇒ <code>Promise.&lt;(Block\|null)&gt;</code>
 Returns information about a block by block number.
 
-* **Parameters**
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;(Block\|null)&gt;</code> - See `getBlockByHash`  
 
-Name        | Type            | Required | Default | Description
-------------|-----------------|----------|---------|---------------------------------------------------------------------------------------------------
-blockNumber | `string,number` | true     |         |
-detail      | `boolean`       | false    | false   | If `true` it returns the full transaction objects, if `false` only the hashes of the transactions.
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| blockNumber | <code>string</code> \| <code>number</code> |  |  |
+| [detail] | <code>boolean</code> | <code>false</code> | If `true` it returns the full transaction objects, if `false` only the hashes of the transactions. |
 
-* **Returns**
-
-`Promise.<(object|null)>` See `getBlockByHash`
-
-* **Examples**
-
-```
+**Example**  
+```js
 > await conflux.getBlockByBlockNumber('0x123', true);
    {...}
 ```
+<a name="Conflux+getBlocksByEpochNumber"></a>
 
-### Conflux.prototype.getBlocksByEpochNumber <a id="Conflux.js/Conflux/getBlocksByEpochNumber"></a>
-
+### conflux.getBlocksByEpochNumber(epochNumber) ⇒ <code>Promise.&lt;Array.&lt;string&gt;&gt;</code>
 Returns hashes of blocks located in some epoch.
 
-* **Parameters**
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;Array.&lt;string&gt;&gt;</code> - Array of block hashes, sorted by execution(topological) order.  
 
-Name        | Type            | Required | Default | Description
-------------|-----------------|----------|---------|-----------------------------------------------------------------------------
-epochNumber | `string,number` | true     |         | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
+| Param | Type | Description |
+| --- | --- | --- |
+| epochNumber | <code>string</code> \| <code>number</code> | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber) |
 
-* **Returns**
-
-`Promise.<Array.<string>>` Array of block hashes, sorted by execution(topological) order.
-
-* **Examples**
-
-```
+**Example**  
+```js
 > await conflux.getBlocksByEpochNumber(0);
    ['0xe677ae5206a5d67d9efa183d867b4b986ed82a3e62174a1488cf8364d58534ec']
 ```
+<a name="Conflux+getBestBlockHash"></a>
 
-### Conflux.prototype.getBestBlockHash <a id="Conflux.js/Conflux/getBestBlockHash"></a>
-
+### conflux.getBestBlockHash() ⇒ <code>Promise.&lt;string&gt;</code>
 Returns the hash of best block.
 
-* **Returns**
-
-`Promise.<string>` hash of the best block.
-
-* **Examples**
-
-```
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;string&gt;</code> - hash of the best block.  
+**Example**  
+```js
 > await conflux.getBestBlockHash();
    "0xb8bb355bfeaf055a032d5b7df719917c090ee4fb6fee42383004dfe8911d7daf"
 ```
+<a name="Conflux+getBlockByHash"></a>
 
-### Conflux.prototype.getBlockByHash <a id="Conflux.js/Conflux/getBlockByHash"></a>
-
+### conflux.getBlockByHash(blockHash, [detail]) ⇒ <code>Promise.&lt;(Block\|null)&gt;</code>
 Returns information about a block by hash.
 
-* **Parameters**
-
-Name      | Type      | Required | Default | Description
-----------|-----------|----------|---------|---------------------------------------------------------------------------------------------------
-blockHash | `string`  | true     |         | hash of a block.
-detail    | `boolean` | false    | false   | If `true` it returns the full transaction objects, if `false` only the hashes of the transactions.
-
-* **Returns**
-
-`Promise.<(object|null)>` A block object, or null when no block was found:
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;(Block\|null)&gt;</code> - A block object, or null when no block was found:
 - adaptive `boolean`: If `true` the weight of the block is adaptive under GHAST rule, if `false` otherwise.
 - blame `number`: If 0, then no blocks are blamed on its parent path, If greater than 0, then the nearest blamed block on the parent path is blame steps away.
 - deferredLogsBloomHash `string`: The bloom hash of deferred logs.
@@ -667,11 +626,15 @@ detail    | `boolean` | false    | false   | If `true` it returns the full trans
 - size `number`: Integer the size of this block in bytes.
 - timestamp `number`: The unix timestamp for when the block was collated.
 - transactions `string[]|object[]`: Array of transaction objects, or 32 Bytes transaction hashes depending on the last given parameter.
-- transactionsRoot `string`: The hash of the transactions of the block.
+- transactionsRoot `string`: The hash of the transactions of the block.  
 
-* **Examples**
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| blockHash | <code>string</code> |  | hash of a block. |
+| [detail] | <code>boolean</code> | <code>false</code> | If `true` it returns the full transaction objects, if `false` only the hashes of the transactions. |
 
-```
+**Example**  
+```js
 > await conflux.getBlockByHash('0xaf4136d04e9e2cc470703251ec46f5913ab7955d526feed43771705e89c77390');
    {
       epochNumber: 6,
@@ -701,42 +664,31 @@ detail    | `boolean` | false    | false   | If `true` it returns the full trans
       transactionsRoot: '0xd2f08676484ba2a3738194f44542eb29fb290b8ed74bf007f132fe51d89b2e7c'
     }
 ```
+<a name="Conflux+getConfirmationRiskByHash"></a>
 
-### Conflux.prototype.getConfirmationRiskByHash <a id="Conflux.js/Conflux/getConfirmationRiskByHash"></a>
-
+### conflux.getConfirmationRiskByHash(blockHash) ⇒ <code>Promise.&lt;(number\|null)&gt;</code>
 Get the risk of the block could be reverted.
 All block in one same epoch returned same risk number
 
-* **Parameters**
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;(number\|null)&gt;</code> - Number >0 and <1  
 
-Name      | Type     | Required | Default | Description
-----------|----------|----------|---------|----------------
-blockHash | `string` | true     |         | Hash of a block
+| Param | Type | Description |
+| --- | --- | --- |
+| blockHash | <code>string</code> | Hash of a block |
 
-* **Returns**
-
-`Promise.<(number|null)>` Number >0 and <1
-
-* **Examples**
-
-```
+**Example**  
+```js
 > await conflux.getConfirmationRiskByHash('0xaf4136d04e9e2cc470703251ec46f5913ab7955d526feed43771705e89c77390')
    1e-8
 ```
+<a name="Conflux+getTransactionByHash"></a>
 
-### Conflux.prototype.getTransactionByHash <a id="Conflux.js/Conflux/getTransactionByHash"></a>
-
+### conflux.getTransactionByHash(transactionHash) ⇒ <code>Promise.&lt;(Transaction\|null)&gt;</code>
 Returns the information about a transaction requested by transaction hash.
 
-* **Parameters**
-
-Name            | Type     | Required | Default | Description
-----------------|----------|----------|---------|----------------------
-transactionHash | `string` | true     |         | hash of a transaction
-
-* **Returns**
-
-`Promise.<(object|null)>` transaction object, or `null` when no transaction was found:
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;(Transaction\|null)&gt;</code> - transaction object, or `null` when no transaction was found:
 - blockHash `string`: hash of the block where this transaction was in and got executed. `null` when its pending.
 - contractCreated `string|null`: address of created contract. `null` when it's not a contract creating transaction
 - data `string`: the data send along with the transaction.
@@ -754,11 +706,14 @@ transactionHash | `string` | true     |         | hash of a transaction
 - to `string`: address of the receiver. null when its a contract creation transaction.
 - transactionIndex `number`: integer of the transactions's index position in the block. `null` when its pending.
 - v `string`: ECDSA recovery id
-- value `BigInt`: value transferred in Drip.
+- value `BigInt`: value transferred in Drip.  
 
-* **Examples**
+| Param | Type | Description |
+| --- | --- | --- |
+| transactionHash | <code>string</code> | hash of a transaction |
 
-```
+**Example**  
+```js
 > await conflux.getTransactionByHash('0xbf7110474779ba2404433ef39a24cb5b277186ef1e6cb199b0b60907b029a1ce');
    {
       nonce: 0n,
@@ -781,20 +736,13 @@ transactionHash | `string` | true     |         | hash of a transaction
       to: 'CFXTEST:TYPE.USER:AATXETSP0KDARPDB5STDYEX11DR3X6SB0J2XZETSG6'
     }
 ```
+<a name="Conflux+getTransactionReceipt"></a>
 
-### Conflux.prototype.getTransactionReceipt <a id="Conflux.js/Conflux/getTransactionReceipt"></a>
-
+### conflux.getTransactionReceipt(transactionHash) ⇒ <code>Promise.&lt;(TransactionReceipt\|null)&gt;</code>
 Returns the information about a transaction receipt requested by transaction hash.
 
-* **Parameters**
-
-Name            | Type     | Required | Default | Description
-----------------|----------|----------|---------|----------------------
-transactionHash | `string` | true     |         | Hash of a transaction
-
-* **Returns**
-
-`Promise.<(object|null)>` A transaction receipt object, or null when no transaction was found or the transaction was not executed yet:
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;(TransactionReceipt\|null)&gt;</code> - A transaction receipt object, or null when no transaction was found or the transaction was not executed yet:
 - transactionHash `string`: Hash of the given transaction.
 - index `number`: Transaction index within the block.
 - blockHash `string`: Hash of the block where this transaction was in and got executed.
@@ -812,11 +760,14 @@ transactionHash | `string` | true     |         | Hash of a transaction
 - storageCollateralized `BigInt`: the amount of storage collateral this transaction required.
 - storageReleased `array`: array of storage change objects, each specifying an address and the corresponding amount of storage collateral released
   - address `string`: address released
-  - collaterals `BigInt`: corresponding amount of storage collateral released
+  - collaterals `BigInt`: corresponding amount of storage collateral released  
 
-* **Examples**
+| Param | Type | Description |
+| --- | --- | --- |
+| transactionHash | <code>string</code> | Hash of a transaction |
 
-```
+**Example**  
+```js
 > await conflux.getTransactionReceipt('0xbf7110474779ba2404433ef39a24cb5b277186ef1e6cb199b0b60907b029a1ce');
    {
       index: 1,
@@ -842,53 +793,45 @@ transactionHash | `string` | true     |         | Hash of a transaction
       ],
     }
 ```
+<a name="Conflux+sendRawTransaction"></a>
 
-### Conflux.prototype.sendRawTransaction <a id="Conflux.js/Conflux/sendRawTransaction"></a>
-
+### conflux.sendRawTransaction(hex) ⇒ <code>Promise.&lt;undefined&gt;</code>
 Creates new message call transaction or a contract creation for signed transactions.
 
-* **Parameters**
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;undefined&gt;</code> - The transaction hash, or the zero hash if the transaction is not yet available.  
 
-Name | Type            | Required | Default | Description
------|-----------------|----------|---------|-----------------------------
-hex  | `string,Buffer` | true     |         | The signed transaction data.
+| Param | Type | Description |
+| --- | --- | --- |
+| hex | <code>string</code> \| <code>Buffer</code> | The signed transaction data. |
 
-* **Returns**
-
-`Promise.<PendingTransaction>` The transaction hash, or the zero hash if the transaction is not yet available.
-
-* **Examples**
-
-```
+**Example**  
+```js
 > await conflux.sendRawTransaction('0xf85f800382520894bbd9e9b...');
    "0xbe007c3eca92d01f3917f33ae983f40681182cf618defe75f490a65aac016914"
 ```
+<a name="Conflux+sendTransaction"></a>
 
-### Conflux.prototype.sendTransaction <a id="Conflux.js/Conflux/sendTransaction"></a>
-
+### conflux.sendTransaction(options, [...password]) ⇒ <code>Promise.&lt;undefined&gt;</code>
 Sign and send transaction
 if `from` field in `conflux.wallet`, sign by local account and send raw transaction,
 else call `cfx_sendTransaction` and sign by remote wallet
 
-* **Parameters**
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;undefined&gt;</code> - The PendingTransaction object.  
 
-Name     | Type     | Required | Default | Description
----------|----------|----------|---------|-----------------------------------------------------------------------------
-options  | `object` | true     |         | See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**)
-password | `string` | false    |         | Password for remote node.
+| Param | Type | Description |
+| --- | --- | --- |
+| options | [<code>TransactionMeta</code>](#TransactionMeta) | See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**) |
+| [...password] | <code>string</code> | Password for remote node. |
 
-* **Returns**
-
-`Promise.<PendingTransaction>` The PendingTransaction object.
-
-* **Examples**
-
-```
+**Example**  
+```js
 > txHash = await conflux.sendTransaction({from:account, to:address, value:0}); // send and get transaction hash
    "0xb2ba6cca35f0af99a9601d09ee19c1949d8130312550e3f5413c520c6d828f88"
 ```
-
-```
+**Example**  
+```js
 > packedTx = await conflux.sendTransaction({from:account, to:address, value:0}).get(); // await till transaction packed
    {
     "nonce": 8n,
@@ -911,8 +854,8 @@ password | `string` | false    |         | Password for remote node.
     "to": "CFXTEST:TYPE.USER:AAR7X4R8MKRNW39GGS8RZ40J1ZNWH5MRRPUFPR2U76"
    }
 ```
-
-```
+**Example**  
+```js
 > minedTx = await conflux.sendTransaction({from:account, to:address, value:0}).mined(); // await till transaction mined
    {
     "nonce": 8n,
@@ -935,8 +878,8 @@ password | `string` | false    |         | Password for remote node.
     "to": "CFXTEST:TYPE.USER:AAR7X4R8MKRNW39GGS8RZ40J1ZNWH5MRRPUFPR2U76"
    }
 ```
-
-```
+**Example**  
+```js
 > executedReceipt = await conflux.sendTransaction({from:account, to:address, value:0}).executed(); // await till transaction executed
    {
     "index": 0,
@@ -954,8 +897,8 @@ password | `string` | false    |         | Password for remote node.
     "transactionHash": "0xb2ba6cca35f0af99a9601d09ee19c1949d8130312550e3f5413c520c6d828f88"
    }
 ```
-
-```
+**Example**  
+```js
 > confirmedReceipt = await conflux.sendTransaction({from:account, to:address, value:0}).confirmed(); // await till risk coefficient < threshold (default 1e-8)
    {
     "index": 0,
@@ -973,73 +916,61 @@ password | `string` | false    |         | Password for remote node.
     "transactionHash": "0xb2ba6cca35f0af99a9601d09ee19c1949d8130312550e3f5413c520c6d828f88"
    }
 ```
+<a name="Conflux+getCode"></a>
 
-### Conflux.prototype.getCode <a id="Conflux.js/Conflux/getCode"></a>
-
+### conflux.getCode(address, [epochNumber]) ⇒ <code>Promise.&lt;string&gt;</code>
 Returns the code of given contract.
 
-* **Parameters**
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;string&gt;</code> - Byte code of contract, or 0x if the contract does not exist.  
 
-Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|-----------------------------------------------------------------------------
-address     | `string`        | true     |                | Address to contract.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| address | <code>string</code> |  | Address to contract. |
+| [epochNumber] | <code>string</code> \| <code>number</code> | <code>&quot;&#x27;latest_state&#x27;&quot;</code> | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber) |
 
-* **Returns**
-
-`Promise.<string>` Byte code of contract, or 0x if the contract does not exist.
-
-* **Examples**
-
-```
+**Example**  
+```js
 > await conflux.getCode('cfxtest:acb2nsctbanb9ezbw0mx1gapve60thyurjmxkage0f');
    "0x6080604052348015600f57600080fd5b506004361060325760003560e01c806306661abd1460375780638..."
 ```
+<a name="Conflux+getStorageAt"></a>
 
-### Conflux.prototype.getStorageAt <a id="Conflux.js/Conflux/getStorageAt"></a>
-
+### conflux.getStorageAt(address, position, [epochNumber]) ⇒ <code>Promise.&lt;(string\|null)&gt;</code>
 Returns storage entries from a given contract.
 
-* **Parameters**
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;(string\|null)&gt;</code> - Storage entry of given query, or null if the it does not exist.  
 
-Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|-----------------------------------------------------------------------------
-address     | `string`        | true     |                | Address to contract.
-position    | `string`        | true     |                | The given position.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| address | <code>string</code> |  | Address to contract. |
+| position | <code>string</code> |  | The given position. |
+| [epochNumber] | <code>string</code> \| <code>number</code> | <code>&quot;&#x27;latest_state&#x27;&quot;</code> | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber) |
 
-* **Returns**
-
-`Promise.<(string|null)>` Storage entry of given query, or null if the it does not exist.
-
-* **Examples**
-
-```
+**Example**  
+```js
 > await conflux.getStorageAt('cfxtest:acdgzwyh9634bnuf4jne0tp3xmae80bwej1w4hr66c', '0x6661e9d6d8b923d5bbaab1b96e1dd51ff6ea2a93520fdc9eb75d059238b8c5e9')
    "0x000000000000000000000000000000000000000000000000000000000000162e"
 ```
+<a name="Conflux+getStorageRoot"></a>
 
-### Conflux.prototype.getStorageRoot <a id="Conflux.js/Conflux/getStorageRoot"></a>
-
+### conflux.getStorageRoot(address, [epochNumber]) ⇒ <code>Promise.&lt;object&gt;</code>
 Returns the storage root of a given contract.
 
-* **Parameters**
-
-Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|-----------------------------------------------------------------------------
-address     | `string`        | true     |                | Address to contract.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
-
-* **Returns**
-
-`Promise.<object>` A storage root object, or `null` if the contract does not exist
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;object&gt;</code> - A storage root object, or `null` if the contract does not exist
 - delta `string`: storage root in the delta trie.
 - intermediate `string`: storage root in the intermediate trie.
-- snapshot `string`: storage root in the snapshot.
+- snapshot `string`: storage root in the snapshot.  
 
-* **Examples**
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| address | <code>string</code> |  | Address to contract. |
+| [epochNumber] | <code>string</code> \| <code>number</code> | <code>&quot;&#x27;latest_state&#x27;&quot;</code> | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber) |
 
-```
+**Example**  
+```js
 > await conflux.getStorageRoot('cfxtest:acdgzwyh9634bnuf4jne0tp3xmae80bwej1w4hr66c')
    {
       "delta": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470",
@@ -1047,30 +978,26 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNum
       "snapshot": "0x7bb7d43152e56f529fbef709aab7371b0672f2332ae0fb4786da350f664df5b4"
    }
 ```
+<a name="Conflux+getSponsorInfo"></a>
 
-### Conflux.prototype.getSponsorInfo <a id="Conflux.js/Conflux/getSponsorInfo"></a>
-
+### conflux.getSponsorInfo(address, [epochNumber]) ⇒ <code>Promise.&lt;SponsorInfo&gt;</code>
 Returns the sponsor info of given contract.
 
-* **Parameters**
-
-Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|-----------------------------------------------------------------------------
-address     | `string`        | true     |                | Address to contract.
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
-
-* **Returns**
-
-`Promise.<object>` A sponsor info object, if the contract doesn't have a sponsor, then the all fields in returned object will be 0:
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;SponsorInfo&gt;</code> - A sponsor info object, if the contract doesn't have a sponsor, then the all fields in returned object will be 0:
 - sponsorBalanceForCollateral `BigInt`: the sponsored balance for storage.
 - sponsorBalanceForGas `BigInt`: the sponsored balance for gas.
 - sponsorGasBound `BigInt`: the max gas could be sponsored for one transaction.
 - sponsorForCollateral `string`: the address of the storage sponsor.
-- sponsorForGas `string`: the address of the gas sponsor.
+- sponsorForGas `string`: the address of the gas sponsor.  
 
-* **Examples**
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| address | <code>string</code> |  | Address to contract. |
+| [epochNumber] | <code>string</code> \| <code>number</code> | <code>&quot;&#x27;latest_state&#x27;&quot;</code> | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber) |
 
-```
+**Example**  
+```js
 > await conflux.getSponsorInfo('cfxtest:achc8nxj7r451c223m18w2dwjnmhkd6rxa2gc31euw')
    {
       sponsorBalanceForCollateral: 410625000000000000000n,
@@ -1080,111 +1007,91 @@ epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNum
       sponsorForGas: 'CFXTEST:TYPE.CONTRACT:ACGZZ08M8Z2YWKEDA0JZU52FGAZ9U95Y1YV785YANX'
    }
 ```
+<a name="Conflux+getAccountPendingInfo"></a>
 
-### Conflux.prototype.getAccountPendingInfo <a id="Conflux.js/Conflux/getAccountPendingInfo"></a>
-
+### conflux.getAccountPendingInfo(address) ⇒ <code>Promise.&lt;AccountPendingInfo&gt;</code>
 Return pending info of an account
 
-* **Parameters**
-
-Name    | Type     | Required | Default | Description
---------|----------|----------|---------|-------------------
-address | `string` | true     |         | Address to account
-
-* **Returns**
-
-`Promise.<object>` An account pending info object.
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;AccountPendingInfo&gt;</code> - An account pending info object.
 - localNonce `BigInt`: then next nonce can use in the transaction pool
 - nextPendingTx `string`: the hash of next pending transaction
 - pendingCount `BigInt`: the count of pending transactions
-- pendingNonce `BigInt`: the nonce of pending transaction
+- pendingNonce `BigInt`: the nonce of pending transaction  
 
-### Conflux.prototype.getAccountPendingTransactions <a id="Conflux.js/Conflux/getAccountPendingTransactions"></a>
+| Param | Type | Description |
+| --- | --- | --- |
+| address | <code>string</code> | Address to account |
 
+<a name="Conflux+getAccountPendingTransactions"></a>
+
+### conflux.getAccountPendingTransactions(address) ⇒ <code>Promise.&lt;AccountPendingTransactions&gt;</code>
 Return pending transactions of one account
 
-* **Parameters**
-
-Name    | Type     | Required | Default | Description
---------|----------|----------|---------|---------------
-address | `string` | true     |         | base32 address
-
-* **Returns**
-
-`Promise.<object>` An account's pending transactions and info.
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;AccountPendingTransactions&gt;</code> - An account's pending transactions and info.
 - pendingTransactions `Array`: pending transactions
 - firstTxStatus `Object`: the status of first pending tx
-- pendingCount `BigInt`: the count of pending transactions
+- pendingCount `BigInt`: the count of pending transactions  
 
-### Conflux.prototype.getCollateralForStorage <a id="Conflux.js/Conflux/getCollateralForStorage"></a>
+| Param | Type | Description |
+| --- | --- | --- |
+| address | <code>string</code> | base32 address |
 
+<a name="Conflux+getCollateralForStorage"></a>
+
+### conflux.getCollateralForStorage(address, [epochNumber]) ⇒ <code>Promise.&lt;BigInt&gt;</code>
 Returns the size of the collateral storage of given address, in Byte.
 
-* **Parameters**
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;BigInt&gt;</code> - - The collateral storage in Byte.  
 
-Name        | Type     | Required | Default        | Description
-------------|----------|----------|----------------|-----------------------------------------------------------------------------
-address     | `string` | true     |                | Address to check for collateral storage.
-epochNumber |          | false    | 'latest_state' | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| address | <code>string</code> |  | Address to check for collateral storage. |
+| [epochNumber] |  | <code>&#x27;latest_state&#x27;</code> | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber) |
 
-* **Returns**
-
-`Promise.<BigInt>` - The collateral storage in Byte.
-
-* **Examples**
-
-```
+**Example**  
+```js
 > await conflux.getCollateralForStorage('cfxtest:achc8nxj7r451c223m18w2dwjnmhkd6rxa2gc31euw')
    89375000000000000000n
 ```
+<a name="Conflux+call"></a>
 
-### Conflux.prototype.call <a id="Conflux.js/Conflux/call"></a>
-
+### conflux.call(options, [epochNumber]) ⇒ <code>Promise.&lt;string&gt;</code>
 Virtually call a contract, return the output data.
 
-* **Parameters**
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;string&gt;</code> - The output data.  
 
-Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|-----------------------------------------------------------------------------
-options     | `object`        | true     |                | See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**)
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| options | [<code>TransactionMeta</code>](#TransactionMeta) |  | See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**) |
+| [epochNumber] | <code>string</code> \| <code>number</code> | <code>&quot;&#x27;latest_state&#x27;&quot;</code> | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber) |
 
-* **Returns**
+<a name="Conflux+estimateGasAndCollateral"></a>
 
-`Promise.<string>` The output data.
-
-### Conflux.prototype.estimateGasAndCollateral <a id="Conflux.js/Conflux/estimateGasAndCollateral"></a>
-
+### conflux.estimateGasAndCollateral(options, [epochNumber]) ⇒ <code>Promise.&lt;EstimateResult&gt;</code>
 Virtually call a contract, return the estimate gas used and storage collateralized.
 
-* **Parameters**
-
-Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|-----------------------------------------------------------------------------
-options     | `object`        | true     |                | See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**)
-epochNumber | `string,number` | false    | 'latest_state' | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
-
-* **Returns**
-
-`Promise.<object>` A estimate result object:
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;EstimateResult&gt;</code> - A estimate result object:
 - `BigInt` gasUsed: The gas used.
 - `BigInt` gasLimit: The gas limit.
-- `BigInt` storageCollateralized: The storage collateralized in Byte.
+- `BigInt` storageCollateralized: The storage collateralized in Byte.  
 
-### Conflux.prototype.estimateGasAndCollateralAdvance <a id="Conflux.js/Conflux/estimateGasAndCollateralAdvance"></a>
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| options | [<code>TransactionMeta</code>](#TransactionMeta) |  | See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**) |
+| [epochNumber] | <code>string</code> \| <code>number</code> | <code>&quot;&#x27;latest_state&#x27;&quot;</code> | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber) |
 
+<a name="Conflux+estimateGasAndCollateralAdvance"></a>
+
+### conflux.estimateGasAndCollateralAdvance(options, [epochNumber]) ⇒ <code>Promise.&lt;object&gt;</code>
 Estimate a transaction's gas and storageCollateralize, check whether user's balance is enough for fee and value
 
-* **Parameters**
-
-Name        | Type            | Required | Default        | Description
-------------|-----------------|----------|----------------|-----------------------------------------------------------------------------
-options     | `object`        | true     |                | See [estimateGasAndCollateral](#Conflux.js/Conflux/estimateGasAndCollateral)
-epochNumber | `string,number` | false    | 'latest_state' | See [estimateGasAndCollateral](#Conflux.js/Conflux/estimateGasAndCollateral)
-
-* **Returns**
-
-`Promise.<object>` A estimate result with advance info object:
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;object&gt;</code> - A estimate result with advance info object:
 - `BigInt` gasUsed: The gas used.
 - `BigInt` gasLimit: The gas limit.
 - `BigInt` storageCollateralized: The storage collateralized in Byte.
@@ -1192,49 +1099,40 @@ epochNumber | `string,number` | false    | 'latest_state' | See [estimateGasAndC
 - `Boolean` isBalanceEnough: indicate balance is enough for gas and storage fee
 - `Boolean` isBalanceEnoughForValueAndFee: indicate balance is enough for gas and storage fee plus value
 - `Boolean` willPayCollateral: false if the transaction is eligible for storage collateral sponsorship, true otherwise
-- `Boolean` willPayTxFee: false if the transaction is eligible for gas sponsorship, true otherwise
+- `Boolean` willPayTxFee: false if the transaction is eligible for gas sponsorship, true otherwise  
 
-### Conflux.prototype.checkBalanceAgainstTransaction <a id="Conflux.js/Conflux/checkBalanceAgainstTransaction"></a>
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| options | [<code>TransactionMeta</code>](#TransactionMeta) |  | See [estimateGasAndCollateral](#Conflux.js/Conflux/estimateGasAndCollateral) |
+| [epochNumber] | <code>string</code> \| <code>number</code> | <code>&quot;&#x27;latest_state&#x27;&quot;</code> | See [estimateGasAndCollateral](#Conflux.js/Conflux/estimateGasAndCollateral) |
 
+<a name="Conflux+checkBalanceAgainstTransaction"></a>
+
+### conflux.checkBalanceAgainstTransaction(from, to, gas, gasPrice, storageLimit, [epochNumber]) ⇒ <code>Promise.&lt;object&gt;</code>
 Check whether transaction sender's balance is enough for gas and storage fee
 
-* **Parameters**
-
-Name         | Type            | Required | Default | Description
--------------|-----------------|----------|---------|------------------------
-from         | `address`       | true     |         | sender address
-to           | `address`       | true     |         | target address
-gas          | `string,number` | true     |         | gas limit (in drip)
-gasPrice     | `string,number` | true     |         | gas price (in drip)
-storageLimit | `string,number` | true     |         | storage limit (in byte)
-epochNumber  | `string,number` | false    |         | optional epoch number
-
-* **Returns**
-
-`Promise.<object>` A check result object:
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;object&gt;</code> - A check result object:
 - `Boolean` isBalanceEnough: indicate balance is enough for gas and storage fee
 - `Boolean` willPayCollateral: false if the transaction is eligible for storage collateral sponsorship, true otherwise
-- `Boolean` willPayTxFee: false if the transaction is eligible for gas sponsorship, true otherwise
+- `Boolean` willPayTxFee: false if the transaction is eligible for gas sponsorship, true otherwise  
 
-### Conflux.prototype.getLogs <a id="Conflux.js/Conflux/getLogs"></a>
+| Param | Type | Description |
+| --- | --- | --- |
+| from | <code>string</code> | sender address |
+| to | <code>string</code> | target address |
+| gas | <code>string</code> \| <code>number</code> | gas limit (in drip) |
+| gasPrice | <code>string</code> \| <code>number</code> | gas price (in drip) |
+| storageLimit | <code>string</code> \| <code>number</code> | storage limit (in byte) |
+| [epochNumber] | <code>string</code> \| <code>number</code> | optional epoch number |
 
+<a name="Conflux+getLogs"></a>
+
+### conflux.getLogs([options]) ⇒ <code>Promise.&lt;Array.&lt;Log&gt;&gt;</code>
 Returns logs matching the filter provided.
 
-* **Parameters**
-
-Name                | Type                    | Required | Default             | Description
---------------------|-------------------------|----------|---------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-options             | `object`                | false    |                     |
-options.fromEpoch   | `string,number`         | false    | 'latest_checkpoint' | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber). Search will be applied from this epoch number.
-options.toEpoch     | `string,number`         | false    | 'latest_state'      | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber). Search will be applied up until (and including) this epoch number.
-options.blockHashes | `Array.<string>`        | false    |                     | Array of up to 128 block hashes that the search will be applied to. This will override from/to epoch fields if it's not null
-options.address     | `string,Array.<string>` | false    |                     | Search contract addresses. If null, match all. If specified, log must be produced by one of these addresses.
-options.topics      | `array`                 | false    |                     | Search topics. Logs can have 4 topics: the function signature and up to 3 indexed event arguments. The elements of topics match the corresponding log topics. Example: ["0xA", null, ["0xB", "0xC"], null] matches logs with "0xA" as the 1st topic AND ("0xB" OR "0xC") as the 3rd topic. If null, match all.
-options.limit       | `number`                | false    |                     | Return the last limit logs
-
-* **Returns**
-
-`Promise.<Array.<object>>` Array of log, that the logs matching the filter provided:
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;Array.&lt;Log&gt;&gt;</code> - Array of log, that the logs matching the filter provided:
 - address `string`: Address this event originated from.
 - topics `string[]`: Array of topics.
 - data `string`: The data containing non-indexed log parameter.
@@ -1243,11 +1141,14 @@ options.limit       | `number`                | false    |                     |
 - transactionHash `string`: Hash of the transaction where the log in.
 - transactionIndex `string`: Transaction index in the block.
 - logIndex `number`: Log index in block.
-- transactionLogIndex `number`: Log index in transaction.
+- transactionLogIndex `number`: Log index in transaction.  
 
-* **Examples**
+| Param | Type |
+| --- | --- |
+| [options] | <code>LogFilter</code> | 
 
-```
+**Example**  
+```js
 > await conflux.getLogs({
       address: 'cfxtest:achc8nxj7r451c223m18w2dwjnmhkd6rxa2gc31euw',
       fromEpoch: 39802,
@@ -1274,26 +1175,22 @@ options.limit       | `number`                | false    |                     |
     }
    ]
 ```
+<a name="Conflux+traceBlock"></a>
 
-### Conflux.prototype.traceBlock <a id="Conflux.js/Conflux/traceBlock"></a>
-
+### conflux.traceBlock(blockHash) ⇒ <code>Promise.&lt;Array.&lt;object&gt;&gt;</code>
 Return block's execution trace.
 
 > Note: need RPC server open trace_block method
 
-* **Parameters**
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;Array.&lt;object&gt;&gt;</code> - Array of transaction traces.  
 
-Name      | Type     | Required | Default | Description
-----------|----------|----------|---------|------------
-blockHash | `string` | true     |         | block hash
+| Param | Type | Description |
+| --- | --- | --- |
+| blockHash | <code>string</code> | block hash |
 
-* **Returns**
-
-`Promise.<Array.<object>>` Array of transaction traces.
-
-* **Examples**
-
-```
+**Example**  
+```js
 > await conflux.traceBlock('0xaf0e1d773dee28c95bcfa5480ed663fcc695b32c8c1dd81f57ff61ff09f55f88')
    {
         "transactionTraces": [
@@ -1328,44 +1225,36 @@ blockHash | `string` | true     |         | block hash
         ]
     }
 ```
+<a name="Conflux+traceTransaction"></a>
 
-### Conflux.prototype.traceTransaction <a id="Conflux.js/Conflux/traceTransaction"></a>
-
+### conflux.traceTransaction(txHash) ⇒ <code>Promise.&lt;Array.&lt;Trace&gt;&gt;</code>
 Return transaction's trace
 
-* **Parameters**
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;Array.&lt;Trace&gt;&gt;</code> - Array of traces.  
 
-Name   | Type     | Required | Default | Description
--------|----------|----------|---------|-----------------
-txHash | `string` | true     |         | transaction hash
+| Param | Type | Description |
+| --- | --- | --- |
+| txHash | <code>string</code> | transaction hash |
 
-* **Returns**
-
-`Promise.<Array.<object>>` Array of traces.
-
-* **Examples**
-
-```
+**Example**  
+```js
 > await conflux.traceTransaction('0xaf0e1d773dee28c95bcfa5480ed663fcc695b32c8c1dd81f57ff61ff09f55f88')
 ```
+<a name="Conflux+traceFilter"></a>
 
-### Conflux.prototype.traceFilter <a id="Conflux.js/Conflux/traceFilter"></a>
-
+### conflux.traceFilter(filter) ⇒ <code>Promise.&lt;Array.&lt;Trace&gt;&gt;</code>
 Return traces that satisfy an filter
 
-* **Parameters**
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;Array.&lt;Trace&gt;&gt;</code> - Array of traces.  
 
-Name    | Type     | Required | Default | Description
---------|----------|----------|---------|--------------
-options | `object` | true     |         | trace filters
+| Param | Type | Description |
+| --- | --- | --- |
+| filter | <code>TraceFilter</code> | trace filters |
 
-* **Returns**
-
-`Promise.<Array.<object>>` Array of traces.
-
-* **Examples**
-
-```
+**Example**  
+```js
 > await conflux.traceFilter({
       fromEpoch: 1,
       toEpoch: 100,
@@ -1375,78 +1264,65 @@ options | `object` | true     |         | trace filters
       actionTypes: ['call_result']
     })
 ```
+<a name="Conflux+getEpochReceipts"></a>
 
-### Conflux.prototype.getEpochReceipts <a id="Conflux.js/Conflux/getEpochReceipts"></a>
-
+### conflux.getEpochReceipts(epochNumber) ⇒ <code>Promise.&lt;Array.&lt;Array.&lt;object&gt;&gt;&gt;</code>
 Return one epoch's all receipts
 
-* **Parameters**
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;Array.&lt;Array.&lt;object&gt;&gt;&gt;</code> - Array of array receipts.  
 
-Name        | Type            | Required | Default | Description
-------------|-----------------|----------|---------|-------------
-epochNumber | `number,string` | true     |         | epoch number
+| Param | Type | Description |
+| --- | --- | --- |
+| epochNumber | <code>number</code> \| <code>string</code> | epoch number |
 
-* **Returns**
-
-`Promise.<Array.<Array.<object>>>` Array of array receipts.
-
-* **Examples**
-
-```
+**Example**  
+```js
 > await conflux.getEpochReceipts('0x6')
 ```
+<a name="Conflux+getEpochReceiptsByPivotBlockHash"></a>
 
-### Conflux.prototype.getEpochReceiptsByPivotBlockHash <a id="Conflux.js/Conflux/getEpochReceiptsByPivotBlockHash"></a>
-
+### conflux.getEpochReceiptsByPivotBlockHash(pivotBlockHash) ⇒ <code>Promise.&lt;Array.&lt;Array.&lt;TransactionReceipt&gt;&gt;&gt;</code>
 Return one epoch's all receipts by pivot block hash
 
-* **Parameters**
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;Array.&lt;Array.&lt;TransactionReceipt&gt;&gt;&gt;</code> - Array of array receipts.  
 
-Name           | Type     | Required | Default | Description
----------------|----------|----------|---------|-----------------------
-pivotBlockHash | `string` | true     |         | epoch pivot block hash
+| Param | Type | Description |
+| --- | --- | --- |
+| pivotBlockHash | <code>string</code> | epoch pivot block hash |
 
-* **Returns**
-
-`Promise.<Array.<Array.<object>>>` Array of array receipts.
-
-* **Examples**
-
-```
+**Example**  
+```js
 > await conflux.getEpochReceiptsByPivotBlockHash('0x12291776d632d966896b6c580f3201cd2e2a3fd672378fc7965aa7f7058282b2')
 ```
+<a name="Conflux+getPoSEconomics"></a>
 
-### Conflux.prototype.getPoSEconomics <a id="Conflux.js/Conflux/getPoSEconomics"></a>
-
+### conflux.getPoSEconomics() ⇒ <code>Promise.&lt;PoSEconomics&gt;</code>
 Return PoS summary info
 
-* **Returns**
-
-`Promise.<object>` PoS summary info
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;PoSEconomics&gt;</code> - PoS summary info
 - distributablePosInterest `number`: Currently total distributable PoS interest (Drip)
 - lastDistributeBlock `number`: Last distribute block number
-- totalPosStakingTokens `number`: Total token amount (Drip) staked in PoS
+- totalPosStakingTokens `number`: Total token amount (Drip) staked in PoS  
+<a name="Conflux+subscribe"></a>
 
-### Conflux.prototype.subscribe <a id="Conflux.js/Conflux/subscribe"></a>
-
+### conflux.subscribe(name, ...args) ⇒ <code>Promise.&lt;string&gt;</code>
 Subscribe event by name and got id, and provider will emit event by id
 
 > Note: suggest use `conflux.subscribeXXX` to subscribe
 
-* **Parameters**
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;string&gt;</code> - Id of subscription  
 
-Name    | Type     | Required | Default | Description
---------|----------|----------|---------|-----------------------
-name    | `string` | true     |         | Subscription name
-...args | `array`  | true     |         | Subscription arguments
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> | Subscription name |
+| ...args | <code>array</code> | Subscription arguments |
 
-* **Returns**
-
-`Promise.<string>` Id of subscription
-
-* **Examples**
-
-```
+**Example**  
+```js
 > conflux = new Conflux({url:'ws://127.0.0.1:12535'})
 > id = await conflux.subscribe('epochs');
    "0x8fe7879a1681e9b9"
@@ -1459,31 +1335,27 @@ name    | `string` | true     |         | Subscription name
      epochNumber: '0x8cb32'
    }
 ```
+<a name="Conflux+subscribeEpochs"></a>
 
-### Conflux.prototype.subscribeEpochs <a id="Conflux.js/Conflux/subscribeEpochs"></a>
-
+### conflux.subscribeEpochs([sub_epoch]) ⇒ <code>Promise.&lt;Subscription&gt;</code>
 The epochs topic streams consensus results: the total order of blocks, as expressed by a sequence of epochs.
 The returned series of epoch numbers is monotonically increasing with an increment of one.
 If you see the same epoch twice, this suggests a pivot chain reorg has happened (this might happen for recent epochs).
 For each epoch, the last hash in epochHashesOrdered is the hash of the pivot block.
 
-* **Parameters**
-
-Name      | Type     | Required | Default | Description
-----------|----------|----------|---------|------------------------------------------------------------------
-sub_epoch | `string` | false    |         | Available values are latest_mined(default value) and latest_state
-
-* **Returns**
-
-`Promise.<Subscription>` EventEmitter instance with the follow events:
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;Subscription&gt;</code> - EventEmitter instance with the follow events:
 - 'data':
   - epochNumber `number`: epoch number
   - epochHashesOrdered `array`: epoch block hash in order
-    - `string`: block hash
+    - `string`: block hash  
 
-* **Examples**
+| Param | Type | Description |
+| --- | --- | --- |
+| [sub_epoch] | <code>string</code> | Available values are latest_mined(default value) and latest_state |
 
-```
+**Example**  
+```js
 > subscription = await conflux.subscribeEpochs()
 > subscription.on('data', data=>console.log(data))
    {
@@ -1501,19 +1373,16 @@ sub_epoch | `string` | false    |         | Available values are latest_mined(de
      ]
    }
 ```
+<a name="Conflux+subscribeNewHeads"></a>
 
-### Conflux.prototype.subscribeNewHeads <a id="Conflux.js/Conflux/subscribeNewHeads"></a>
-
+### conflux.subscribeNewHeads() ⇒ <code>Promise.&lt;Subscription&gt;</code>
 The newHeads topic streams all new block headers participating in the consensus.
 
-* **Returns**
-
-`Promise.<Subscription>` EventEmitter instance with the follow events:
-- 'data': see `getBlockByHash`
-
-* **Examples**
-
-```
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;Subscription&gt;</code> - EventEmitter instance with the follow events:
+- 'data': see `getBlockByHash`  
+**Example**  
+```js
 > subscription = await conflux.subscribeNewHeads()
 > subscription.on('data', data=>console.log(data))
    {
@@ -1536,31 +1405,27 @@ The newHeads topic streams all new block headers participating in the consensus.
       transactionsRoot: '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'
     }
 ```
+<a name="Conflux+subscribeLogs"></a>
 
-### Conflux.prototype.subscribeLogs <a id="Conflux.js/Conflux/subscribeLogs"></a>
-
+### conflux.subscribeLogs([options]) ⇒ <code>Promise.&lt;Subscription&gt;</code>
 The logs topic streams all logs matching a certain filter, in order.
 In case of a pivot chain reorg (which might affect recent logs), a special revert message is sent.
 All logs received previously that belong to epochs larger than the one in this message should be considered invalid.
 
-* **Parameters**
-
-Name            | Type                    | Required | Default | Description
-----------------|-------------------------|----------|---------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-options         | `object`                | false    |         |
-options.address | `string,Array.<string>` | false    |         | Search contract addresses. If null, match all. If specified, log must be produced by one of these addresses.
-options.topics  | `array`                 | false    |         | Search topics. Logs can have 4 topics: the function signature and up to 3 indexed event arguments. The elements of topics match the corresponding log topics. Example: ["0xA", null, ["0xB", "0xC"], null] matches logs with "0xA" as the 1st topic AND ("0xB" OR "0xC") as the 3rd topic. If null, match all.
-
-* **Returns**
-
-`Promise.<Subscription>` EventEmitter instance with the follow events:
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;Subscription&gt;</code> - EventEmitter instance with the follow events:
 - 'data': see `getLogs`
 - 'revert':
-  - revertTo 'number': epoch number
+  - revertTo 'number': epoch number  
 
-* **Examples**
+| Param | Type | Description |
+| --- | --- | --- |
+| [options] | <code>object</code> |  |
+| [options.address] | <code>string</code> \| <code>Array.&lt;string&gt;</code> | Search contract addresses. If null, match all. If specified, log must be produced by one of these addresses. |
+| [options.topics] | <code>array</code> | Search topics. Logs can have 4 topics: the function signature and up to 3 indexed event arguments. The elements of topics match the corresponding log topics. Example: ["0xA", null, ["0xB", "0xC"], null] matches logs with "0xA" as the 1st topic AND ("0xB" OR "0xC") as the 3rd topic. If null, match all. |
 
-```
+**Example**  
+```js
 > subscription = await conflux.subscribeLogs()
 > subscription.on('data', data=>console.log(data))
    {
@@ -1579,39 +1444,70 @@ options.topics  | `array`                 | false    |         | Search topics. 
      transactionHash: '0x950ddec9ce3b42c4d8ca120722fa318ae64dc2e24553201f55f68c00bfd9cc4c'
    }
 ```
-
-```
+**Example**  
+```js
 > subscription.on('revert', data=>console.log(data))
    { revertTo: 568230 }
    { revertTo: 568231 }
 ```
+<a name="Conflux+unsubscribe"></a>
 
-### Conflux.prototype.unsubscribe <a id="Conflux.js/Conflux/unsubscribe"></a>
-
+### conflux.unsubscribe(id) ⇒ <code>Promise.&lt;boolean&gt;</code>
 Unsubscribe subscription.
 
-* **Parameters**
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;boolean&gt;</code> - Is success  
 
-Name | Type                  | Required | Default | Description
------|-----------------------|----------|---------|----------------
-id   | `string,Subscription` | true     |         | Subscription id
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>string</code> \| <code>Subscription</code> | Subscription id |
 
-* **Returns**
-
-`Promise.<boolean>` Is success
-
-* **Examples**
-
-```
+**Example**  
+```js
 > id = await conflux.subscribe('epochs');
 > await conflux.unsubscribe(id);
    true
 > await conflux.unsubscribe(id);
    false
 ```
-
-```
+**Example**  
+```js
 > subscription = await conflux.subscribeLogs();
 > await conflux.unsubscribe(subscription);
    true
 ```
+<a name="Conflux.create"></a>
+
+### Conflux.create(options) ⇒ [<code>Conflux</code>](#Conflux)
+Create a Conflux instance with networdId set up
+
+**Kind**: static method of [<code>Conflux</code>](#Conflux)  
+
+| Param | Type |
+| --- | --- |
+| options | [<code>ConfluxOption</code>](#ConfluxOption) | 
+
+<a name="ConfluxOption"></a>
+
+## ConfluxOption : <code>Object</code>
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| [options.defaultGasPrice] | <code>string</code> \| <code>number</code> |  | The default gas price in drip to use for transactions. |
+| [options.defaultGasRatio] | <code>number</code> | <code>1.1</code> | The ratio to multiply by gas. |
+| [options.defaultStorageRatio] | <code>number</code> | <code>1.1</code> | The ratio to multiply by storageLimit. |
+| [options.url] | <code>string</code> |  | Url of Conflux node to connect. |
+| [options.retry] | <code>number</code> |  | Retry times if request error occurs. |
+| [options.timeout] | <code>number</code> |  | Request time out in ms |
+| [options.logger] | <code>Object</code> |  | Logger object with 'info' and 'error' method. |
+| [options.networkId] | <code>number</code> |  | Connected RPC's networkId |
+| [options.useWechatProvider] | <code>boolean</code> |  | Use wechat provider |
+| [options.useHexAddressInParameter] | <code>boolean</code> |  | Use hex address in parameter |
+| [options.useVerboseAddress] | <code>boolean</code> |  | Use verbose address |
+
+<a name="TransactionMeta"></a>
+
+## TransactionMeta : [<code>TransactionMeta</code>](#TransactionMeta)
+**Kind**: global typedef  
