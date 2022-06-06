@@ -2,10 +2,14 @@
 
 <dl>
 <dt><a href="#any">any(arg)</a> ⇒ <code><a href="#any">any</a></code></dt>
-<dd></dd>
-<dt><a href="#uInt">uInt(arg)</a> ⇒ <code>Number</code></dt>
-<dd></dd>
+<dd><p>Do nothing for the given value.</p>
+</dd>
+<dt><a href="#uInt">uInt(arg)</a> ⇒ <code>number</code></dt>
+<dd><p>format input to number</p>
+</dd>
 <dt><a href="#bigInt">bigInt(arg)</a> ⇒ <code>BigInt</code></dt>
+<dd></dd>
+<dt><a href="#bigIntFromBuffer">bigIntFromBuffer(arg)</a> ⇒ <code>BigInt</code></dt>
 <dd></dd>
 <dt><a href="#bigUInt">bigUInt(arg)</a> ⇒ <code>BigInt</code></dt>
 <dd></dd>
@@ -21,6 +25,8 @@
 <dt><a href="#hex">hex(arg)</a> ⇒ <code>string</code></dt>
 <dd><p>When encoding UNFORMATTED DATA (byte arrays, account addresses, hashes, bytecode arrays): encode as hex, prefix with &quot;0x&quot;, two hex digits per byte.</p>
 </dd>
+<dt><a href="#hex40">hex40(arg)</a> ⇒ <code>string</code></dt>
+<dd></dd>
 <dt><a href="#address">address(address, networkId, [verbose])</a> ⇒ <code>string</code></dt>
 <dd><p>Checks if a given string is a valid address.</p>
 </dd>
@@ -54,6 +60,8 @@ It will also check the checksum, if the address has upper and lowercase letters.
 <a name="any"></a>
 
 ## any(arg) ⇒ [<code>any</code>](#any)
+Do nothing for the given value.
+
 **Kind**: global function  
 **Returns**: [<code>any</code>](#any) - arg  
 
@@ -68,7 +76,9 @@ It will also check the checksum, if the address has upper and lowercase letters.
 ```
 <a name="uInt"></a>
 
-## uInt(arg) ⇒ <code>Number</code>
+## uInt(arg) ⇒ <code>number</code>
+format input to number
+
 **Kind**: global function  
 
 | Param | Type |
@@ -124,6 +134,15 @@ It will also check the checksum, if the address has upper and lowercase letters.
 > format.bigInt(Number.MAX_SAFE_INTEGER + 1) // unsafe integer
  9007199254740992n
 ```
+<a name="bigIntFromBuffer"></a>
+
+## bigIntFromBuffer(arg) ⇒ <code>BigInt</code>
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| arg | <code>Buffer</code> | 
+
 <a name="bigUInt"></a>
 
 ## bigUInt(arg) ⇒ <code>BigInt</code>
@@ -249,6 +268,16 @@ When encoding UNFORMATTED DATA (byte arrays, account addresses, hashes, bytecode
 > format.hex("0x0a")
  "0x0a"
 ```
+<a name="hex40"></a>
+
+## hex40(arg) ⇒ <code>string</code>
+**Kind**: global function  
+**Returns**: <code>string</code> - hex40 address  
+
+| Param | Type |
+| --- | --- |
+| arg | <code>string</code> \| <code>Buffer</code> | 
+
 <a name="address"></a>
 
 ## address(address, networkId, [verbose]) ⇒ <code>string</code>

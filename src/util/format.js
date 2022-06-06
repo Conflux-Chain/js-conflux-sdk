@@ -70,6 +70,7 @@ const format = new Proxy(() => undefined, {
 });
 
 /**
+ * Do nothing for the given value.
  * @function any
  * @param {any} arg
  * @return {any} arg
@@ -81,9 +82,10 @@ const format = new Proxy(() => undefined, {
 format.any = format(v => v, { name: 'format.any' });
 
 /**
+ * format input to number
  * @function uInt
  * @param {number|BigInt|string|boolean} arg
- * @return {Number}
+ * @return {number}
  *
  * @example
  * > format.uInt(-3.14)
@@ -132,6 +134,11 @@ format.uInt = format(toNumber, { name: 'format.uInt' }).$validate(v => Number.is
  */
 format.bigInt = format(toBigInt, { name: 'format.bigInt' });
 
+/**
+ * @function bigIntFromBuffer
+ * @param {Buffer} arg
+ * @return {BigInt}
+ */
 format.bigIntFromBuffer = format.bigInt.$before(v => (v.length === 0 ? '0x0' : format.hex(v)));
 
 /**
@@ -246,6 +253,11 @@ format.epochNumberOrUndefined = format.epochNumber.$or(undefined);
  */
 format.hex = format(toHex, { name: 'format.hex' });
 
+/**
+ * @function hex40
+ * @param {string|Buffer} arg
+ * @return {string} hex40 address
+ */
 format.hex40 = format.hex.$validate(v => v.length === 2 + 40, 'hex40');
 
 function toAddress(address, networkId, verbose = false) {
