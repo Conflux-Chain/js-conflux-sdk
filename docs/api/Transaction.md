@@ -1,111 +1,114 @@
-- Transaction.js
-    - Transaction
-        - [(static)decodeRaw](#Transaction.js/Transaction/(static)decodeRaw)
-        - [**constructor**](#Transaction.js/Transaction/**constructor**)
-        - [hash(getter)](#Transaction.js/Transaction/hash(getter))
-        - [sign](#Transaction.js/Transaction/sign)
-        - [recover](#Transaction.js/Transaction/recover)
-        - [encode](#Transaction.js/Transaction/encode)
-        - [serialize](#Transaction.js/Transaction/serialize)
+## Classes
 
-----------------------------------------
+<dl>
+<dt><a href="#Transaction">Transaction</a></dt>
+<dd></dd>
+</dl>
 
-## Transaction <a id="Transaction.js/Transaction"></a>
+## Typedefs
 
+<dl>
+<dt><a href="#TransactionMeta">TransactionMeta</a> : <code>CallRequest</code></dt>
+<dd></dd>
+</dl>
 
+<a name="Transaction"></a>
 
-### Transaction.decodeRaw <a id="Transaction.js/Transaction/(static)decodeRaw"></a>
+## Transaction
+**Kind**: global class  
 
-Decode rlp encoded raw transaction hex string
+* [Transaction](#Transaction)
+    * [new Transaction(options)](#new_Transaction_new)
+    * _instance_
+        * [.hash](#Transaction+hash) ⇒ <code>string</code> \| <code>undefined</code>
+        * [.sign(privateKey, networkId)](#Transaction+sign) ⇒ [<code>Transaction</code>](#Transaction)
+        * [.recover()](#Transaction+recover) ⇒ <code>string</code>
+        * [.encode([includeSignature])](#Transaction+encode) ⇒ <code>Buffer</code>
+        * [.serialize()](#Transaction+serialize) ⇒ <code>string</code>
+    * _static_
+        * [.decodeRaw(raw)](#Transaction.decodeRaw) ⇒ [<code>Transaction</code>](#Transaction)
 
-* **Parameters**
+<a name="new_Transaction_new"></a>
 
-Name | Type     | Required | Default | Description
------|----------|----------|---------|-----------------------------------
-raw  | `string` | true     |         | rlp encoded transaction hex string
-
-* **Returns**
-
-`object` A Transaction instance
-
-### Transaction.prototype.**constructor** <a id="Transaction.js/Transaction/**constructor**"></a>
-
+### new Transaction(options)
 Create a transaction.
 
-* **Parameters**
 
-Name                 | Type            | Required | Default | Description
----------------------|-----------------|----------|---------|------------------------------------------------------------------------------------------------------------------------------------------------------------
-options              | `object`        | true     |         |
-options.from         | `string`        | false    |         | The sender address.
-options.nonce        | `string,number` | false    |         | This allows to overwrite your own pending transactions that use the same nonce.
-options.gasPrice     | `string,number` | false    |         | The price of gas for this transaction in drip.
-options.gas          | `string,number` | false    |         | The amount of gas to use for the transaction (unused gas is refunded).
-options.to           | `string`        | false    |         | The destination address of the message, left undefined for a contract-creation transaction.
-options.value        | `string,number` | false    |         | The value transferred for the transaction in drip, also the endowment if it’s a contract-creation transaction.
-options.storageLimit | `string,number` | false    |         | The storage limit specified by the sender.
-options.epochHeight  | `string,number` | false    |         | The epoch proposed by the sender. Note that this is NOT the epoch of the block containing this transaction.
-options.chainId      | `string,number` | false    |         | The chain ID specified by the sender.
-options.data         | `string,Buffer` | false    |         | Either a ABI byte string containing the data of the function call on a contract, or in the case of a contract-creation transaction the initialisation code.
-options.r            | `string,Buffer` | false    |         | ECDSA signature r
-options.s            | `string,Buffer` | false    |         | ECDSA signature s
-options.v            | `number`        | false    |         | ECDSA recovery id
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> |  |
+| [options.from] | <code>string</code> | The sender address. |
+| [options.nonce] | <code>string</code> \| <code>number</code> | This allows to overwrite your own pending transactions that use the same nonce. |
+| [options.gasPrice] | <code>string</code> \| <code>number</code> | The price of gas for this transaction in drip. |
+| [options.gas] | <code>string</code> \| <code>number</code> | The amount of gas to use for the transaction (unused gas is refunded). |
+| [options.to] | <code>string</code> | The destination address of the message, left undefined for a contract-creation transaction. |
+| [options.value] | <code>string</code> \| <code>number</code> | The value transferred for the transaction in drip, also the endowment if it’s a contract-creation transaction. |
+| [options.storageLimit] | <code>string</code> \| <code>number</code> | The storage limit specified by the sender. |
+| [options.epochHeight] | <code>string</code> \| <code>number</code> | The epoch proposed by the sender. Note that this is NOT the epoch of the block containing this transaction. |
+| [options.chainId] | <code>string</code> \| <code>number</code> | The chain ID specified by the sender. |
+| [options.data] | <code>string</code> \| <code>Buffer</code> | Either a ABI byte string containing the data of the function call on a contract, or in the case of a contract-creation transaction the initialisation code. |
+| [options.r] | <code>string</code> \| <code>Buffer</code> | ECDSA signature r |
+| [options.s] | <code>string</code> \| <code>Buffer</code> | ECDSA signature s |
+| [options.v] | <code>number</code> | ECDSA recovery id |
 
-* **Returns**
+<a name="Transaction+hash"></a>
 
-`Transaction` 
-
-### Transaction.prototype.hash <a id="Transaction.js/Transaction/hash(getter)"></a>
-
+### transaction.hash ⇒ <code>string</code> \| <code>undefined</code>
 Getter of transaction hash include signature.
 
 > Note: calculate every time.
 
-* **Returns**
+**Kind**: instance property of [<code>Transaction</code>](#Transaction)  
+**Returns**: <code>string</code> \| <code>undefined</code> - If transaction has r,s,v return hex string, else return undefined.  
+<a name="Transaction+sign"></a>
 
-`string,undefined` If transaction has r,s,v return hex string, else return undefined.
-
-### Transaction.prototype.sign <a id="Transaction.js/Transaction/sign"></a>
-
+### transaction.sign(privateKey, networkId) ⇒ [<code>Transaction</code>](#Transaction)
 Sign transaction and set 'r','s','v'.
 
-* **Parameters**
+**Kind**: instance method of [<code>Transaction</code>](#Transaction)  
 
-Name       | Type     | Required | Default | Description
------------|----------|----------|---------|------------------------
-privateKey | `string` | true     |         | Private key hex string.
-networkId  | `number` | true     |         | fullnode's network id.
+| Param | Type | Description |
+| --- | --- | --- |
+| privateKey | <code>string</code> | Private key hex string. |
+| networkId | <code>number</code> | fullnode's network id. |
 
-* **Returns**
+<a name="Transaction+recover"></a>
 
-`Transaction` 
-
-### Transaction.prototype.recover <a id="Transaction.js/Transaction/recover"></a>
-
+### transaction.recover() ⇒ <code>string</code>
 Recover public key from signed Transaction.
 
-* **Returns**
+**Kind**: instance method of [<code>Transaction</code>](#Transaction)  
+<a name="Transaction+encode"></a>
 
-`string` 
-
-### Transaction.prototype.encode <a id="Transaction.js/Transaction/encode"></a>
-
+### transaction.encode([includeSignature]) ⇒ <code>Buffer</code>
 Encode rlp.
 
-* **Parameters**
+**Kind**: instance method of [<code>Transaction</code>](#Transaction)  
 
-Name             | Type      | Required | Default | Description
------------------|-----------|----------|---------|-----------------------------------------
-includeSignature | `boolean` | false    | false   | Whether or not to include the signature.
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [includeSignature] | <code>boolean</code> | <code>false</code> | Whether or not to include the signature. |
 
-* **Returns**
+<a name="Transaction+serialize"></a>
 
-`Buffer` 
-
-### Transaction.prototype.serialize <a id="Transaction.js/Transaction/serialize"></a>
-
+### transaction.serialize() ⇒ <code>string</code>
 Get the raw transaction hex string.
 
-* **Returns**
+**Kind**: instance method of [<code>Transaction</code>](#Transaction)  
+**Returns**: <code>string</code> - Hex string  
+<a name="Transaction.decodeRaw"></a>
 
-`string` Hex string
+### Transaction.decodeRaw(raw) ⇒ [<code>Transaction</code>](#Transaction)
+Decode rlp encoded raw transaction hex string
+
+**Kind**: static method of [<code>Transaction</code>](#Transaction)  
+**Returns**: [<code>Transaction</code>](#Transaction) - A Transaction instance  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| raw | <code>string</code> | rlp encoded transaction hex string |
+
+<a name="TransactionMeta"></a>
+
+## TransactionMeta : <code>CallRequest</code>
+**Kind**: global typedef  

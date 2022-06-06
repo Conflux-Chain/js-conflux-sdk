@@ -3,7 +3,7 @@ const { sleep } = require('../util');
 class PendingTransaction {
   /**
    * PendingTransaction constructor.
-   * @param {import('../Conflux')} conflux
+   * @param {import('../Conflux').Conflux} conflux
    * @param {function} func
    * @param {array} args
    * @return {PendingTransaction}

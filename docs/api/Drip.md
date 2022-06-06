@@ -1,110 +1,89 @@
-- Drip.js
-    - Drip
-        - [(static)fromCFX](#Drip.js/Drip/(static)fromCFX)
-        - [(static)fromGDrip](#Drip.js/Drip/(static)fromGDrip)
-        - [**constructor**](#Drip.js/Drip/**constructor**)
-        - [toCFX](#Drip.js/Drip/toCFX)
-        - [toGDrip](#Drip.js/Drip/toGDrip)
+<a name="Drip"></a>
 
-----------------------------------------
-
-## Drip <a id="Drip.js/Drip"></a>
-
+## Drip
 Positive decimal integer string in `Drip`
 
-### Drip.fromCFX <a id="Drip.js/Drip/(static)fromCFX"></a>
+**Kind**: global class  
 
-Get `Drip` string from `CFX`
+* [Drip](#Drip)
+    * [new Drip(value)](#new_Drip_new)
+    * _instance_
+        * [.toCFX()](#Drip+toCFX) ⇒ <code>string</code>
+        * [.toGDrip()](#Drip+toGDrip) ⇒ <code>string</code>
+    * _static_
+        * [.fromCFX(value)](#Drip.fromCFX) ⇒ [<code>Drip</code>](#Drip)
+        * [.fromGDrip(value)](#Drip.fromGDrip) ⇒ [<code>Drip</code>](#Drip)
 
-* **Parameters**
+<a name="new_Drip_new"></a>
 
-Name  | Type            | Required | Default | Description
-------|-----------------|----------|---------|------------
-value | `string,number` | true     |         |
+### new Drip(value)
 
-* **Returns**
+| Param | Type |
+| --- | --- |
+| value | <code>number</code> \| <code>string</code> | 
 
-`Drip` 
-
-* **Examples**
-
-```
-> Drip.fromCFX(3.14)
-   [String (Drip): '3140000000000000000']
-> Drip.fromCFX('0xab')
-   [String (Drip): '171000000000000000000']
-```
-
-### Drip.fromGDrip <a id="Drip.js/Drip/(static)fromGDrip"></a>
-
-Get `Drip` string from `GDrip`
-
-* **Parameters**
-
-Name  | Type            | Required | Default | Description
-------|-----------------|----------|---------|------------
-value | `string,number` | true     |         |
-
-* **Returns**
-
-`Drip` 
-
-* **Examples**
-
-```
-> Drip.fromGDrip(3.14)
-   [String (Drip): '3140000000']
-> Drip.fromGDrip('0xab')
-   [String (Drip): '171000000000']
-```
-
-### Drip.prototype.**constructor** <a id="Drip.js/Drip/**constructor**"></a>
-
-* **Parameters**
-
-Name  | Type            | Required | Default | Description
-------|-----------------|----------|---------|------------
-value | `number,string` | true     |         |
-
-* **Returns**
-
-`Drip` 
-
-* **Examples**
-
-```
+**Example**  
+```js
 > new Drip(1.00)
    [String (Drip): '1']
 > new Drip('0xab')
    [String (Drip): '171']
 ```
+<a name="Drip+toCFX"></a>
 
-### Drip.prototype.toCFX <a id="Drip.js/Drip/toCFX"></a>
-
+### drip.toCFX() ⇒ <code>string</code>
 Get `CFX` number string
 
-* **Returns**
-
-`string` 
-
-* **Examples**
-
-```
+**Kind**: instance method of [<code>Drip</code>](#Drip)  
+**Example**  
+```js
 > Drip(1e9).toCFX()
    "0.000000001"
 ```
+<a name="Drip+toGDrip"></a>
 
-### Drip.prototype.toGDrip <a id="Drip.js/Drip/toGDrip"></a>
-
+### drip.toGDrip() ⇒ <code>string</code>
 Get `GDrip` number string
 
-* **Returns**
-
-`string` 
-
-* **Examples**
-
-```
+**Kind**: instance method of [<code>Drip</code>](#Drip)  
+**Example**  
+```js
 > Drip(1e9).toGDrip()
    "1"
+```
+<a name="Drip.fromCFX"></a>
+
+### Drip.fromCFX(value) ⇒ [<code>Drip</code>](#Drip)
+Get `Drip` string from `CFX`
+
+**Kind**: static method of [<code>Drip</code>](#Drip)  
+
+| Param | Type |
+| --- | --- |
+| value | <code>string</code> \| <code>number</code> | 
+
+**Example**  
+```js
+> Drip.fromCFX(3.14)
+   [String (Drip): '3140000000000000000']
+> Drip.fromCFX('0xab')
+   [String (Drip): '171000000000000000000']
+```
+<a name="Drip.fromGDrip"></a>
+
+### Drip.fromGDrip(value) ⇒ [<code>Drip</code>](#Drip)
+Get `Drip` string from `GDrip`
+
+**Kind**: static method of [<code>Drip</code>](#Drip)  
+
+| Param | Type |
+| --- | --- |
+| value | <code>string</code> \| <code>number</code> | 
+
+**Example**  
+```js
+> Drip.fromGDrip(3.14)
+   [String (Drip): '3140000000']
+> Drip.fromGDrip('0xab')
+   [String (Drip): '171000000000']
 ```

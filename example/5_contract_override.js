@@ -3,7 +3,7 @@ const { Conflux } = require('../src'); // require('js-conflux-sdk');
 const { abi, bytecode } = require('./contract/override.json');
 
 const conflux = new Conflux({ 
-    url: 'http://test.confluxrpc.org/v2',
+    url: 'https://test.confluxrpc.com',
     networkId: 1,
 });
 const contract = conflux.Contract({

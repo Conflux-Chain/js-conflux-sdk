@@ -15,6 +15,81 @@ const { checksumAddress, keccak256 } = require('./sign');
 const { ADDRESS_TYPES } = require('../CONST');
 
 /**
+ * encode hex40 address to base32 address
+ * @function encodeCfxAddress
+ * @param {string|Buffer} address - hex40 address
+ * @param {number} numberId - networkId
+ * @param {boolean} [verbose] - if true, return verbose address
+ * @return {string} base32 string address
+ */
+
+/**
+ * decode base32 address to hex40 address
+ * @function decodeCfxAddress
+ * @param {string} address - base32 string
+ * @return {object}
+ */
+
+/**
+ * check if the address is valid
+ * @function isValidCfxAddress
+ * @param {string} address - base32 string
+ * @return {boolean}
+ */
+
+/**
+ * verify base32 address if pass return true if not throw error
+ * @function verifyCfxAddress
+ * @param {string} address - base32 string
+ * @return {boolean}
+ */
+
+/**
+ * check if the address has network prefix
+ * @function hasNetworkPrefix
+ * @param {string} address - base32 string
+ * @return {boolean}
+ */
+
+/**
+ * simplify base32 address to non verbose address
+ * @function simplifyCfxAddress
+ * @param {string} address - base32 string
+ * @return {string} return a non verbose address
+ */
+
+/**
+ * @function shortenCfxAddress
+ * @param {string} address - base32 string
+ * @return {string} Return a short address
+ */
+
+/**
+ * @function isZeroAddress
+ * @param {string} address - base32 string
+ * @return {boolean}
+ */
+
+/**
+ * @function isInternalContractAddress
+ * @param {string} address - base32 string
+ * @return {boolean}
+ */
+
+/**
+ * @function isValidHexAddress
+ * @param {string} address - hex string
+ * @return {boolean}
+ */
+
+/**
+ * check if the address is valid conflux hex address
+ * @function isValidCfxHexAddress
+ * @param {string} address - hex string
+ * @return {boolean}
+ */
+
+/**
  * Makes a ethereum checksum address
  *
  * > Note: support [EIP-55](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-55.md)

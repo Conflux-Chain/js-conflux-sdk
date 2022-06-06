@@ -77,14 +77,14 @@ class Conflux {
     /**
      * Provider for rpc call
      *
-     * @type {import('./provider/BaseProvider')|import('./provider/WechatProvider')|import('./provider/HttpProvider')|import('./provider/WebsocketProvider')}
+     * @type {import('./provider/BaseProvider').BaseProvider|import('./provider/WechatProvider').WechatProvider|import('./provider/HttpProvider').HttpProvider|import('./provider/WebsocketProvider').WebsocketProvider}
      */
     this.provider = providerFactory(rest);
 
     /**
      * Wallet for `sendTransaction` to get `Account` by `from` field
      *
-     * @type {import("./wallet/Wallet")}
+     * @type {import("./wallet/Wallet").Wallet}
      */
     this.wallet = new Wallet();
 
@@ -138,27 +138,27 @@ class Conflux {
 
     /**
      * pos RPC methods
-     * @type {import('./rpc/pos')}
+     * @type {import('./rpc/pos').PoS}
      */
     this.pos = new PoS(this);
     /**
      * trace RPC methods
-     * @type {import('./rpc/trace')}
+     * @type {import('./rpc/trace').Trace}
      */
     this.trace = new Trace(this);
     /**
      * txpool RPC methods
-     * @type {import('./rpc/txpool')}
+     * @type {import('./rpc/txpool').TxPool}
      */
     this.txpool = new TxPool(this);
     /**
      * cfx RPC methods
-     * @type {import('./rpc/cfx')}
+     * @type {import('./rpc/cfx').CFX}
      */
     this.cfx = new CFX(this);
     /**
      * Advanced RPC compose methods
-     * @type {import('./rpc/Advanced')}
+     * @type {import('./rpc/Advanced').AdvancedRPCUtilities}
      */
     this.advanced = new AdvancedRPCUtilities(this);
   }
@@ -217,7 +217,7 @@ class Conflux {
    * A shout cut for `new Contract(options, conflux);`
    *
    * @param {object} options - See [Contract.constructor](Contract.md#Contract.js/constructor)
-   * @return {import('./contract/index')}
+   * @return {import('./contract/index').Contract}
    */
   Contract(options) {
     return new Contract(options, this);
@@ -231,7 +231,7 @@ class Conflux {
    * - [Staking](https://github.com/Conflux-Chain/conflux-rust/blob/master/internal_contract/contracts/Staking.sol)
    *
    * @param {"AdminControl"|"SponsorWhitelistControl"|"Staking"|"ConfluxContext"|"PoSRegister"|"CrossSpaceCall"} name - Internal contract name
-   * @return {import('./contract/index')}
+   * @return {import('./contract/index').Contract}
    *
    * @example
    * > conflux.InternalContract('AdminControl')
@@ -260,7 +260,7 @@ class Conflux {
    * Create an token CRC20 contract with standard CRC20 abi
    *
    * @param {string} address
-   * @returns  {import('./contract/index')} A token contract instance
+   * @returns  {import('./contract/index').Contract} A token contract instance
    */
   CRC20(address) {
     return this.Contract({ address, abi: CRC20_ABI });
@@ -268,7 +268,7 @@ class Conflux {
 
   /**
    * Return a BatchRequester instance which can used to build batch request and decode response data
-   * @returns {import('./rpc/BatchRequester')} - A BatchRequester instance
+   * @returns {import('./rpc/BatchRequester').BatchRequester} - A BatchRequester instance
    */
   BatchRequest() {
     return new BatchRequester(this);
@@ -395,7 +395,7 @@ class Conflux {
    *
    * @param {string} address - address to get account.
    * @param {string|number} [epochNumber='latest_state'] - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
-   * @return {Promise<import('./rpc/types/Account')>} Return the states of the given account:
+   * @return {Promise<import('./rpc/types/Account').Account>} Return the states of the given account:
    * - balance `BigInt`: the balance of the account.
    * - nonce `BigInt`: the nonce of the account's next transaction.
    * - codeHash `string`: the code hash of the account.
@@ -814,7 +814,7 @@ class Conflux {
    * Creates new message call transaction or a contract creation for signed transactions.
    *
    * @param {string|Buffer} hex - The signed transaction data.
-   * @return {Promise<import('./subscribe/PendingTransaction')>} The transaction hash, or the zero hash if the transaction is not yet available.
+   * @return {Promise<import('./subscribe/PendingTransaction').PendingTransaction>} The transaction hash, or the zero hash if the transaction is not yet available.
    *
    * @example
    * > await conflux.sendRawTransaction('0xf85f800382520894bbd9e9b...');
@@ -838,7 +838,7 @@ class Conflux {
    *
    * @param {TransactionMeta} options - See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**)
    * @param {string} [password] - Password for remote node.
-   * @return {Promise<import('./subscribe/PendingTransaction')>} The PendingTransaction object.
+   * @return {Promise<import('./subscribe/PendingTransaction').PendingTransaction>} The PendingTransaction object.
    *
    * @example
    * > txHash = await conflux.sendTransaction({from:account, to:address, value:0}); // send and get transaction hash

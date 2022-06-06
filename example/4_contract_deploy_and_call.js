@@ -3,7 +3,7 @@ const { Conflux, Transaction, format } = require('../src'); // require('js-confl
 const { abi, bytecode } = require('./contract/miniERC20.json');
 
 const conflux = new Conflux({ 
-    url: 'http://test.confluxrpc.org/v2',
+    url: 'https://test.confluxrpc.com',
     networkId: 1,
 });
 const accountAlice = conflux.wallet.addPrivateKey('0xa816a06117e572ca7ae2f786a046d2bc478051d0717bf5cc4f5397923258d393');
