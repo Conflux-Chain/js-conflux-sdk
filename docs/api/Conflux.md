@@ -26,21 +26,21 @@ The Client class that provides an interface to the Conflux network.
     * [new Conflux([options])](#new_Conflux_new)
     * _instance_
         * [.version](#Conflux+version) : <code>string</code>
-        * [.provider](#Conflux+provider) : <code>undefined</code> \| <code>undefined</code> \| <code>undefined</code> \| <code>undefined</code>
-        * [.wallet](#Conflux+wallet) : <code>undefined</code>
+        * [.provider](#Conflux+provider) : <code>BaseProvider</code> \| <code>WechatProvider</code> \| <code>HttpProvider</code> \| <code>WebsocketProvider</code>
+        * [.wallet](#Conflux+wallet) : <code>Wallet</code>
         * ~~[.defaultGasPrice](#Conflux+defaultGasPrice) : <code>number</code> \| <code>string</code>~~
         * [.defaultGasRatio](#Conflux+defaultGasRatio) : <code>number</code>
         * [.defaultStorageRatio](#Conflux+defaultStorageRatio) : <code>number</code>
-        * [.pos](#Conflux+pos) : <code>undefined</code>
-        * [.trace](#Conflux+trace) : <code>undefined</code>
-        * [.txpool](#Conflux+txpool) : <code>undefined</code>
-        * [.cfx](#Conflux+cfx) : <code>undefined</code>
-        * [.advanced](#Conflux+advanced) : <code>undefined</code>
+        * [.pos](#Conflux+pos) : <code>PoS</code>
+        * [.trace](#Conflux+trace) : <code>Trace</code>
+        * [.txpool](#Conflux+txpool) : <code>TxPool</code>
+        * [.cfx](#Conflux+cfx) : <code>CFX</code>
+        * [.advanced](#Conflux+advanced) : <code>AdvancedRPCUtilities</code>
         * [.request()](#Conflux+request)
-        * [.Contract(options)](#Conflux+Contract) ⇒ <code>undefined</code>
-        * [.InternalContract(name)](#Conflux+InternalContract) ⇒ <code>undefined</code>
-        * [.CRC20(address)](#Conflux+CRC20) ⇒ <code>undefined</code>
-        * [.BatchRequest()](#Conflux+BatchRequest) ⇒ <code>undefined</code>
+        * [.Contract(options)](#Conflux+Contract) ⇒ <code>Contract</code>
+        * [.InternalContract(name)](#Conflux+InternalContract) ⇒ <code>Contract</code>
+        * [.CRC20(address)](#Conflux+CRC20) ⇒ <code>Contract</code>
+        * [.BatchRequest()](#Conflux+BatchRequest) ⇒ <code>BatchRequester</code>
         * [.close()](#Conflux+close)
         * [.updateNetworkId()](#Conflux+updateNetworkId)
         * [.getClientVersion()](#Conflux+getClientVersion) ⇒ <code>Promise.&lt;string&gt;</code>
@@ -49,7 +49,7 @@ The Client class that provides an interface to the Conflux network.
         * [.getGasPrice()](#Conflux+getGasPrice) ⇒ <code>Promise.&lt;BigInt&gt;</code>
         * [.getInterestRate([epochNumber])](#Conflux+getInterestRate) ⇒ <code>Promise.&lt;BigInt&gt;</code>
         * [.getAccumulateInterestRate([epochNumber])](#Conflux+getAccumulateInterestRate) ⇒ <code>Promise.&lt;BigInt&gt;</code>
-        * [.getAccount(address, [epochNumber])](#Conflux+getAccount) ⇒ <code>Promise.&lt;undefined&gt;</code>
+        * [.getAccount(address, [epochNumber])](#Conflux+getAccount) ⇒ <code>Promise.&lt;Account&gt;</code>
         * [.getBalance(address, [epochNumber])](#Conflux+getBalance) ⇒ <code>Promise.&lt;BigInt&gt;</code>
         * [.getStakingBalance(address, [epochNumber])](#Conflux+getStakingBalance) ⇒ <code>Promise.&lt;BigInt&gt;</code>
         * [.getNextNonce(address, [epochNumber])](#Conflux+getNextNonce) ⇒ <code>Promise.&lt;BigInt&gt;</code>
@@ -65,8 +65,8 @@ The Client class that provides an interface to the Conflux network.
         * [.getConfirmationRiskByHash(blockHash)](#Conflux+getConfirmationRiskByHash) ⇒ <code>Promise.&lt;(number\|null)&gt;</code>
         * [.getTransactionByHash(transactionHash)](#Conflux+getTransactionByHash) ⇒ <code>Promise.&lt;(Transaction\|null)&gt;</code>
         * [.getTransactionReceipt(transactionHash)](#Conflux+getTransactionReceipt) ⇒ <code>Promise.&lt;(TransactionReceipt\|null)&gt;</code>
-        * [.sendRawTransaction(hex)](#Conflux+sendRawTransaction) ⇒ <code>Promise.&lt;undefined&gt;</code>
-        * [.sendTransaction(options, [...password])](#Conflux+sendTransaction) ⇒ <code>Promise.&lt;undefined&gt;</code>
+        * [.sendRawTransaction(hex)](#Conflux+sendRawTransaction) ⇒ <code>Promise.&lt;PendingTransaction&gt;</code>
+        * [.sendTransaction(options, [...password])](#Conflux+sendTransaction) ⇒ <code>Promise.&lt;PendingTransaction&gt;</code>
         * [.getCode(address, [epochNumber])](#Conflux+getCode) ⇒ <code>Promise.&lt;string&gt;</code>
         * [.getStorageAt(address, position, [epochNumber])](#Conflux+getStorageAt) ⇒ <code>Promise.&lt;(string\|null)&gt;</code>
         * [.getStorageRoot(address, [epochNumber])](#Conflux+getStorageRoot) ⇒ <code>Promise.&lt;object&gt;</code>
@@ -120,13 +120,13 @@ The Client class that provides an interface to the Conflux network.
 **Kind**: instance property of [<code>Conflux</code>](#Conflux)  
 <a name="Conflux+provider"></a>
 
-### conflux.provider : <code>undefined</code> \| <code>undefined</code> \| <code>undefined</code> \| <code>undefined</code>
+### conflux.provider : <code>BaseProvider</code> \| <code>WechatProvider</code> \| <code>HttpProvider</code> \| <code>WebsocketProvider</code>
 Provider for rpc call
 
 **Kind**: instance property of [<code>Conflux</code>](#Conflux)  
 <a name="Conflux+wallet"></a>
 
-### conflux.wallet : <code>undefined</code>
+### conflux.wallet : <code>Wallet</code>
 Wallet for `sendTransaction` to get `Account` by `from` field
 
 **Kind**: instance property of [<code>Conflux</code>](#Conflux)  
@@ -167,31 +167,31 @@ Default gas price for following methods:
 **Kind**: instance property of [<code>Conflux</code>](#Conflux)  
 <a name="Conflux+pos"></a>
 
-### conflux.pos : <code>undefined</code>
+### conflux.pos : <code>PoS</code>
 pos RPC methods
 
 **Kind**: instance property of [<code>Conflux</code>](#Conflux)  
 <a name="Conflux+trace"></a>
 
-### conflux.trace : <code>undefined</code>
+### conflux.trace : <code>Trace</code>
 trace RPC methods
 
 **Kind**: instance property of [<code>Conflux</code>](#Conflux)  
 <a name="Conflux+txpool"></a>
 
-### conflux.txpool : <code>undefined</code>
+### conflux.txpool : <code>TxPool</code>
 txpool RPC methods
 
 **Kind**: instance property of [<code>Conflux</code>](#Conflux)  
 <a name="Conflux+cfx"></a>
 
-### conflux.cfx : <code>undefined</code>
+### conflux.cfx : <code>CFX</code>
 cfx RPC methods
 
 **Kind**: instance property of [<code>Conflux</code>](#Conflux)  
 <a name="Conflux+advanced"></a>
 
-### conflux.advanced : <code>undefined</code>
+### conflux.advanced : <code>AdvancedRPCUtilities</code>
 Advanced RPC compose methods
 
 **Kind**: instance property of [<code>Conflux</code>](#Conflux)  
@@ -203,7 +203,7 @@ Different kind provider API wrapper
 **Kind**: instance method of [<code>Conflux</code>](#Conflux)  
 <a name="Conflux+Contract"></a>
 
-### conflux.Contract(options) ⇒ <code>undefined</code>
+### conflux.Contract(options) ⇒ <code>Contract</code>
 A shout cut for `new Contract(options, conflux);`
 
 **Kind**: instance method of [<code>Conflux</code>](#Conflux)  
@@ -214,7 +214,7 @@ A shout cut for `new Contract(options, conflux);`
 
 <a name="Conflux+InternalContract"></a>
 
-### conflux.InternalContract(name) ⇒ <code>undefined</code>
+### conflux.InternalContract(name) ⇒ <code>Contract</code>
 Create internal contract by default abi and address
 
 - [AdminControl](https://github.com/Conflux-Chain/conflux-rust/blob/master/internal_contract/contracts/AdminControl.sol)
@@ -247,11 +247,11 @@ Create internal contract by default abi and address
 ```
 <a name="Conflux+CRC20"></a>
 
-### conflux.CRC20(address) ⇒ <code>undefined</code>
+### conflux.CRC20(address) ⇒ <code>Contract</code>
 Create an token CRC20 contract with standard CRC20 abi
 
 **Kind**: instance method of [<code>Conflux</code>](#Conflux)  
-**Returns**: <code>undefined</code> - A token contract instance  
+**Returns**: <code>Contract</code> - A token contract instance  
 
 | Param | Type |
 | --- | --- |
@@ -259,11 +259,11 @@ Create an token CRC20 contract with standard CRC20 abi
 
 <a name="Conflux+BatchRequest"></a>
 
-### conflux.BatchRequest() ⇒ <code>undefined</code>
+### conflux.BatchRequest() ⇒ <code>BatchRequester</code>
 Return a BatchRequester instance which can used to build batch request and decode response data
 
 **Kind**: instance method of [<code>Conflux</code>](#Conflux)  
-**Returns**: <code>undefined</code> - - A BatchRequester instance  
+**Returns**: <code>BatchRequester</code> - - A BatchRequester instance  
 <a name="Conflux+close"></a>
 
 ### conflux.close()
@@ -383,11 +383,11 @@ Returns the accumulate interest rate of given parameter.
 ```
 <a name="Conflux+getAccount"></a>
 
-### conflux.getAccount(address, [epochNumber]) ⇒ <code>Promise.&lt;undefined&gt;</code>
+### conflux.getAccount(address, [epochNumber]) ⇒ <code>Promise.&lt;Account&gt;</code>
 Return account related states of the given account
 
 **Kind**: instance method of [<code>Conflux</code>](#Conflux)  
-**Returns**: <code>Promise.&lt;undefined&gt;</code> - Return the states of the given account:
+**Returns**: <code>Promise.&lt;Account&gt;</code> - Return the states of the given account:
 - balance `BigInt`: the balance of the account.
 - nonce `BigInt`: the nonce of the account's next transaction.
 - codeHash `string`: the code hash of the account.
@@ -795,11 +795,11 @@ Returns the information about a transaction receipt requested by transaction has
 ```
 <a name="Conflux+sendRawTransaction"></a>
 
-### conflux.sendRawTransaction(hex) ⇒ <code>Promise.&lt;undefined&gt;</code>
+### conflux.sendRawTransaction(hex) ⇒ <code>Promise.&lt;PendingTransaction&gt;</code>
 Creates new message call transaction or a contract creation for signed transactions.
 
 **Kind**: instance method of [<code>Conflux</code>](#Conflux)  
-**Returns**: <code>Promise.&lt;undefined&gt;</code> - The transaction hash, or the zero hash if the transaction is not yet available.  
+**Returns**: <code>Promise.&lt;PendingTransaction&gt;</code> - The transaction hash, or the zero hash if the transaction is not yet available.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -812,13 +812,13 @@ Creates new message call transaction or a contract creation for signed transacti
 ```
 <a name="Conflux+sendTransaction"></a>
 
-### conflux.sendTransaction(options, [...password]) ⇒ <code>Promise.&lt;undefined&gt;</code>
+### conflux.sendTransaction(options, [...password]) ⇒ <code>Promise.&lt;PendingTransaction&gt;</code>
 Sign and send transaction
 if `from` field in `conflux.wallet`, sign by local account and send raw transaction,
 else call `cfx_sendTransaction` and sign by remote wallet
 
 **Kind**: instance method of [<code>Conflux</code>](#Conflux)  
-**Returns**: <code>Promise.&lt;undefined&gt;</code> - The PendingTransaction object.  
+**Returns**: <code>Promise.&lt;PendingTransaction&gt;</code> - The PendingTransaction object.  
 
 | Param | Type | Description |
 | --- | --- | --- |

@@ -7,8 +7,8 @@ Account abstract class
 
 * [Account](#Account)
     * [new Account(address)](#new_Account_new)
-    * [.signTransaction(options)](#Account+signTransaction) ⇒ <code>Promise.&lt;undefined&gt;</code>
-    * [.signMessage(message)](#Account+signMessage) ⇒ <code>Promise.&lt;undefined&gt;</code>
+    * [.signTransaction(options)](#Account+signTransaction) ⇒ <code>Promise.&lt;Transaction&gt;</code>
+    * [.signMessage(message)](#Account+signMessage) ⇒ <code>Promise.&lt;Message&gt;</code>
     * [.toString()](#Account+toString) ⇒ <code>string</code>
     * [.toJSON()](#Account+toJSON) ⇒ <code>string</code>
 
@@ -22,7 +22,7 @@ Account abstract class
 
 <a name="Account+signTransaction"></a>
 
-### account.signTransaction(options) ⇒ <code>Promise.&lt;undefined&gt;</code>
+### account.signTransaction(options) ⇒ <code>Promise.&lt;Transaction&gt;</code>
 **Kind**: instance method of [<code>Account</code>](#Account)  
 
 | Param | Type |
@@ -31,7 +31,7 @@ Account abstract class
 
 <a name="Account+signMessage"></a>
 
-### account.signMessage(message) ⇒ <code>Promise.&lt;undefined&gt;</code>
+### account.signMessage(message) ⇒ <code>Promise.&lt;Message&gt;</code>
 **Kind**: instance method of [<code>Account</code>](#Account)  
 
 | Param | Type |

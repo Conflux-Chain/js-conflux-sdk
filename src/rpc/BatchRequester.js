@@ -8,7 +8,7 @@ class BatchRequester {
   /**
    * BatchRequester constructor.
    *
-   * @param {import('../Conflux')} conflux - A Conflux instance
+   * @param {import('../Conflux').Conflux} conflux - A Conflux instance
    */
   constructor(conflux) {
     this.conflux = conflux;

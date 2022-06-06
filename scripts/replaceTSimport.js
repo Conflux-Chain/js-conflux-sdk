@@ -15,7 +15,7 @@ function replaceTSImport(e) {
     substring => {
       return substring.replace(importRegex,
         (_substring2, relImportPath, symbolName) => {
-        // const moduleId = getModuleId(e.filename, relImportPath);
+          // const moduleId = getModuleId(e.filename, relImportPath);
           const moduleId = null;
           return (moduleId) ? `module:${moduleId}${symbolName ? `~${symbolName}` : ''}` : symbolName;
         });

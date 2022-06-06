@@ -7,8 +7,8 @@
     * [new PrivateKeyAccount(privateKey, networkId)](#new_PrivateKeyAccount_new)
     * _instance_
         * [.encrypt(password)](#PrivateKeyAccount+encrypt) ⇒ <code>object</code>
-        * [.signTransaction(options)](#PrivateKeyAccount+signTransaction) ⇒ <code>Promise.&lt;undefined&gt;</code>
-        * [.signMessage(options)](#PrivateKeyAccount+signMessage) ⇒ <code>Promise.&lt;undefined&gt;</code>
+        * [.signTransaction(options)](#PrivateKeyAccount+signTransaction) ⇒ <code>Promise.&lt;Transaction&gt;</code>
+        * [.signMessage(options)](#PrivateKeyAccount+signMessage) ⇒ <code>Promise.&lt;Message&gt;</code>
     * _static_
         * [.random(entropy, networkId)](#PrivateKeyAccount.random) ⇒ [<code>PrivateKeyAccount</code>](#PrivateKeyAccount)
         * [.decrypt(keystore, password, networkId)](#PrivateKeyAccount.decrypt) ⇒ [<code>PrivateKeyAccount</code>](#PrivateKeyAccount)
@@ -53,7 +53,7 @@ Encrypt account privateKey to object.
 ```
 <a name="PrivateKeyAccount+signTransaction"></a>
 
-### privateKeyAccount.signTransaction(options) ⇒ <code>Promise.&lt;undefined&gt;</code>
+### privateKeyAccount.signTransaction(options) ⇒ <code>Promise.&lt;Transaction&gt;</code>
 Sign a transaction.
 
 **Kind**: instance method of [<code>PrivateKeyAccount</code>](#PrivateKeyAccount)  
@@ -92,7 +92,7 @@ Sign a transaction.
 ```
 <a name="PrivateKeyAccount+signMessage"></a>
 
-### privateKeyAccount.signMessage(options) ⇒ <code>Promise.&lt;undefined&gt;</code>
+### privateKeyAccount.signMessage(options) ⇒ <code>Promise.&lt;Message&gt;</code>
 Sign a string.
 
 **Kind**: instance method of [<code>PrivateKeyAccount</code>](#PrivateKeyAccount)  

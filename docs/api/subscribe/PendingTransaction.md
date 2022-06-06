@@ -18,7 +18,7 @@ PendingTransaction constructor.
 
 | Param | Type |
 | --- | --- |
-| conflux | <code>undefined</code> | 
+| conflux | <code>Conflux</code> | 
 | func | <code>function</code> | 
 | args | <code>array</code> | 
 
