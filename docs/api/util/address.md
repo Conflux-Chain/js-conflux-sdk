@@ -1,18 +1,24 @@
 ## Functions
 
 <dl>
-<dt><a href="#encodeCfxAddress encode hex40 address to base32 address">encodeCfxAddress encode hex40 address to base32 address(address, numberId, [verbose])</a> ⇒ <code>string</code></dt>
-<dd></dd>
-<dt><a href="#decodeCfxAddress decode base32 address to hex40 address">decodeCfxAddress decode base32 address to hex40 address(address)</a> ⇒ <code>object</code></dt>
-<dd></dd>
-<dt><a href="#isValidCfxAddress check if the address is valid">isValidCfxAddress check if the address is valid(address)</a> ⇒ <code>boolean</code></dt>
-<dd></dd>
-<dt><a href="#verifyCfxAddress verify base32 address if pass return true if not throw error">verifyCfxAddress verify base32 address if pass return true if not throw error(address)</a> ⇒ <code>boolean</code></dt>
-<dd></dd>
-<dt><a href="#hasNetworkPrefix check if the address has network prefix">hasNetworkPrefix check if the address has network prefix(address)</a> ⇒ <code>boolean</code></dt>
-<dd></dd>
-<dt><a href="#simplifyCfxAddress simplify base32 address to non verbose address">simplifyCfxAddress simplify base32 address to non verbose address(address)</a> ⇒ <code>string</code></dt>
-<dd></dd>
+<dt><a href="#encodeCfxAddress">encodeCfxAddress(address, numberId, [verbose])</a> ⇒ <code>string</code></dt>
+<dd><p>encode hex40 address to base32 address</p>
+</dd>
+<dt><a href="#decodeCfxAddress">decodeCfxAddress(address)</a> ⇒ <code>object</code></dt>
+<dd><p>decode base32 address to hex40 address</p>
+</dd>
+<dt><a href="#isValidCfxAddress">isValidCfxAddress(address)</a> ⇒ <code>boolean</code></dt>
+<dd><p>check if the address is valid</p>
+</dd>
+<dt><a href="#verifyCfxAddress">verifyCfxAddress(address)</a> ⇒ <code>boolean</code></dt>
+<dd><p>verify base32 address if pass return true if not throw error</p>
+</dd>
+<dt><a href="#hasNetworkPrefix">hasNetworkPrefix(address)</a> ⇒ <code>boolean</code></dt>
+<dd><p>check if the address has network prefix</p>
+</dd>
+<dt><a href="#simplifyCfxAddress">simplifyCfxAddress(address)</a> ⇒ <code>string</code></dt>
+<dd><p>simplify base32 address to non verbose address</p>
+</dd>
 <dt><a href="#shortenCfxAddress">shortenCfxAddress(address)</a> ⇒ <code>string</code></dt>
 <dd></dd>
 <dt><a href="#isZeroAddress">isZeroAddress(address)</a> ⇒ <code>boolean</code></dt>
@@ -21,8 +27,9 @@
 <dd></dd>
 <dt><a href="#isValidHexAddress">isValidHexAddress(address)</a> ⇒ <code>boolean</code></dt>
 <dd></dd>
-<dt><a href="#isValidCfxHexAddress check if the address is valid conflux hex address">isValidCfxHexAddress check if the address is valid conflux hex address(address)</a> ⇒ <code>boolean</code></dt>
-<dd></dd>
+<dt><a href="#isValidCfxHexAddress">isValidCfxHexAddress(address)</a> ⇒ <code>boolean</code></dt>
+<dd><p>check if the address is valid conflux hex address</p>
+</dd>
 <dt><a href="#ethChecksumAddress">ethChecksumAddress(address)</a> ⇒ <code>string</code></dt>
 <dd><p>Makes a ethereum checksum address</p>
 <blockquote>
@@ -38,9 +45,11 @@ Note: not support <a href="https://github.com/rsksmart/RSKIPs/blob/master/IPs/RS
 </dd>
 </dl>
 
-<a name="encodeCfxAddress encode hex40 address to base32 address"></a>
+<a name="encodeCfxAddress"></a>
 
-## encodeCfxAddress encode hex40 address to base32 address(address, numberId, [verbose]) ⇒ <code>string</code>
+## encodeCfxAddress(address, numberId, [verbose]) ⇒ <code>string</code>
+encode hex40 address to base32 address
+
 **Kind**: global function  
 **Returns**: <code>string</code> - base32 string address  
 
@@ -50,45 +59,55 @@ Note: not support <a href="https://github.com/rsksmart/RSKIPs/blob/master/IPs/RS
 | numberId | <code>number</code> | networkId |
 | [verbose] | <code>boolean</code> | if true, return verbose address |
 
-<a name="decodeCfxAddress decode base32 address to hex40 address"></a>
+<a name="decodeCfxAddress"></a>
 
-## decodeCfxAddress decode base32 address to hex40 address(address) ⇒ <code>object</code>
+## decodeCfxAddress(address) ⇒ <code>object</code>
+decode base32 address to hex40 address
+
 **Kind**: global function  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | address | <code>string</code> | base32 string |
 
-<a name="isValidCfxAddress check if the address is valid"></a>
+<a name="isValidCfxAddress"></a>
 
-## isValidCfxAddress check if the address is valid(address) ⇒ <code>boolean</code>
+## isValidCfxAddress(address) ⇒ <code>boolean</code>
+check if the address is valid
+
 **Kind**: global function  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | address | <code>string</code> | base32 string |
 
-<a name="verifyCfxAddress verify base32 address if pass return true if not throw error"></a>
+<a name="verifyCfxAddress"></a>
 
-## verifyCfxAddress verify base32 address if pass return true if not throw error(address) ⇒ <code>boolean</code>
+## verifyCfxAddress(address) ⇒ <code>boolean</code>
+verify base32 address if pass return true if not throw error
+
 **Kind**: global function  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | address | <code>string</code> | base32 string |
 
-<a name="hasNetworkPrefix check if the address has network prefix"></a>
+<a name="hasNetworkPrefix"></a>
 
-## hasNetworkPrefix check if the address has network prefix(address) ⇒ <code>boolean</code>
+## hasNetworkPrefix(address) ⇒ <code>boolean</code>
+check if the address has network prefix
+
 **Kind**: global function  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | address | <code>string</code> | base32 string |
 
-<a name="simplifyCfxAddress simplify base32 address to non verbose address"></a>
+<a name="simplifyCfxAddress"></a>
 
-## simplifyCfxAddress simplify base32 address to non verbose address(address) ⇒ <code>string</code>
+## simplifyCfxAddress(address) ⇒ <code>string</code>
+simplify base32 address to non verbose address
+
 **Kind**: global function  
 **Returns**: <code>string</code> - return a non verbose address  
 
@@ -133,9 +152,11 @@ Note: not support <a href="https://github.com/rsksmart/RSKIPs/blob/master/IPs/RS
 | --- | --- | --- |
 | address | <code>string</code> | hex string |
 
-<a name="isValidCfxHexAddress check if the address is valid conflux hex address"></a>
+<a name="isValidCfxHexAddress"></a>
 
-## isValidCfxHexAddress check if the address is valid conflux hex address(address) ⇒ <code>boolean</code>
+## isValidCfxHexAddress(address) ⇒ <code>boolean</code>
+check if the address is valid conflux hex address
+
 **Kind**: global function  
 
 | Param | Type | Description |

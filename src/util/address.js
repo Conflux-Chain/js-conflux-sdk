@@ -15,7 +15,8 @@ const { checksumAddress, keccak256 } = require('./sign');
 const { ADDRESS_TYPES } = require('../CONST');
 
 /**
- * @function encodeCfxAddress encode hex40 address to base32 address
+ * encode hex40 address to base32 address
+ * @function encodeCfxAddress
  * @param {string|Buffer} address - hex40 address
  * @param {number} numberId - networkId
  * @param {boolean} [verbose] - if true, return verbose address
@@ -23,31 +24,36 @@ const { ADDRESS_TYPES } = require('../CONST');
  */
 
 /**
- * @function decodeCfxAddress decode base32 address to hex40 address
+ * decode base32 address to hex40 address
+ * @function decodeCfxAddress
  * @param {string} address - base32 string
  * @return {object}
  */
 
 /**
- * @function isValidCfxAddress check if the address is valid
+ * check if the address is valid
+ * @function isValidCfxAddress
  * @param {string} address - base32 string
  * @return {boolean}
  */
 
 /**
- * @function verifyCfxAddress verify base32 address if pass return true if not throw error
+ * verify base32 address if pass return true if not throw error
+ * @function verifyCfxAddress
  * @param {string} address - base32 string
  * @return {boolean}
  */
 
 /**
- * @function hasNetworkPrefix check if the address has network prefix
+ * check if the address has network prefix
+ * @function hasNetworkPrefix
  * @param {string} address - base32 string
  * @return {boolean}
  */
 
 /**
- * @function simplifyCfxAddress simplify base32 address to non verbose address
+ * simplify base32 address to non verbose address
+ * @function simplifyCfxAddress
  * @param {string} address - base32 string
  * @return {string} return a non verbose address
  */
@@ -77,7 +83,8 @@ const { ADDRESS_TYPES } = require('../CONST');
  */
 
 /**
- * @function isValidCfxHexAddress check if the address is valid conflux hex address
+ * check if the address is valid conflux hex address
+ * @function isValidCfxHexAddress
  * @param {string} address - hex string
  * @return {boolean}
  */
