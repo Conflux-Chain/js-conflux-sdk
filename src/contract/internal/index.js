@@ -79,6 +79,14 @@ const CrossSpaceCall = {
   address: '0x0888000000000000000000000000000000000006',
 };
 
+const ParamsControl = {
+  abi: [
+    'function castVote(uint64 version, tuple(uint16 index, uint256[3] votes)[] vote_data)',
+    'function readVote(address addr) view returns (tuple(uint16 index, uint256[3] votes)[])',
+  ],
+  address: '0x0888000000000000000000000000000000000007',
+};
+
 module.exports = {
   AdminControl,
   SponsorWhitelistControl,
@@ -86,4 +94,5 @@ module.exports = {
   ConfluxContext,
   PoSRegister,
   CrossSpaceCall,
+  ParamsControl,
 };
