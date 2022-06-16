@@ -60,3 +60,32 @@ msg.sign(privateKey, networkId);
 console.log(msg.r, msg.s, msg.v);
 console.log(msg.from);
 ```
+
+## HD Wallet
+
+If you want to use account from mnemonic, there is a independent package `@conflux-dev/hdwallet` can fullfill your requirements.
+
+First step is install it by npm
+
+```sh
+$ npm install @conflux-dev/hdwallet
+```
+
+Then you can use it to get the private key and add it to conflux wallet.
+
+```js
+const { HDWallet } = require('@conflux-dev/hdwallet');
+
+const mnemonic = 'faint also eye industry survey unhappy boil public lemon myself cube sense';
+const rootNode = new HDWallet(mnemonic);
+
+const privateKey0 = wallet.getPrivateKeyByIndex(0);
+const account0 = conflux.wallet.addPrivateKey(privateKey0);
+console.log(privateKey0.toString('hex'));
+// 40d0f137665463584cc57fce2b761572a85d1cbf1601fc93d001c129b2a11c92
+console.log(account0.address);
+// cfxtest:aargrnff46pmuy2g1mmrntctkhr5mzamh6nmg361n0
+
+const privateKey1 = wallet.getPrivateKey("m/44'/503'/0'/0/1");
+const account1 = conflux.wallet.addPrivateKey(privateKey1);
+```
