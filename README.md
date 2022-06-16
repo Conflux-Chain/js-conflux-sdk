@@ -115,3 +115,10 @@ v2.0.0+        | v2.0.0+
 v1.7.0+        | v1.1.5+
 v1.6.0+        | v1.1.3+
 v1.5.11+       | v1.1.1+
+
+## Related Projects | Tools
+
+* [CIP-23](https://github.com/conflux-fans/cip-23) can be used to work with Conflux signTypedData
+* [hardhat-conflux](https://github.com/conflux-chain/hardhat-conflux) hardhat plugin that can be used to interact with Conflux Core network
+* [conflux-truffle](https://github.com/conflux-chain/conflux-truffle) Conflux fork of truffle develop framework
+* [@conflux-dev/hdwallet](https://github.com/Conflux-Chain/ts-conflux-sdk/tree/main/packages/hdwallet) HD Wallet
