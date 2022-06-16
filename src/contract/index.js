@@ -171,6 +171,10 @@ class Contract {
       });
     });
   }
+
+  attach(address) {
+    this.address = address;
+  }
 }
 
 function _feedAddressNetId(abi, conflux) {
