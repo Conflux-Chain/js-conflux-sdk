@@ -81,8 +81,12 @@ const CrossSpaceCall = {
 
 const ParamsControl = {
   abi: [
-    'function castVote(uint64 version, tuple(uint16 index, uint256[3] votes)[] vote_data)',
-    'function readVote(address addr) view returns (tuple(uint16 index, uint256[3] votes)[])',
+    'function castVote(uint64 vote_round, tuple(uint16 topic_index, uint256[3] votes)[] vote_data)',
+    'function readVote(address addr) view returns (tuple(uint16 topic_index, uint256[3] votes)[])',
+    'function voteRound() external view returns (uint64)',
+    'function totalVotes(uint64 vote_round) external view returns (tuple(uint16 topic_index, uint256[3] votes)[])',
+    'event CastVote(uint64 indexed vote_round, address indexed addr, uint16 indexed topic_index, uint256[3] votes)',
+    'event RevokeVote(uint64 indexed vote_round, address indexed addr, uint16 indexed topic_index, uint256[3] votes)',
   ],
   address: '0x0888000000000000000000000000000000000007',
 };
