@@ -56,7 +56,6 @@ program
 async function info(contractAddr) {
   const { conflux, SponsorWhitelistControl } = _getClient();
   const sponsorInfo = await conflux.getSponsorInfo(contractAddr);
-  console.log(`Sponsor info of ${contractAddr}: \n`);
   console.log('Gas Sponsor: ', sponsorInfo.sponsorForGas);
   console.log('Gas Sponsor Balance: ', new Drip(sponsorInfo.sponsorBalanceForGas).toCFX(), 'CFX');
   console.log('Gas Sponsor upperBound: ', new Drip(sponsorInfo.sponsorGasBound).toGDrip(), 'GDrip');
@@ -77,7 +76,7 @@ async function setGasSponsor(contractAddr, upperBound, value) {
     console.log('You are not admin');
     return;
   }
-  // TODO add more check: value > upperBound * 100; new sponsor balance > old sponsor balance; sponsor have enough balance for value
+  // TODO add more check: value > upperBound * 1000; new sponsor balance > old sponsor balance; sponsor have enough balance for value
   const receipt = await SponsorWhitelistControl
     .setSponsorForGas(contractAddr, Drip.fromGDrip(upperBound))
     .sendTransaction({
