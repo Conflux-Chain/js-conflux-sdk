@@ -39,13 +39,13 @@ function _getClient() {
   return conflux;
 }
 
-function _getAccount(conflux) {
+/* function _getAccount(conflux) {
   if (!process.env.PRIVATE_KEY) {
     console.log('Please set PRIVATE_KEY environment variable to update sponsor');
     process.exit();
   }
   return conflux.wallet.addPrivateKey(process.env.PRIVATE_KEY);
-}
+} */
 
 async function cfx(method, args) {
   const conflux = _getClient();
@@ -71,7 +71,7 @@ async function call(namespace, method, args) {
     return;
   }
   const result = await methods[method](...args);
-  console.log(`cfx_${method}: `, result);
+  console.log(`${namespace}_${method}: `, result);
 }
 
 program.parse(process.argv);
