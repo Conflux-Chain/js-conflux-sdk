@@ -570,7 +570,6 @@ class Conflux {
   /**
    * Get epoch blocks reward info
    *
-   * @private
    * @param {string|number} epochNumber - See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber)
    * @return {Promise<import('./rpc/types/formatter').RewardInfo[]>} List of block reward info
    * - blockHash `string`: Hash of the block.
@@ -679,7 +678,6 @@ class Conflux {
   /**
    * Get block by `blockHash` if pivot block of `epochNumber` is `pivotBlockHash`.
    *
-   * @private
    * @param {string} blockHash - Block hash which epochNumber expect to be `epochNumber`.
    * @param {string} pivotBlockHash - Block hash which expect to be the pivot block of `epochNumber`.
    * @param {number} epochNumber - Epoch number
@@ -926,18 +924,17 @@ class Conflux {
     "transactionHash": "0xb2ba6cca35f0af99a9601d09ee19c1949d8130312550e3f5413c520c6d828f88"
    }
    */
-  async sendTransaction(options, ...password) {
+  async sendTransaction(options, password) {
     if (this.wallet.has(`${options.from}`)) {
       const rawTx = await this.cfx.populateAndSignTransaction(options);
       return this.sendRawTransaction(rawTx);
     }
 
+    const params = [this._formatCallTx(options)];
+    if (password) params.push(password);
     return this.request({
       method: 'cfx_sendTransaction',
-      params: [
-        this._formatCallTx(options),
-        ...password,
-      ],
+      params,
     });
   }
 
@@ -1279,7 +1276,7 @@ class Conflux {
   /**
    * Return one epoch's all receipts
    * @param {number|string} epochNumber - epoch number
-   * @returns {Promise<object[][]>} Array of array receipts.
+   * @returns {Promise<import('./rpc/types/formatter').TransactionReceipt[][]>} Array of array receipts.
    *
    * @example
    * > await conflux.getEpochReceipts('0x6')
