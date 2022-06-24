@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable no-console */
 const { program } = require('commander');
 const sign = require('../src/util/sign');
 const format = require('../src/util/format');

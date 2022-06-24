@@ -11,7 +11,9 @@
   ],
   "main": "src/index.js",
   "bin": {
-    "cfxjs": "bin/cfxjs.js"
+    "cfxjs": "bin/cfxjs.js",
+    "sponsor": "bin/sponsor.js",
+    "rpc": "bin/rpc.js"
   },
   "types": "./dist/types/index.d.ts",
   "browser": "dist/js-conflux-sdk.umd.min.js",
