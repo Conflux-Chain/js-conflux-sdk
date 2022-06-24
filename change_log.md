@@ -1,5 +1,9 @@
 # change log
 
+## Next
+
+* Add support the new InternalContract `ParamsControl`
+
 ## v2.1.0
 
 * Add more jsdoc comment to generate ts `d.ts` files
