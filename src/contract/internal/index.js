@@ -49,7 +49,7 @@ const ConfluxContext = {
 
 const PoSRegister = {
   abi: [
-    'function register(bytes32 indentifier, uint64 votePower, bytes calldata blsPubKey, bytes calldata vrfPubKey, bytes[2] calldata blsPubKeyProof)',
+    'function register(bytes32 identifier, uint64 votePower, bytes calldata blsPubKey, bytes calldata vrfPubKey, bytes[2] calldata blsPubKeyProof)',
     'function increaseStake(uint64 votePower)',
     'function retire(uint64 votePower)',
     'function getVotes(bytes32 identifier) external view returns (uint256, uint256)',

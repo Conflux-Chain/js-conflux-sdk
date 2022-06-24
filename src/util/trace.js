@@ -77,7 +77,7 @@ const errorContract = new Contract({ abi });
 
 function _decodeErrorMessage(action) {
   let errorMessage;
-  if (action.outcome === CALL_STATUS.REVERTED) {
+  if (action.outcome === CALL_STATUS.REVERTED && action.returnData !== '0x') {
     const decoded = errorContract.abi.decodeData(action.returnData);
     errorMessage = decoded.object.message;
   }
