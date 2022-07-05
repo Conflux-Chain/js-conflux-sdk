@@ -230,7 +230,7 @@ class Conflux {
    * - [SponsorWhitelistControl](https://github.com/Conflux-Chain/conflux-rust/blob/master/internal_contract/contracts/SponsorWhitelistControl.sol)
    * - [Staking](https://github.com/Conflux-Chain/conflux-rust/blob/master/internal_contract/contracts/Staking.sol)
    *
-   * @param {"AdminControl"|"SponsorWhitelistControl"|"Staking"|"ConfluxContext"|"PoSRegister"|"CrossSpaceCall"} name - Internal contract name
+   * @param {"AdminControl"|"SponsorWhitelistControl"|"Staking"|"PoSRegister"|"CrossSpaceCall"} name - Internal contract name
    * @return {import('./contract/index').Contract}
    *
    * @example
