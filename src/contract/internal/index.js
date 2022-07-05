@@ -38,14 +38,14 @@ const Staking = {
   address: '0x0888000000000000000000000000000000000002',
 };
 
-const ConfluxContext = {
+/* const ConfluxContext = {
   abi: [
     'function epochNumber() public view returns (uint256)',
     'function posHeight() public view returns (uint256)',
     'function finalizedEpochNumber() public view returns (uint256)',
   ],
   address: '0x0888000000000000000000000000000000000004',
-};
+}; */
 
 const PoSRegister = {
   abi: [
@@ -95,7 +95,7 @@ module.exports = {
   AdminControl,
   SponsorWhitelistControl,
   Staking,
-  ConfluxContext,
+  // ConfluxContext,
   PoSRegister,
   CrossSpaceCall,
   ParamsControl,
