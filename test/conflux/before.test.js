@@ -392,7 +392,7 @@ test('estimateGasAndCollateral', async () => {
 });
 
 test('getLogs', async () => {
-  await expect(conflux.getLogs()).rejects.toThrow('Cannot read property');
+  // await expect(conflux.getLogs()).rejects.toThrow('Cannot read property');
   await expect(conflux.getLogs({ blockHashes: [], fromEpoch: 0 })).rejects.toThrow('OverrideError');
   await expect(conflux.getLogs({ topics: [[null]] })).rejects.toThrow('not match "hex"');
 
@@ -421,6 +421,13 @@ test('getLogs', async () => {
     blockHashes: [BLOCK_HASH],
     topics: [TX_HASH, null],
     limit: '0x64',
+  });
+
+  await conflux.getLogs({
+    address: ADDRESS,
+  });
+  expect(call).toHaveBeenLastCalledWith('cfx_getLogs', {
+    address: ADDRESS,
   });
 
   call.mockRestore();
