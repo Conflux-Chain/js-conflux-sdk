@@ -423,6 +423,13 @@ test('getLogs', async () => {
     limit: '0x64',
   });
 
+  await conflux.getLogs({
+    address: ADDRESS,
+  });
+  expect(call).toHaveBeenLastCalledWith('cfx_getLogs', {
+    address: ADDRESS,
+  });
+
   call.mockRestore();
 });
 
