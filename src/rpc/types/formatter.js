@@ -33,14 +33,14 @@ cfxFormat.getLogs = format({
 
 // configure getLogs formatter with networkId and toHexAddress
 cfxFormat.getLogsAdvance = function (networkId, toHexAddress = false, useVerboseAddress = false) {
-  const fromatAddress = toHexAddress ? format.hexAddress : format.netAddress(networkId, useVerboseAddress);
+  const formatAddress = toHexAddress ? format.hexAddress : format.netAddress(networkId, useVerboseAddress);
   return format({
     limit: format.bigUIntHex,
     offset: format.bigUIntHex,
     fromEpoch: format.epochNumber,
     toEpoch: format.epochNumber,
     blockHashes: format([format.blockHash]).$or(null),
-    address: fromatAddress.$or([fromatAddress]).$or(null),
+    address: format([formatAddress]).$or(formatAddress).$or(null),
     topics: format([format.hex64.$or([format.hex64]).$or(null)]),
   }, {
     pick: true,
