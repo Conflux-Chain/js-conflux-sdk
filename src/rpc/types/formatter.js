@@ -40,7 +40,7 @@ cfxFormat.getLogsAdvance = function (networkId, toHexAddress = false, useVerbose
     fromEpoch: format.epochNumber,
     toEpoch: format.epochNumber,
     blockHashes: format([format.blockHash]).$or(null),
-    address: format([fromatAddress]).$or(null),
+    address: fromatAddress.$or([fromatAddress]).$or(null),
     topics: format([format.hex64.$or([format.hex64]).$or(null)]),
   }, {
     pick: true,

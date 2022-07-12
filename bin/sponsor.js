@@ -64,7 +64,7 @@ async function info(contractAddr) {
   const isAllWhiteList = await SponsorWhitelistControl.isAllWhitelisted(contractAddr);
   console.log('IsAllWhitelisted: ', isAllWhiteList);
   const admin = await _getAdmin(conflux, contractAddr);
-  console.log('Contact Admin: ', admin);
+  console.log('Contract Admin: ', admin);
   console.log('');
 }
 
