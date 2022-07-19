@@ -3,6 +3,7 @@
 ## Next
 
 * Add support the new InternalContract `ParamsControl`
+* Remove `cfx_getLogs` filter's field `offset` and `limit`
 
 ## v2.1.0
 

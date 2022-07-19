@@ -10,8 +10,6 @@ const cfxFormat = new Proxy(() => undefined, {
 
 /**
  * @typedef {Object} LogFilter
- * @property {number} [limit] Return the last limit logs
- * @property {number} [offset]
  * @property {string|number} [fromEpoch] Search will be applied from this epoch number.
  * @property {string|number} [toEpoch] Search will be applied up until (and including) this epoch number.
  * @property {string[]} [blockHashes] Array of up to 128 block hashes that the search will be applied to. This will override from/to epoch fields if it's not null
@@ -19,8 +17,6 @@ const cfxFormat = new Proxy(() => undefined, {
  * @property {string[]} [topics] Search topics. Logs can have 4 topics: the function signature and up to 3 indexed event arguments. The elements of topics match the corresponding log topics. Example: ["0xA", null, ["0xB", "0xC"], null] matches logs with "0xA" as the 1st topic AND ("0xB" OR "0xC") as the 3rd topic. If null, match all.
  */
 cfxFormat.getLogs = format({
-  limit: format.bigUIntHex,
-  offset: format.bigUIntHex,
   fromEpoch: format.epochNumber,
   toEpoch: format.epochNumber,
   blockHashes: format([format.blockHash]).$or(null),
@@ -35,8 +31,6 @@ cfxFormat.getLogs = format({
 cfxFormat.getLogsAdvance = function (networkId, toHexAddress = false, useVerboseAddress = false) {
   const formatAddress = toHexAddress ? format.hexAddress : format.netAddress(networkId, useVerboseAddress);
   return format({
-    limit: format.bigUIntHex,
-    offset: format.bigUIntHex,
     fromEpoch: format.epochNumber,
     toEpoch: format.epochNumber,
     blockHashes: format([format.blockHash]).$or(null),
