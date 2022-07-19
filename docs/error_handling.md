@@ -132,3 +132,7 @@ Error: {"message":"length not match","expect":2,"got":1,"coder":{"type":"(addres
 ```
 
 ```"length not match","expect":2,"got":1``` means the abi encoder expect 2 arguments according to the ABI, but only 1 is provided.
+
+### notifications not supported
+
+If you use event subscribe methods, a websocket RPC endpoint is required.
