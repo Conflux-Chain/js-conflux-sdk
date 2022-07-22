@@ -460,4 +460,16 @@ cfxFormat.posEconomics = format({
   name: 'format.posEconomics',
 });
 
+/**
+ * @typedef {Object} VoteParamsInfo
+ * @property {BigInt} powBaseReward PoW block base reward
+ * @property {BigInt} interestRate PoS interest rate
+ */
+cfxFormat.voteParamsInfo = format({
+  powBaseReward: format.bigUInt,
+  interestRate: format.bigUInt,
+}, {
+  name: 'format.voteParamsInfo',
+});
+
 module.exports = cfxFormat;

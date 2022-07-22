@@ -923,9 +923,9 @@
     minimist "^1.2.0"
 
 "@conflux-dev/conflux-address-js@^1.3.14":
-  version "1.3.14"
-  resolved "https://registry.yarnpkg.com/@conflux-dev/conflux-address-js/-/conflux-address-js-1.3.14.tgz#cb06001b869785c335a59688c8e2bdf2de6b5fd0"
-  integrity sha512-5tx9RQriSx9XdNT5SdrYkd6UD2FCUbhHkh5A+06sMZTeoaYTCizsPm116clqI6/Di4IeISsxZuOSQ/G4+La/2w==
+  version "1.3.15"
+  resolved "https://registry.yarnpkg.com/@conflux-dev/conflux-address-js/-/conflux-address-js-1.3.15.tgz#981872212ef8a231d36d25d49b9c1c78e464642a"
+  integrity sha512-Aw62j5DdAolagoNEqi5rV7duerGxeoIrNKxu/ndQMgZf19W5UFtelgDzrb1oeF4RriKczGzStT1a6NSA7SZHKw==
   dependencies:
     jsbi "^3.1.4"
 

@@ -307,6 +307,13 @@ class CFX extends RPCMethodFactory {
         method: 'cfx_getPoSEconomics',
         responseFormatter: cfxFormat.posEconomics,
       },
+      {
+        method: 'cfx_getParamsFromVote',
+        requestFormatters: [
+          format.epochNumberOrUndefined,
+        ],
+        responseFormatter: cfxFormat.voteParamsInfo,
+      },
     ];
   }
 

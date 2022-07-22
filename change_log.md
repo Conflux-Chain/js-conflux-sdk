@@ -1,9 +1,11 @@
 # change log
 
-## Next
+## v2.1.5
 
 * Add support the new InternalContract `ParamsControl`
 * Remove `cfx_getLogs` filter's field `offset` and `limit`
+* Add support for new RPC `cfx_getParamsFromVote`
+* Update typescript datatype definitions
 
 ## v2.1.0
 
