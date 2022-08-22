@@ -10,7 +10,7 @@ The purpose of this page is to give you a sense of everything js-conflux-sdk can
 
 ## Initialize
 
-After installing `js-conflux-sdk` (via npm), you’ll need to specify the provider url. You can use the mainnet([https://main.confluxrpc.com](https://main.confluxrpc.com)), or testnet([https://test.confluxrpc.com](https://test.confluxrpc.com)), or [run your own Conflux node](https://developer.conflux-chain.org/docs/conflux-doc/docs/independent_chain).
+After installing `js-conflux-sdk` (via npm), you’ll need to specify the provider url. You can use the mainnet([https://main.confluxrpc.com](https://main.confluxrpc.com)), or testnet([https://test.confluxrpc.com](https://test.confluxrpc.com)), or [run your own Conflux node](https://developer.confluxnetwork.org/conflux-doc/docs/independent_chain).
 
 ### Testnet
 
@@ -61,7 +61,7 @@ async function main() {
 main();
 ```
 
-Besides balance you can get a lot blockchain information through it, for example: nonce, block, transaction, receipt and so on. You can check [API](https://github.com/Conflux-Chain/js-conflux-sdk/tree/faec50e6c2dd16158b114d0d4de228d7b2ca7535/api.md) and [RPC](https://developer.conflux-chain.org/docs/conflux-doc/docs/json_rpc)
+Besides balance you can get a lot blockchain information through it, for example: nonce, block, transaction, receipt and so on. You can check [API](https://github.com/Conflux-Chain/js-conflux-sdk/tree/faec50e6c2dd16158b114d0d4de228d7b2ca7535/api.md) and [RPC](https://developer.confluxnetwork.org/conflux-doc/docs/json_rpc)
 
 ### Conflux hex address
 
@@ -114,7 +114,7 @@ Check [here](how_to_send_tx.md) for details
 
 ### Hex value and epochNumber and tags
 
-You can find the epochNumber doc at official developer [RPC doc](https://developer.conflux-chain.org/docs/conflux-doc/docs/json_rpc#hex-value-encoding)
+You can find the epochNumber doc at official developer [RPC doc](https://developer.confluxnetwork.org/conflux-doc/docs/json_rpc#hex-value-encoding)
 
 ### JSBI
 
@@ -180,7 +180,7 @@ main();
 
 ### Pub/Sub
 
-Conflux node support pub/sub makes it possible to query certain items on an ongoing basis, without polling through the JSON-RPC HTTP interface, currently three topics are supported: `newHeads`, `epochs`, `logs`, for detail explain of Pub/Sub check the [official doc](https://developer.conflux-chain.org/docs/conflux-doc/docs/pubsub)
+Conflux node support pub/sub makes it possible to query certain items on an ongoing basis, without polling through the JSON-RPC HTTP interface, currently three topics are supported: `newHeads`, `epochs`, `logs`, for detail explain of Pub/Sub check the [official doc](https://developer.confluxnetwork.org/conflux-doc/docs/pubsub)
 
 Use JS SDK it will be very easy to use Pub/Sub.
 

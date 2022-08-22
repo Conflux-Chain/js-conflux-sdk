@@ -922,10 +922,10 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@conflux-dev/conflux-address-js@^1.3.14":
-  version "1.3.15"
-  resolved "https://registry.yarnpkg.com/@conflux-dev/conflux-address-js/-/conflux-address-js-1.3.15.tgz#981872212ef8a231d36d25d49b9c1c78e464642a"
-  integrity sha512-Aw62j5DdAolagoNEqi5rV7duerGxeoIrNKxu/ndQMgZf19W5UFtelgDzrb1oeF4RriKczGzStT1a6NSA7SZHKw==
+"@conflux-dev/conflux-address-js@^1.3.16":
+  version "1.3.16"
+  resolved "https://registry.yarnpkg.com/@conflux-dev/conflux-address-js/-/conflux-address-js-1.3.16.tgz#2ae7733138fe160e177392d7e1dc5f27590d1ee6"
+  integrity sha512-9n7wFCr7Wu4WYdngPfxB63bRHSk+0xWFHVqVwUPddg3oIRT+sQm+TcHGiXaiuvnjnvjDFfCMbHnjZ+a8X5C/aA==
   dependencies:
     jsbi "^3.1.4"
 

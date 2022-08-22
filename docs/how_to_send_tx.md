@@ -62,7 +62,7 @@ If the transaction receipt's `outcomeStatus` is `0`, congratulate you have send 
 
 ### Transaction's stage
 
-After sending, a transaction could be in several different states, [here](https://developer.conflux-chain.org/docs/conflux-doc/docs/send_transaction#track-my-transaction) is a detail explanation of transaction life cycle.
+After sending, a transaction could be in several different states, [here](https://developer.confluxnetwork.org/sending-tx/en/transaction_stage) is a detail explanation of transaction life cycle.
 
 You can get a transaction's state by it's `status` or it's receipt's `outcomeStatus`
 

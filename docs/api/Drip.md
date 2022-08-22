@@ -20,7 +20,7 @@ Positive decimal integer string in `Drip`
 
 | Param | Type |
 | --- | --- |
-| value | <code>number</code> \| <code>string</code> | 
+| value | <code>number</code> \| <code>string</code> \| <code>BigInt</code> | 
 
 **Example**  
 ```js
@@ -60,7 +60,7 @@ Get `Drip` string from `CFX`
 
 | Param | Type |
 | --- | --- |
-| value | <code>string</code> \| <code>number</code> | 
+| value | <code>string</code> \| <code>number</code> \| <code>BigInt</code> | 
 
 **Example**  
 ```js
@@ -78,7 +78,7 @@ Get `Drip` string from `GDrip`
 
 | Param | Type |
 | --- | --- |
-| value | <code>string</code> \| <code>number</code> | 
+| value | <code>string</code> \| <code>number</code> \| <code>BigInt</code> | 
 
 **Example**  
 ```js
