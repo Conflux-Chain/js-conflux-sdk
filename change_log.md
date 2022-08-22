@@ -396,7 +396,7 @@ const tx = { to: ADDRESS, value: Drip.fromCFX(0.1), ... }
 
 * include all method from conflux JSON_RPC document
 
-[JSON_RPC](https://developer.conflux-chain.org/docs/conflux-doc/docs/json_rpc) 
+[JSON_RPC](https://developer.confluxnetwork.org/conflux-doc/docs/json_rpc) 
 
 * friendly example code
 
