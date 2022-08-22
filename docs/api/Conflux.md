@@ -60,13 +60,15 @@ The Client class that provides an interface to the Conflux network.
         * [.getBlockByEpochNumber(epochNumber, [detail])](#Conflux+getBlockByEpochNumber) ⇒ <code>Promise.&lt;(Block\|null)&gt;</code>
         * [.getBlockByBlockNumber(blockNumber, [detail])](#Conflux+getBlockByBlockNumber) ⇒ <code>Promise.&lt;(Block\|null)&gt;</code>
         * [.getBlocksByEpochNumber(epochNumber)](#Conflux+getBlocksByEpochNumber) ⇒ <code>Promise.&lt;Array.&lt;string&gt;&gt;</code>
+        * [.getBlockRewardInfo(epochNumber)](#Conflux+getBlockRewardInfo) ⇒ <code>Promise.&lt;Array.&lt;RewardInfo&gt;&gt;</code>
         * [.getBestBlockHash()](#Conflux+getBestBlockHash) ⇒ <code>Promise.&lt;string&gt;</code>
         * [.getBlockByHash(blockHash, [detail])](#Conflux+getBlockByHash) ⇒ <code>Promise.&lt;(Block\|null)&gt;</code>
+        * [.getBlockByHashWithPivotAssumption(blockHash, pivotBlockHash, epochNumber)](#Conflux+getBlockByHashWithPivotAssumption) ⇒ <code>Promise.&lt;(Block\|null)&gt;</code>
         * [.getConfirmationRiskByHash(blockHash)](#Conflux+getConfirmationRiskByHash) ⇒ <code>Promise.&lt;(number\|null)&gt;</code>
         * [.getTransactionByHash(transactionHash)](#Conflux+getTransactionByHash) ⇒ <code>Promise.&lt;(Transaction\|null)&gt;</code>
         * [.getTransactionReceipt(transactionHash)](#Conflux+getTransactionReceipt) ⇒ <code>Promise.&lt;(TransactionReceipt\|null)&gt;</code>
         * [.sendRawTransaction(hex)](#Conflux+sendRawTransaction) ⇒ <code>Promise.&lt;PendingTransaction&gt;</code>
-        * [.sendTransaction(options, [...password])](#Conflux+sendTransaction) ⇒ <code>Promise.&lt;PendingTransaction&gt;</code>
+        * [.sendTransaction(options, [password])](#Conflux+sendTransaction) ⇒ <code>Promise.&lt;PendingTransaction&gt;</code>
         * [.getCode(address, [epochNumber])](#Conflux+getCode) ⇒ <code>Promise.&lt;string&gt;</code>
         * [.getStorageAt(address, position, [epochNumber])](#Conflux+getStorageAt) ⇒ <code>Promise.&lt;(string\|null)&gt;</code>
         * [.getStorageRoot(address, [epochNumber])](#Conflux+getStorageRoot) ⇒ <code>Promise.&lt;object&gt;</code>
@@ -82,7 +84,7 @@ The Client class that provides an interface to the Conflux network.
         * [.traceBlock(blockHash)](#Conflux+traceBlock) ⇒ <code>Promise.&lt;Array.&lt;object&gt;&gt;</code>
         * [.traceTransaction(txHash)](#Conflux+traceTransaction) ⇒ <code>Promise.&lt;Array.&lt;Trace&gt;&gt;</code>
         * [.traceFilter(filter)](#Conflux+traceFilter) ⇒ <code>Promise.&lt;Array.&lt;Trace&gt;&gt;</code>
-        * [.getEpochReceipts(epochNumber)](#Conflux+getEpochReceipts) ⇒ <code>Promise.&lt;Array.&lt;Array.&lt;object&gt;&gt;&gt;</code>
+        * [.getEpochReceipts(epochNumber)](#Conflux+getEpochReceipts) ⇒ <code>Promise.&lt;Array.&lt;Array.&lt;TransactionReceipt&gt;&gt;&gt;</code>
         * [.getEpochReceiptsByPivotBlockHash(pivotBlockHash)](#Conflux+getEpochReceiptsByPivotBlockHash) ⇒ <code>Promise.&lt;Array.&lt;Array.&lt;TransactionReceipt&gt;&gt;&gt;</code>
         * [.getPoSEconomics()](#Conflux+getPoSEconomics) ⇒ <code>Promise.&lt;PoSEconomics&gt;</code>
         * [.subscribe(name, ...args)](#Conflux+subscribe) ⇒ <code>Promise.&lt;string&gt;</code>
@@ -225,7 +227,7 @@ Create internal contract by default abi and address
 
 | Param | Type | Description |
 | --- | --- | --- |
-| name | <code>&quot;AdminControl&quot;</code> \| <code>&quot;SponsorWhitelistControl&quot;</code> \| <code>&quot;Staking&quot;</code> \| <code>&quot;ConfluxContext&quot;</code> \| <code>&quot;PoSRegister&quot;</code> \| <code>&quot;CrossSpaceCall&quot;</code> | Internal contract name |
+| name | <code>&quot;AdminControl&quot;</code> \| <code>&quot;SponsorWhitelistControl&quot;</code> \| <code>&quot;Staking&quot;</code> \| <code>&quot;PoSRegister&quot;</code> \| <code>&quot;CrossSpaceCall&quot;</code> | Internal contract name |
 
 **Example**  
 ```js
@@ -589,6 +591,43 @@ Returns hashes of blocks located in some epoch.
 > await conflux.getBlocksByEpochNumber(0);
    ['0xe677ae5206a5d67d9efa183d867b4b986ed82a3e62174a1488cf8364d58534ec']
 ```
+<a name="Conflux+getBlockRewardInfo"></a>
+
+### conflux.getBlockRewardInfo(epochNumber) ⇒ <code>Promise.&lt;Array.&lt;RewardInfo&gt;&gt;</code>
+Get epoch blocks reward info
+
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;Array.&lt;RewardInfo&gt;&gt;</code> - List of block reward info
+- blockHash `string`: Hash of the block.
+- author `string`: The address of the beneficiary to whom the mining rewards were given.
+- baseReward `BigInt`: Block base reward in `Drip`
+- totalReward `BigInt`: Block total reward in `Drip`
+- txFee `BigInt`: Total gas fee of block transaction  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| epochNumber | <code>string</code> \| <code>number</code> | See [format.epochNumber](utils.md#util/format.js/format/(static)epochNumber) |
+
+**Example**  
+```js
+> await conflux.getBlockRewardInfo(6);
+   [
+   {
+      baseReward: 6993700000000000000n,
+      totalReward: 6993700031741486703n,
+      txFee: 0n,
+      author: 'CFXTEST:TYPE.USER:AATXETSP0KDARPDB5STDYEX11DR3X6SB0J2XZETSG6',
+      blockHash: '0x73cd891aea310e2c0b8644de91746c7353cebfffb780126bc06101b20689c893'
+    },
+   {
+      baseReward: 6997200000000000000n,
+      totalReward: 6997200031760371742n,
+      txFee: 3000000n,
+      author: 'CFXTEST:TYPE.USER:AATXETSP0KDARPDB5STDYEX11DR3X6SB0J2XZETSG6',
+      blockHash: '0xaf4136d04e9e2cc470703251ec46f5913ab7955d526feed43771705e89c77390'
+    }
+   ]
+```
 <a name="Conflux+getBestBlockHash"></a>
 
 ### conflux.getBestBlockHash() ⇒ <code>Promise.&lt;string&gt;</code>
@@ -664,6 +703,20 @@ Returns information about a block by hash.
       transactionsRoot: '0xd2f08676484ba2a3738194f44542eb29fb290b8ed74bf007f132fe51d89b2e7c'
     }
 ```
+<a name="Conflux+getBlockByHashWithPivotAssumption"></a>
+
+### conflux.getBlockByHashWithPivotAssumption(blockHash, pivotBlockHash, epochNumber) ⇒ <code>Promise.&lt;(Block\|null)&gt;</code>
+Get block by `blockHash` if pivot block of `epochNumber` is `pivotBlockHash`.
+
+**Kind**: instance method of [<code>Conflux</code>](#Conflux)  
+**Returns**: <code>Promise.&lt;(Block\|null)&gt;</code> - See `getBlockByHash`  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| blockHash | <code>string</code> | Block hash which epochNumber expect to be `epochNumber`. |
+| pivotBlockHash | <code>string</code> | Block hash which expect to be the pivot block of `epochNumber`. |
+| epochNumber | <code>number</code> | Epoch number |
+
 <a name="Conflux+getConfirmationRiskByHash"></a>
 
 ### conflux.getConfirmationRiskByHash(blockHash) ⇒ <code>Promise.&lt;(number\|null)&gt;</code>
@@ -812,7 +865,7 @@ Creates new message call transaction or a contract creation for signed transacti
 ```
 <a name="Conflux+sendTransaction"></a>
 
-### conflux.sendTransaction(options, [...password]) ⇒ <code>Promise.&lt;PendingTransaction&gt;</code>
+### conflux.sendTransaction(options, [password]) ⇒ <code>Promise.&lt;PendingTransaction&gt;</code>
 Sign and send transaction
 if `from` field in `conflux.wallet`, sign by local account and send raw transaction,
 else call `cfx_sendTransaction` and sign by remote wallet
@@ -823,7 +876,7 @@ else call `cfx_sendTransaction` and sign by remote wallet
 | Param | Type | Description |
 | --- | --- | --- |
 | options | [<code>TransactionMeta</code>](#TransactionMeta) | See [Transaction](Transaction.md#Transaction.js/Transaction/**constructor**) |
-| [...password] | <code>string</code> | Password for remote node. |
+| [password] | <code>string</code> | Password for remote node. |
 
 **Example**  
 ```js
@@ -1266,11 +1319,11 @@ Return traces that satisfy an filter
 ```
 <a name="Conflux+getEpochReceipts"></a>
 
-### conflux.getEpochReceipts(epochNumber) ⇒ <code>Promise.&lt;Array.&lt;Array.&lt;object&gt;&gt;&gt;</code>
+### conflux.getEpochReceipts(epochNumber) ⇒ <code>Promise.&lt;Array.&lt;Array.&lt;TransactionReceipt&gt;&gt;&gt;</code>
 Return one epoch's all receipts
 
 **Kind**: instance method of [<code>Conflux</code>](#Conflux)  
-**Returns**: <code>Promise.&lt;Array.&lt;Array.&lt;object&gt;&gt;&gt;</code> - Array of array receipts.  
+**Returns**: <code>Promise.&lt;Array.&lt;Array.&lt;TransactionReceipt&gt;&gt;&gt;</code> - Array of array receipts.  
 
 | Param | Type | Description |
 | --- | --- | --- |
