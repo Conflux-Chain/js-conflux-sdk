@@ -254,6 +254,7 @@ cfxFormat.block = format({
  * @prop {number} outcomeStatus - the outcome status code. 0x0 means success. 0x1 means failed. 0x2 means skipped
  * @prop {string} logsBloom - bloom filter for light clients to quickly retrieve related logs.
  * @prop {Log[]} logs - array of log objects that this transaction generated
+ * @prop {string} [txExecErrorMsg] - the error message of transaction execution. null when the transaction is succeeded.
  */
 cfxFormat.receipt = format({
   index: format.uInt,
