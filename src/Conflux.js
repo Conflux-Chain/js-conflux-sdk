@@ -21,7 +21,7 @@ const AdvancedRPCUtilities = require('./rpc/Advanced');
  * @typedef {Object} ConfluxOption
  * @property {string|number} [options.defaultGasPrice] - The default gas price in drip to use for transactions.
  * @property {number} [options.defaultGasRatio] - The ratio to multiply by gas.
- * @property {number} [options.defaultStorageRatio] - The ratio to multiply by storageLimit.
+ * @property {number} [options.defaultStorageRatio=1.1] - The ratio to multiply by storageLimit.
  * @property {string} [options.url] - Url of Conflux node to connect.
  * @property {number} [options.retry] - Retry times if request error occurs.
  * @property {number} [options.timeout] - Request time out in ms
@@ -65,7 +65,7 @@ class Conflux {
   constructor({
     defaultGasPrice,
     defaultGasRatio,
-    defaultStorageRatio,
+    defaultStorageRatio = 1.1,
     networkId,
     useHexAddressInParameter = false,
     useVerboseAddress = false,
