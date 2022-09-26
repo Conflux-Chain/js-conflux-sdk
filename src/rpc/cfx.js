@@ -389,18 +389,21 @@ class CFX extends RPCMethodFactory {
       let gas;
       let storageLimit;
 
-      const isContract = decodeCfxAddress(options.from).type === ADDRESS_TYPES.CONTRACT;
-      if (options.data || isContract) {
+      const isToUser = options.to && decodeCfxAddress(options.to).type === ADDRESS_TYPES.USER;
+      if (isToUser && !options.data) {
+        gas = CONST.TRANSACTION_GAS;
+        storageLimit = CONST.TRANSACTION_STORAGE_LIMIT;
+      } else {
         const { gasUsed, storageCollateralized, gasLimit } = await this.estimateGasAndCollateral(options);
         if (defaultGasRatio) {
           gas = format.big(gasUsed).times(defaultGasRatio).toFixed(0);
+          if (gas > 15000000) {
+            gas = 15000000;
+          }
         } else {
           gas = gasLimit;
         }
         storageLimit = format.big(storageCollateralized).times(defaultStorageRatio).toFixed(0);
-      } else {
-        gas = CONST.TRANSACTION_GAS;
-        storageLimit = CONST.TRANSACTION_STORAGE_LIMIT;
       }
 
       if (options.gas === undefined) {
