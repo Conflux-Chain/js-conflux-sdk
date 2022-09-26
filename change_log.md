@@ -1,5 +1,9 @@
 # change log
 
+## v2.1.7
+
+* Optimize the gas and storageCollateral logic of transaction population.
+
 ## v2.1.5
 
 * Add support the new InternalContract `ParamsControl`
