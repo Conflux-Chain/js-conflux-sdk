@@ -389,8 +389,8 @@ class CFX extends RPCMethodFactory {
       let gas;
       let storageLimit;
 
-      const isUser = decodeCfxAddress(options.from).type === ADDRESS_TYPES.USER;
-      if (isUser && !options.data) {
+      const isToUser = options.to && decodeCfxAddress(options.to).type === ADDRESS_TYPES.USER;
+      if (isToUser && !options.data) {
         gas = CONST.TRANSACTION_GAS;
         storageLimit = CONST.TRANSACTION_STORAGE_LIMIT;
       } else {
