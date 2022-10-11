@@ -1,4 +1,4 @@
-const { ACTION_TYPES, CALL_STATUS, POCKET_ENUM } = require('../CONST');
+const { ACTION_TYPES, CALL_STATUS } = require('../CONST');
 const Contract = require('../contract');
 const { ERROR_ABI: abi } = require('../contract/standard');
 const { decodeHexEncodedStr } = require('./index');
@@ -10,17 +10,6 @@ function tracesInTree(txTrace) {
   const levelCalls = {};
   let maxLevel = 0;
   if (!txTrace || txTrace.length === 0) return [];
-  // If the first trace's type is 'internal_transfer_action'(gas_payment) then remove it from array
-  if (txTrace[0].type === ACTION_TYPES.INTERNAL_TRANSFER_ACTION) {
-    const tLen = txTrace.length;
-    result.push(txTrace[0]); // gas_payment
-    if (txTrace[tLen - 2].type === ACTION_TYPES.INTERNAL_TRANSFER_ACTION && txTrace[tLen - 2].action.toPocket === POCKET_ENUM.STORAGE_COLLATERAL) {
-      result.push(txTrace[tLen - 2]); // storage_collateral
-      txTrace = txTrace.slice(0, tLen - 1);
-    }
-    result.push(txTrace[txTrace.length - 1]); // gas_refund
-    txTrace = txTrace.slice(1, txTrace.length - 1);
-  }
   // eslint-disable-next-line no-plusplus
   for (let i = 0; i < txTrace.length; i++) {
     const t = txTrace[i];
@@ -35,22 +24,28 @@ function tracesInTree(txTrace) {
       // set result
       const tp = stack.pop();
       txTrace[tp.index].result = t.action;
+      if (stack.length === 0) {
+        result.push(txTrace[tp.index]);
+      }
     } else {
       // set parent relation and invoke level
       if (stack.length > 0) {
         const ta = txTrace[stack[stack.length - 1].index];
         t.parent = ta.index;
         t.level = ta.level + 1;
-        if (t.level > maxLevel) maxLevel = t.level;
+        if (t.level > maxLevel) {
+          maxLevel = t.level;
+        }
       }
-      //
-      if (!levelCalls[t.level]) {
-        levelCalls[t.level] = [];
-      }
+
+      if (!levelCalls[t.level]) levelCalls[t.level] = [];
+
       levelCalls[t.level].push(t.index);
       // if is a  call or create push to stack top
       if (t.type === ACTION_TYPES.CALL || t.type === ACTION_TYPES.CREATE) {
         stack.push(t);
+      } else if (t.type === ACTION_TYPES.INTERNAL_TRANSFER_ACTION && stack.length === 0) {
+        result.push(t);
       }
     }
   }
@@ -63,7 +58,10 @@ function tracesInTree(txTrace) {
       _cleanTrace(item);
     }
   }
-  result.splice(1, 0, txTrace[0]);
+  // eslint-disable-next-line no-plusplus
+  for (let i = 0; i < result.length; i++) {
+    _cleanTrace(result[i]);
+  }
   return result;
 }
 
