@@ -385,11 +385,12 @@ class CFX extends RPCMethodFactory {
       options.epochHeight = await this.epochNumber();
     }
 
+    const addrInfo = options.to ? decodeCfxAddress(options.to) : null;
     if (options.gas === undefined || options.storageLimit === undefined) {
       let gas;
       let storageLimit;
 
-      const isToUser = options.to && addressUtil.isValidCfxAddress(options.to) && decodeCfxAddress(options.to).type === ADDRESS_TYPES.USER;
+      const isToUser = addrInfo && addrInfo.type === ADDRESS_TYPES.USER;
       if (isToUser && !options.data) {
         gas = CONST.TRANSACTION_GAS;
         storageLimit = CONST.TRANSACTION_STORAGE_LIMIT;
@@ -450,6 +451,7 @@ class CFX extends RPCMethodFactory {
    * @return {Promise<string>} Transaction hash
    */
   async sendTransaction(options, ...extra) {
+    if (!options.from) throw new Error('options.from is required');
     if (this.conflux.wallet.has(`${options.from}`)) {
       const rawTx = await this.populateAndSignTransaction(options);
       return this.sendRawTransaction(rawTx);
