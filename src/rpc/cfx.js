@@ -451,6 +451,7 @@ class CFX extends RPCMethodFactory {
    * @return {Promise<string>} Transaction hash
    */
   async sendTransaction(options, ...extra) {
+    if (!options) throw new Error('options is required');
     if (!options.from) throw new Error('options.from is required');
     if (this.conflux.wallet.has(`${options.from}`)) {
       const rawTx = await this.populateAndSignTransaction(options);

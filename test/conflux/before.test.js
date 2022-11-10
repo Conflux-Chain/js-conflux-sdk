@@ -392,7 +392,7 @@ test('estimateGasAndCollateral', async () => {
 });
 
 test('getLogs', async () => {
-  await expect(conflux.getLogs()).rejects.toThrow('Cannot read property');
+  await expect(conflux.getLogs()).rejects.toThrow("Cannot read properties of undefined (reading 'blockHashes')");
   await expect(conflux.getLogs({ blockHashes: [], fromEpoch: 0 })).rejects.toThrow('OverrideError');
   await expect(conflux.getLogs({ topics: [[null]] })).rejects.toThrow('not match "hex"');
 
