@@ -332,7 +332,7 @@ class CFX extends RPCMethodFactory {
         request: {
           method: 'cfx_call',
           params: [
-            self.conflux._formatCallTx(options),
+            self.conflux._formatCallTx(options, epochNumber),
             format.epochNumber.$or(undefined)(epochNumber),
           ],
         },
@@ -344,7 +344,7 @@ class CFX extends RPCMethodFactory {
         request: {
           method: 'cfx_estimateGasAndCollateral',
           params: [
-            self.conflux._formatCallTx(options),
+            self.conflux._formatCallTx(options, epochNumber),
             format.epochNumber.$or(undefined)(epochNumber),
           ],
         },
@@ -504,7 +504,7 @@ class CFX extends RPCMethodFactory {
       return await this.conflux.request({
         method: 'cfx_call',
         params: [
-          this.conflux._formatCallTx(options),
+          this.conflux._formatCallTx(options, epochNumber),
           format.epochNumber.$or(undefined)(epochNumber),
         ],
       });
@@ -528,7 +528,7 @@ class CFX extends RPCMethodFactory {
       const result = await this.conflux.request({
         method: 'cfx_estimateGasAndCollateral',
         params: [
-          this.conflux._formatCallTx(options),
+          this.conflux._formatCallTx(options, epochNumber),
           format.epochNumber.$or(undefined)(epochNumber),
         ],
       });

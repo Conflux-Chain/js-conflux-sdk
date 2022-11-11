@@ -7,8 +7,7 @@ const ContractMethodOverride = require('./method/ContractMethodOverride');
 const ContractEvent = require('./event/ContractEvent');
 const ContractEventOverride = require('./event/ContractEventOverride');
 const ErrorCoder = require('./method/ErrorCoder');
-const { isValidCfxAddress, decodeCfxAddress } = require('../util/address');
-const { ADDRESS_TYPES } = require('../CONST');
+const { isContractAddress } = require('../util/address');
 
 /**
  * Contract with all its methods and events defined in its abi.
@@ -147,7 +146,7 @@ class Contract {
     this.abi = new ContractABI(this); // XXX: Create a method named `abi` in solidity is a `Warning`.
 
     if (address) {
-      if (isValidCfxAddress(address) && decodeCfxAddress(address).type === ADDRESS_TYPES.USER) throw new Error('Invalid contract address');
+      if (!isContractAddress(address)) throw new Error('Invalid contract address');
       this.address = address; // XXX: Create a method named `address` in solidity is a `ParserError`
     }
 
@@ -178,7 +177,7 @@ class Contract {
   }
 
   attach(address) {
-    if (decodeCfxAddress(address).type === ADDRESS_TYPES.USER) throw new Error('Invalid contract address');
+    if (!isContractAddress(address)) throw new Error('Invalid contract address');
     this.address = address;
   }
 }

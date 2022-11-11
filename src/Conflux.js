@@ -200,7 +200,8 @@ class Conflux {
   /**
    * @private
    */
-  _formatCallTx(options) {
+  _formatCallTx(options, epochNumber) {
+    if (epochNumber) options.epochHeight = epochNumber;
     return cfxFormat.callTxAdvance(this.networkId, false, this.useVerboseAddress)(options);
   }
 
@@ -1070,7 +1071,7 @@ class Conflux {
       return await this.request({
         method: 'cfx_call',
         params: [
-          this._formatCallTx(options), // TODO set epochHeight in call request
+          this._formatCallTx(options, epochNumber),
           format.epochNumber.$or(undefined)(epochNumber),
         ],
       });
@@ -1094,7 +1095,7 @@ class Conflux {
       const result = await this.request({
         method: 'cfx_estimateGasAndCollateral',
         params: [
-          this._formatCallTx(options), // TODO set epochHeight in call request
+          this._formatCallTx(options, epochNumber),
           format.epochNumber.$or(undefined)(epochNumber),
         ],
       });
