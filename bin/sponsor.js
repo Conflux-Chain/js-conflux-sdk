@@ -71,11 +71,11 @@ async function info(contractAddr) {
 async function setGasSponsor(contractAddr, upperBound, value) {
   const { conflux, SponsorWhitelistControl } = _getClient();
   const account = _getAccount(conflux);
-  const admin = await _getAdmin(conflux, contractAddr);
+  /* const admin = await _getAdmin(conflux, contractAddr);
   if (account.address !== admin) {
     console.log('You are not admin');
     return;
-  }
+  } */
   // TODO add more check: value > upperBound * 1000; new sponsor balance > old sponsor balance; sponsor have enough balance for value
   const receipt = await SponsorWhitelistControl
     .setSponsorForGas(contractAddr, Drip.fromGDrip(upperBound))
@@ -90,11 +90,11 @@ async function setGasSponsor(contractAddr, upperBound, value) {
 async function setCollateralSponsor(contractAddr, value) {
   const { conflux, SponsorWhitelistControl } = _getClient();
   const account = _getAccount(conflux);
-  const admin = await _getAdmin(conflux, contractAddr);
+  /* const admin = await _getAdmin(conflux, contractAddr);
   if (account.address !== admin) {
     console.log('You are not admin');
     return;
-  }
+  } */
   // TODO add more check: sponsor for collateral must bigger than current if want replace a old sponsor
   const receipt = await SponsorWhitelistControl
     .setSponsorForCollateral(contractAddr)
