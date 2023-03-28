@@ -77,7 +77,7 @@ function _decodeErrorMessage(action) {
   let errorMessage;
   if (action.outcome === CALL_STATUS.REVERTED && action.returnData !== '0x') {
     const decoded = errorContract.abi.decodeData(action.returnData);
-    errorMessage = decoded.object.message;
+    errorMessage = decoded?.object?.message;
   }
   if (action.outcome === CALL_STATUS.FAIL) {
     errorMessage = decodeHexEncodedStr(action.returnData);
