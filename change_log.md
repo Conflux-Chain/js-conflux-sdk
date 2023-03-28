@@ -1,5 +1,9 @@
 # change log
 
+## v2.2.0
+
+* Remove support for hex address in parameter
+
 ## v2.1.7
 
 * Optimize the gas and storageCollateral logic of transaction population.

@@ -130,6 +130,15 @@ function cfxMappedEVMSpaceAddress(address) {
   return checksumAddress(`0x${mappedBuf.toString('hex')}`);
 }
 
+function isContractAddress(address) {
+  if (isValidHexAddress(address) && (address.startsWith('0x8') || address.startsWith('0x0888'))) return true;
+  if (isValidCfxAddress(address)) {
+    const { type } = decode(address);
+    return type === ADDRESS_TYPES.CONTRACT || type === ADDRESS_TYPES.BUILTIN;
+  }
+  return false;
+}
+
 module.exports = {
   encodeCfxAddress: encode,
   decodeCfxAddress: decode,
@@ -146,4 +155,5 @@ module.exports = {
   isInternalContractAddress,
   isValidHexAddress,
   isValidCfxHexAddress,
+  isContractAddress,
 };

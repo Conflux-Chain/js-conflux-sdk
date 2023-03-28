@@ -28,7 +28,6 @@ const AdvancedRPCUtilities = require('./rpc/Advanced');
  * @property {Object} [options.logger] - Logger object with 'info' and 'error' method.
  * @property {number} [options.networkId] - Connected RPC's networkId
  * @property {boolean} [options.useWechatProvider] - Use wechat provider
- * @property {boolean} [options.useHexAddressInParameter] - Use hex address in parameter
  * @property {boolean} [options.useVerboseAddress] - Use verbose address
  */
 
@@ -67,7 +66,6 @@ class Conflux {
     defaultGasRatio = 1,
     defaultStorageRatio = 1.1,
     networkId,
-    useHexAddressInParameter = false,
     useVerboseAddress = false,
     ...rest
   } = {}) {
@@ -129,11 +127,11 @@ class Conflux {
     this.sendTransaction = this._decoratePendingTransaction(this.sendTransaction);
 
     if (networkId) {
+      if (typeof networkId !== 'number' || Number.isNaN(networkId)) throw new Error('networkId must be a number');
       this.networkId = networkId;
       this.wallet.setNetworkId(networkId);
     }
 
-    this.useHexAddressInParameter = useHexAddressInParameter;
     this.useVerboseAddress = useVerboseAddress;
 
     /**
@@ -196,21 +194,22 @@ class Conflux {
     if (!this.networkId) {
       console.warn('Conflux address: networkId is not set properly, please set it');
     }
-    return this.useHexAddressInParameter ? format.hexAddress(address) : format.address(address, this.networkId, this.useVerboseAddress);
+    return format.address(address, this.networkId, this.useVerboseAddress);
   }
 
   /**
    * @private
    */
-  _formatCallTx(options) {
-    return cfxFormat.callTxAdvance(this.networkId, this.useHexAddressInParameter, this.useVerboseAddress)(options);
+  _formatCallTx(options, epochNumber) {
+    if (epochNumber) options.epochHeight = epochNumber;
+    return cfxFormat.callTxAdvance(this.networkId, false, this.useVerboseAddress)(options);
   }
 
   /**
    * @private
    */
   _formatGetLogs(options) {
-    return cfxFormat.getLogsAdvance(this.networkId, this.useHexAddressInParameter, this.useVerboseAddress)(options);
+    return cfxFormat.getLogsAdvance(this.networkId, false, this.useVerboseAddress)(options);
   }
 
   /**
@@ -230,7 +229,7 @@ class Conflux {
    * - [SponsorWhitelistControl](https://github.com/Conflux-Chain/conflux-rust/blob/master/internal_contract/contracts/SponsorWhitelistControl.sol)
    * - [Staking](https://github.com/Conflux-Chain/conflux-rust/blob/master/internal_contract/contracts/Staking.sol)
    *
-   * @param {"AdminControl"|"SponsorWhitelistControl"|"Staking"|"PoSRegister"|"CrossSpaceCall"} name - Internal contract name
+   * @param {"AdminControl"|"SponsorWhitelistControl"|"Staking"|"PoSRegister"|"CrossSpaceCall"|"ParamsControl"} name - Internal contract name
    * @return {import('./contract/index').Contract}
    *
    * @example
@@ -286,7 +285,7 @@ class Conflux {
 
   // --------------------------------------------------------------------------
   /**
-   * Update conflux networkId from RPC
+   * Update conflux context networkId from RPC
    */
   async updateNetworkId() {
     const { networkId } = await this.getStatus();
@@ -819,10 +818,7 @@ class Conflux {
    "0xbe007c3eca92d01f3917f33ae983f40681182cf618defe75f490a65aac016914"
    */
   async sendRawTransaction(hex) {
-    return this.request({
-      method: 'cfx_sendRawTransaction',
-      params: [format.hex(hex)],
-    });
+    return this.cfx.sendRawTransaction(hex);
   }
 
   /**
@@ -925,6 +921,8 @@ class Conflux {
    }
    */
   async sendTransaction(options, password) {
+    if (!options) throw new Error('options is required');
+    if (!options.from) throw new Error('options.from is required');
     if (this.wallet.has(`${options.from}`)) {
       const rawTx = await this.cfx.populateAndSignTransaction(options);
       return this.sendRawTransaction(rawTx);
@@ -1073,7 +1071,7 @@ class Conflux {
       return await this.request({
         method: 'cfx_call',
         params: [
-          this._formatCallTx(options),
+          this._formatCallTx(options, epochNumber),
           format.epochNumber.$or(undefined)(epochNumber),
         ],
       });
@@ -1097,7 +1095,7 @@ class Conflux {
       const result = await this.request({
         method: 'cfx_estimateGasAndCollateral',
         params: [
-          this._formatCallTx(options),
+          this._formatCallTx(options, epochNumber),
           format.epochNumber.$or(undefined)(epochNumber),
         ],
       });

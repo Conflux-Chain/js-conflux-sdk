@@ -98,6 +98,7 @@ class PrivateKeyAccount extends Account {
   }
    */
   constructor(privateKey, networkId) {
+    if (typeof privateKey === 'string' && privateKey.length === 64) privateKey = `0x${privateKey}`;
     const privateKeyBuffer = format.hexBuffer(privateKey);
     const publicKeyBuffer = sign.privateKeyToPublicKey(privateKeyBuffer);
     const addressBuffer = sign.publicKeyToAddress(publicKeyBuffer);

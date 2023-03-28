@@ -65,7 +65,7 @@ class AdvancedRPCUtilities {
     if (!options.from) {
       throw new Error('Can not check balance without `from`');
     }
-    options = this.conflux._formatCallTx(options);
+    options = this.conflux._formatCallTx(options, epochNumber);
     const gasPrice = format.bigInt(options.gasPrice || BigInt(1));
     const txValue = format.bigInt(options.value || BigInt(0));
     const gasFee = gasPrice * estimateResult.gasLimit;

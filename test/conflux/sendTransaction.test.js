@@ -14,7 +14,7 @@ conflux.provider = new MockProvider();
 const account = conflux.wallet.addPrivateKey(PRIVATE_KEY, CONST.TESTNET_ID);
 
 test('sendTransaction error', async () => {
-  await expect(conflux.sendTransaction()).rejects.toThrow('Cannot read property');
+  await expect(conflux.sendTransaction()).rejects.toThrow('options is required');
 });
 
 test('sendTransaction remote', async () => {
@@ -22,8 +22,8 @@ test('sendTransaction remote', async () => {
 
   expect(conflux.wallet.has(HEX_ADDRESS)).toEqual(false);
 
-  await conflux.sendTransaction({}, PASSWORD);
-  expect(call).toHaveBeenLastCalledWith('cfx_sendTransaction', {}, PASSWORD);
+  await expect(conflux.sendTransaction({}, PASSWORD)).rejects.toThrow('options.from is required');
+  // expect(call).toHaveBeenLastCalledWith('cfx_sendTransaction', {}, PASSWORD);
 
   /* await conflux.sendTransaction({
     from: HEX_ADDRESS,
