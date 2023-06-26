@@ -314,6 +314,13 @@ class CFX extends RPCMethodFactory {
         ],
         responseFormatter: cfxFormat.voteParamsInfo,
       },
+      {
+        method: 'cfx_getCollateralInfo',
+        requestFormatters: [
+          format.epochNumberOrUndefined,
+        ],
+        responseFormatter: cfxFormat.collateralInfo,
+      },
     ];
   }
 
