@@ -120,8 +120,9 @@ Available internal contracts:
 * `AdminControl`
 * `SponsorWhitelistControl`
 * `Staking`
-* `ConfluxContext`
 * `PoSRegister`
+* `CrossSpaceCall`
+* `ParamsControl`
 
 ## How to get log
 
@@ -190,7 +191,7 @@ How to build the filter `topics`
 
 ```js
 // initialize a contract instance with abi and address
-let fc = cfx.Contract({
+let fc = conflux.Contract({
   abi: CRC20_ABI,
 });
 

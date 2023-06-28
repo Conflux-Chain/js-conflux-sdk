@@ -318,6 +318,8 @@ cfxFormat.supplyInfo = format({
  * @property {BigInt} sponsorBalanceForCollateral
  * @property {BigInt} sponsorBalanceForGas
  * @property {BigInt} sponsorGasBound
+ * @property {BigInt} usedStoragePoint
+ * @property {BigInt} availableStoragePoint
  * @property {string} sponsorForCollateral
  * @property {string} sponsorForGas
  */
@@ -325,6 +327,8 @@ cfxFormat.sponsorInfo = format({
   sponsorBalanceForCollateral: format.bigUInt,
   sponsorBalanceForGas: format.bigUInt,
   sponsorGasBound: format.bigUInt,
+  usedStoragePoint: format.bigUInt.$or(null),
+  availableStoragePoint: format.bigUInt.$or(null),
 }, {
   name: 'format.sponsorInfo',
 });
@@ -471,6 +475,18 @@ cfxFormat.voteParamsInfo = format({
   interestRate: format.bigUInt,
 }, {
   name: 'format.voteParamsInfo',
+});
+
+/**
+ * @typedef {Object} CollateralInfo
+ * @property {BigInt} convertedStoragePoints Total converted storage points
+ * @property {BigInt} totalStorageTokens Total collateral CFX
+ * @property {BigInt} usedStoragePoints Current using storage points
+ */
+cfxFormat.collateralInfo = format({
+  convertedStoragePoints: format.bigUInt,
+  totalStorageTokens: format.bigUInt,
+  usedStoragePoints: format.bigUInt,
 });
 
 module.exports = cfxFormat;

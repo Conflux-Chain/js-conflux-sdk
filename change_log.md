@@ -1,5 +1,10 @@
 # change log
 
+## v2.1.11
+
+* Add `cfx_getCollateralInfo` RPC method which was import from `conflux-rust v2.2.5`
+* `SponsorInfo` add two more fields `availableStoragePoint` and `usedStoragePoint`
+
 ## v2.1.7
 
 * Optimize the gas and storageCollateral logic of transaction population.
