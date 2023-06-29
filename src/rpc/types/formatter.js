@@ -318,8 +318,8 @@ cfxFormat.supplyInfo = format({
  * @property {BigInt} sponsorBalanceForCollateral
  * @property {BigInt} sponsorBalanceForGas
  * @property {BigInt} sponsorGasBound
- * @property {BigInt} usedStoragePoint
- * @property {BigInt} availableStoragePoint
+ * @property {BigInt} usedStoragePoints
+ * @property {BigInt} availableStoragePoints
  * @property {string} sponsorForCollateral
  * @property {string} sponsorForGas
  */
@@ -327,8 +327,8 @@ cfxFormat.sponsorInfo = format({
   sponsorBalanceForCollateral: format.bigUInt,
   sponsorBalanceForGas: format.bigUInt,
   sponsorGasBound: format.bigUInt,
-  usedStoragePoint: format.bigUInt.$or(null),
-  availableStoragePoint: format.bigUInt.$or(null),
+  usedStoragePoints: format.bigUInt.$or(null),
+  availableStoragePoints: format.bigUInt.$or(null),
 }, {
   name: 'format.sponsorInfo',
 });
