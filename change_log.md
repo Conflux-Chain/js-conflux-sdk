@@ -1,6 +1,6 @@
 # change log
 
-## v2.2.0
+## v2.3.0
 
 * Add three debug RPC method in `cfx` namespace `debug_getTransactionsByBlock`, `debug_getEpochReceiptProofByTransaction`, `debug_getTransactionsByEpoch`
 * Add filter related RPC method in cfx namespace `cfx_newFilter`, `cfx_newBlockFilter`, `cfx_newPendingTransactionFilter`, `cfx_getFilterChanges`, `cfx_getFilterLogs`, `cfx_uninstallFilter`
