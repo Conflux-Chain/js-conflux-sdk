@@ -488,7 +488,7 @@ format.keccak256 = format.bytes.$before(v => (lodash.isString(v) && !isHexString
 
 format.epochNumber1898 = format({
   epochNumber: format.bigUIntHex.$or(null),
-  blockHash: format.blockHash.$or(null),
+  blockHash: format.hex64.$or(null),
   requirePivot: format.boolean.$or(null),
 });
 

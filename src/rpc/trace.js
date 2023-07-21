@@ -199,7 +199,7 @@ class Trace extends RPCMethodFactory {
         method: 'trace_epoch',
         alias: 'traceEpoch',
         requestFormatters: [
-          format.format.epochNumber,
+          format.epochNumber,
         ],
       },
     ];
