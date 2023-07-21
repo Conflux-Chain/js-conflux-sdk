@@ -20,6 +20,7 @@ const SponsorWhitelistControl = {
     'function removePrivilegeByAdmin(address contractAddr, address[] memory addresses)',
     'function setSponsorForGas(address contractAddr, uint upperBound)',
     'function setSponsorForCollateral(address contractAddr)',
+    'function getAvailableStoragePoints(address contractAddr) public view returns (uint256)',
     // 'function addPrivilege(address[] memory)',
     // 'function removePrivilege(address[] memory)',
   ],
