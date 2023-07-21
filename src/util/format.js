@@ -228,15 +228,7 @@ format.epochNumber = format.bigUIntHex
   .$or(CONST.EPOCH_NUMBER.LATEST_CHECKPOINT)
   .$or(CONST.EPOCH_NUMBER.EARLIEST);
 
-format.epochNumber1898 = format({
-  epochNumber: format.bigUIntHex.$or(null),
-  blockHash: format.blockHash.$or(null),
-  requirePivot: format.boolean.$or(null),
-});
-
 format.epochNumberOrUndefined = format.epochNumber.$or(undefined);
-
-format.epochNumberOrBlockHash = format.epochNumberOrUndefined.$or(format.epochNumber1898);
 
 /**
  * When encoding UNFORMATTED DATA (byte arrays, account addresses, hashes, bytecode arrays): encode as hex, prefix with "0x", two hex digits per byte.
@@ -493,5 +485,13 @@ format.boolean = format.any.$validate(lodash.isBoolean, 'boolean');
  "0x3c1b2d38851281e9a7b59d10973b0c87c340ff1e76bde7d06bf6b9f28df2b8c0"
  */
 format.keccak256 = format.bytes.$before(v => (lodash.isString(v) && !isHexString(v) ? Buffer.from(v) : v)).$after(sign.keccak256).$after(format.hex);
+
+format.epochNumber1898 = format({
+  epochNumber: format.bigUIntHex.$or(null),
+  blockHash: format.blockHash.$or(null),
+  requirePivot: format.boolean.$or(null),
+});
+
+format.epochNumberOrBlockHash = format.epochNumberOrUndefined.$or(format.epochNumber1898);
 
 module.exports = format;
