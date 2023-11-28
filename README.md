@@ -3,7 +3,7 @@
 [![npm](https://img.shields.io/npm/v/js-conflux-sdk.svg)](https://www.npmjs.com/package/js-conflux-sdk)
 [![npm](https://img.shields.io/npm/dm/js-conflux-sdk.svg)](https://www.npmjs.com/package/js-conflux-sdk)
 
-JavaScript Conflux Software Development Kit is a complete library for interacting with the [Conflux Blockchain Core Space](https://developer.confluxnetwork.org/) in both Node.js and browser environment.
+JavaScript Conflux Software Development Kit is a complete library for interacting with the [Conflux Blockchain Core Space](https://doc.confluxnetwork.org/) in both Node.js and browser environment.
 
 ## Docs
 
@@ -11,8 +11,8 @@ JavaScript Conflux Software Development Kit is a complete library for interactin
 * [SDK API doc](./docs/api/README.md)
 * [Examples](./example/README.md)
 * [Community examples](https://github.com/conflux-fans/js-sdk-example)
-* [Fullnode JSONRPC API](https://developer.confluxnetwork.org/conflux-doc/docs/json_rpc)
-* [Public RPC endpoints](https://developer.confluxnetwork.org/sdks-and-tools/en/conflux_rpcs)
+* [Fullnode JSONRPC API](https://doc.confluxnetwork.org/docs/core/build/json-rpc/json_rpc)
+* [Public RPC endpoints](https://doc.confluxnetwork.org/docs/core/build/sdks-and-tools/conflux_rpcs)
 * [Testnet faucet](https://faucet.confluxnetwork.org/)
 * [FAQs](./docs/FAQs.md)
 
