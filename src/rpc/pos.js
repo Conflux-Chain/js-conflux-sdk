@@ -187,6 +187,10 @@ format.rewardsByEpoch = format({
   })],
 }).$or(null);
 
+format.epochState = format.any;
+
+format.ledgerInfoWithSignatures = format.any;
+
 /**
  * Class contains pos RPC methods
  * For the detail meaning of fields, please refer to the PoS RPC document:
@@ -254,6 +258,14 @@ class PoS extends RPCMethodFactory {
         method: 'pos_getAccount',
         requestFormatters: [
           format.hex64,
+          format.posBlockNumber.$or(undefined),
+        ],
+        responseFormatter: format.posAccount,
+      },
+      {
+        method: 'pos_getAccountByPowAddress',
+        requestFormatters: [
+          format.address,
           format.posBlockNumber.$or(undefined),
         ],
         responseFormatter: format.posAccount,
@@ -410,6 +422,48 @@ class PoS extends RPCMethodFactory {
           format.bigUIntHex,
         ],
         responseFormatter: format.rewardsByEpoch,
+      },
+      {
+        method: 'pos_getConsensusBlocks',
+        requestFormatters: [
+        ],
+        responseFormatter: format([format.posBlock]),
+      },
+      {
+        method: 'pos_getEpochState',
+        requestFormatters: [
+          format.bigUIntHex,
+        ],
+        responseFormatter: format.epochState,
+      },
+      {
+        method: 'pos_getLedgerInfoByEpoch',
+        requestFormatters: [
+          format.bigUIntHex,
+        ],
+        responseFormatter: format.ledgerInfoWithSignatures.$or(undefined),
+      },
+      {
+        method: 'pos_getLedgerInfoByBlockNumber',
+        requestFormatters: [
+          format.posBlockNumber,
+        ],
+        responseFormatter: format.ledgerInfoWithSignatures.$or(undefined),
+      },
+      {
+        method: 'pos_getLedgerInfoByEpochAndRound',
+        requestFormatters: [
+          format.bigUIntHex,
+          format.bigUIntHex,
+        ],
+        responseFormatter: format.ledgerInfoWithSignatures.$or(undefined),
+      },
+      {
+        method: 'pos_getLedgerInfosByEpoch',
+        requestFormatters: [
+          format.bigUIntHex,
+        ],
+        responseFormatter: format([format.ledgerInfoWithSignatures]),
       },
     ];
   }

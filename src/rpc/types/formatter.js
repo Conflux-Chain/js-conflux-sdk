@@ -350,11 +350,12 @@ cfxFormat.rewardInfo = format([
 /**
  * @typedef {Object} Vote
  * @prop {BigInt} amount
- * @prop {number} unlockBlockNumber
+ * @prop {BigInt} unlockBlockNumber
  */
 cfxFormat.voteList = format([
   {
     amount: format.bigUInt,
+    unlockBlockNumber: format.bigUInt,
   },
 ]);
 
@@ -362,7 +363,7 @@ cfxFormat.voteList = format([
  * @typedef {Object} Deposit
  * @prop {BigInt} accumulatedInterestRate
  * @prop {BigInt} amount
- * @prop {number} depositTime
+ * @prop {BigInt} depositTime
  */
 cfxFormat.depositList = format([
   {
@@ -487,6 +488,11 @@ cfxFormat.collateralInfo = format({
   convertedStoragePoints: format.bigUInt,
   totalStorageTokens: format.bigUInt,
   usedStoragePoints: format.bigUInt,
+});
+
+cfxFormat.wrapTransaction = format({
+  nativeTransaction: cfxFormat.transaction,
+  ethTransaction: format.any,
 });
 
 module.exports = cfxFormat;

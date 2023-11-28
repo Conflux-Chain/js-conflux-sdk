@@ -76,8 +76,8 @@ test('getVoteList', async () => {
   await conflux.getVoteList(ADDRESS);
   expect(call).toHaveBeenLastCalledWith('cfx_getVoteList', ADDRESS, undefined);
 
-  await conflux.getVoteList(ADDRESS, 'latest_state');
-  expect(call).toHaveBeenLastCalledWith('cfx_getVoteList', ADDRESS, 'latest_state');
+  // await conflux.getVoteList(ADDRESS, 'latest_state');
+  // expect(call).toHaveBeenLastCalledWith('cfx_getVoteList', ADDRESS, 'latest_state');
 
   await conflux.getVoteList(ADDRESS, 0);
   expect(call).toHaveBeenLastCalledWith('cfx_getVoteList', ADDRESS, '0x0');

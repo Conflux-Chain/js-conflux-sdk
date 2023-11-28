@@ -206,7 +206,7 @@ class MockProvider extends EventEmitter {
   cfx_getVoteList(address, epochNumber) {
     return lodash.range(2).map(() => ({
       amount: randomHex(8),
-      unlockBlockNumber: epochNumber === undefined ? lodash.random(0, 1000) : epochNumber * 2,
+      unlockBlockNumber: epochNumber === undefined ? randomHex(8) : toHex(epochNumber * 2),
     }));
   }
 

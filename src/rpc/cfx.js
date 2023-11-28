@@ -73,7 +73,7 @@ class CFX extends RPCMethodFactory {
         method: 'cfx_getBalance',
         requestFormatters: [
           formatAddressWithNetworkId,
-          format.epochNumberOrUndefined,
+          format.epochNumberOrBlockHash,
         ],
         responseFormatter: format.bigUInt,
       },
@@ -89,7 +89,7 @@ class CFX extends RPCMethodFactory {
         method: 'cfx_getNextNonce',
         requestFormatters: [
           formatAddressWithNetworkId,
-          format.epochNumberOrUndefined,
+          format.epochNumberOrBlockHash,
         ],
         responseFormatter: format.bigUInt,
       },
@@ -205,7 +205,7 @@ class CFX extends RPCMethodFactory {
         method: 'cfx_getCode',
         requestFormatters: [
           formatAddressWithNetworkId,
-          format.epochNumber.$or(undefined),
+          format.epochNumberOrBlockHash,
         ],
         responseFormatter: format.any,
       },
@@ -214,7 +214,7 @@ class CFX extends RPCMethodFactory {
         requestFormatters: [
           formatAddressWithNetworkId,
           format.hex64,
-          format.epochNumber.$or(undefined),
+          format.epochNumberOrBlockHash,
         ],
       },
       {
@@ -297,13 +297,6 @@ class CFX extends RPCMethodFactory {
         responseFormatter: cfxFormat.logs,
       },
       {
-        method: 'cfx_getEpochReceipts',
-        requestFormatters: [
-          format.epochNumber,
-        ],
-        responseFormatter: cfxFormat.epochReceipts,
-      },
-      {
         method: 'cfx_getPoSEconomics',
         responseFormatter: cfxFormat.posEconomics,
       },
@@ -320,6 +313,70 @@ class CFX extends RPCMethodFactory {
           format.epochNumberOrUndefined,
         ],
         responseFormatter: cfxFormat.collateralInfo,
+      },
+      {
+        method: 'cfx_newFilter',
+        requestFormatters: [
+          format.getLogs,
+        ],
+      },
+      {
+        method: 'cfx_newBlockFilter',
+      },
+      {
+        method: 'cfx_newPendingTransactionFilter',
+      },
+      {
+        method: 'cfx_getFilterChanges',
+        requestFormatters: [
+          format.hex32,
+        ],
+        responseFormatter: cfxFormat.logs.$or(format([format.hex64])),
+      },
+      {
+        method: 'cfx_getFilterLogs',
+        requestFormatters: [
+          format.hex32,
+        ],
+        responseFormatter: cfxFormat.logs,
+      },
+      {
+        method: 'cfx_uninstallFilter',
+        requestFormatters: [
+          format.hex32,
+        ],
+      },
+      {
+        method: 'cfx_getEpochReceipts',
+        debug: true,
+        requestFormatters: [
+          format.epochNumber,
+          format.boolean.$or(undefined),
+        ],
+        responseFormatter: cfxFormat.epochReceipts,
+      },
+      {
+        method: 'debug_getTransactionsByEpoch',
+        debug: true,
+        requestFormatters: [
+          format.bigUIntHex,
+        ],
+        responseFormatter: format([format.wrapTransaction]),
+      },
+      {
+        method: 'debug_getTransactionsByBlock',
+        debug: true,
+        requestFormatters: [
+          format.blockHash,
+        ],
+        responseFormatter: format([format.wrapTransaction]),
+      },
+      {
+        method: 'debug_getEpochReceiptProofByTransaction',
+        debug: true,
+        requestFormatters: [
+          format.transactionHash,
+        ],
       },
     ];
   }
@@ -340,7 +397,7 @@ class CFX extends RPCMethodFactory {
           method: 'cfx_call',
           params: [
             self.conflux._formatCallTx(options),
-            format.epochNumber.$or(undefined)(epochNumber),
+            format.epochNumberOrBlockHash(epochNumber),
           ],
         },
       };

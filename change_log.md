@@ -1,8 +1,16 @@
 # change log
 
+## v2.3.0
+
+* Add three debug RPC method in `cfx` namespace `debug_getTransactionsByBlock`, `debug_getEpochReceiptProofByTransaction`, `debug_getTransactionsByEpoch`
+* Add filter related RPC method in cfx namespace `cfx_newFilter`, `cfx_newBlockFilter`, `cfx_newPendingTransactionFilter`, `cfx_getFilterChanges`, `cfx_getFilterLogs`, `cfx_uninstallFilter`
+* Add `pos_getAccountByPowAddress`, `pos_getConsensusBlocks`, `pos_getEpochState`, `pos_getLedgerInfoByEpoch`, `pos_getLedgerInfoByBlockNumber`, `pos_getLedgerInfoByEpochAndRound`, `pos_getLedgerInfosByEpoch`  in `pos` namespace
+* Add trace method `trace_epoch` in `trace` namespace
+* Support new scheme for epoch parameter like EIP-1898, check details [here](https://github.com/Conflux-Chain/conflux-rust/blob/master/changelogs/JSONRPC.md#v222), supported methods are: `cfx_getBalance`, `cfx_getCode`, `cfx_call`, `cfx_getNextNonce`, `cfx_getStorageAt`
+
 ## v2.1.11
 
-* Add `cfx_getCollateralInfo` RPC method which was import from `conflux-rust v2.2.5`
+* Add `cfx_getCollateralInfo` RPC method which was import from `conflux-rust v2.3.0`
 * `SponsorInfo` add two more fields `availableStoragePoint` and `usedStoragePoint`
 
 ## v2.1.7

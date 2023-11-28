@@ -358,6 +358,8 @@ format.checksumAddress = format.hex40.$after(sign.checksumAddress);
 /** @type {function(string): string} */
 format.hex64 = format.hex.$validate(v => v.length === 2 + 64, 'hex64');
 
+format.hex32 = format.hex.$validate(v => v.length === 2 + 32, 'hex32');
+
 /**
  * @function blockHash
  * @param {string|Buffer} arg
@@ -483,5 +485,13 @@ format.boolean = format.any.$validate(lodash.isBoolean, 'boolean');
  "0x3c1b2d38851281e9a7b59d10973b0c87c340ff1e76bde7d06bf6b9f28df2b8c0"
  */
 format.keccak256 = format.bytes.$before(v => (lodash.isString(v) && !isHexString(v) ? Buffer.from(v) : v)).$after(sign.keccak256).$after(format.hex);
+
+format.epochNumber1898 = format({
+  epochNumber: format.bigUIntHex.$or(null),
+  blockHash: format.hex64.$or(null),
+  requirePivot: format.boolean.$or(null),
+});
+
+format.epochNumberOrBlockHash = format.epochNumberOrUndefined.$or(format.epochNumber1898);
 
 module.exports = format;
