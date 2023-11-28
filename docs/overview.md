@@ -37,7 +37,7 @@ async function main() {
 
 Besides `url` and `logger` you can pass [other options](https://github.com/Conflux-Chain/js-conflux-sdk/tree/faec50e6c2dd16158b114d0d4de228d7b2ca7535/api.md) to initialize a Conflux object
 
-## Add account
+### Add account
 
 Private keys are required to approve any transaction made on your behalf, `conflux.wallet` provide utility help you manage your accounts
 
@@ -47,7 +47,7 @@ conflux.wallet.addPrivateKey('0x0123456789abcdef0123456789abcdef0123456789abcdef
 
 **Only after you add your account to wallet, then you can use them send transactions.**
 
-## Send JSON-RPC request
+### Send JSON-RPC request
 
 There are a lot methods on cfx object which are one-to-one with [Conflux node RPC methods](https://developer.confluxnetwork.org/conflux-doc/docs/json_rpc). All conflux methods will return a promise, so you can use it with `async/await` syntax.
 
@@ -66,16 +66,6 @@ Besides balance you can get a lot blockchain information through it, for example
 ### Conflux hex address
 
 **Note: from Conflux-rust v1.1.1 we have import a new base32 encoded address, the hex address can not be used then.**
-
-In Conflux network there are three kind address:
-
-* Normal address `0x1` prefix: `0x1386B4185A223EF49592233b69291bbe5a80C527`
-* Contract address `0x8` prefix: `0x80a17fd515c1fc819e87e606c058490ac1f14ca7`
-* Internal contract address `0x0888` prefix: `0x0888000000000000000000000000000000000000`
-
-So normally a ethereum's address cann't used as conflux address, otherwise it starts with `0x1`
-
-Notice: one address can have two form `checksumed` and `not checksumed`, these two actually are same account. For example `0x1386B4185A223EF49592233b69291bbe5a80C527` and `0x1386b4185a223ef49592233b69291bbe5a80c527` which point to same account.
 
 ### Conflux base32 checksum address
 
