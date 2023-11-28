@@ -50,7 +50,7 @@ const util = require('js-conflux-sdk/src/util');
 
 #### umd
 
-The front packed package is located in `js-conflux-sdk`'s dist folder.
+The front-packed package is located in `js-conflux-sdk`'s dist folder.
 
 ```javascript
 import { Conflux } from 'js-conflux-sdk/dist/js-conflux-sdk.umd.min.js';
@@ -75,7 +75,7 @@ or
 </script>
 ```
 
-From `v2.0` the exported class to browser window name change from Conflux to `TreeGraph`
+From `v2.0` the exported class to browser window name changed from Conflux to `TreeGraph`
 
 Or you can use public CDN links:
 
@@ -83,7 +83,7 @@ Or you can use public CDN links:
 
 ## Address conversion performance
 
-To gain a address conversion(hex->base32 or reverse) performance boost, you can install [`@conflux-dev/conflux-address-rust`](https://github.com/conflux-fans/conflux-address-rust-binding) in your project. Which will be used to relace the purejs version and can gain a `10-100` performance boost.
+To gain an address conversion(hex->base32 or reverse) performance boost, you can install [`@conflux-dev/conflux-address-rust`](https://github.com/conflux-fans/conflux-address-rust-binding) in your project. Which will be used to replace the purejs version and can gain a `10-100` performance boost.
 
 Note: @conflux-dev/conflux-address-rust required a rust environment to install.
 
@@ -120,5 +120,4 @@ v1.5.11+       | v1.1.1+
 
 * [CIP-23](https://github.com/conflux-fans/cip-23) can be used to work with Conflux signTypedData
 * [hardhat-conflux](https://github.com/conflux-chain/hardhat-conflux) hardhat plugin that can be used to interact with Conflux Core network
-* [conflux-truffle](https://github.com/conflux-chain/conflux-truffle) Conflux fork of truffle develop framework
 * [@conflux-dev/hdwallet](https://github.com/Conflux-Chain/ts-conflux-sdk/tree/main/packages/hdwallet) HD Wallet
