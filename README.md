@@ -3,7 +3,7 @@
 [![npm](https://img.shields.io/npm/v/js-conflux-sdk.svg)](https://www.npmjs.com/package/js-conflux-sdk)
 [![npm](https://img.shields.io/npm/dm/js-conflux-sdk.svg)](https://www.npmjs.com/package/js-conflux-sdk)
 
-JavaScript Conflux Software Development Kit is a complete library for interacting with the [Conflux Blockchain](https://developer.confluxnetwork.org/) in both Node.js and browser environment.
+JavaScript Conflux Software Development Kit is a complete library for interacting with the [Conflux Blockchain Core Space](https://developer.confluxnetwork.org/) in both Node.js and browser environment.
 
 ## Docs
 
