@@ -3,7 +3,7 @@
 [![npm](https://img.shields.io/npm/v/js-conflux-sdk.svg)](https://www.npmjs.com/package/js-conflux-sdk)
 [![npm](https://img.shields.io/npm/dm/js-conflux-sdk.svg)](https://www.npmjs.com/package/js-conflux-sdk)
 
-JavaScript Conflux Software Development Kit is a complete library for interacting with the [Conflux Blockchain Core Space](https://doc.confluxnetwork.org/) in both Node.js and browser environment.
+JavaScript Conflux Software Development Kit is a complete library for interacting with the [Conflux Blockchain Core Space](https://doc.confluxnetwork.org/docs/core/Overview) in both Node.js and browser environment.
 
 ## Docs
 
@@ -11,9 +11,10 @@ JavaScript Conflux Software Development Kit is a complete library for interactin
 * [SDK API doc](./docs/api/README.md)
 * [Examples](./example/README.md)
 * [Community examples](https://github.com/conflux-fans/js-sdk-example)
-* [Fullnode JSONRPC API](https://doc.confluxnetwork.org/docs/core/build/json-rpc/json_rpc)
-* [Public RPC endpoints](https://doc.confluxnetwork.org/docs/core/build/sdks-and-tools/conflux_rpcs)
+* [Fullnode JSONRPC API](https://doc.confluxnetwork.org/docs/core/build/json-rpc/)
+* [Public RPC Provider Endpoints](https://doc.confluxnetwork.org/docs/core/conflux_rpcs)
 * [Testnet faucet](https://faucet.confluxnetwork.org/)
+* [Core Space Documentation](https://doc.confluxnetwork.org/docs/core/Overview)
 * [FAQs](./docs/FAQs.md)
 
 ## Install
@@ -75,11 +76,48 @@ or
 </script>
 ```
 
-From `v2.0` the exported class to browser window name changed from Conflux to `TreeGraph`
+From `v2.0` the exported root class to browser window name changed from Conflux to `TreeGraph`
 
 Or you can use public CDN links:
 
 * [`jsdelivr`](https://cdn.jsdelivr.net/npm/js-conflux-sdk/dist/js-conflux-sdk.umd.min.js)
+
+## Quick Start
+
+After importing the package, you can use the `Conflux` class instance to interact with the Conflux network, such as querying the balance of an account, sending a transaction.
+
+```javascript
+const { Conflux, Drip } = require('js-conflux-sdk');
+
+const conflux = new Conflux({
+  url: 'https://test.confluxrpc.com',
+  networkId: 1,  // Note: network is required
+  logger: console, // for debug
+});
+
+const exampleAddress = 'cfxtest:aar8jzybzv0fhzreav49syxnzut8s0jt1a1pdeeuwb';
+
+async function main() {
+  const balance = await conflux.cfx.getBalance(exampleAddress);
+  console.log(`Balance of ${exampleAddress} is ${Drip(balance).toCFX()} CFX`);
+
+  const account = await conflux.wallet.addPrivateKey(process.env.PRIVATE_KEY); // prepare and set your private key as environment variable
+
+  const txHash = await conflux.cfx.sendTransaction({
+    from: account.address,
+    to: exampleAddress,
+    value: Drip.fromCFX(1), // send 1 CFX
+  });
+
+  console.log(`Transaction hash: ${txHash}`);
+
+  // after the transaction is executed, you can query the receipt, and the receiver should have 1 CFX more
+}
+
+main().catch(console.error);
+```
+
+For more guides and examples, please refer to the [SDK documentation](https://docs.confluxnetwork.org/js-conflux-sdk).
 
 ## Address conversion performance
 
@@ -119,5 +157,5 @@ v1.5.11+       | v1.1.1+
 ## Related Projects | Tools
 
 * [CIP-23](https://github.com/conflux-fans/cip-23) can be used to work with Conflux signTypedData
-* [hardhat-conflux](https://github.com/conflux-chain/hardhat-conflux) hardhat plugin that can be used to interact with Conflux Core network
+* [hardhat-conflux](https://github.com/conflux-chain/hardhat-conflux) hardhat plugin that can be used to interact with Conflux Core Network Contracts
 * [@conflux-dev/hdwallet](https://github.com/Conflux-Chain/ts-conflux-sdk/tree/main/packages/hdwallet) HD Wallet

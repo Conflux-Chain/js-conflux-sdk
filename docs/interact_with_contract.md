@@ -97,7 +97,7 @@ main();
 
 ## How to play with InternalContract
 
-Conflux network has provide Internal Contracts `AdminControl`, `SponsorWhitelistControl`, `Staking`, these internal contract are very helpful to contract developer, for detail documentation check [official doc](https://developer.confluxnetwork.org/conflux-rust/internal_contract/internal_contract). This SDK have fully support for Internal Contract, you can use them like this.
+Conflux network has provide Internal Contracts `AdminControl`, `SponsorWhitelistControl`, `Staking`, these internal contract are very helpful to contract developer, for detail documentation check [official doc](https://doc.confluxnetwork.org/docs/core/core-space-basics/internal-contracts/). This SDK have fully support for Internal Contract, you can use them like this.
 
 ```javascript
 const { Conflux } = require('js-conflux-sdk');
@@ -155,7 +155,7 @@ console.log(receipt.logs);
 
 ### Get log with `cfx_getLogs` method
 
-Also there is an RPC [`cfx_getLogs`](https://developer.confluxnetwork.org/conflux-doc/docs/json_rpc#cfx_getlogs) to get logs. An filter object is need to invoke this method.
+Also there is an RPC [`cfx_getLogs`](https://doc.confluxnetwork.org/docs/core/build/json-rpc/cfx-namespace#cfx_getlogs) to get logs. An filter object is need to invoke this method.
 
 ```js
 let logs = await conflux.cfx.getLogs({

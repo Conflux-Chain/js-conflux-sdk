@@ -10,7 +10,7 @@ The purpose of this page is to give you a sense of everything js-conflux-sdk can
 
 ## Initialize
 
-After installing `js-conflux-sdk` (via npm), you’ll need to specify the provider url. You can use the mainnet([https://main.confluxrpc.com](https://main.confluxrpc.com)), or testnet([https://test.confluxrpc.com](https://test.confluxrpc.com)), or [run your own Conflux node](https://developer.confluxnetwork.org/conflux-doc/docs/independent_chain).
+After installing `js-conflux-sdk` (via npm), you’ll need to specify the provider url. You can use the mainnet([https://main.confluxrpc.com](https://main.confluxrpc.com)), or testnet([https://test.confluxrpc.com](https://test.confluxrpc.com)), or [run your own Conflux node](https://doc.confluxnetwork.org/docs/general/run-a-node/Overview).
 
 ### Testnet
 
@@ -49,7 +49,7 @@ conflux.wallet.addPrivateKey('0x0123456789abcdef0123456789abcdef0123456789abcdef
 
 ### Send JSON-RPC request
 
-There are a lot methods on cfx object which are one-to-one with [Conflux node RPC methods](https://developer.confluxnetwork.org/conflux-doc/docs/json_rpc). All conflux methods will return a promise, so you can use it with `async/await` syntax.
+There are a lot methods on cfx object which are one-to-one with [Conflux node RPC methods](https://doc.confluxnetwork.org/docs/core/build/json-rpc/cfx-namespace). All conflux methods will return a promise, so you can use it with `async/await` syntax.
 
 ```javascript
 async function main() {
@@ -61,7 +61,7 @@ async function main() {
 main();
 ```
 
-Besides balance you can get a lot blockchain information through it, for example: nonce, block, transaction, receipt and so on. You can check [API](https://github.com/Conflux-Chain/js-conflux-sdk/tree/faec50e6c2dd16158b114d0d4de228d7b2ca7535/api.md) and [RPC](https://developer.confluxnetwork.org/conflux-doc/docs/json_rpc)
+Besides balance you can get a lot blockchain information through it, for example: nonce, block, transaction, receipt and so on. You can check [API](https://github.com/Conflux-Chain/js-conflux-sdk/tree/faec50e6c2dd16158b114d0d4de228d7b2ca7535/api.md) and [RPC](https://doc.confluxnetwork.org/docs/core/build/json-rpc/cfx-namespace)
 
 ### Conflux hex address
 
@@ -104,7 +104,7 @@ Check [here](how_to_send_tx.md) for details
 
 ### Hex value and epochNumber and tags
 
-You can find the epochNumber doc at official developer [RPC doc](https://developer.confluxnetwork.org/conflux-doc/docs/json_rpc#hex-value-encoding)
+You can find the epochNumber doc at official developer [RPC doc](https://doc.confluxnetwork.org/docs/core/build/json-rpc/cfx-namespace#hex-value-encoding)
 
 ### JSBI
 
@@ -170,7 +170,7 @@ main();
 
 ### Pub/Sub
 
-Conflux node support pub/sub makes it possible to query certain items on an ongoing basis, without polling through the JSON-RPC HTTP interface, currently three topics are supported: `newHeads`, `epochs`, `logs`, for detail explain of Pub/Sub check the [official doc](https://developer.confluxnetwork.org/conflux-doc/docs/pubsub)
+Conflux node support pub/sub makes it possible to query certain items on an ongoing basis, without polling through the JSON-RPC HTTP interface, currently three topics are supported: `newHeads`, `epochs`, `logs`, for detail explain of Pub/Sub check the [official doc](https://doc.confluxnetwork.org/docs/core/build/json-rpc/pubsub)
 
 Use JS SDK it will be very easy to use Pub/Sub.
 

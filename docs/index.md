@@ -28,8 +28,8 @@ It’s commonly found in decentralized apps (dapps) to help with sending transac
 
 ## Other Docs
 
-1. [Official developer documentation](https://developer.confluxnetwork.org/)
-2. [RPC](https://developer.confluxnetwork.org/conflux-doc/docs/json_rpc)
-3. [Subscribtion](https://developer.confluxnetwork.org/conflux-doc/docs/pubsub)
+1. [Official developer documentation](https://doc.confluxnetwork.org/)
+2. [RPC](https://doc.confluxnetwork.org/docs/core/build/json-rpc/)
+3. [Subscribtion](https://doc.confluxnetwork.org/docs/core/build/json-rpc/pubsub)
 4. [FluentWallet](https://fluentwallet.com/)
 5. [Fluent documentation](https://fluent-wallet.zendesk.com/hc/en-001)
