@@ -5,6 +5,19 @@
 
 JavaScript Conflux Software Development Kit is a complete library for interacting with the [Conflux Blockchain Core Space](https://doc.confluxnetwork.org/docs/core/Overview) in both Node.js and browser environment.
 
+Featured with:
+
+* Full support of Conflux Network Core Space's JSON-RPC API
+* Wallet management
+* Meta-classes create JavaScript objects from any contract ABI, including ABIv2 and Human-Readable ABI
+* Unit(CFX, Drip) conversion
+* Common utilities:
+  1. Address conversion
+  2. ABI/RLP encoding/decoding
+  3. Crypto utilities
+  4. Type conversion
+* Extensive documentation and examples
+
 ## Docs
 
 * [js-conflux-sdk documentation](https://docs.confluxnetwork.org/js-conflux-sdk)

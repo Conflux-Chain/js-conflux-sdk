@@ -1,8 +1,8 @@
 # Table of contents
 
 * [Home](README.md)
-* [QuickStart](docs/quick_start.md)
 * [Introduction](docs/index.md)
+* [QuickStart](docs/quick_start.md)
 * [Overview](docs/overview.md)
 * [Contrast with web3.js](docs/jssdk-vs-web3.md)
 * [Guides](docs/README.md)
@@ -24,3 +24,4 @@
   * [Wallet](docs/api/wallet/Wallet.md)
 * [Release notes](change_log.md)
 * [v2.0 Changes](docs/v2.0_changes.md)
+* [FAQs](docs/FAQs.md)
