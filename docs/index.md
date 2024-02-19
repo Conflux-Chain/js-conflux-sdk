@@ -32,6 +32,17 @@ It’s commonly found in decentralized apps (dapps) to help with sending transac
 * [Error Handling](error_handling.md) How to handle errors.
 * [Batch RPC](batch_rpc.md) How to batch RPC requests.
 
+## Examples
+
+* [`Conflux` class initialization](https://github.com/Conflux-Chain/js-conflux-sdk/blob/v2/example/0_create_conflux.js)
+* [Account and balance](https://github.com/Conflux-Chain/js-conflux-sdk/blob/v2/example/1_account_and_balance.js)
+* [Send transaction](https://github.com/Conflux-Chain/js-conflux-sdk/blob/v2/example/2_send_transaction.js)
+* [Epoch, Block, Transaction](https://github.com/Conflux-Chain/js-conflux-sdk/blob/v2/example/3_epoch_block_transaction.js)
+* [Contract deploy and interact](https://github.com/Conflux-Chain/js-conflux-sdk/blob/v2/example/4_contract_deploy_and_call.js)
+* [Contract override](https://github.com/Conflux-Chain/js-conflux-sdk/blob/v2/example/5_contract_override.js)
+
+Check more community examples in [js-sdk-example](https://github.com/conflux-fans/js-sdk-example)
+
 ## API
 
 * [Conflux](./api/Conflux.md) The `Conflux` class provide methods to interact with RPC methods and send transaction.
