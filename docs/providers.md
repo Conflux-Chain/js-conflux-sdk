@@ -9,7 +9,7 @@ Most nodes have a variety of ways to connect to them. The most common ways to co
 - Websockets (works remotely, faster than HTTP)
 - HTTP (more nodes support it)
 
-Currently, js-conflux-sdk has support for both `HTTP` and `Websockets`. Normally, websockets is recommended than HTTP, because it's faster and can use [Pub/Sub methods](https://developer.confluxnetwork.org/conflux-doc/docs/pubsub). If you want to use the PubSub API, websocket provider is the only choice. Conflux-rust's HTTP default port is `12537`, websocket default port is `12535`. They can be changed through [config file](https://developer.confluxnetwork.org/apis/en/node_config_example).
+Currently, js-conflux-sdk has support for both `HTTP` and `Websockets`. Normally, websockets is recommended than HTTP, because it's faster and can use [Pub/Sub methods](https://doc.confluxnetwork.org/docs/core/build/json-rpc/pubsub). If you want to use the PubSub API, websocket provider is the only choice. Conflux-rust's HTTP default port is `12537`, websocket default port is `12535`. They can be changed through [config file](https://doc.confluxnetwork.org/docs/general/run-a-node/advanced-topics/node-configuration).
 
 When initialize a Conflux object, the underline provider can be configured through the `url` option. If you want to use HTTP provider, then provide an HTTP URL:
 
