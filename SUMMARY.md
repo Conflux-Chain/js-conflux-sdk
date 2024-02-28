@@ -7,6 +7,7 @@
 * [Contrast with web3.js](docs/jssdk-vs-web3.md)
 * [Guides](docs/README.md)
   * [Providers](docs/guides/providers.md)
+  * [How to Connect Fluent](docs/guides/how_to_connect_fluent.md)
   * [CIP37 Address](docs/guides/conflux_checksum_address.md)
   * [Account](docs/guides/account.md)
   * [Sending Transaction](docs/guides/how_to_send_tx.md)
