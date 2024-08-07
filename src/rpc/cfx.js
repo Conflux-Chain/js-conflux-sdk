@@ -318,6 +318,9 @@ class CFX extends RPCMethodFactory {
       },
       {
         method: 'cfx_getPoSEconomics',
+        requestFormatters: [
+          format.epochNumberOrUndefined,
+        ],
         responseFormatter: cfxFormat.posEconomics,
       },
       {
