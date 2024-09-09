@@ -63,8 +63,8 @@ test('contract.call', async () => {
   expect(call).toHaveBeenLastCalledWith('cfx_call', {
     to: address,
     data: '0x06661abd',
-    type: '0x0',
-    accessList: null,
+    // type: '0x0',
+    // accessList: null,
   }, undefined);
 
   const error = new Error();
@@ -126,8 +126,8 @@ test('contract.estimateGasAndCollateral', async () => {
   expect(call).toHaveBeenLastCalledWith('cfx_estimateGasAndCollateral', {
     to: address,
     data: '0x06661abd',
-    type: '0x0',
-    accessList: null,
+    // type: '0x0',
+    // accessList: null,
   }, undefined);
 
   call.mockRestore();
@@ -146,8 +146,8 @@ test('contract.sendTransaction', async () => {
     gas: '0x0',
     storageLimit: '0x0',
     chainId: '0x1',
-    type: '0x0',
-    accessList: null,
+    // type: '0x0',
+    // accessList: null,
   });
 
   call.mockRestore();
