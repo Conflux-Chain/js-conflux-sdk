@@ -68,7 +68,7 @@ class Transaction {
 
     const formatedMeta = Transaction.formatTxMeta({ nonce, gas, to, value, storageLimit, epochHeight, chainId, data, r, s, v });
     const tx = new Transaction({
-      type: 0,
+      type: TRANSACTION_TYPE_LEGACY,
       gasPrice: format.bigIntFromBuffer(gasPrice),
       ...formatedMeta,
     });
@@ -86,7 +86,7 @@ class Transaction {
 
     const formatedMeta = Transaction.formatTxMeta({ nonce, gas, to, value, storageLimit, epochHeight, chainId, data, r, s, v });
     const tx = new Transaction({
-      type: 1,
+      type: TRANSACTION_TYPE_EIP2930,
       gasPrice: format.bigIntFromBuffer(gasPrice),
       accessList,
       ...formatedMeta,
@@ -106,7 +106,7 @@ class Transaction {
     const formatedMeta = Transaction.formatTxMeta({ nonce, gas, to, value, storageLimit, epochHeight, chainId, data, r, s, v });
 
     const tx = new Transaction({
-      type: 2,
+      type: TRANSACTION_TYPE_EIP1559,
       maxPriorityFeePerGas: format.bigIntFromBuffer(maxPriorityFeePerGas),
       maxFeePerGas: format.bigIntFromBuffer(maxFeePerGas),
       accessList,
@@ -140,7 +140,7 @@ class Transaction {
    * @return {Transaction}
    */
   constructor({
-    type = 0,
+    type,
     from,
     nonce,
     gasPrice,
@@ -172,7 +172,7 @@ class Transaction {
     this.v = v;
     this.r = r;
     this.s = s;
-    this.accessList = accessList ? new AccessList(accessList) : null;
+    this.accessList = accessList ? new AccessList(accessList) : undefined;
     this.maxPriorityFeePerGas = maxPriorityFeePerGas;
     this.maxFeePerGas = maxFeePerGas;
   }
@@ -226,11 +226,27 @@ class Transaction {
     return format.publicKey(publicKey);
   }
 
+  /**
+   * Infer the transaction type from the fields.
+   * @returns {number} Transaction type
+   */
+  txType() {
+    if (this.type !== undefined) {
+      return this.type;
+    } else if (this.maxPriorityFeePerGas !== undefined && this.maxFeePerGas !== undefined) {
+      return TRANSACTION_TYPE_EIP1559;
+    } else if (this.accessList !== undefined) {
+      return TRANSACTION_TYPE_EIP2930;
+    } else {
+      return TRANSACTION_TYPE_LEGACY;
+    }
+  }
+
   typePrefix() {
     let prefix = Buffer.from([]);
-    if (this.type === 1) {
+    if (this.txType() === TRANSACTION_TYPE_EIP2930) {
       prefix = TXRLP_TYPE_PREFIX_2930;
-    } else if (this.type === 2) {
+    } else if (this.txType() === TRANSACTION_TYPE_EIP1559) {
       prefix = TXRLP_TYPE_PREFIX_1559;
     }
     return prefix;
@@ -248,20 +264,20 @@ class Transaction {
    */
   encode(includeSignature) {
     let raw;
-    if (this.type === TRANSACTION_TYPE_LEGACY) { // legacy transaction
+    if (this.txType() === TRANSACTION_TYPE_LEGACY) { // legacy transaction
       const { nonce, gasPrice, gas, to, value, storageLimit, epochHeight, chainId, data, v, r, s } = cfxFormat.signTx(this);
 
       raw = includeSignature
         ? [[nonce, gasPrice, gas, to, value, storageLimit, epochHeight, chainId, data], v, r, s]
         : [nonce, gasPrice, gas, to, value, storageLimit, epochHeight, chainId, data];
-    } else if (this.type === TRANSACTION_TYPE_EIP2930) { // 2930 transaction
+    } else if (this.txType() === TRANSACTION_TYPE_EIP2930) { // 2930 transaction
       const { nonce, gasPrice, gas, to, value, storageLimit, epochHeight, chainId, data, v, r, s } = cfxFormat.signTx(this);
       const accessList = this.encodeAccessList();
 
       raw = includeSignature
         ? [[nonce, gasPrice, gas, to, value, storageLimit, epochHeight, chainId, data, accessList], v, r, s]
         : [nonce, gasPrice, gas, to, value, storageLimit, epochHeight, chainId, data, accessList];
-    } else if (this.type === TRANSACTION_TYPE_EIP1559) { // 1559 transaction
+    } else if (this.txType() === TRANSACTION_TYPE_EIP1559) { // 1559 transaction
       const { nonce, maxPriorityFeePerGas, maxFeePerGas, gas, to, value, storageLimit, epochHeight, chainId, data, v, r, s } = cfxFormat.sign1559Tx(this);
       const accessList = this.encodeAccessList();
 
