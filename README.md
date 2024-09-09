@@ -22,7 +22,7 @@ For the Conflux eSpace JS SDK, consider using one of the following robust librar
 
 ## Docs
 
-* [js-conflux-sdk documentation](https://docs.confluxnetwork.org/js-conflux-sdk)
+* [js-conflux-sdk documentation](https://confluxnetwork.gitbook.io/js-conflux-sdk)
 * [SDK API doc](./docs/api/README.md)
 * [Examples](./example/README.md)
 * [Community examples](https://github.com/conflux-fans/js-sdk-example)
@@ -132,7 +132,7 @@ async function main() {
 main().catch(console.error);
 ```
 
-For more guides and examples, please refer to the [SDK documentation](https://docs.confluxnetwork.org/js-conflux-sdk).
+For more guides and examples, please refer to the [SDK documentation](https://confluxnetwork.gitbook.io/js-conflux-sdk).
 
 ## Address conversion performance
 
