@@ -1267,14 +1267,15 @@ class Conflux {
 
   /**
    * Return PoS summary info
+   * @param {number|string} epochNumber - epoch number
    * @returns {Promise<import('./rpc/types/formatter').PoSEconomics>} PoS summary info
    * - distributablePosInterest `number`: Currently total distributable PoS interest (Drip)
    * - lastDistributeBlock `number`: Last distribute block number
    * - totalPosStakingTokens `number`: Total token amount (Drip) staked in PoS
    *
    */
-  async getPoSEconomics() {
-    return this.cfx.getPoSEconomics();
+  async getPoSEconomics(epochNumber) {
+    return this.cfx.getPoSEconomics(epochNumber);
   }
 
   // ----------------------------- subscription -------------------------------
