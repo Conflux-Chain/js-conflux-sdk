@@ -373,7 +373,7 @@ class CFX extends RPCMethodFactory {
         method: 'cfx_getEpochReceipts',
         debug: true,
         requestFormatters: [
-          format.epochNumber,
+          format.epochNumberOrBlockHash,
           format.boolean.$or(undefined),
         ],
         responseFormatter: cfxFormat.epochReceipts,
@@ -592,8 +592,17 @@ class CFX extends RPCMethodFactory {
    * @param {string} pivotBlockHash Hash of pivot block
    * @returns {Promise<Array>} All receipts of one epoch
    */
-  async getEpochReceiptsByPivotBlockHash(pivotBlockHash) {
-    const result = await this.conflux.request({ method: 'cfx_getEpochReceipts', params: [`hash:${pivotBlockHash}`] });
+  async getEpochReceiptsByPivotBlockHash(pivotBlockHash, ...extra) {
+    const result = await this.conflux.request({
+      method: 'cfx_getEpochReceipts',
+      params: [
+        {
+          blockHash: pivotBlockHash,
+          requirePivot: true,
+        },
+        ...extra,
+      ],
+    });
     return cfxFormat.epochReceipts(result);
   }
 
