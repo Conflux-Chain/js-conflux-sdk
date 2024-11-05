@@ -592,8 +592,8 @@ class CFX extends RPCMethodFactory {
    * @param {string} pivotBlockHash Hash of pivot block
    * @returns {Promise<Array>} All receipts of one epoch
    */
-  async getEpochReceiptsByPivotBlockHash(pivotBlockHash) {
-    const result = await this.conflux.request({ method: 'cfx_getEpochReceipts', params: [`hash:${pivotBlockHash}`] });
+  async getEpochReceiptsByPivotBlockHash(pivotBlockHash, ...extra) {
+    const result = await this.conflux.request({ method: 'cfx_getEpochReceipts', params: [`hash:${pivotBlockHash}`, ...extra] });
     return cfxFormat.epochReceipts(result);
   }
 
