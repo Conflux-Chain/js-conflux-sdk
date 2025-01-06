@@ -22,19 +22,19 @@ function fastFormatTxTraces(v) {
 
 function fastFormatBlockTraces(v) {
   v.transactionTraces.forEach(fastFormatTxTraces);
-  v.epochNumber = parseInt10(v.epochNumber);
+  v.epochNumber = parseInt16(v.epochNumber);
 
   return v;
 }
-function parseInt10(v) {
-  return parseInt(v, 10);
+function parseInt16(v) {
+  return parseInt(v, 16);
 }
 // receipt
 function fastFormatReceipt(v) {
-  v.type = v.type ? parseInt10(v.type) : null;
-  v.index = v.index ? parseInt10(v.index) : null;
+  v.type = v.type ? parseInt16(v.type) : null;
+  v.index = v.index ? parseInt16(v.index) : null;
   v.epochNumber = BigInt(v.epochNumber);
-  v.outcomeStatus = v.outcomeStatus ? parseInt10(v.outcomeStatus) : null;
+  v.outcomeStatus = v.outcomeStatus ? parseInt16(v.outcomeStatus) : null;
   v.gasUsed = BigInt(v.gasUsed);
   v.effectiveGasPrice = v.effectiveGasPrice ? BigInt(v.effectiveGasPrice) : null;
   v.burntGasFee = v.burntGasFee ? BigInt(v.burntGasFee) : null;
@@ -56,7 +56,7 @@ function fastFormatEpochReceipts(v2d) {
 }
 
 function fastFormatTx(v) {
-  v.type = v.type ? parseInt10(v.type) : null;
+  v.type = v.type ? parseInt16(v.type) : null;
   v.nonce = BigInt(v.nonce);
   v.gasPrice = v.gasPrice ? BigInt(v.gasPrice) : null;
   v.maxPriorityFeePerGas = v.maxPriorityFeePerGas ? BigInt(v.maxPriorityFeePerGas) : null;
@@ -65,21 +65,21 @@ function fastFormatTx(v) {
   v.value = BigInt(v.value);
   v.storageLimit = BigInt(v.storageLimit);
   v.epochHeight = BigInt(v.epochHeight);
-  v.chainId = parseInt10(v.chainId);
-  v.v = parseInt10(v.v);
-  v.yParity = v.yParity ? parseInt10(v.yParity) : null;
-  v.status = v.status ? parseInt10(v.status) : null;
-  v.transactionIndex = v.transactionIndex ? parseInt10(v.transactionIndex) : null;
+  v.chainId = parseInt16(v.chainId);
+  v.v = parseInt16(v.v);
+  v.yParity = v.yParity ? parseInt16(v.yParity) : null;
+  v.status = v.status ? parseInt16(v.status) : null;
+  v.transactionIndex = v.transactionIndex ? parseInt16(v.transactionIndex) : null;
 }
 
 function fastFormatBlock(v) {
   v.baseFeePerGas = v.baseFeePerGas ? BigInt(v.baseFeePerGas) : null;
-  v.epochNumber = v.epochNumber ? parseInt10(v.epochNumber) : null;
-  v.blockNumber = v.blockNumber ? parseInt10(v.blockNumber) : null;
-  v.blame = parseInt10(v.blame);
-  v.height = parseInt10(v.height);
-  v.size = parseInt10(v.size);
-  v.timestamp = parseInt10(v.timestamp);
+  v.epochNumber = v.epochNumber ? parseInt16(v.epochNumber) : null;
+  v.blockNumber = v.blockNumber ? parseInt16(v.blockNumber) : null;
+  v.blame = parseInt16(v.blame);
+  v.height = parseInt16(v.height);
+  v.size = parseInt16(v.size);
+  v.timestamp = parseInt16(v.timestamp);
   maybeBigInt(v, 'gasLimit');
   maybeBigInt(v, 'gasUsed');
   maybeBigInt(v, 'difficulty');
