@@ -1,5 +1,6 @@
 const RPCMethodFactory = require('./index');
 const format = require('../util/format');
+const { fastFormatBlockTraces } = require('./types/fastFormatter');
 
 /**
  * @typedef {Object} ActionCall
@@ -174,10 +175,11 @@ class Trace extends RPCMethodFactory {
       {
         method: 'trace_block',
         alias: 'traceBlock',
-        requestFormatters: [
-          format.blockHash,
-        ],
-        responseFormatter: format.blockTraces,
+        // requestFormatters: [
+        //   format.blockHash,
+        // ],
+        // responseFormatter: format.blockTraces,
+        responseFormatter: fastFormatBlockTraces,
       },
       {
         method: 'trace_transaction',
