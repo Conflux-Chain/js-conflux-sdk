@@ -1,4 +1,5 @@
 const format = require('../util/format');
+const { rpcPatch } = require('./rpcPatch');
 
 class RPCMethodFactory {
   constructor(conflux, methods = []) {
@@ -8,6 +9,7 @@ class RPCMethodFactory {
 
   addMethods(methods) {
     for (const methodMeta of methods) {
+      rpcPatch(methodMeta);
       const method = methodMeta.method.split('_')[1];
       this[method] = this.createRPCMethod(methodMeta);
       // create method alias

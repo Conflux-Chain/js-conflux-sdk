@@ -1,3 +1,5 @@
+const cfxFormat = require('./formatter');
+
 function maybeBigInt(v, prop) {
   if (v[prop] === undefined) {
     return;
@@ -88,4 +90,25 @@ function fastFormatBlock(v) {
   return v;
 }
 
-module.exports = { fastFormatBlockTraces, fastFormatEpochReceipts, fastFormatBlock };
+const nothing = v => v;
+// use setPRCMethodPatch(useFastFormat) to enable it.
+function useFastFormat(rpcDef) {
+  cfxFormat.epochReceipts = fastFormatEpochReceipts;
+  cfxFormat.hex64 = nothing;
+  const { method } = rpcDef;
+  switch (method) {
+    case 'cfx_getBlockByHashWithPivotAssumption':
+      rpcDef.requestFormatters[0] = undefined;
+      rpcDef.requestFormatters[1] = undefined;
+      rpcDef.responseFormatter = fastFormatBlock;
+      break;
+    case 'trace_block':
+      rpcDef.requestFormatters = undefined;
+      rpcDef.responseFormatter = fastFormatBlockTraces;
+      break;
+    default:
+      break;
+  }
+}
+
+module.exports = { fastFormatBlockTraces, fastFormatEpochReceipts, fastFormatBlock, useFastFormat };

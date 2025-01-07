@@ -8,7 +8,6 @@ const { decodeCfxAddress, ADDRESS_TYPES } = require('../util/address');
 const PendingTransaction = require('../subscribe/PendingTransaction');
 const Contract = require('../contract');
 const RPCTypes = require('./types/index');
-const { fastFormatEpochReceipts, fastFormatBlock } = require('./types/fastFormatter');
 
 /**
  * @typedef { import('../Transaction').TransactionMeta } TransactionMeta
@@ -189,12 +188,11 @@ class CFX extends RPCMethodFactory {
       {
         method: 'cfx_getBlockByHashWithPivotAssumption',
         requestFormatters: [
-          v => v, // format.blockHash,
-          v => v, // blockHash,
+          format.blockHash,
+          format.blockHash,
           format.epochNumber,
         ],
-        // responseFormatter: cfxFormat.block,
-        responseFormatter: fastFormatBlock,
+        responseFormatter: cfxFormat.block,
       },
       {
         method: 'cfx_getConfirmationRiskByHash',
@@ -605,8 +603,7 @@ class CFX extends RPCMethodFactory {
         ...extra,
       ],
     });
-    // return cfxFormat.epochReceipts(result);
-    return fastFormatEpochReceipts(result);
+    return cfxFormat.epochReceipts(result);
   }
 
   /**
