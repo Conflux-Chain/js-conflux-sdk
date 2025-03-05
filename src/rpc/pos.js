@@ -182,9 +182,9 @@ format.committee = format({
  * @property {PoSReward[]} accountRewards
  */
 format.rewardsByEpoch = format({
-  accountRewards: [format({
+  accountRewards: format([format({
     reward: format.bigUInt,
-  })],
+  })]).$or(null),
 }).$or(null);
 
 format.epochState = format.any;
