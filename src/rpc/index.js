@@ -21,23 +21,31 @@ class RPCMethodFactory {
 
   createRPCMethod({ method, requestFormatters = [], responseFormatter = format.any, beforeHook }) {
     async function rpcMethod(...args) {
+      let result;
+      let paramsVerified = false;
       try {
         if (beforeHook) {
           beforeHook(...args);
         }
         const params = Array.from(args).map((arg, i) => (requestFormatters[i] ? requestFormatters[i](arg) : arg));
-        const result = await this.conflux.request({ method, params });
+        paramsVerified = true;
+        result = await this.conflux.request({ method, params });
         return responseFormatter(result);
-      } catch(error) {
+      } catch (error) {
         error.rpcMethod = method;
+        error.paramsVerified = paramsVerified;
         error.rpcParams = args;
+        // if rpc result is not null, means params normalization and rpc call is successful
+        error.rpcResult = result;
         throw error;
       }
     }
 
     rpcMethod.request = function (...args) {
+      let paramsVerified = false;
       try {
         const params = Array.from(args).map((arg, i) => (requestFormatters[i] ? requestFormatters[i](arg) : arg));
+        paramsVerified = true;
         return {
           request: {
             method,
@@ -48,6 +56,7 @@ class RPCMethodFactory {
       } catch (error) {
         error.rpcMethod = method;
         error.rpcParams = args;
+        error.paramsVerified = paramsVerified;
         throw error;
       }
     };
