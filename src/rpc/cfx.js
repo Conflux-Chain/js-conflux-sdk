@@ -22,7 +22,8 @@ class CFX extends RPCMethodFactory {
     // decorate methods;
     this.sendRawTransaction = this._decoratePendingTransaction(this.sendRawTransaction);
     this.sendTransaction = this._decoratePendingTransaction(this.sendTransaction);
-    this._addRequestBuilderToCustomMethods();
+    this.call = this._addRequestBuilderToCall();
+    this.estimateGasAndCollateral = this._addRequestBuilderToEstimate();
   }
 
   methods() {
@@ -411,10 +412,14 @@ class CFX extends RPCMethodFactory {
     };
   }
 
-  _addRequestBuilderToCustomMethods() {
+  _addRequestBuilderToCall() {
     const self = this;
 
-    this.call.request = function (options, epochNumber) {
+    async function wrapper(options, epochNumber) {
+      return self._call(options, epochNumber);
+    }
+
+    wrapper.request = function (options, epochNumber) {
       return {
         request: {
           method: 'cfx_call',
@@ -426,7 +431,17 @@ class CFX extends RPCMethodFactory {
       };
     };
 
-    this.estimateGasAndCollateral.request = function (options, epochNumber) {
+    return wrapper;
+  }
+
+  _addRequestBuilderToEstimate() {
+    const self = this;
+
+    async function wrapper(options, epochNumber) {
+      return self._estimateGasAndCollateral(options, epochNumber);
+    }
+
+    wrapper.request = function (options, epochNumber) {
       return {
         request: {
           method: 'cfx_estimateGasAndCollateral',
@@ -438,6 +453,8 @@ class CFX extends RPCMethodFactory {
         decoder: cfxFormat.estimate,
       };
     };
+
+    return wrapper;
   }
 
   /**
@@ -613,7 +630,7 @@ class CFX extends RPCMethodFactory {
    * @param {string|number} [epochNumber='latest_state'] - See [format.epochNumber](#util/format.js/format/(static)epochNumber)
    * @return {Promise<string>} The output data.
    */
-  async call(options, epochNumber) {
+  async _call(options, epochNumber) {
     try {
       if (options.to && addressUtil.hasNetworkPrefix(options.to) && this.conflux.networkId) {
         const {
@@ -651,7 +668,7 @@ class CFX extends RPCMethodFactory {
    * - `BigInt` gasLimit: The gas limit.
    * - `BigInt` storageCollateralized: The storage collateralized in Byte.
    */
-  async estimateGasAndCollateral(options, epochNumber) {
+  async _estimateGasAndCollateral(options, epochNumber) {
     try {
       const result = await this.conflux.request({
         method: 'cfx_estimateGasAndCollateral',
