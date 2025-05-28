@@ -1,7 +1,7 @@
 const crypto = require('crypto');
-const keccak = require('keccak');
 const secp256k1 = require('secp256k1');
 const { syncScrypt: scrypt } = require('scrypt-js');
+const { Hash } = require('ox');
 const { isHexString } = require('./index');
 
 // ----------------------------------------------------------------------------
@@ -16,7 +16,9 @@ const { isHexString } = require('./index');
  <Buffer c5 d2 46 01 86 f7 23 3c 92 7e 7d b2 dc c7 03 c0 e5 00 b6 53 ca 82 27 3b 7b fa d8 04 5d 85 a4 70>
  */
 function keccak256(buffer) {
-  return keccak('keccak256').update(buffer).digest();
+  const hex = `0x${buffer.toString('hex')}`;
+  const hash = Hash.keccak256(hex, { as: 'Bytes' });
+  return Buffer.from(hash);
 }
 
 /**

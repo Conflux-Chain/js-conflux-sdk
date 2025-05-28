@@ -225,5 +225,7 @@ function _feedByteOption(abi, decodeByteToHex = false) {
 
 module.exports = Contract;
 
-const errorCoder = new ErrorCoder();
-module.exports.decodeError = e => errorCoder.decodeError(e);
+module.exports.decodeError = function (e) {
+  const errorCoder = new ErrorCoder();
+  return errorCoder.decodeError(e);
+};

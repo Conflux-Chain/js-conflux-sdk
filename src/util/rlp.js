@@ -1,4 +1,4 @@
-const { decode } = require('rlp');
+const { Rlp } = require('ox');
 /*
   prefix    | delta | note          | code
   ----------|-------|---------------|--------------------------------------------------------------
@@ -82,6 +82,19 @@ function encodeArray(array) {
   return concat(encodeLength(buffer.length, ARRAY_OFFSET), buffer);
 }
 
-// TODO decode
+function decode(rlp) {
+  const values = Rlp.toBytes(rlp);
+  return rlpUint8ArrayToBuffer(values);
+}
+
+function rlpUint8ArrayToBuffer(uint8Array) {
+  if (!Array.isArray(uint8Array)) {
+    return Buffer.from(uint8Array);
+  }
+
+  return uint8Array.map(value => rlpUint8ArrayToBuffer(value));
+}
+
+// TODO replace encode with ox.Rlp
 
 module.exports = { encode, decode };
