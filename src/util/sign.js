@@ -1,7 +1,6 @@
 const crypto = require('crypto');
 const secp256k1 = require('secp256k1');
-const { syncScrypt: scrypt } = require('scrypt-js');
-const { Hash } = require('ox');
+const { Hash, Secp256k1, Keystore, Hex } = require('ox');
 const { isHexString } = require('./index');
 
 // ----------------------------------------------------------------------------
@@ -69,7 +68,6 @@ function randomBuffer(size) {
 /**
  * Gen a random PrivateKey buffer.
  *
- * @param {Buffer} entropy
  * @return {Buffer}
  *
  * @example
@@ -77,22 +75,10 @@ function randomBuffer(size) {
  <Buffer 23 fb 3b 2b 1f c9 36 8c a4 8e 5b dc c7 a9 e2 bd 67 81 43 3b f2 3a cc da da ff a9 dd dd b6 08 d4>
  * > randomPrivateKey()
  <Buffer e7 5b 68 fb f9 50 19 94 07 80 d5 13 2e 40 a7 f9 a1 b0 5d 72 c8 86 ca d1 c6 59 cd a6 bf 37 cb 73>
-
- * @example
- * > entropy = randomBuffer(32)
- * > randomPrivateKey(entropy)
- <Buffer 57 90 e8 3d 16 10 02 b9 a4 33 87 e1 6b cd 40 7e f7 22 b1 d8 94 ae 98 bf 76 a4 56 fb b6 0c 4b 4a>
- * > randomPrivateKey(entropy) // same `entropy`
- <Buffer 89 44 ef 31 d4 9c d0 25 9f b0 de 61 99 12 4a 21 57 43 d4 4b af ae ef ae e1 3a ba 05 c3 e6 ad 21>
  */
-function randomPrivateKey(entropy = randomBuffer(32)) {
-  if (!(Buffer.isBuffer(entropy) && entropy.length === 32)) {
-    throw new Error(`entropy must be 32 length Buffer, got "${typeof entropy}"`);
-  }
-
-  const inner = keccak256(Buffer.concat([randomBuffer(32), entropy]));
-  const middle = Buffer.concat([randomBuffer(32), inner, randomBuffer(32)]);
-  return keccak256(middle);
+function randomPrivateKey() {
+  const key = Secp256k1.randomPrivateKey({ as: 'Bytes' });
+  return Buffer.from(key);
 }
 
 /**
@@ -191,15 +177,10 @@ function ecdsaRecover(hash, { r, s, v }) {
   return secp256k1.publicKeyConvert(senderPublic, false).slice(1);
 }
 
-// ----------------------------------------------------------------------------
-function uuidV4() {
-  return [4, 2, 2, 2, 6].map(randomBuffer).map(v => v.toString('hex')).join('-');
-}
-
 /**
  *
  * @param {Buffer} privateKey
- * @param {string|Buffer} password
+ * @param {string} password
  * @return {object} - keystoreV3 object
  *
  * @example
@@ -224,35 +205,13 @@ function uuidV4() {
     }
   }
  */
-function encrypt(privateKey, password) {
-  const cipher = 'aes-128-ctr';
-  const n = 8192;
-  const r = 8;
-  const p = 1;
-  const dklen = 32;
-  const salt = randomBuffer(32);
-  const iv = randomBuffer(16);
-
-  password = Buffer.from(password);
-  const derived = scrypt(password, salt, n, r, p, dklen);
-  const ciphertext = crypto.createCipheriv(cipher, derived.slice(0, 16), iv).update(privateKey);
-  const mac = keccak256(Buffer.concat([derived.slice(16, 32), ciphertext]));
-  const publicKey = privateKeyToPublicKey(privateKey);
-  const address = keccak256(publicKey).slice(-20);
-
-  return {
-    version: 3,
-    id: uuidV4(),
-    address: address.toString('hex'),
-    crypto: {
-      ciphertext: ciphertext.toString('hex'),
-      cipherparams: { iv: iv.toString('hex') },
-      cipher,
-      kdf: 'scrypt',
-      kdfparams: { dklen, salt: salt.toString('hex'), n, r, p },
-      mac: mac.toString('hex'),
-    },
-  };
+async function encrypt(privateKey, password) {
+  const hexPrivateKey = `0x${privateKey.toString('hex')}`;
+  const key = Keystore.scrypt({ password });
+  const encrypted = await Keystore.encrypt(hexPrivateKey, key);
+  encrypted.keysalt = `0x${key.kdfparams.salt}`;
+  encrypted.keyiv = Hex.fromBytes(key.iv);
+  return encrypted;
 }
 
 /**
@@ -298,35 +257,19 @@ function encrypt(privateKey, password) {
   }, 'password')
  <Buffer 01 23 45 67 89 ab cd ef 01 23 45 67 89 ab cd ef 01 23 45 67 89 ab cd ef 01 23 45 67 89 ab cd ef>
  */
-function decrypt({
-  version,
-  crypto: {
-    ciphertext,
-    cipherparams: { iv },
-    cipher,
-    kdf,
-    kdfparams: { dklen, salt, n, r, p },
-    mac,
-  },
-}, password) {
-  if (version !== 3) {
-    throw new Error('Not a valid V3 wallet');
+async function decrypt(keystore, password) {
+  const options = { password };
+  if (keystore.keysalt) {
+    options.salt = keystore.keysalt;
+    delete keystore.keysalt;
   }
-  if (kdf !== 'scrypt') {
-    throw new Error(`Unsupported kdf "${kdf}", only support "scrypt"`);
+  if (keystore.keyiv) {
+    options.iv = keystore.keyiv;
+    delete keystore.keyiv;
   }
-
-  password = Buffer.from(password);
-  ciphertext = Buffer.from(ciphertext, 'hex');
-  iv = Buffer.from(iv, 'hex');
-  salt = Buffer.from(salt, 'hex');
-  mac = Buffer.from(mac, 'hex');
-
-  const derived = scrypt(password, salt, n, r, p, dklen);
-  if (!keccak256(Buffer.concat([derived.slice(16, 32), ciphertext])).equals(mac)) {
-    throw new Error('Key derivation failed, possibly wrong password!');
-  }
-  return crypto.createDecipheriv(cipher, derived.slice(0, 16), iv).update(ciphertext);
+  const key = Keystore.scrypt(options);
+  const privateKey = await Keystore.decrypt(keystore, key, { as: 'Bytes' });
+  return Buffer.from(privateKey);
 }
 
 module.exports = {

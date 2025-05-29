@@ -44,13 +44,12 @@
     "commander": "^8.0.0",
     "lodash": "^4.17.21",
     "ox": "^0.7.2",
-    "scrypt-js": "^3.0.1",
     "secp256k1": "^3.8.1",
     "superagent": "^6.1.0",
     "websocket": "^1.0.35"
   },
   "devDependencies": {
-    "@babel/core": "^7.8.4",
+    "@babel/core": "^7.22.0",
     "@babel/plugin-transform-runtime": "^7.8.3",
     "@babel/preset-env": "^7.8.4",
     "@babel/runtime": "^7.8.4",
@@ -67,7 +66,7 @@
     "eslint-plugin-import": "^2.18.2",
     "exorcist": "^1.0.1",
     "fs-extra": "^8.1.0",
-    "jest": "26.6.0",
+    "jest": "29.7.0",
     "jsbi": "^3.1.4",
     "jsdoc-to-markdown": "^7.1.0",
     "jsdoc-tsimport-plugin": "^1.0.5",
@@ -85,7 +84,7 @@
     "**/kind-of": "^6.0.3",
     "**/elliptic": "^6.5.3",
     "**/lodash": "^4.17.20",
-    "**/babel-jest": "^26.6.0",
+    "**/babel-jest": "^29.7.0",
     "jest/jest-cli/jest-config/jest-environment-jsdom/jsdom/acorn-globals/acorn": "6.4.1"
   }
 }

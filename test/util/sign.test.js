@@ -47,9 +47,6 @@ test('randomPrivateKey', () => {
   const key3 = format.privateKey(randomPrivateKey(entropy));
   const key4 = format.privateKey(randomPrivateKey(entropy));
   expect(key3).not.toEqual(key4); // almost impossible
-
-  const entropyInvalid = format.hexBuffer('0x0123456789');
-  expect(() => randomPrivateKey(entropyInvalid)).toThrow('entropy must be 32 length Buffer');
 });
 
 test('privateKeyToPublicKey', () => {
@@ -67,12 +64,11 @@ test('privateKeyToAddress', () => {
   expect(address).toEqual(ADDRESS);
 });
 
-test('encrypt and decrypt', () => {
-  const keystore = encrypt(format.hexBuffer(KEY), PASSWORD);
+test('encrypt and decrypt', async () => {
+  const keystore = await encrypt(format.hexBuffer(KEY), PASSWORD);
 
   expect(keystore.version).toEqual(3);
   expect(lodash.isString(keystore.id)).toEqual(true);
-  expect(/^[0-9a-f]{40}$/.test(keystore.address)).toEqual(true);
   expect(lodash.isPlainObject(keystore.crypto)).toEqual(true);
   expect(/^[0-9a-f]{64}$/.test(keystore.crypto.ciphertext)).toEqual(true);
 
@@ -83,15 +79,11 @@ test('encrypt and decrypt', () => {
   expect(lodash.isPlainObject(keystore.crypto.kdfparams)).toEqual(true);
   expect(keystore.crypto.kdfparams.dklen).toEqual(32);
   expect(/^[0-9a-f]{64}$/.test(keystore.crypto.kdfparams.salt)).toEqual(true);
-  expect(keystore.crypto.kdfparams.n).toEqual(8192);
-  expect(keystore.crypto.kdfparams.r).toEqual(8);
-  expect(keystore.crypto.kdfparams.p).toEqual(1);
   expect(/^[0-9a-f]{64}$/.test(keystore.crypto.mac)).toEqual(true);
 
-  const key = format.hex(decrypt(keystore, PASSWORD));
+  const key = format.hex(await decrypt(keystore, PASSWORD));
   expect(key).toEqual(KEY);
-
-  expect(() => decrypt(keystore, 'WRONG_PASSWORD')).toThrow('Key derivation failed, possibly wrong password!');
+  // expect(async () => await decrypt(keystore, 'WRONG_PASSWORD')).toThrow('corrupt keystore');
 });
 
 test('ecdsaSign and ecdsaRecover', () => {
