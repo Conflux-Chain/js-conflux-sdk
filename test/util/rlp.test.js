@@ -4,7 +4,7 @@ const { encode } = require('../../src/util/rlp');
 
 test('zero', () => {
   const value = format.hexBuffer(0);
-  expect(format.hex(encode(value))).toEqual('0x80');
+  expect(format.hex(encode(value))).toEqual('0x00');
 });
 
 test('number', () => {
@@ -39,7 +39,7 @@ test('empty array', () => {
 
 test('short array', () => {
   const value = [Buffer.from('cat'), Buffer.from([0]), Buffer.from('dog')];
-  expect(format.hex(encode(value))).toEqual('0xc9836361748083646f67');
+  expect(format.hex(encode(value))).toEqual('0xc9836361740083646f67');
 });
 
 test('long array', () => {
