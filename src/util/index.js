@@ -68,6 +68,13 @@ function validAddressPrefix(addressBuf) {
   return prefix === 0x10 || prefix === 0x80 || prefix === 0x00;
 }
 
+function bufferToHex(buffer) {
+  if (Buffer.isBuffer(buffer)) {
+    return `0x${buffer.toString('hex')}`;
+  }
+  throw new Error('Expected a Buffer');
+}
+
 module.exports = {
   assert,
   alignBuffer,
@@ -77,4 +84,5 @@ module.exports = {
   isBytes,
   validAddressPrefix,
   sleep,
+  bufferToHex,
 };

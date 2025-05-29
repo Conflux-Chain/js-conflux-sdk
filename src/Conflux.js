@@ -162,7 +162,7 @@ class Conflux {
    */
   _formatAddress(address) {
     if (!this.networkId) {
-      console.warn('Conflux address: networkId is not set properly, please set it');
+      console.warn('Conflux address: networkId is not set properly, please set it'); // eslint-disable-line
     }
     return this.useHexAddressInParameter ? format.hexAddress(address) : format.address(address, this.networkId, this.useVerboseAddress);
   }

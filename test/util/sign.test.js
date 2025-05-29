@@ -22,7 +22,7 @@ const ADDRESS = 'cfxtest:aasm4c231py7j34fghntcfkdt2nm9xv1tu6jd3r1s7';
 const PASSWORD = 'password';
 
 test('checksumAddress', () => {
-  expect(checksumAddress('0XFB6916095CA1DF60BB79CE92CE3EA74C37C5D359'))
+  expect(checksumAddress('0xFB6916095CA1DF60BB79CE92CE3EA74C37C5D359'))
     .toEqual('0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359');
 
   expect(checksumAddress('0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359'))

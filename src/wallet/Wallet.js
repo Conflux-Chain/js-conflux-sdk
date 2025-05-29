@@ -92,7 +92,7 @@ class Wallet extends Map {
    */
   addPrivateKey(privateKey) {
     if (!this.networkId) {
-      console.warn('wallet.addPrivateKey: networkId is not set properly, please set it');
+      console.warn('wallet.addPrivateKey: networkId is not set properly, please set it'); // eslint-disable-line no-console
     }
     const account = new PrivateKeyAccount(privateKey, this.networkId);
     this.set(account.address, account);

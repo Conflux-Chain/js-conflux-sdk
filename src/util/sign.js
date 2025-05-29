@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 const secp256k1 = require('secp256k1');
-const { Hash, Secp256k1, Keystore, Hex } = require('ox');
+const { Hash, Secp256k1, Keystore, Hex, Address } = require('ox');
 const { isHexString } = require('./index');
 
 // ----------------------------------------------------------------------------
@@ -35,13 +35,7 @@ function keccak256(buffer) {
  "0x1B716c51381e76900EBAA7999A488511A4E1fD0a"
  */
 function checksumAddress(address) {
-  const string = address.toLowerCase().replace('0x', '');
-
-  const hash = keccak256(Buffer.from(string)).toString('hex');
-  const sequence = Object.entries(string).map(([index, char]) => {
-    return parseInt(hash[index], 16) >= 8 ? char.toUpperCase() : char;
-  });
-  return `0x${sequence.join('')}`;
+  return Address.checksum(address);
 }
 
 // ----------------------------------------------------------------------------
