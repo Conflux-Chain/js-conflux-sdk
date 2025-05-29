@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const { Hash, Secp256k1, Keystore, Hex, Address, PublicKey, Signature } = require('ox');
+const { Hash, Secp256k1, Keystore, Address, PublicKey, Signature } = require('ox');
 const { bufferToHex } = require('./index');
 
 // ----------------------------------------------------------------------------
@@ -221,7 +221,6 @@ async function encrypt(privateKey, password) {
   const key = Keystore.scrypt({ password });
   const encrypted = await Keystore.encrypt(hexPrivateKey, key);
   encrypted.keysalt = `0x${key.kdfparams.salt}`;
-  encrypted.keyiv = Hex.fromBytes(key.iv);
   return encrypted;
 }
 
@@ -269,14 +268,13 @@ async function encrypt(privateKey, password) {
  <Buffer 01 23 45 67 89 ab cd ef 01 23 45 67 89 ab cd ef 01 23 45 67 89 ab cd ef 01 23 45 67 89 ab cd ef>
  */
 async function decrypt(keystore, password) {
-  const options = { password };
+  const options = {
+    password,
+    iv: `0x${keystore.crypto.cipherparams.iv}`,
+  };
   if (keystore.keysalt) {
     options.salt = keystore.keysalt;
     delete keystore.keysalt;
-  }
-  if (keystore.keyiv) {
-    options.iv = keystore.keyiv;
-    delete keystore.keyiv;
   }
   const key = Keystore.scrypt(options);
   const privateKey = await Keystore.decrypt(keystore, key, { as: 'Bytes' });
