@@ -44,7 +44,6 @@
     "commander": "^8.0.0",
     "lodash": "^4.17.21",
     "ox": "^0.7.2",
-    "superagent": "^6.1.0",
     "websocket": "^1.0.35"
   },
   "devDependencies": {

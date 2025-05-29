@@ -1,28 +1,45 @@
-const superagent = require('superagent');
+const { RpcTransport } = require('ox');
 const BaseProvider = require('./BaseProvider');
 
 /**
  * Http protocol json rpc provider.
  */
 class HttpProvider extends BaseProvider {
-  async _doRequest(data) {
-    const { body } = await superagent
-      .post(this.url)
-      .retry(this.retry)
-      .set(this.headers)
-      .send(data)
-      .timeout(this.timeout);
-    return body;
+  constructor(options) {
+    super(options);
+
+    this.transport = RpcTransport.fromHttp(this.url, {
+      timeout: this.timeout,
+      fetchOptions: {
+        headers: this.headers,
+        keepalive: this.keepAlive,
+      },
+    });
   }
 
   async _request(data) {
-    const body = await this._doRequest(data);
-    return body || {};
+    try {
+      const result = await this.transport.request(data);
+      return { result };
+    } catch (err) {
+      const error = {
+        code: err.code,
+        message: err.message,
+        data: err.data,
+      };
+      return { error };
+    }
   }
 
   async _requestBatch(dataArray) {
-    const body = await this._doRequest(dataArray);
-    return body || [];
+    const response = await fetch(this.url, { // eslint-disable-line
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(dataArray),
+    });
+    return response.json();
   }
 }
 
