@@ -1,7 +1,6 @@
 const crypto = require('crypto');
-const secp256k1 = require('secp256k1');
-const { Hash, Secp256k1, Keystore, Hex, Address } = require('ox');
-const { isHexString } = require('./index');
+const { Hash, Secp256k1, Keystore, Hex, Address, PublicKey, Signature } = require('ox');
+const { bufferToHex } = require('./index');
 
 // ----------------------------------------------------------------------------
 /**
@@ -80,7 +79,13 @@ function randomPrivateKey() {
  * @return {Buffer}
  */
 function privateKeyToPublicKey(privateKey) {
-  return secp256k1.publicKeyCreate(privateKey, false).slice(1);
+  const key = bufferToHex(privateKey);
+  const pubKey = Secp256k1.getPublicKey({ privateKey: key });
+  const buf = Buffer.from(PublicKey.toBytes(pubKey));
+  if (buf.length === 65) {
+    return buf.slice(1); // remove the first prefix byte (0x04)
+  }
+  return buf;
 }
 
 /**
@@ -96,11 +101,14 @@ function privateKeyToPublicKey(privateKey) {
  <Buffer 4c 6f a3 22 12 5f a3 1a 42 cb dd a8 73 0d 4c f0 20 0d 72 db>
  */
 function publicKeyToAddress(publicKey) {
-  if (isHexString(publicKey)) publicKey = Buffer.from(publicKey.slice(2), 'hex');
-  if (!Buffer.isBuffer(publicKey)) throw new Error('publicKey should be a buffer');
-  if (publicKey.length === 65) publicKey = publicKey.slice(1);
-  if (publicKey.length !== 64) throw new Error('publicKey length should be 64 or 65');
-  const buffer = keccak256(publicKey).slice(-20);
+  if (Buffer.isBuffer(publicKey)) {
+    if (publicKey.length === 65) publicKey = publicKey.slice(1);
+    if (publicKey.length !== 64) throw new Error('publicKey length should be 64 or 65');
+    publicKey = bufferToHex(publicKey);
+  }
+  publicKey = PublicKey.fromHex(publicKey);
+  const address = Address.fromPublicKey(publicKey);
+  const buffer = Buffer.from(address.slice(2), 'hex');
   buffer[0] = (buffer[0] & 0x0f) | 0x10; // eslint-disable-line no-bitwise
   return buffer;
 }
@@ -140,11 +148,15 @@ function privateKeyToAddress(privateKey) {
  }
  */
 function ecdsaSign(hash, privateKey) {
-  const sig = secp256k1.sign(hash, privateKey);
+  const sig = Secp256k1.sign({
+    payload: bufferToHex(hash),
+    privateKey: bufferToHex(privateKey),
+  });
+  const hex = Signature.toHex(sig);
   return {
-    r: sig.signature.slice(0, 32),
-    s: sig.signature.slice(32, 64),
-    v: sig.recovery,
+    r: Buffer.from(hex.slice(2, 66), 'hex'),
+    s: Buffer.from(hex.slice(66, 130), 'hex'),
+    v: sig.yParity,
   };
 }
 
@@ -167,8 +179,13 @@ function ecdsaSign(hash, privateKey) {
  <Buffer 0d b9 e0 02 85 67 52 28 8b ef 47 60 fa 67 94 ec 83 a8 53 b9>
  */
 function ecdsaRecover(hash, { r, s, v }) {
-  const senderPublic = secp256k1.recover(hash, Buffer.concat([r, s]), v);
-  return secp256k1.publicKeyConvert(senderPublic, false).slice(1);
+  hash = bufferToHex(hash);
+  const signature = Signature.fromTuple([bufferToHex(Buffer.from([v])), bufferToHex(r), bufferToHex(s)]);
+  const pubKey = Secp256k1.recoverPublicKey({
+    payload: hash,
+    signature,
+  });
+  return Buffer.from(PublicKey.toBytes(pubKey));
 }
 
 /**
