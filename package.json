@@ -1,7 +1,7 @@
 {
   "name": "js-conflux-sdk",
   "description": "JavaScript Conflux Software Development Kit",
-  "version": "3.0.0-beta.1",
+  "version": "3.0.1-beta.1",
   "license": "LGPL-3.0",
   "author": "pan.wang@confluxnetwork.org",
   "repository": "https://github.com/Conflux-Chain/js-conflux-sdk.git",
@@ -33,7 +33,6 @@
     "document": "node scripts/document.js",
     "jsdocToMd": "node scripts/jsdoc-to-md.js",
     "jsdoc": "jsdoc -c jsdoc.json",
-    "prepublishOnly": "npm run build",
     "test": "jest --coverage",
     "react": "npm run build & cd react & yarn build & yarn start"
   },
