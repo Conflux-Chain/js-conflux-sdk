@@ -43,7 +43,7 @@ function decodeHexEncodedStr(hexEncodedStr) {
 }
 
 function isHexString(v) {
-  return lodash.isString(v) && v.match(/^0x[0-9A-Fa-f]*$/);
+  return typeof v === 'string' && v.match(/^0x[0-9A-Fa-f]*$/);
 }
 
 function isBytes(value) {

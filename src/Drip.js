@@ -1,4 +1,5 @@
-const format = require('./util/format');
+const { Value } = require('ox');
+const { isHexString } = require('./util/index');
 
 /**
  * Positive decimal integer string in `Drip`
@@ -17,7 +18,8 @@ class Drip extends String {
    [String (Drip): '171000000000000000000']
    */
   static fromCFX(value) {
-    return new this(format.big(value).times(1e18).toFixed());
+    value = normalizeNumber(value);
+    return new this(Value.fromEther(value));
   }
 
   /**
@@ -33,7 +35,8 @@ class Drip extends String {
    [String (Drip): '171000000000']
    */
   static fromGDrip(value) {
-    return new this(format.big(value).times(1e9).toFixed());
+    value = normalizeNumber(value);
+    return new this(Value.fromGwei(value));
   }
 
   /**
@@ -47,7 +50,9 @@ class Drip extends String {
    [String (Drip): '171']
    */
   constructor(value) {
-    super(format.bigUInt(value).toString(10));
+    if (typeof value === 'number' && !Number.isInteger(value)) throw new TypeError('Cannot');
+    value = normalizeNumber(value);
+    super(Value.from(value).toString());
   }
 
   /**
@@ -59,7 +64,7 @@ class Drip extends String {
    "0.000000001"
    */
   toCFX() {
-    return format.big(this).div(1e18).toFixed();
+    return Value.formatEther(Value.from(this));
   }
 
   /**
@@ -71,8 +76,19 @@ class Drip extends String {
    "1"
    */
   toGDrip() {
-    return format.big(this).div(1e9).toFixed();
+    return Value.formatGwei(Value.from(this));
   }
+}
+
+function normalizeNumber(value) {
+  if (value === undefined || value === null || value === '') throw new TypeError('Invalid number');
+  if (typeof value === 'number') {
+    if (Number.isNaN(value)) throw new TypeError('Cannot');
+    if (value < 0) throw new TypeError('not match "bigUInt"');
+  }
+  if (typeof value === 'number' || typeof value === 'bigint') value = value.toString();
+  if (isHexString(value)) value = Number(value).toString();
+  return value;
 }
 
 module.exports = new Proxy(Drip, {
