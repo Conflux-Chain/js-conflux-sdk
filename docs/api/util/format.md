@@ -180,49 +180,6 @@ When encoding QUANTITIES (integers, numbers): encode as hex, prefix with "0x", t
 > format.bigUIntHex(-1))
  Error("not match uintHex")
 ```
-<a name="big"></a>
-
-## big(arg) ⇒ <code>Big</code>
-**Kind**: global function  
-**Returns**: <code>Big</code> - Big instance  
-
-| Param | Type |
-| --- | --- |
-| arg | <code>number</code> \| <code>string</code> \| <code>BigInt</code> | 
-
-**Example**  
-```js
-> format.big('0b10').toString()
- '2'
-> format.big('0O10').toString()
- '8'
-> format.big('010').toString()
- '10'
-> format.big('0x10').toString()
- '16'
-> format.big(3.14).toString()
- '3.14'
-> format.big('-03.140').toString()
- '-3.14'
-> format.big(null)
- Error('Invalid number')
-```
-<a name="fixed64"></a>
-
-## fixed64(arg) ⇒ <code>Number</code>
-**Kind**: global function  
-
-| Param | Type |
-| --- | --- |
-| arg | <code>string</code> \| <code>number</code> \| <code>BigInt</code> \| <code>Big</code> | 
-
-**Example**  
-```js
-> format.fixed64('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')
- 1
-> format.fixed64('0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')
- 0.5
-```
 <a name="epochNumber"></a>
 
 ## epochNumber(arg) ⇒ <code>string</code>

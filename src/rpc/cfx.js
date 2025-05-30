@@ -200,7 +200,7 @@ class CFX extends RPCMethodFactory {
         requestFormatters: [
           format.blockHash,
         ],
-        responseFormatter: format.fixed64.$or(null),
+        responseFormatter: format.bigUInt.$or(null),
       },
       {
         method: 'cfx_getTransactionByHash',

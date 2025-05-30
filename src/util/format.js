@@ -1,4 +1,3 @@
-const Big = require('big.js');
 const lodash = require('lodash');
 const CONST = require('../CONST');
 const JSBI = require('./jsbi');
@@ -53,13 +52,6 @@ function toBigInt(value) {
 
   value = `${value}`.replace(/^(-?\d+)(.0+)?$/, '$1'); // replace "number.000" to "number"
   return JSBI.BigInt(value);
-}
-
-function toBig(value) {
-  if (/^0[xob]/i.test(value)) {
-    value = JSBI.BigInt(value);
-  }
-  return new Big(value);
 }
 
 // ----------------------------------------------------------------------------
@@ -170,42 +162,6 @@ format.bigUInt = format.bigInt.$validate(v => v >= 0, 'bigUInt');
  Error("not match uintHex")
  */
 format.bigUIntHex = format.bigUInt.$after(v => `0x${v.toString(16)}`);
-
-/**
- * @function big
- * @param {number|string|BigInt} arg
- * @return {Big} Big instance
- *
- * @example
- * > format.big('0b10').toString()
- '2'
- * > format.big('0O10').toString()
- '8'
- * > format.big('010').toString()
- '10'
- * > format.big('0x10').toString()
- '16'
- * > format.big(3.14).toString()
- '3.14'
- * > format.big('-03.140').toString()
- '-3.14'
- * > format.big(null)
- Error('Invalid number')
- */
-format.big = format(toBig, { name: 'format.big' });
-
-/**
- * @function fixed64
- * @param {string|number|BigInt|Big} arg
- * @return {Number}
- *
- * @example
- * > format.fixed64('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')
- 1
- * > format.fixed64('0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')
- 0.5
- */
-format.fixed64 = format.big.$after(v => Number(v.div(CONST.MAX_UINT)));
 
 /**
  * @function epochNumber

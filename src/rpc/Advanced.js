@@ -1,4 +1,3 @@
-const Big = require('big.js');
 const CONST = require('../CONST');
 const format = require('../util/format');
 
@@ -30,7 +29,6 @@ class AdvancedRPCUtilities {
    * @returns {Promise<string>} PoS interest rate
    */
   async getPoSInterestRate() {
-    const RATIO = new Big(0.04);
     const batchRequest = this.conflux.BatchRequest();
     batchRequest.add(this.conflux.cfx.getSupplyInfo.request());
     batchRequest.add(this.conflux.cfx.getPoSEconomics.request());
@@ -40,10 +38,12 @@ class AdvancedRPCUtilities {
       { totalPosStakingTokens },
       balanceOfZeroAddress,
     ] = await batchRequest.execute();
-    const bigTotalStaking = new Big(totalCirculating - balanceOfZeroAddress);
-    const bigTotalPosStakingTokens = new Big(totalPosStakingTokens);
-    const bigRatio = RATIO.div(bigTotalPosStakingTokens.div(bigTotalStaking).sqrt());
-    return bigRatio.toString();
+    const bigTotalCirculating = totalCirculating - balanceOfZeroAddress;
+    const bigTotalPosStakingTokens = totalPosStakingTokens;
+    const ratio = Number(bigTotalCirculating / bigTotalPosStakingTokens);
+
+    const baseRatio = 0.04; // TODO get base ratio from RPC
+    return (Math.sqrt(ratio) * baseRatio).toString();
   }
 
   /**

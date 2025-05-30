@@ -232,7 +232,7 @@ async function sendMethodTransactionWithEstimate() {
   const receipt = await methodTx.sendTransaction({
     from: accountAlice.address, // but `from` is unnecessary when actual send
     nonce: await conflux.getNextNonce(accountAlice),
-    gas: format.big(estimate.gasUsed).times(1.1).toFixed(0), // you could multiply `gas` like this
+    gas: estimate.gasUsed * 11n / 10n, // you could multiply `gas` like this
     storageLimit: estimate.storageCollateralized,
     gasPrice: 1,
   }).executed();

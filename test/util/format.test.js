@@ -1,4 +1,3 @@
-const Big = require('big.js');
 const { format, CONST } = require('../../src');
 const JSBI = require('../../src/util/jsbi');
 
@@ -113,26 +112,6 @@ test('bigUIntHex', () => {
   expect(() => format.bigUIntHex(-0.5)).toThrow('Cannot');
   expect(() => format.bigUIntHex(-1)).toThrow('not match "bigUInt"');
   expect(() => format.bigUIntHex(null)).toThrow('Cannot');
-});
-
-test('big', () => {
-  expect(format.big('0b10')).toEqual(Big(2));
-  expect(format.big('0O10')).toEqual(Big(8));
-  expect(format.big('010')).toEqual(Big(10));
-  expect(format.big('0x10')).toEqual(Big(16));
-  expect(format.big(3.14)).toEqual(Big(3.14));
-  expect(format.big('-03.140')).toEqual(Big(-3.14));
-  expect(format.big(BigInt(10))).toEqual(Big(10));
-  expect(() => format.big()).toThrow('Invalid number');
-  expect(() => format.big(null)).toThrow('Invalid number');
-  expect(() => format.big(true)).toThrow('Invalid number');
-  expect(() => format.big('-0x10')).toThrow('Invalid number');
-});
-
-test('fixed64', () => {
-  expect(format.fixed64('0x0')).toEqual(0);
-  expect(format.fixed64('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')).toEqual(1);
-  expect(format.fixed64('0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')).toEqual(0.5);
 });
 
 test('epochNumber', () => {
