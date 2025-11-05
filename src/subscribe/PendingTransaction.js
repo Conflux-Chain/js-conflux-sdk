@@ -21,6 +21,9 @@ class PendingTransaction {
     try {
       return resolve(await this.promise);
     } catch (e) {
+      if (typeof reject !== 'function') {
+        reject = (e) => { throw e; };
+      }
       return reject(e);
     }
   }

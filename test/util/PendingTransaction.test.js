@@ -80,3 +80,15 @@ test('PendingTransaction finally', async () => {
 
   call.mockRestore();
 });
+
+test('PendingTransaction then optional reject fn', async () => {
+  const call = jest.spyOn(conflux.provider, 'call');
+  let called;
+
+  call.mockRejectedValueOnce(new Error('XXX'));
+  await expect(
+      conflux.sendRawTransaction('0x').then(() => {
+        called = true;
+      })
+  ).rejects.toThrow('XXX');
+});
