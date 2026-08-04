@@ -26,4 +26,8 @@ function supplementErrorInfo(object, payload) {
   if (isHexString(object.data)) {
     object.data = format.hexBuffer(object.data).toString();
   }
+  // In order to maintain compatibility with the error message format of the RPC framework prior to v3.1.
+  if (object.message === 'Invalid params' && typeof object.data === 'string' && object.data) {
+    object.message = `${object.message}: ${object.data}`;
+  }
 }
