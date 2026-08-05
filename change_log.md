@@ -1,5 +1,10 @@
 # change log
 
+## v2.6.0
+
+* Add `RPCError.paramsErrorDetail()` to consistently retrieve invalid-parameter details from legacy `data` fields and newer `Invalid params:` or `Invalid parameters:` messages without changing the original RPC error message.
+* Fix `PendingTransaction` Promise compatibility so transaction errors are correctly propagated when `.then()` is called without a rejection handler.
+
 ## v2.4.0
 
 * Support conflux-rust v2.4.0 `new RPC methods`(https://github.com/Conflux-Chain/conflux-rust/blob/master/changelogs/JSONRPC.md#v240) `cfx_feeHistory`, `cfx_maxPriorityFeePerGas` etc.

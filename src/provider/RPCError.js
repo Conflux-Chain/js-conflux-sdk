@@ -8,6 +8,20 @@ class RPCError extends Error {
     Object.assign(this, object);
     Object.assign(this, payload);
   }
+
+  // return the parameter error detail, return null if it is not an Invalid params error
+  paramsErrorDetail() {
+    if (this.message === 'Invalid params' && typeof this.data === 'string' && this.data) {
+      return this.data;
+    }
+    if (this.message.startsWith('Invalid params:')) {
+      return this.message.substring(15).trim();
+    }
+    if (this.message.startsWith('Invalid parameters:')) {
+      return this.message.substring(19).trim();
+    }
+    return null;
+  }
 }
 
 module.exports = RPCError;
@@ -25,9 +39,5 @@ function supplementErrorInfo(object, payload) {
   // decode hex encoded error message
   if (isHexString(object.data)) {
     object.data = format.hexBuffer(object.data).toString();
-  }
-  // In order to maintain compatibility with the error message format of the RPC framework prior to v3.1.
-  if (object.message === 'Invalid params' && typeof object.data === 'string' && object.data) {
-    object.message = `${object.message}: ${object.data}`;
   }
 }
