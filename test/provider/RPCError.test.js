@@ -17,11 +17,25 @@ describe('RPCError.paramsErrorDetail', () => {
     ['Invalid params: invalid epoch number', 'invalid epoch number'],
     ['Invalid parameters: invalid epoch number', 'invalid epoch number'],
     ['Invalid params:   invalid epoch number   ', 'invalid epoch number'],
+    ['Invalid params: invalid "epoch" number', 'invalid epoch number'],
+    ['Invalid parameters: invalid \\"epoch\\" number', 'invalid epoch number'],
   ])('extracts the detail from %s', (message, detail) => {
     const error = new RPCError({ code: -32602, message });
 
     expect(error.message).toEqual(message);
     expect(error.paramsErrorDetail()).toEqual(detail);
+  });
+
+  test('removes escaped double quotes from legacy data without changing the data', () => {
+    const data = 'invalid \\"epoch\\" number';
+    const error = new RPCError({
+      code: -32602,
+      message: 'Invalid params',
+      data,
+    });
+
+    expect(error.data).toEqual(data);
+    expect(error.paramsErrorDetail()).toEqual('invalid epoch number');
   });
 
   test.each([

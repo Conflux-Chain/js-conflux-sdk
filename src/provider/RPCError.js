@@ -12,19 +12,23 @@ class RPCError extends Error {
   // return the parameter error detail, return null if it is not an Invalid params error
   paramsErrorDetail() {
     if (this.message === 'Invalid params' && typeof this.data === 'string' && this.data) {
-      return this.data;
+      return sanitizeParamsErrorDetail(this.data);
     }
     if (this.message.startsWith('Invalid params:')) {
-      return this.message.substring(15).trim();
+      return sanitizeParamsErrorDetail(this.message.substring(15).trim());
     }
     if (this.message.startsWith('Invalid parameters:')) {
-      return this.message.substring(19).trim();
+      return sanitizeParamsErrorDetail(this.message.substring(19).trim());
     }
     return null;
   }
 }
 
 module.exports = RPCError;
+
+function sanitizeParamsErrorDetail(detail) {
+  return detail.replace(/\\?"/g, '');
+}
 
 function supplementErrorInfo(object, payload) {
   // If use base32 address with full node before v1.1.1, will encounter this error

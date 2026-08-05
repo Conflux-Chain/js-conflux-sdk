@@ -2,7 +2,7 @@
 
 ## v2.6.0
 
-* Add `RPCError.paramsErrorDetail()` to consistently retrieve invalid-parameter details from legacy `data` fields and newer `Invalid params:` or `Invalid parameters:` messages without changing the original RPC error message.
+* Add `RPCError.paramsErrorDetail()` to consistently retrieve invalid-parameter details from legacy `data` fields and newer `Invalid params:` or `Invalid parameters:` messages, remove double quotes from returned details, and preserve the original RPC error message.
 * Fix `PendingTransaction` Promise compatibility so transaction errors are correctly propagated when `.then()` is called without a rejection handler.
 
 ## v2.4.0
