@@ -2,6 +2,9 @@ const { isHexString } = require('../util');
 const format = require('../util/format');
 
 class RPCError extends Error {
+  INVALID_PARAMS = 'Invalid params:';
+  INVALID_PARAMETERS = "Invalid parameters:";
+
   constructor(object, payload = {}) {
     supplementErrorInfo(object, payload);
     super(object);
@@ -11,20 +14,25 @@ class RPCError extends Error {
 
   // return the parameter error detail, return null if it is not an Invalid params error
   paramsErrorDetail() {
-    if (this.message === 'Invalid params' && typeof this.data === 'string' && this.data) {
-      return this.data;
+    if (this.code != -32602) return null;
+    if (this.message === "Invalid params" && typeof this.data === 'string' && this.data) {
+      return sanitizeParamsErrorDetail(this.data);
     }
-    if (this.message.startsWith('Invalid params:')) {
-      return this.message.substring(15).trim();
+    if (this.message.startsWith(this.INVALID_PARAMS)) {
+      return sanitizeParamsErrorDetail(this.message.substring(this.INVALID_PARAMS.length).trim());
     }
-    if (this.message.startsWith('Invalid parameters:')) {
-      return this.message.substring(19).trim();
+    if (this.message.startsWith(this.INVALID_PARAMETERS)) {
+      return sanitizeParamsErrorDetail(this.message.substring(this.INVALID_PARAMETERS.length).trim());
     }
     return null;
   }
 }
 
 module.exports = RPCError;
+
+function sanitizeParamsErrorDetail(detail) {
+  return detail.replace(/\\?"/g, '');
+}
 
 function supplementErrorInfo(object, payload) {
   // If use base32 address with full node before v1.1.1, will encounter this error
