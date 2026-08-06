@@ -1,10 +1,9 @@
 const { isHexString } = require('../util');
 const format = require('../util/format');
 
+const INVALID_PARAMS = 'Invalid params:';
+const INVALID_PARAMETERS = 'Invalid parameters:';
 class RPCError extends Error {
-  INVALID_PARAMS = 'Invalid params:';
-  INVALID_PARAMETERS = "Invalid parameters:";
-
   constructor(object, payload = {}) {
     supplementErrorInfo(object, payload);
     super(object);
@@ -14,15 +13,15 @@ class RPCError extends Error {
 
   // return the parameter error detail, return null if it is not an Invalid params error
   paramsErrorDetail() {
-    if (this.code != -32602) return null;
-    if (this.message === "Invalid params" && typeof this.data === 'string' && this.data) {
+    if (this.code !== -32602) return null;
+    if (this.message === 'Invalid params' && typeof this.data === 'string' && this.data) {
       return sanitizeParamsErrorDetail(this.data);
     }
-    if (this.message.startsWith(this.INVALID_PARAMS)) {
-      return sanitizeParamsErrorDetail(this.message.substring(this.INVALID_PARAMS.length).trim());
+    if (this.message.startsWith(INVALID_PARAMS)) {
+      return sanitizeParamsErrorDetail(this.message.substring(INVALID_PARAMS.length).trim());
     }
-    if (this.message.startsWith(this.INVALID_PARAMETERS)) {
-      return sanitizeParamsErrorDetail(this.message.substring(this.INVALID_PARAMETERS.length).trim());
+    if (this.message.startsWith(INVALID_PARAMETERS)) {
+      return sanitizeParamsErrorDetail(this.message.substring(INVALID_PARAMETERS.length).trim());
     }
     return null;
   }
@@ -30,8 +29,13 @@ class RPCError extends Error {
 
 module.exports = RPCError;
 
+// Remove extra outer double quotes
 function sanitizeParamsErrorDetail(detail) {
-  return detail.replace(/\\?"/g, '');
+  if (detail[0] === '"' && detail[detail.length - 1] === '"') {
+    return JSON.parse(detail);
+  } else {
+    return detail;
+  }
 }
 
 function supplementErrorInfo(object, payload) {
