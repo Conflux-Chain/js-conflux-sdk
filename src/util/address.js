@@ -12,6 +12,7 @@ const {
   isValidCfxHexAddress,
 } = require('@conflux-dev/conflux-address-js');
 const { checksumAddress, keccak256 } = require('./sign');
+const { assert } = require('./index');
 const { ADDRESS_TYPES } = require('../CONST');
 
 /**
@@ -130,9 +131,17 @@ function cfxMappedEVMSpaceAddress(address) {
   return checksumAddress(`0x${mappedBuf.toString('hex')}`);
 }
 
+function assertNetworkId(address, networkId, message = 'address networkId does not match expected networkId') {
+  if (address && networkId !== undefined && hasNetworkPrefix(address.toString())) {
+    const { netId } = decode(address.toString());
+    assert(netId === networkId, message);
+  }
+}
+
 module.exports = {
   encodeCfxAddress: encode,
   decodeCfxAddress: decode,
+  assertNetworkId,
   ethChecksumAddress,
   ethAddressToCfxAddress,
   cfxMappedEVMSpaceAddress,
