@@ -236,6 +236,7 @@ test('address', () => {
   expect(() => format.address(null)).toThrow('not match "hex40"');
   expect(format.address('0x0123456789012345678901234567890123456789', 1)).toEqual('cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp');
   expect(format.address('cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp')).toEqual('cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp');
+  expect(() => format.address('cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp', 1029)).toThrow('address networkId does not match expected networkId');
   expect(format.address(Buffer.from('0123456789012345678901234567890123456789', 'hex'), 1)).toEqual('cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp');
 
   expect(() => format.address('0x0123456789012345678')).toThrow('not match "hex40"');
