@@ -8,12 +8,30 @@ const { pack, unpack } = require('./TupleCoder');
 
 const MAX_DECODE_ARRAY_LENGTH = 2 ** 20;
 
+function staticHeadWords(coder) {
+  if (coder.dynamic) {
+    return 1;
+  }
+
+  if (Array.isArray(coder.coders)) {
+    return lodash.sum(coder.coders.map(staticHeadWords));
+  }
+
+  if (coder.coder && coder.size !== undefined) {
+    return coder.size * staticHeadWords(coder.coder);
+  }
+
+  return coder.constructor.name === 'NullCoder' ? 0 : 1;
+}
+
 function assertDecodeLength(length, stream, coder) {
+  const elementWords = staticHeadWords(coder.coder);
+  const requiredWords = length * elementWords;
   const remainingWords = Math.floor((stream.string.length - stream.index) / WORD_CHARS);
-  assert(length <= remainingWords, {
+  assert(requiredWords <= remainingWords, {
     message: 'array length exceeds available data',
     expect: `<=${remainingWords}`,
-    got: length,
+    got: requiredWords,
     coder,
     stream,
   });

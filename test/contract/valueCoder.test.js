@@ -279,6 +279,21 @@ describe('array', () => {
       '6364000000000000000000000000000000000000000000000000000000000000',
     );
   });
+
+  test('zero-width dynamic[]', () => {
+    const tupleCoder = valueCoder({ type: 'tuple[]', components: [] });
+    const tupleHex = testEncode(tupleCoder, [[]], '0x' +
+      '0000000000000000000000000000000000000000000000000000000000000001',
+    );
+    const decodedTuples = tupleCoder.decode(new HexStream(tupleHex));
+    expect(decodedTuples.length).toEqual(1);
+    expect([...decodedTuples[0]]).toEqual([]);
+
+    const nullCoder = valueCoder({ type: '[]' });
+    testEncodeAndDecode(nullCoder, [null], '0x' +
+      '0000000000000000000000000000000000000000000000000000000000000001',
+    );
+  });
 });
 
 describe('tuple', () => {
