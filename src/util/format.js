@@ -15,8 +15,8 @@ function toHex(value) {
     hex = value.toLowerCase(); // XXX: lower case for support checksum address
   } else if (Number.isInteger(value) || (typeof value === 'bigint') || (value instanceof JSBI)) {
     hex = `0x${value.toString(16)}`;
-  } else if (Buffer.isBuffer(value)) {
-    hex = `0x${value.toString('hex')}`;
+  } else if (Buffer.isBuffer(value) || isBytes(value)) {
+    hex = `0x${Buffer.from(value).toString('hex')}`;
   } else if (lodash.isBoolean(value)) {
     hex = value ? '0x01' : '0x00';
   } else if (value === null) {

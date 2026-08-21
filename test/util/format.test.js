@@ -32,6 +32,7 @@ test('hex(Number)', () => {
 test('hex(Buffer)', () => {
   expect(format.hex(Buffer.from([]))).toEqual('0x');
   expect(format.hex(Buffer.from([1, 10, 255]))).toEqual('0x010aff');
+  expect(format.hex(new Uint8Array([1, 10, 255]))).toEqual('0x010aff');
 });
 
 test('hex(bool)', () => {
