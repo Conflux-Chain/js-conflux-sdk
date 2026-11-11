@@ -4998,9 +4998,9 @@ js-tokens@^4.0.0:
   integrity sha1-GSA/tZmR35jjoocFDUZHzerzJJk=
 
 js-yaml@^3.12.1, js-yaml@^3.13.1:
-  version "3.14.1"
-  resolved "https://registry.npmmirror.com/js-yaml/download/js-yaml-3.14.1.tgz"
-  integrity sha1-2ugS/bOCX6MGYJqHFzg8UMNqBTc=
+  version "3.15.2"
+  resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.15.2.tgz#3f83823ac6be17f570f23b2ecdef3777ff5ea364"
+  integrity sha512-6EuL879VkRA+1Cz578mKMiKvjPNEuk6+r1JaFzoSWejZmtf7xWbIyw1e3KkxlkzTIt9Taw6JBhEppG7utc1P+w==
   dependencies:
     argparse "^1.0.7"
     esprima "^4.0.0"
