@@ -93,11 +93,11 @@
     "**/braces": "3.0.3",
     "**/flatted": "3.4.2",
     "**/jsdoc-parse": "6.2.5",
-    "**/markdown-it": "14.3.2",
+    "**/markdown-it": "14.3.3",
     "**/minimatch": "3.1.4",
     "**/sane": "5.0.1",
     "**/secp256k1": "3.8.1",
-    "**/tmp": "0.2.6",
+    "**/tmp": "0.2.7",
     "jest/jest-cli/jest-config/jest-environment-jsdom/jsdom/acorn-globals/acorn": "6.4.1"
   }
 }
