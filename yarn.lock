@@ -1023,13 +1023,14 @@
   resolved "https://registry.npmjs.org/@conflux-dev/jsdoc-tsimport-plugin/-/jsdoc-tsimport-plugin-1.0.5.tgz"
   integrity sha512-ZMz9GpegPwQq0nitk1bR0xsmCclfxELFeiCPag1Vu1zOZ1h6fD6FOqItt3peISViCj3tfWJE/VjiWpCfjBVehg==
 
-"@conflux-dev/jsonrpc-spec@^0.2.1":
-  version "0.2.1"
-  resolved "https://registry.npmjs.org/@conflux-dev/jsonrpc-spec/-/jsonrpc-spec-0.2.1.tgz"
-  integrity sha512-/BDvUcI4NWbrB4UoWxcCUreVYpDUcLt9MkVepBrRUfCce7WpLV3+nrD7bo6ltLt4/9N2wQFrq0Mu1PTP3aM9AA==
+"@conflux-dev/jsonrpc-spec@^0.2.3":
+  version "0.2.3"
+  resolved "https://registry.npmmirror.com/@conflux-dev/jsonrpc-spec/-/jsonrpc-spec-0.2.3.tgz#064934bcc6edd4829ec201373f9e40986226bd63"
+  integrity sha512-QzhJs754BfFMH1Fnerumkv5zMpxdyflHLcacWplqe6mSjU6mmMtp/DK9W6DfJ+XNFq1ATYkjbBCaz7Fjg1JJCg==
   dependencies:
     "@open-rpc/server-js" "^1.9.3"
     js-conflux-sdk "^2.4.1"
+    json-schema-faker "0.5.9"
 
 "@eslint/eslintrc@^0.4.3":
   version "0.4.3"
@@ -1292,6 +1293,16 @@
   dependencies:
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
+
+"@jsep-plugin/assignment@^1.3.0":
+  version "1.4.0"
+  resolved "https://registry.npmmirror.com/@jsep-plugin/assignment/-/assignment-1.4.0.tgz#b1278faf785da77d3312a62cc320a1d10962b8da"
+  integrity sha512-nw2Px23Eirx0PFTVoPrb3FEq9Wkmg6vxcDtt38MtBCf1G0tjLCB9cK+3seOXyiw+6+aalgYhvJabQbWwMVKlEQ==
+
+"@jsep-plugin/regex@^1.0.4":
+  version "1.1.0"
+  resolved "https://registry.npmmirror.com/@jsep-plugin/regex/-/regex-1.1.0.tgz#3460b0b84cf3294dbfee86a3928d944589a739b8"
+  integrity sha512-2Vkbda+XRjK6VTI6Lrh0sNBuMT8mZ51EhqMvO+V2rSdmqjs7NAGssxPZfkL23EFzYfSrvxyd1ZjOdqPQMM50og==
 
 "@json-schema-spec/json-pointer@^0.1.2":
   version "0.1.2"
@@ -5168,6 +5179,11 @@ jsdom@^16.4.0:
     ws "^7.4.6"
     xml-name-validator "^3.0.0"
 
+jsep@^1.4.0:
+  version "1.6.0"
+  resolved "https://registry.npmmirror.com/jsep/-/jsep-1.6.0.tgz#21a1ebd9a4f858e6c58ffd05e3492e31d29fd8b0"
+  integrity sha512-Y8Tr54CX7B5YGAwo7/n8eumidEX3Opx98RyyQVnlHqUaZcPA8uUzL2v1rshr9ypW9Q6hNjfJtg3sL+8kaNE7TA==
+
 jsesc@^2.5.1:
   version "2.5.2"
   resolved "https://registry.npmmirror.com/jsesc/download/jsesc-2.5.2.tgz"
@@ -5187,6 +5203,14 @@ json-parse-even-better-errors@^2.3.0:
   version "2.3.1"
   resolved "https://registry.npmmirror.com/json-parse-even-better-errors/download/json-parse-even-better-errors-2.3.1.tgz"
   integrity sha1-fEeAWpQxmSjgV3dAXcEuH3pO4C0=
+
+json-schema-faker@0.5.9:
+  version "0.5.9"
+  resolved "https://registry.npmmirror.com/json-schema-faker/-/json-schema-faker-0.5.9.tgz#6ae58b81cd6a57b3a222e7dd6e6c730da3816890"
+  integrity sha512-fNKLHgDvfGNNTX1zqIjqFMJjCLzJ2kvnJ831x4aqkAoeE4jE2TxvpJdhOnk3JU3s42vFzmXvkpbYzH5H3ncAzg==
+  dependencies:
+    json-schema-ref-parser "^6.1.0"
+    jsonpath-plus "^10.3.0"
 
 json-schema-faker@^0.5.0-rcv.26:
   version "0.5.6"
@@ -5271,6 +5295,15 @@ jsonparse@^1.2.0:
   version "1.3.1"
   resolved "https://registry.npmmirror.com/jsonparse/download/jsonparse-1.3.1.tgz"
   integrity sha1-P02uSpH6wxX3EGL4UhzCOfE2YoA=
+
+jsonpath-plus@^10.3.0:
+  version "10.4.0"
+  resolved "https://registry.npmmirror.com/jsonpath-plus/-/jsonpath-plus-10.4.0.tgz#73cf545c231afda21452150b7a2a58e48e109702"
+  integrity sha512-T92WWatJXmhBbKsgH/0hl+jxjdXrifi5IKeMY02DWggRxX0UElcbVzPlmgLTbvsPeW1PasQ6xE2Q75stkhGbsA==
+  dependencies:
+    "@jsep-plugin/assignment" "^1.3.0"
+    "@jsep-plugin/regex" "^1.0.4"
+    jsep "^1.4.0"
 
 jsonpath-plus@^7.2.0:
   version "7.2.0"
