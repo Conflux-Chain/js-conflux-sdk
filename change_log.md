@@ -1,5 +1,9 @@
 # change log
 
+## v2.7.0
+
+* Upgrade `@conflux-dev/conflux-address-js` to `2.1.0`. SDK address formatting, wallet, contract, access-list, and transaction APIs remain compatible with the new byte-array address decode result. If you call `address.decodeCfxAddress()` directly, note that `hexAddress` is now byte-like (`Uint8Array`); normalize it with `Buffer.from(hexAddress)` if you need a Buffer or hex string.
+
 ## v2.6.0
 
 * Add `RPCError.paramsErrorDetail()` to consistently retrieve invalid-parameter details from legacy `data` fields and newer `Invalid params:` or `Invalid parameters:` messages, remove double quotes from returned details, and preserve the original RPC error message.
