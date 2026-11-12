@@ -266,9 +266,10 @@ function toAddress(address, networkId, verbose = false) {
     address = address.toString();
   }
   if (lodash.isString(address) && addressUtil.hasNetworkPrefix(address)) {
+    addressUtil.assertNetworkId(address, networkId);
     const _decodedAddress = addressUtil.decodeCfxAddress(address);
     address = _decodedAddress.hexAddress;
-    networkId = networkId || _decodedAddress.netId;
+    networkId = networkId === undefined ? _decodedAddress.netId : networkId;
   }
   address = format.hexBuffer(address);
   if (address.length !== 20) {

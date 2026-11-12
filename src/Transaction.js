@@ -2,6 +2,7 @@ const { keccak256, ecdsaSign, ecdsaRecover, privateKeyToAddress, publicKeyToAddr
 const rlp = require('./util/rlp');
 const format = require('./util/format');
 const cfxFormat = require('./rpc/types/formatter');
+const addressUtil = require('./util/address');
 const { AccessList } = require('./primitives/AccessList');
 const {
   TXRLP_TYPE_PREFIX_2930,
@@ -263,6 +264,8 @@ class Transaction {
    * @return {Buffer}
    */
   encode(includeSignature) {
+    addressUtil.assertNetworkId(this.to, this.chainId, '`to` address\'s networkId does not match transaction chainId');
+
     let raw;
     if (this.txType() === TRANSACTION_TYPE_LEGACY) { // legacy transaction
       const { nonce, gasPrice, gas, to, value, storageLimit, epochHeight, chainId, data, v, r, s } = cfxFormat.signTx(this);

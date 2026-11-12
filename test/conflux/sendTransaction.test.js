@@ -5,6 +5,7 @@ const PRIVATE_KEY = '0x0123456789abcdef0123456789abcdef0123456789abcdef012345678
 // const ADDRESS = 'cfxtest:00eau2strcmx8tu567bf2593fsbazkhrfgw83tdrex';
 const HEX_ADDRESS = '0x0123456789012345678901234567890123456789';
 const PASSWORD = 'password';
+const MAINNET_ADDRESS = format.address(HEX_ADDRESS, CONST.MAINNET_ID);
 
 // ----------------------------------------------------------------------------
 const conflux = new Conflux({
@@ -61,6 +62,54 @@ test('sendTransaction local', async () => {
   });
 
   expect(call).toHaveBeenLastCalledWith('cfx_sendRawTransaction', '0xf867e3640a820400941cad0b19bb29d4674531d6f115237e16afce377c808208008203e8018080a07408093a0a059d285f8b064e41ebca856c5c2369af32ebcdadb0b5e2446d9eaea043624cf0731d4ad618ef055a95cef1e05708b7b45e675205be9d050581820afc');
+
+  call.mockRestore();
+});
+
+test('sendTransaction local rejects mismatched to address networkId', async () => {
+  const signTransaction = jest.spyOn(account, 'signTransaction');
+
+  await expect(conflux.sendTransaction({
+    from: account,
+    to: MAINNET_ADDRESS,
+    nonce: 100,
+    gasPrice: 10,
+    gas: format.bigUInt(1024),
+    value: 0,
+    storageLimit: format.bigUInt(2048),
+    epochHeight: 1000,
+    chainId: CONST.TESTNET_ID,
+  })).rejects.toThrow('`to` address\'s networkId does not match current RPC\'s networkId');
+  expect(signTransaction).not.toHaveBeenCalled();
+
+  signTransaction.mockRestore();
+});
+
+test('sendTransaction remote rejects mismatched from address networkId', async () => {
+  await expect(conflux.sendTransaction({
+    from: MAINNET_ADDRESS,
+    nonce: 100,
+    gasPrice: 10,
+    gas: format.bigUInt(1024),
+    value: 0,
+    storageLimit: format.bigUInt(2048),
+    epochHeight: 1000,
+    chainId: CONST.TESTNET_ID,
+  })).rejects.toThrow('address networkId does not match expected networkId');
+});
+
+test('sendTransaction remote rejects mismatched to address networkId', async () => {
+  const call = jest.spyOn(conflux.provider, 'call');
+
+  await expect(conflux.sendTransaction({
+    from: HEX_ADDRESS,
+    to: MAINNET_ADDRESS,
+    gasPrice: 10,
+    gas: format.bigUInt(1024),
+    storageLimit: format.bigUInt(2048),
+    chainId: CONST.TESTNET_ID,
+  }, PASSWORD)).rejects.toThrow('address networkId does not match expected networkId');
+  expect(call).not.toHaveBeenCalledWith('cfx_sendTransaction', expect.anything(), PASSWORD);
 
   call.mockRestore();
 });
