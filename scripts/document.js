@@ -1,18 +1,25 @@
 const fs = require('fs');
 const lodash = require('lodash');
-const jsdocToMd = require('@geekberry/jsdoc-to-md'); // eslint-disable-line import/no-extraneous-dependencies
-const { sep } = require('path');
+const jsdocToMd = require('jsdoc-to-markdown'); // eslint-disable-line import/no-extraneous-dependencies
+const { join, sep } = require('path');
+const { replaceTSImport } = require('./replaceTSimport');
 
-function generateMarkdown(filters, apiName) {
-  const markdown = jsdocToMd(`${__dirname}/../src`, {
-    filter: filename => {
-      if (lodash.some(filters, suffix => filename.endsWith(suffix))) {
-        console.log(`File "${filename}" parsing...`); // eslint-disable-line no-console
-        return true;
-      }
-      return false;
-    },
+function listSourceFiles(directory) {
+  return fs.readdirSync(directory, { withFileTypes: true }).flatMap(entry => {
+    const filename = join(directory, entry.name);
+    return entry.isDirectory() ? listSourceFiles(filename) : [filename];
   });
+}
+
+async function generateMarkdown(filters, apiName) {
+  const sourceDir = `${__dirname}/../src`;
+  const files = listSourceFiles(sourceDir)
+    .filter(filename => lodash.some(filters, suffix => filename.endsWith(suffix)));
+
+  const markdown = (await Promise.all(files.map(async filename => {
+    console.log(`File "${filename}" parsing...`); // eslint-disable-line no-console
+    return jsdocToMd.render({ source: replaceTSImport({ source: fs.readFileSync(filename, 'utf8') }) });
+  }))).join('\n');
 
   fs.writeFileSync(`${__dirname}/../docs/api/${apiName}.md`, `${markdown}`);
 }
@@ -73,6 +80,7 @@ const APIs = [
   },
 ];
 
-for (const API of APIs) {
-  generateMarkdown(API.files, API.name);
-}
+Promise.all(APIs.map(API => generateMarkdown(API.files, API.name))).catch(error => {
+  console.error(error); // eslint-disable-line no-console
+  process.exitCode = 1;
+});
