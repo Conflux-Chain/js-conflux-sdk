@@ -126,7 +126,7 @@ function ethAddressToCfxAddress(address) {
  */
 function cfxMappedEVMSpaceAddress(address) {
   const { hexAddress } = decode(address);
-  const mappedBuf = keccak256(hexAddress).slice(-20);
+  const mappedBuf = keccak256(Buffer.from(hexAddress)).slice(-20);
   return checksumAddress(`0x${mappedBuf.toString('hex')}`);
 }
 
