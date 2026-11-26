@@ -1,6 +1,8 @@
 const JSBI = require('../../src/util/jsbi');
 const EventCoder = require('../../src/contract/event/EventCoder');
 
+const pad = hex => hex.padStart(64, '0');
+
 test('event', () => {
   const abi = {
     name: 'EventName',
@@ -39,6 +41,27 @@ test('event', () => {
 
   expect([...coder.decodeLog(log)])
     .toEqual(['cfxtest:aaawgvnhveawgvnhveawgvnhveawgvnhvey1umfzwp', JSBI.BigInt(10)]);
+});
+
+test('event rejects oversized dynamic array before allocating coders', () => {
+  const coder = new EventCoder({
+    anonymous: false,
+    name: 'Batch',
+    inputs: [
+      {
+        indexed: false,
+        name: 'items',
+        type: 'uint256[]',
+      },
+    ],
+  });
+
+  const data = `0x${pad('20')}${pad('7fffffff')}${pad('01')}`;
+
+  expect(() => coder.decodeLog({
+    topics: [coder.signature],
+    data,
+  })).toThrow('array length exceeds available data');
 });
 
 test('event.anonymous', () => {

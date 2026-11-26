@@ -1,9 +1,48 @@
 const lodash = require('lodash');
+const { WORD_CHARS } = require('../../CONST');
 const { assert } = require('../../util');
 const format = require('../../util/format');
 const BaseCoder = require('./BaseCoder');
 const { uIntCoder } = require('./IntegerCoder');
 const { pack, unpack } = require('./TupleCoder');
+
+const MAX_DECODE_ARRAY_LENGTH = 2 ** 20;
+
+function staticHeadWords(coder) {
+  if (coder.dynamic) {
+    return 1;
+  }
+
+  if (Array.isArray(coder.coders)) {
+    return lodash.sum(coder.coders.map(staticHeadWords));
+  }
+
+  if (coder.coder && coder.size !== undefined) {
+    return coder.size * staticHeadWords(coder.coder);
+  }
+
+  return coder.constructor.name === 'NullCoder' ? 0 : 1;
+}
+
+function assertDecodeLength(length, stream, coder) {
+  const elementWords = staticHeadWords(coder.coder);
+  const requiredWords = length * elementWords;
+  const remainingWords = Math.floor((stream.string.length - stream.index) / WORD_CHARS);
+  assert(requiredWords <= remainingWords, {
+    message: 'array length exceeds available data',
+    expect: `<=${remainingWords}`,
+    got: requiredWords,
+    coder,
+    stream,
+  });
+
+  assert(length <= MAX_DECODE_ARRAY_LENGTH, {
+    message: 'array length exceeds max decode limit',
+    expect: `<=${MAX_DECODE_ARRAY_LENGTH}`,
+    got: length,
+    coder,
+  });
+}
 
 class ArrayCoder extends BaseCoder {
   static from({ type, components, ...options }, valueCoder) {
@@ -76,6 +115,8 @@ class ArrayCoder extends BaseCoder {
     if (length === undefined) {
       length = format.uInt(uIntCoder.decode(stream)); // XXX: BigInt => Number, for length is enough.
     }
+
+    assertDecodeLength(length, stream, this);
 
     const coders = lodash.range(length).map(() => this.coder);
     return unpack(coders, stream);
