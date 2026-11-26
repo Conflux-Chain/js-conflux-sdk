@@ -1,5 +1,5 @@
 const JSBI = require('../../src/util/jsbi');
-const { Conflux, Contract, format } = require('../../src');
+const { Conflux, Contract, format, CONST } = require('../../src');
 const { MockProvider } = require('../../mock');
 const { abi, bytecode, address } = require('./contract.json');
 const ContractConstructor = require('../../src/contract/method/ContractConstructor');
@@ -148,6 +148,22 @@ test('contract.sendTransaction', async () => {
     // type: '0x0',
     // accessList: null,
   });
+
+  call.mockRestore();
+});
+
+test('contract.sendTransaction rejects mismatched from address networkId', async () => {
+  const call = jest.spyOn(conflux.provider, 'call');
+  const mainnetAddress = format.address(ADDRESS, CONST.MAINNET_ID);
+
+  await expect(contract.count().sendTransaction({
+    from: mainnetAddress,
+    gasPrice: 0,
+    gas: 0,
+    storageLimit: 0,
+    chainId: 1,
+  })).rejects.toThrow('address networkId does not match expected networkId');
+  expect(call).not.toHaveBeenCalledWith('cfx_sendTransaction', expect.anything());
 
   call.mockRestore();
 });

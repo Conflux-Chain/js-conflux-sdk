@@ -3,7 +3,6 @@ const format = require('../util/format');
 const cfxFormat = require('./types/formatter');
 const addressUtil = require('../util/address');
 const CONST = require('../CONST');
-const { assert } = require('../util');
 const { decodeCfxAddress, ADDRESS_TYPES } = require('../util/address');
 const PendingTransaction = require('../subscribe/PendingTransaction');
 const Contract = require('../contract');
@@ -468,12 +467,6 @@ class CFX extends RPCMethodFactory {
       defaultGasPrice,
     } = this.conflux;
 
-    options.from = this._formatAddress(options.from);
-
-    if (options.nonce === undefined) {
-      options.nonce = await this.conflux.advanced.getNextUsableNonce(options.from);
-    }
-
     if (options.chainId === undefined) {
       options.chainId = this.conflux.networkId;
     }
@@ -481,6 +474,15 @@ class CFX extends RPCMethodFactory {
     if (options.chainId === undefined) {
       const status = await this.getStatus();
       options.chainId = status.chainId;
+    }
+
+    addressUtil.assertNetworkId(options.from, options.chainId, '`from` address\'s networkId does not match current RPC\'s networkId');
+    addressUtil.assertNetworkId(options.to, options.chainId, '`to` address\'s networkId does not match current RPC\'s networkId');
+
+    options.from = this._formatAddress(options.from);
+
+    if (options.nonce === undefined) {
+      options.nonce = await this.conflux.advanced.getNextUsableNonce(options.from);
     }
 
     if (options.epochHeight === undefined) {
@@ -632,19 +634,7 @@ class CFX extends RPCMethodFactory {
    */
   async _call(options, epochNumber) {
     try {
-      if (options.to && addressUtil.hasNetworkPrefix(options.to) && this.conflux.networkId) {
-        const {
-          netId,
-          // type,
-        } = addressUtil.decodeCfxAddress(options.to);
-        // check target address's networkId with current RPC's networkId
-        assert(netId === this.conflux.networkId, '`to` address\'s networkId is not match current RPC\'s networkId');
-        // check target contract is exist
-        /* if (type === ADDRESS_TYPES.CONTRACT) {
-          const code = await this.getCode(options.to);
-          assert(code !== '0x', 'Contract not exist!');
-        } */
-      }
+      addressUtil.assertNetworkId(options.to, this.conflux.networkId, '`to` address\'s networkId does not match current RPC\'s networkId');
 
       return await this.conflux.request({
         method: 'cfx_call',

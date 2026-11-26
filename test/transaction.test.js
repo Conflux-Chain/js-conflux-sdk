@@ -14,6 +14,7 @@ const txMeta = {
   epochHeight: 0,
   chainId: 1,
 };
+const MAINNET_TO = format.address(txMeta.to, 1029);
 
 const rawTx = '0xf863df8001825208940123456789012345678901234567890123456789808080018001a0ef53e4af065905cb5134f7de4e9434e71656f824e3e268a9babb4f14ff808113a0407f05f44f79c1fd19262665d3efc29368e317fe5e77be27c0c1314b6a242a1e';
 
@@ -87,6 +88,16 @@ test('Transaction', () => {
   expect(transaction.hash).toEqual('0x9e463f32428c7c4026575d132e8c4e5d6fe387322fce5234103e52f4ab39b053');
   expect(transaction.recover()).toEqual('0x4646ae5047316b4230d0086c8acec687f00b1cd9d1dc634f6cb358ac0a9a8ffffe77b4dd0a4bfb95851f3b7355c781dd60f8418fc8a65d14907aff47c903a559');
   expect(transaction.serialize()).toEqual(rawTx);
+});
+
+test('Transaction.sign rejects mismatched to address networkId', () => {
+  const transaction = new Transaction({
+    ...txMeta,
+    to: MAINNET_TO,
+    chainId: 1,
+  });
+
+  expect(() => transaction.sign(KEY, networkId)).toThrow('`to` address\'s networkId does not match transaction chainId');
 });
 
 test('2930 tx encode', () => {
